@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Alias="Self" Namespace="BB_DB_DEVModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
+  <EntityType Name="BB_Clientes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="accountnumber" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Owner" Type="nvarchar(max)" />
+    <Property Name="PostalCode" Type="nvarchar(max)" />
+    <Property Name="address1_line1" Type="nvarchar(max)" />
+    <Property Name="emailaddress1" Type="nvarchar(max)" />
+    <Property Name="NIF" Type="nvarchar(max)" />
+    <Property Name="Blocked" Type="bit" />
+    <Property Name="Holding" Type="nvarchar(max)" />
+    <Property Name="GMA" Type="nvarchar(max)" />
+    <Property Name="GMA_Identifier" MaxLength="10" Type="nvarchar" />
+    <Property Name="Industry" Type="nvarchar(max)" />
+    <Property Name="Segment" Type="nvarchar(max)" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="City" Type="nvarchar(max)" />
+    <Property Name="IsClienteBB" Type="bit" />
+    <Property Name="telephone1" Type="nvarchar(max)" />
+    <Property Name="NUS_ACCOUNT" Type="nvarchar(max)" />
+    <Property Name="new_businesssegmentname" Type="nvarchar(max)" />
+    <Property Name="numberofemployees" Type="int" />
+    <Property Name="new_totalequipments" Type="int" />
+    <Property Name="new_totalequipmentskm" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Documents_Type">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Proposal">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="CRM_QUOTE_ID" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="StatusID" Type="int" />
+    <Property Name="ValueTotal" Type="float" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="ClientAccountNumber" Type="nvarchar(max)" />
+    <Property Name="AccountManager" Type="nvarchar(max)" />
+    <Property Name="ToDelete" Type="bit" />
+    <Property Name="CampaignID" Type="int" />
+    <Property Name="StatusCRM1" Type="nvarchar(max)" />
+    <Property Name="SubTotal" Type="float" />
+    <Property Name="ClientID" Type="int" />
+    <Property Name="Locked" Type="bit" />
+    <Property Name="ParentID" Type="int" />
+    <Property Name="StatusCRM" Type="int" />
+    <Property Name="TaxaCopiaTotal" Type="float" />
+    <Property Name="SobreValorizacao" Type="float" />
+    <Property Name="ValueComission" Type="float" />
+    <Property Name="SapVersion" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Contacts_Documentation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar(max)" />
+    <Property Name="Telefone" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Contacts_Signing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar(max)" />
+    <Property Name="Telefone" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_FinancingApproval">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="FinancingID" Type="int" />
+    <Property Name="Createby" Type="nvarchar(max)" />
+    <Property Name="CreateDate" Type="datetime" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="IsComplete" Type="bit" />
+    <Property Name="IsAproved" Type="bit" />
+    <Property Name="Comments" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_Assinatura_System">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="System" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_Contrato">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="QuoteNumber" Type="nvarchar(max)" />
+    <Property Name="PathContracto" Type="nvarchar(max)" />
+    <Property Name="Comments" Type="nvarchar(max)" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="ContratoValidado" Type="bit" />
+    <Property Name="ContratoGerado" Type="bit" />
+    <Property Name="Assinatura" Type="datetime" />
+    <Property Name="SystemAssinaturaID" Type="int" />
+    <Property Name="StatusID" Type="int" />
+    <Property Name="FilenameContracto" Type="nvarchar(max)" />
+    <Property Name="TipoContratoID" Type="int" />
+    <Property Name="ComentariosGC" Type="nvarchar(max)" />
+    <Property Name="IsClosed" Type="bit" />
+    <Property Name="Retorno" Type="bit" />
+    <Property Name="ComentariosDevolucao" Type="nvarchar(max)" />
+    <Property Name="MotivoID" Type="int" />
+    <Property Name="DevolucaoMotivoID" Type="int" />
+    <Property Name="Pasta" Type="nvarchar(max)" />
+    <Property Name="IsFacturacao" Type="bit" />
+    <Property Name="DocusignEnvelopeID" Type="nvarchar(max)" />
+    <Property Name="SapVersion" Type="int" />
+  </EntityType>
+  <EntityType Name="LD_Contrato_Facturacao">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="LDID" Type="int" />
+    <Property Name="NUS" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="InvoiceAssistant" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_Contrato_History">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="QuoteNumber" Type="nvarchar(max)" />
+    <Property Name="PathContracto" Type="nvarchar(max)" />
+    <Property Name="Comments" Type="nvarchar(max)" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="ContratoValidado" Type="bit" />
+    <Property Name="ContratoGerado" Type="bit" />
+    <Property Name="Assinatura" Type="datetime" />
+    <Property Name="SystemAssinaturaID" Type="int" />
+    <Property Name="StatusID" Type="int" />
+    <Property Name="FilenameContracto" Type="nvarchar(max)" />
+    <Property Name="TipoContratoID" Type="int" />
+    <Property Name="ComentariosGC" Type="nvarchar(max)" />
+    <Property Name="IsClosed" Type="bit" />
+    <Property Name="Retorno" Type="bit" />
+    <Property Name="ComentariosDevolucao" Type="nvarchar(max)" />
+    <Property Name="ContratoID" Type="int" />
+    <Property Name="MotivoID" Type="int" />
+    <Property Name="DevolucaoMotivoID" Type="int" />
+  </EntityType>
+  <EntityType Name="LD_Devolucao_Motivo">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Motivo" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_DocSign_Control">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="LeasedeskID" Type="int" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="DocSignStatusSent" Type="int" />
+    <Property Name="DocSignDateTimeSent" Type="datetime" />
+    <Property Name="NrPageSign" Type="int" />
+    <Property Name="DocPath" Type="nvarchar(max)" />
+    <Property Name="DocSignEnvelopeID" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_DocSign_Control_Files">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="FilePath" Type="nvarchar(max)" />
+    <Property Name="NrPageSign" Type="int" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedDatetime" Type="datetime" />
+    <Property Name="IsToSign" Type="bit" />
+    <Property Name="OrderFile" Type="int" />
+  </EntityType>
+  <EntityType Name="LD_DocSign_Control_History">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="LeasedeskID" Type="int" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="DocSignStatusSent" Type="int" />
+    <Property Name="DocSignDateTimeSent" Type="datetime" />
+    <Property Name="NrPageSign" Type="int" />
+    <Property Name="DocPath" Type="nvarchar(max)" />
+    <Property Name="DocSignEnvelopeID" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_DocumentClassification">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Classification" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_DocumentProposal">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ContratoID" Type="int" />
+    <Property Name="QuoteNumber" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Drive" Type="nvarchar(max)" />
+    <Property Name="Folder" Type="nvarchar(max)" />
+    <Property Name="FileName" Type="nvarchar(max)" />
+    <Property Name="FileExtension" Type="nvarchar(max)" />
+    <Property Name="FileFullPath" Type="nvarchar(max)" />
+    <Property Name="ClassificationID" Type="int" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="SystemID" Type="int" />
+    <Property Name="DocumentIsProcess" Type="bit" />
+    <Property Name="DocumentIsValid" Type="bit" />
+    <Property Name="Comments" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_Email_Log">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ContractID" Type="int" />
+    <Property Name="QuoteNumber" Type="nvarchar(max)" />
+    <Property Name="NrClient" Type="nvarchar(max)" />
+    <Property Name="ProcessDate" Type="datetime" />
+    <Property Name="Status" Type="nvarchar(max)" />
+    <Property Name="NrAttachedFiles" Type="int" />
+    <Property Name="EmailReceived" Type="nvarchar(max)" />
+    <Property Name="EmailSent" Type="nvarchar(max)" />
+    <Property Name="Subject" Type="nvarchar(max)" />
+    <Property Name="body" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_Logs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="contratoID" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="TypeID" Type="nvarchar(max)" />
+    <Property Name="Message" Type="nvarchar(max)" />
+    <Property Name="CreateBy" Type="nvarchar(max)" />
+    <Property Name="CreateDate" Type="datetime" />
+    <Property Name="Type" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_Logs_Type">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Type" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_Observacoes_Motivos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Motive" Type="nvarchar(max)" />
+    <Property Name="OrderMotive" Type="int" />
+  </EntityType>
+  <EntityType Name="LD_PA5_DocumentProposal">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ContractID" Type="int" />
+    <Property Name="PA5DocumentID" Type="int" />
+    <Property Name="IsValid" Type="bit" />
+    <Property Name="IsToSend" Type="bit" />
+  </EntityType>
+  <EntityType Name="LD_PA5_DocumentType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="IsRequired" Type="bit" />
+    <Property Name="IsSolicted" Type="bit" />
+    <Property Name="IsEnabled" Type="bit" />
+  </EntityType>
+  <EntityType Name="LD_PA5_EmailConfigSent">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="ContractID" Type="int" />
+    <Property Name="Nr_Reminder" Type="int" />
+    <Property Name="IsStarted" Type="bit" />
+    <Property Name="IsFinish" Type="bit" />
+    <Property Name="NextDateSent" Type="datetime" />
+    <Property Name="EmailTo" Type="nvarchar(max)" />
+    <Property Name="Subject" Type="nvarchar(max)" />
+    <Property Name="Notes" Type="nvarchar(max)" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="CreateTime" Type="datetime" />
+    <Property Name="Mode" Type="int" />
+    <Property Name="TypeEmail" Type="int" />
+    <Property Name="EmailCC" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_Status">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="Status" Type="nvarchar(max)" />
+    <Property Name="Description" MaxLength="10" Type="nchar" />
+  </EntityType>
+  <EntityType Name="LD_System">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="System" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_TipoContrato">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+    <Property Name="TipoContrato" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="Enable" Type="bit" />
+  </EntityType>
+  <EntityContainer Name="BB_DB_DEVModel1StoreContainer">
+    <EntitySet Name="BB_Clientes" EntityType="Self.BB_Clientes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Documents_Type" EntityType="Self.BB_Documents_Type" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal" EntityType="Self.BB_Proposal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="Self.BB_Proposal_Contacts_Documentation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Contacts_Signing" EntityType="Self.BB_Proposal_Contacts_Signing" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_FinancingApproval" EntityType="Self.BB_Proposal_FinancingApproval" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Assinatura_System" EntityType="Self.LD_Assinatura_System" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Contrato" EntityType="Self.LD_Contrato" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Contrato_Facturacao" EntityType="Self.LD_Contrato_Facturacao" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Contrato_History" EntityType="Self.LD_Contrato_History" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Devolucao_Motivo" EntityType="Self.LD_Devolucao_Motivo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_DocSign_Control" EntityType="Self.LD_DocSign_Control" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_DocSign_Control_Files" EntityType="Self.LD_DocSign_Control_Files" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_DocSign_Control_History" EntityType="Self.LD_DocSign_Control_History" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_DocumentClassification" EntityType="Self.LD_DocumentClassification" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_DocumentProposal" EntityType="Self.LD_DocumentProposal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Email_Log" EntityType="Self.LD_Email_Log" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Logs" EntityType="Self.LD_Logs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Logs_Type" EntityType="Self.LD_Logs_Type" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Observacoes_Motivos" EntityType="Self.LD_Observacoes_Motivos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_PA5_DocumentProposal" EntityType="Self.LD_PA5_DocumentProposal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_PA5_DocumentType" EntityType="Self.LD_PA5_DocumentType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_PA5_EmailConfigSent" EntityType="Self.LD_PA5_EmailConfigSent" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_Status" EntityType="Self.LD_Status" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_System" EntityType="Self.LD_System" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_TipoContrato" EntityType="Self.LD_TipoContrato" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

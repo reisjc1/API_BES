@@ -1,0 +1,1236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Alias="Self" Namespace="BB_DB_DEVModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
+        <EntityType Name="BB_Clientes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="accountnumber" Type="nvarchar(max)" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Owner" Type="nvarchar(max)" />
+          <Property Name="PostalCode" Type="nvarchar(max)" />
+          <Property Name="address1_line1" Type="nvarchar(max)" />
+          <Property Name="emailaddress1" Type="nvarchar(max)" />
+          <Property Name="NIF" Type="nvarchar(max)" />
+          <Property Name="Blocked" Type="bit" />
+          <Property Name="Holding" Type="nvarchar(max)" />
+          <Property Name="GMA" Type="nvarchar(max)" />
+          <Property Name="GMA_Identifier" MaxLength="10" Type="nvarchar" />
+          <Property Name="Industry" Type="nvarchar(max)" />
+          <Property Name="Segment" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="City" Type="nvarchar(max)" />
+          <Property Name="IsClienteBB" Type="bit" />
+          <Property Name="telephone1" Type="nvarchar(max)" />
+          <Property Name="NUS_ACCOUNT" Type="nvarchar(max)" />
+          <Property Name="new_businesssegmentname" Type="nvarchar(max)" />
+          <Property Name="numberofemployees" Type="int" />
+          <Property Name="new_totalequipments" Type="int" />
+          <Property Name="new_totalequipmentskm" Type="int" />
+        </EntityType>
+        <EntityType Name="BB_Documents_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Name" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="BB_Proposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="CRM_QUOTE_ID" Type="nvarchar(max)" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="StatusID" Type="int" />
+          <Property Name="ValueTotal" Type="float" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="ClientAccountNumber" Type="nvarchar(max)" />
+          <Property Name="AccountManager" Type="nvarchar(max)" />
+          <Property Name="ToDelete" Type="bit" />
+          <Property Name="CampaignID" Type="int" />
+          <Property Name="StatusCRM1" Type="nvarchar(max)" />
+          <Property Name="SubTotal" Type="float" />
+          <Property Name="ClientID" Type="int" />
+          <Property Name="Locked" Type="bit" />
+          <Property Name="ParentID" Type="int" />
+          <Property Name="StatusCRM" Type="int" />
+          <Property Name="TaxaCopiaTotal" Type="float" />
+          <Property Name="SobreValorizacao" Type="float" />
+          <Property Name="ValueComission" Type="float" />
+          <Property Name="SapVersion" Type="int" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Contacts_Documentation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar(max)" />
+          <Property Name="Telefone" Type="nvarchar(max)" />
+          <Property Name="ProposalID" Type="int" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Contacts_Signing">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar(max)" />
+          <Property Name="Telefone" Type="nvarchar(max)" />
+          <Property Name="ProposalID" Type="int" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_FinancingApproval">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="FinancingID" Type="int" />
+          <Property Name="Createby" Type="nvarchar(max)" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="IsComplete" Type="bit" />
+          <Property Name="IsAproved" Type="bit" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_Assinatura_System">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="System" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_Contrato">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="QuoteNumber" Type="nvarchar(max)" />
+          <Property Name="PathContracto" Type="nvarchar(max)" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="ContratoValidado" Type="bit" />
+          <Property Name="ContratoGerado" Type="bit" />
+          <Property Name="Assinatura" Type="datetime" />
+          <Property Name="SystemAssinaturaID" Type="int" />
+          <Property Name="StatusID" Type="int" />
+          <Property Name="FilenameContracto" Type="nvarchar(max)" />
+          <Property Name="TipoContratoID" Type="int" />
+          <Property Name="ComentariosGC" Type="nvarchar(max)" />
+          <Property Name="IsClosed" Type="bit" />
+          <Property Name="Retorno" Type="bit" />
+          <Property Name="ComentariosDevolucao" Type="nvarchar(max)" />
+          <Property Name="MotivoID" Type="int" />
+          <Property Name="DevolucaoMotivoID" Type="int" />
+          <Property Name="Pasta" Type="nvarchar(max)" />
+          <Property Name="IsFacturacao" Type="bit" />
+          <Property Name="DocusignEnvelopeID" Type="nvarchar(max)" />
+          <Property Name="SapVersion" Type="int" />
+        </EntityType>
+        <EntityType Name="LD_Contrato_Facturacao">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="LDID" Type="int" />
+          <Property Name="NUS" Type="nvarchar(max)" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="InvoiceAssistant" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_Contrato_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="QuoteNumber" Type="nvarchar(max)" />
+          <Property Name="PathContracto" Type="nvarchar(max)" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="ContratoValidado" Type="bit" />
+          <Property Name="ContratoGerado" Type="bit" />
+          <Property Name="Assinatura" Type="datetime" />
+          <Property Name="SystemAssinaturaID" Type="int" />
+          <Property Name="StatusID" Type="int" />
+          <Property Name="FilenameContracto" Type="nvarchar(max)" />
+          <Property Name="TipoContratoID" Type="int" />
+          <Property Name="ComentariosGC" Type="nvarchar(max)" />
+          <Property Name="IsClosed" Type="bit" />
+          <Property Name="Retorno" Type="bit" />
+          <Property Name="ComentariosDevolucao" Type="nvarchar(max)" />
+          <Property Name="ContratoID" Type="int" />
+          <Property Name="MotivoID" Type="int" />
+          <Property Name="DevolucaoMotivoID" Type="int" />
+        </EntityType>
+        <EntityType Name="LD_Devolucao_Motivo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Motivo" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_DocSign_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="LeasedeskID" Type="int" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="DocSignStatusSent" Type="int" />
+          <Property Name="DocSignDateTimeSent" Type="datetime" />
+          <Property Name="NrPageSign" Type="int" />
+          <Property Name="DocPath" Type="nvarchar(max)" />
+          <Property Name="DocSignEnvelopeID" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_DocSign_Control_Files">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="FilePath" Type="nvarchar(max)" />
+          <Property Name="NrPageSign" Type="int" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedDatetime" Type="datetime" />
+          <Property Name="IsToSign" Type="bit" />
+          <Property Name="OrderFile" Type="int" />
+        </EntityType>
+        <EntityType Name="LD_DocSign_Control_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="LeasedeskID" Type="int" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="DocSignStatusSent" Type="int" />
+          <Property Name="DocSignDateTimeSent" Type="datetime" />
+          <Property Name="NrPageSign" Type="int" />
+          <Property Name="DocPath" Type="nvarchar(max)" />
+          <Property Name="DocSignEnvelopeID" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_DocumentClassification">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Classification" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_DocumentProposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ContratoID" Type="int" />
+          <Property Name="QuoteNumber" Type="nvarchar(max)" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Drive" Type="nvarchar(max)" />
+          <Property Name="Folder" Type="nvarchar(max)" />
+          <Property Name="FileName" Type="nvarchar(max)" />
+          <Property Name="FileExtension" Type="nvarchar(max)" />
+          <Property Name="FileFullPath" Type="nvarchar(max)" />
+          <Property Name="ClassificationID" Type="int" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar(max)" />
+          <Property Name="ModifiedTime" Type="datetime" />
+          <Property Name="SystemID" Type="int" />
+          <Property Name="DocumentIsProcess" Type="bit" />
+          <Property Name="DocumentIsValid" Type="bit" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_Email_Log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ContractID" Type="int" />
+          <Property Name="QuoteNumber" Type="nvarchar(max)" />
+          <Property Name="NrClient" Type="nvarchar(max)" />
+          <Property Name="ProcessDate" Type="datetime" />
+          <Property Name="Status" Type="nvarchar(max)" />
+          <Property Name="NrAttachedFiles" Type="int" />
+          <Property Name="EmailReceived" Type="nvarchar(max)" />
+          <Property Name="EmailSent" Type="nvarchar(max)" />
+          <Property Name="Subject" Type="nvarchar(max)" />
+          <Property Name="body" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_Logs">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="contratoID" Type="int" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="TypeID" Type="nvarchar(max)" />
+          <Property Name="Message" Type="nvarchar(max)" />
+          <Property Name="CreateBy" Type="nvarchar(max)" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="Type" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_Logs_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Type" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_Observacoes_Motivos">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Motive" Type="nvarchar(max)" />
+          <Property Name="OrderMotive" Type="int" />
+        </EntityType>
+        <EntityType Name="LD_PA5_DocumentProposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ContractID" Type="int" />
+          <Property Name="PA5DocumentID" Type="int" />
+          <Property Name="IsValid" Type="bit" />
+          <Property Name="IsToSend" Type="bit" />
+        </EntityType>
+        <EntityType Name="LD_PA5_DocumentType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="IsRequired" Type="bit" />
+          <Property Name="IsSolicted" Type="bit" />
+          <Property Name="IsEnabled" Type="bit" />
+        </EntityType>
+        <EntityType Name="LD_PA5_EmailConfigSent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ContractID" Type="int" />
+          <Property Name="Nr_Reminder" Type="int" />
+          <Property Name="IsStarted" Type="bit" />
+          <Property Name="IsFinish" Type="bit" />
+          <Property Name="NextDateSent" Type="datetime" />
+          <Property Name="EmailTo" Type="nvarchar(max)" />
+          <Property Name="Subject" Type="nvarchar(max)" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="Mode" Type="int" />
+          <Property Name="TypeEmail" Type="int" />
+          <Property Name="EmailCC" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_Status">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Status" Type="nvarchar(max)" />
+          <Property Name="Description" MaxLength="10" Type="nchar" />
+        </EntityType>
+        <EntityType Name="LD_System">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="System" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="LD_TipoContrato">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="TipoContrato" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Enable" Type="bit" />
+        </EntityType>
+        <EntityContainer Name="BB_DB_DEVModel1StoreContainer">
+          <EntitySet Name="BB_Clientes" EntityType="Self.BB_Clientes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Documents_Type" EntityType="Self.BB_Documents_Type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Proposal" EntityType="Self.BB_Proposal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="Self.BB_Proposal_Contacts_Documentation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Proposal_Contacts_Signing" EntityType="Self.BB_Proposal_Contacts_Signing" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Proposal_FinancingApproval" EntityType="Self.BB_Proposal_FinancingApproval" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Assinatura_System" EntityType="Self.LD_Assinatura_System" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Contrato" EntityType="Self.LD_Contrato" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Contrato_Facturacao" EntityType="Self.LD_Contrato_Facturacao" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Contrato_History" EntityType="Self.LD_Contrato_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Devolucao_Motivo" EntityType="Self.LD_Devolucao_Motivo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_DocSign_Control" EntityType="Self.LD_DocSign_Control" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_DocSign_Control_Files" EntityType="Self.LD_DocSign_Control_Files" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_DocSign_Control_History" EntityType="Self.LD_DocSign_Control_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_DocumentClassification" EntityType="Self.LD_DocumentClassification" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_DocumentProposal" EntityType="Self.LD_DocumentProposal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Email_Log" EntityType="Self.LD_Email_Log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Logs" EntityType="Self.LD_Logs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Logs_Type" EntityType="Self.LD_Logs_Type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Observacoes_Motivos" EntityType="Self.LD_Observacoes_Motivos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_PA5_DocumentProposal" EntityType="Self.LD_PA5_DocumentProposal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_PA5_DocumentType" EntityType="Self.LD_PA5_DocumentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_PA5_EmailConfigSent" EntityType="Self.LD_PA5_EmailConfigSent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_Status" EntityType="Self.LD_Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_System" EntityType="Self.LD_System" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LD_TipoContrato" EntityType="Self.LD_TipoContrato" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BB_DB_DEVModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BB_DB_DEV_LeaseDesk" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="LD_DocumentClassification" EntityType="BB_DB_DEVModel1.LD_DocumentClassification" />
+          <EntitySet Name="LD_System" EntityType="BB_DB_DEVModel1.LD_System" />
+          <EntitySet Name="LD_Assinatura_System" EntityType="BB_DB_DEVModel1.LD_Assinatura_System" />
+          <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel1.LD_DocumentProposal" />
+          <EntitySet Name="LD_Status" EntityType="BB_DB_DEVModel1.LD_Status" />
+          <EntitySet Name="BB_Proposal_FinancingApproval" EntityType="BB_DB_DEVModel1.BB_Proposal_FinancingApproval" />
+          <EntitySet Name="LD_Logs" EntityType="BB_DB_DEVModel1.LD_Logs" />
+          <EntitySet Name="LD_Logs_Type" EntityType="BB_DB_DEVModel1.LD_Logs_Type" />
+          <EntitySet Name="BB_Clientes" EntityType="BB_DB_DEVModel1.BB_Clientes" />
+          <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel1.BB_Proposal" />
+          <EntitySet Name="LD_TipoContrato" EntityType="BB_DB_DEVModel1.LD_TipoContrato" />
+          <EntitySet Name="LD_Contrato_History" EntityType="BB_DB_DEVModel1.LD_Contrato_History" />
+          <EntitySet Name="LD_Observacoes_Motivos" EntityType="BB_DB_DEVModel1.LD_Observacoes_Motivos" />
+          <EntitySet Name="LD_Devolucao_Motivo" EntityType="BB_DB_DEVModel1.LD_Devolucao_Motivo" />
+          <EntitySet Name="LD_Contrato_Facturacao" EntityType="BB_DB_DEVModel1.LD_Contrato_Facturacao" />
+          <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel1.LD_Contrato" />
+          <EntitySet Name="BB_Documents_Type" EntityType="BB_DB_DEVModel1.BB_Documents_Type" />
+          <EntitySet Name="LD_PA5_DocumentProposal" EntityType="BB_DB_DEVModel1.LD_PA5_DocumentProposal" />
+          <EntitySet Name="LD_PA5_DocumentType" EntityType="BB_DB_DEVModel1.LD_PA5_DocumentType" />
+          <EntitySet Name="LD_PA5_EmailConfigSent" EntityType="BB_DB_DEVModel1.LD_PA5_EmailConfigSent" />
+          <EntitySet Name="LD_Email_Log" EntityType="BB_DB_DEVModel1.LD_Email_Log" />
+          <EntitySet Name="BB_Proposal_Contacts_Signing" EntityType="BB_DB_DEVModel1.BB_Proposal_Contacts_Signing" />
+          <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="BB_DB_DEVModel1.BB_Proposal_Contacts_Documentation" />
+          <EntitySet Name="LD_DocSign_Control" EntityType="BB_DB_DEVModel1.LD_DocSign_Control" />
+          <EntitySet Name="LD_DocSign_Control_Files" EntityType="BB_DB_DEVModel1.LD_DocSign_Control_Files" />
+          <EntitySet Name="LD_DocSign_Control_History" EntityType="BB_DB_DEVModel1.LD_DocSign_Control_History" />
+        </EntityContainer>
+        <EntityType Name="LD_DocumentClassification">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Classification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_System">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="System" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_Assinatura_System">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="System" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_DocumentProposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContratoID" Type="Int32" />
+          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Drive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Folder" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileExtension" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileFullPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClassificationID" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="SystemID" Type="Int32" />
+          <Property Name="DocumentIsProcess" Type="Boolean" />
+          <Property Name="DocumentIsValid" Type="Boolean" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_Status">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_FinancingApproval">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="FinancingID" Type="Int32" />
+          <Property Name="Createby" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="IsComplete" Type="Boolean" />
+          <Property Name="IsAproved" Type="Boolean" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_Logs">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="contratoID" Type="Int32" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="TypeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_Logs_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BB_Clientes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="accountnumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Owner" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="address1_line1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="emailaddress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NIF" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Blocked" Type="Boolean" />
+          <Property Name="Holding" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GMA" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GMA_Identifier" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Industry" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsClienteBB" Type="Boolean" />
+          <Property Name="telephone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NUS_ACCOUNT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="new_businesssegmentname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="numberofemployees" Type="Int32" />
+          <Property Name="new_totalequipments" Type="Int32" />
+          <Property Name="new_totalequipmentskm" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_Proposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CRM_QUOTE_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="ValueComission" Type="Double" />
+          <Property Name="ValueTotal" Type="Double" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="ParentID" Type="Int32" />
+          <Property Name="Locked" Type="Boolean" />
+          <Property Name="ClientID" Type="Int32" />
+          <Property Name="ClientAccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StatusCRM" Type="Int32" />
+          <Property Name="AccountManager" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ToDelete" Type="Boolean" />
+          <Property Name="CampaignID" Type="Int32" />
+          <Property Name="StatusCRM1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SobreValorizacao" Type="Double" />
+          <Property Name="TaxaCopiaTotal" Type="Double" />
+          <Property Name="SubTotal" Type="Double" />
+          <Property Name="SapVersion" Type="Int32" />
+        </EntityType>
+        <EntityType Name="LD_TipoContrato">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TipoContrato" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Enable" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="LD_Contrato_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PathContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="ContratoValidado" Type="Boolean" />
+          <Property Name="ContratoGerado" Type="Boolean" />
+          <Property Name="Assinatura" Type="DateTime" Precision="3" />
+          <Property Name="SystemAssinaturaID" Type="Int32" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="FilenameContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TipoContratoID" Type="Int32" />
+          <Property Name="ComentariosGC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsClosed" Type="Boolean" />
+          <Property Name="Retorno" Type="Boolean" />
+          <Property Name="ComentariosDevolucao" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ContratoID" Type="Int32" />
+          <Property Name="MotivoID" Type="Int32" />
+          <Property Name="DevolucaoMotivoID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="LD_Observacoes_Motivos">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Motive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OrderMotive" Type="Int32" />
+        </EntityType>
+        <EntityType Name="LD_Devolucao_Motivo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Motivo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_Contrato_Facturacao">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LDID" Type="Int32" />
+          <Property Name="NUS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="InvoiceAssistant" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_Contrato">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PathContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="ContratoValidado" Type="Boolean" />
+          <Property Name="ContratoGerado" Type="Boolean" />
+          <Property Name="Assinatura" Type="DateTime" Precision="3" />
+          <Property Name="SystemAssinaturaID" Type="Int32" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="FilenameContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TipoContratoID" Type="Int32" />
+          <Property Name="ComentariosGC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsClosed" Type="Boolean" />
+          <Property Name="Retorno" Type="Boolean" />
+          <Property Name="ComentariosDevolucao" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MotivoID" Type="Int32" />
+          <Property Name="DevolucaoMotivoID" Type="Int32" />
+          <Property Name="Pasta" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsFacturacao" Type="Boolean" />
+          <Property Name="DocusignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SapVersion" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_Documents_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_PA5_DocumentProposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContractID" Type="Int32" />
+          <Property Name="PA5DocumentID" Type="Int32" />
+          <Property Name="IsValid" Type="Boolean" />
+          <Property Name="IsToSend" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="LD_PA5_DocumentType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsRequired" Type="Boolean" />
+          <Property Name="IsSolicted" Type="Boolean" />
+          <Property Name="IsEnabled" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="LD_PA5_EmailConfigSent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContractID" Type="Int32" />
+          <Property Name="Nr_Reminder" Type="Int32" />
+          <Property Name="IsStarted" Type="Boolean" />
+          <Property Name="IsFinish" Type="Boolean" />
+          <Property Name="NextDateSent" Type="DateTime" Precision="3" />
+          <Property Name="EmailTo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="Mode" Type="Int32" />
+          <Property Name="TypeEmail" Type="Int32" />
+          <Property Name="EmailCC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_Email_Log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContractID" Type="Int32" />
+          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NrClient" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProcessDate" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NrAttachedFiles" Type="Int32" />
+          <Property Name="EmailReceived" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EmailSent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Contacts_Signing">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Telefone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProposalID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Contacts_Documentation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Telefone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProposalID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="LD_DocSign_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="LeasedeskID" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="DocSignStatusSent" Type="Int32" />
+          <Property Name="DocSignDateTimeSent" Type="DateTime" Precision="3" />
+          <Property Name="NrPageSign" Type="Int32" />
+          <Property Name="DocPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DocSignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LD_DocSign_Control_Files">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NrPageSign" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDatetime" Type="DateTime" Precision="3" />
+          <Property Name="IsToSign" Type="Boolean" />
+          <Property Name="OrderFile" Type="Int32" />
+        </EntityType>
+        <EntityType Name="LD_DocSign_Control_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="LeasedeskID" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="DocSignStatusSent" Type="Int32" />
+          <Property Name="DocSignDateTimeSent" Type="DateTime" Precision="3" />
+          <Property Name="NrPageSign" Type="Int32" />
+          <Property Name="DocPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DocSignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BB_DB_DEVModel1StoreContainer" CdmEntityContainer="BB_DB_DEV_LeaseDesk">
+          <EntitySetMapping Name="LD_DocumentClassification">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_DocumentClassification">
+              <MappingFragment StoreEntitySet="LD_DocumentClassification">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_System">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_System">
+              <MappingFragment StoreEntitySet="LD_System">
+                <ScalarProperty Name="System" ColumnName="System" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Assinatura_System">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Assinatura_System">
+              <MappingFragment StoreEntitySet="LD_Assinatura_System">
+                <ScalarProperty Name="System" ColumnName="System" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_DocumentProposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_DocumentProposal">
+              <MappingFragment StoreEntitySet="LD_DocumentProposal">
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="DocumentIsValid" ColumnName="DocumentIsValid" />
+                <ScalarProperty Name="DocumentIsProcess" ColumnName="DocumentIsProcess" />
+                <ScalarProperty Name="SystemID" ColumnName="SystemID" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ClassificationID" ColumnName="ClassificationID" />
+                <ScalarProperty Name="FileFullPath" ColumnName="FileFullPath" />
+                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Folder" ColumnName="Folder" />
+                <ScalarProperty Name="Drive" ColumnName="Drive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
+                <ScalarProperty Name="ContratoID" ColumnName="ContratoID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Status">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Status">
+              <MappingFragment StoreEntitySet="LD_Status">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_FinancingApproval">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal_FinancingApproval">
+              <MappingFragment StoreEntitySet="BB_Proposal_FinancingApproval">
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="IsAproved" ColumnName="IsAproved" />
+                <ScalarProperty Name="IsComplete" ColumnName="IsComplete" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Createby" ColumnName="Createby" />
+                <ScalarProperty Name="FinancingID" ColumnName="FinancingID" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Logs">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Logs">
+              <MappingFragment StoreEntitySet="LD_Logs">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="contratoID" ColumnName="contratoID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Logs_Type">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Logs_Type">
+              <MappingFragment StoreEntitySet="LD_Logs_Type">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Clientes">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Clientes">
+              <MappingFragment StoreEntitySet="BB_Clientes">
+                <ScalarProperty Name="new_totalequipmentskm" ColumnName="new_totalequipmentskm" />
+                <ScalarProperty Name="new_totalequipments" ColumnName="new_totalequipments" />
+                <ScalarProperty Name="numberofemployees" ColumnName="numberofemployees" />
+                <ScalarProperty Name="new_businesssegmentname" ColumnName="new_businesssegmentname" />
+                <ScalarProperty Name="NUS_ACCOUNT" ColumnName="NUS_ACCOUNT" />
+                <ScalarProperty Name="telephone1" ColumnName="telephone1" />
+                <ScalarProperty Name="IsClienteBB" ColumnName="IsClienteBB" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Segment" ColumnName="Segment" />
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="GMA_Identifier" ColumnName="GMA_Identifier" />
+                <ScalarProperty Name="GMA" ColumnName="GMA" />
+                <ScalarProperty Name="Holding" ColumnName="Holding" />
+                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
+                <ScalarProperty Name="NIF" ColumnName="NIF" />
+                <ScalarProperty Name="emailaddress1" ColumnName="emailaddress1" />
+                <ScalarProperty Name="address1_line1" ColumnName="address1_line1" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="accountnumber" ColumnName="accountnumber" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal">
+              <MappingFragment StoreEntitySet="BB_Proposal">
+                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="TaxaCopiaTotal" ColumnName="TaxaCopiaTotal" />
+                <ScalarProperty Name="SobreValorizacao" ColumnName="SobreValorizacao" />
+                <ScalarProperty Name="StatusCRM1" ColumnName="StatusCRM1" />
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+                <ScalarProperty Name="ToDelete" ColumnName="ToDelete" />
+                <ScalarProperty Name="AccountManager" ColumnName="AccountManager" />
+                <ScalarProperty Name="StatusCRM" ColumnName="StatusCRM" />
+                <ScalarProperty Name="ClientAccountNumber" ColumnName="ClientAccountNumber" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ValueTotal" ColumnName="ValueTotal" />
+                <ScalarProperty Name="ValueComission" ColumnName="ValueComission" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CRM_QUOTE_ID" ColumnName="CRM_QUOTE_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_TipoContrato">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_TipoContrato">
+              <MappingFragment StoreEntitySet="LD_TipoContrato">
+                <ScalarProperty Name="Enable" ColumnName="Enable" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TipoContrato" ColumnName="TipoContrato" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Contrato_History">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Contrato_History">
+              <MappingFragment StoreEntitySet="LD_Contrato_History">
+                <ScalarProperty Name="DevolucaoMotivoID" ColumnName="DevolucaoMotivoID" />
+                <ScalarProperty Name="MotivoID" ColumnName="MotivoID" />
+                <ScalarProperty Name="ContratoID" ColumnName="ContratoID" />
+                <ScalarProperty Name="ComentariosDevolucao" ColumnName="ComentariosDevolucao" />
+                <ScalarProperty Name="Retorno" ColumnName="Retorno" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="ComentariosGC" ColumnName="ComentariosGC" />
+                <ScalarProperty Name="TipoContratoID" ColumnName="TipoContratoID" />
+                <ScalarProperty Name="FilenameContracto" ColumnName="FilenameContracto" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="SystemAssinaturaID" ColumnName="SystemAssinaturaID" />
+                <ScalarProperty Name="Assinatura" ColumnName="Assinatura" />
+                <ScalarProperty Name="ContratoGerado" ColumnName="ContratoGerado" />
+                <ScalarProperty Name="ContratoValidado" ColumnName="ContratoValidado" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="PathContracto" ColumnName="PathContracto" />
+                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Observacoes_Motivos">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Observacoes_Motivos">
+              <MappingFragment StoreEntitySet="LD_Observacoes_Motivos">
+                <ScalarProperty Name="OrderMotive" ColumnName="OrderMotive" />
+                <ScalarProperty Name="Motive" ColumnName="Motive" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Devolucao_Motivo">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Devolucao_Motivo">
+              <MappingFragment StoreEntitySet="LD_Devolucao_Motivo">
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Contrato_Facturacao">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Contrato_Facturacao">
+              <MappingFragment StoreEntitySet="LD_Contrato_Facturacao">
+                <ScalarProperty Name="InvoiceAssistant" ColumnName="InvoiceAssistant" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="NUS" ColumnName="NUS" />
+                <ScalarProperty Name="LDID" ColumnName="LDID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Contrato">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Contrato">
+              <MappingFragment StoreEntitySet="LD_Contrato">
+                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
+                <ScalarProperty Name="DocusignEnvelopeID" ColumnName="DocusignEnvelopeID" />
+                <ScalarProperty Name="IsFacturacao" ColumnName="IsFacturacao" />
+                <ScalarProperty Name="Pasta" ColumnName="Pasta" />
+                <ScalarProperty Name="DevolucaoMotivoID" ColumnName="DevolucaoMotivoID" />
+                <ScalarProperty Name="MotivoID" ColumnName="MotivoID" />
+                <ScalarProperty Name="ComentariosDevolucao" ColumnName="ComentariosDevolucao" />
+                <ScalarProperty Name="Retorno" ColumnName="Retorno" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="ComentariosGC" ColumnName="ComentariosGC" />
+                <ScalarProperty Name="TipoContratoID" ColumnName="TipoContratoID" />
+                <ScalarProperty Name="FilenameContracto" ColumnName="FilenameContracto" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="SystemAssinaturaID" ColumnName="SystemAssinaturaID" />
+                <ScalarProperty Name="Assinatura" ColumnName="Assinatura" />
+                <ScalarProperty Name="ContratoGerado" ColumnName="ContratoGerado" />
+                <ScalarProperty Name="ContratoValidado" ColumnName="ContratoValidado" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="PathContracto" ColumnName="PathContracto" />
+                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Documents_Type">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Documents_Type">
+              <MappingFragment StoreEntitySet="BB_Documents_Type">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_PA5_DocumentProposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_PA5_DocumentProposal">
+              <MappingFragment StoreEntitySet="LD_PA5_DocumentProposal">
+                <ScalarProperty Name="IsToSend" ColumnName="IsToSend" />
+                <ScalarProperty Name="IsValid" ColumnName="IsValid" />
+                <ScalarProperty Name="PA5DocumentID" ColumnName="PA5DocumentID" />
+                <ScalarProperty Name="ContractID" ColumnName="ContractID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_PA5_DocumentType">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_PA5_DocumentType">
+              <MappingFragment StoreEntitySet="LD_PA5_DocumentType">
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="IsSolicted" ColumnName="IsSolicted" />
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_PA5_EmailConfigSent">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_PA5_EmailConfigSent">
+              <MappingFragment StoreEntitySet="LD_PA5_EmailConfigSent">
+                <ScalarProperty Name="EmailCC" ColumnName="EmailCC" />
+                <ScalarProperty Name="TypeEmail" ColumnName="TypeEmail" />
+                <ScalarProperty Name="Mode" ColumnName="Mode" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="EmailTo" ColumnName="EmailTo" />
+                <ScalarProperty Name="NextDateSent" ColumnName="NextDateSent" />
+                <ScalarProperty Name="IsFinish" ColumnName="IsFinish" />
+                <ScalarProperty Name="IsStarted" ColumnName="IsStarted" />
+                <ScalarProperty Name="Nr_Reminder" ColumnName="Nr_Reminder" />
+                <ScalarProperty Name="ContractID" ColumnName="ContractID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Email_Log">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Email_Log">
+              <MappingFragment StoreEntitySet="LD_Email_Log">
+                <ScalarProperty Name="body" ColumnName="body" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="EmailSent" ColumnName="EmailSent" />
+                <ScalarProperty Name="EmailReceived" ColumnName="EmailReceived" />
+                <ScalarProperty Name="NrAttachedFiles" ColumnName="NrAttachedFiles" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ProcessDate" ColumnName="ProcessDate" />
+                <ScalarProperty Name="NrClient" ColumnName="NrClient" />
+                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
+                <ScalarProperty Name="ContractID" ColumnName="ContractID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Contacts_Signing">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal_Contacts_Signing">
+              <MappingFragment StoreEntitySet="BB_Proposal_Contacts_Signing">
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="Telefone" ColumnName="Telefone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Contacts_Documentation">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal_Contacts_Documentation">
+              <MappingFragment StoreEntitySet="BB_Proposal_Contacts_Documentation">
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="Telefone" ColumnName="Telefone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_DocSign_Control">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_DocSign_Control">
+              <MappingFragment StoreEntitySet="LD_DocSign_Control">
+                <ScalarProperty Name="DocSignEnvelopeID" ColumnName="DocSignEnvelopeID" />
+                <ScalarProperty Name="DocPath" ColumnName="DocPath" />
+                <ScalarProperty Name="NrPageSign" ColumnName="NrPageSign" />
+                <ScalarProperty Name="DocSignDateTimeSent" ColumnName="DocSignDateTimeSent" />
+                <ScalarProperty Name="DocSignStatusSent" ColumnName="DocSignStatusSent" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LeasedeskID" ColumnName="LeasedeskID" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_DocSign_Control_Files">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_DocSign_Control_Files">
+              <MappingFragment StoreEntitySet="LD_DocSign_Control_Files">
+                <ScalarProperty Name="OrderFile" ColumnName="OrderFile" />
+                <ScalarProperty Name="IsToSign" ColumnName="IsToSign" />
+                <ScalarProperty Name="CreatedDatetime" ColumnName="CreatedDatetime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="NrPageSign" ColumnName="NrPageSign" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_DocSign_Control_History">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_DocSign_Control_History">
+              <MappingFragment StoreEntitySet="LD_DocSign_Control_History">
+                <ScalarProperty Name="DocSignEnvelopeID" ColumnName="DocSignEnvelopeID" />
+                <ScalarProperty Name="DocPath" ColumnName="DocPath" />
+                <ScalarProperty Name="NrPageSign" ColumnName="NrPageSign" />
+                <ScalarProperty Name="DocSignDateTimeSent" ColumnName="DocSignDateTimeSent" />
+                <ScalarProperty Name="DocSignStatusSent" ColumnName="DocSignStatusSent" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="LeasedeskID" ColumnName="LeasedeskID" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,1604 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BB_DB_DEVModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="BB_DB_DEVEntities2" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="BB_Acessories" EntityType="BB_DB_DEVModel.BB_Acessories" />
+    <EntitySet Name="BB_Bank_Bnp" EntityType="BB_DB_DEVModel.BB_Bank_Bnp" />
+    <EntitySet Name="BB_Consumables" EntityType="BB_DB_DEVModel.BB_Consumables" />
+    <EntitySet Name="BB_Data_Integration" EntityType="BB_DB_DEVModel.BB_Data_Integration" />
+    <EntitySet Name="BB_Equipamentos" EntityType="BB_DB_DEVModel.BB_Equipamentos" />
+    <EntitySet Name="BB_Margin" EntityType="BB_DB_DEVModel.BB_Margin" />
+    <EntitySet Name="BB_REL_Equipament_Acessorie" EntityType="BB_DB_DEVModel.BB_REL_Equipament_Acessorie" />
+    <EntitySet Name="BB_REL_Equipament_Consumable" EntityType="BB_DB_DEVModel.BB_REL_Equipament_Consumable" />
+    <EntitySet Name="BB_WorkSheet_Metadata" EntityType="BB_DB_DEVModel.BB_WorkSheet_Metadata" />
+    <EntitySet Name="BB_WorkSheet_PT_Metadata" EntityType="BB_DB_DEVModel.BB_WorkSheet_PT_Metadata" />
+    <EntitySet Name="BB_Proposal_Status" EntityType="BB_DB_DEVModel.BB_Proposal_Status" />
+    <EntitySet Name="BB_Commission" EntityType="BB_DB_DEVModel.BB_Commission" />
+    <EntitySet Name="BB_Proposal_Quote_RS" EntityType="BB_DB_DEVModel.BB_Proposal_Quote_RS" />
+    <EntitySet Name="BB_Proposal_PsConfig" EntityType="BB_DB_DEVModel.BB_Proposal_PsConfig" />
+    <EntitySet Name="BB_Proposal_Commission" EntityType="BB_DB_DEVModel.BB_Proposal_Commission" />
+    <EntitySet Name="BB_FinancingContractType" EntityType="BB_DB_DEVModel.BB_FinancingContractType" />
+    <EntitySet Name="BB_FinancingPaymentMethod" EntityType="BB_DB_DEVModel.BB_FinancingPaymentMethod" />
+    <EntitySet Name="BB_FinancingType" EntityType="BB_DB_DEVModel.BB_FinancingType" />
+    <EntitySet Name="BB_Proposal_Counters" EntityType="BB_DB_DEVModel.BB_Proposal_Counters" />
+    <EntitySet Name="BB_Proposal_FinancingMonthly" EntityType="BB_DB_DEVModel.BB_Proposal_FinancingMonthly" />
+    <EntitySet Name="BB_Proposal_FinancingTrimestral" EntityType="BB_DB_DEVModel.BB_Proposal_FinancingTrimestral" />
+    <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
+    <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel.BB_Proposal" />
+    <EntitySet Name="BB_Proposal_Overvaluation" EntityType="BB_DB_DEVModel.BB_Proposal_Overvaluation" />
+    <EntitySet Name="BB_Clientes" EntityType="BB_DB_DEVModel.BB_Clientes" />
+    <EntitySet Name="BB_Proposal_Observations" EntityType="BB_DB_DEVModel.BB_Proposal_Observations" />
+    <EntitySet Name="BB_CRM_Quotes" EntityType="BB_DB_DEVModel.BB_CRM_Quotes" />
+    <EntitySet Name="BB_Machines_Compatibility" EntityType="BB_DB_DEVModel.BB_Machines_Compatibility" />
+    <EntitySet Name="BB_Coderef_Generic" EntityType="BB_DB_DEVModel.BB_Coderef_Generic" />
+    <EntitySet Name="BB_Contactos" EntityType="BB_DB_DEVModel.BB_Contactos" />
+    <EntitySet Name="BB_CRM_Workflow" EntityType="BB_DB_DEVModel.BB_CRM_Workflow" />
+    <EntitySet Name="BB_Campanha" EntityType="BB_DB_DEVModel.BB_Campanha" />
+    <EntitySet Name="BB_Campanha_Items" EntityType="BB_DB_DEVModel.BB_Campanha_Items" />
+    <EntitySet Name="BB_Campanha_Financing" EntityType="BB_DB_DEVModel.BB_Campanha_Financing" />
+    <EntitySet Name="BB_Campanhas_Printing" EntityType="BB_DB_DEVModel.BB_Campanhas_Printing" />
+    <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
+    <EntitySet Name="BB_Financing_Documentos" EntityType="BB_DB_DEVModel.BB_Financing_Documentos" />
+    <EntitySet Name="LD_DocumentClassification" EntityType="BB_DB_DEVModel.LD_DocumentClassification" />
+    <EntitySet Name="BB_Proposal_PrintingServices" EntityType="BB_DB_DEVModel.BB_Proposal_PrintingServices" />
+    <EntitySet Name="LD_FinancingDocument" EntityType="BB_DB_DEVModel.LD_FinancingDocument" />
+    <EntitySet Name="BB_Service_Collab" EntityType="BB_DB_DEVModel.BB_Service_Collab" />
+    <EntitySet Name="BB_Proposal_Contacts" EntityType="BB_DB_DEVModel.BB_Proposal_Contacts" />
+    <EntitySet Name="BB_Proposal_Vva" EntityType="BB_DB_DEVModel.BB_Proposal_Vva" />
+    <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="BB_DB_DEVModel.BB_Proposal_Contacts_Documentation" />
+    <EntitySet Name="BB_Proposal_Contacts_Signing" EntityType="BB_DB_DEVModel.BB_Proposal_Contacts_Signing" />
+    <EntitySet Name="BB_Proposal_SigningType" EntityType="BB_DB_DEVModel.BB_Proposal_SigningType" />
+    <EntitySet Name="BB_Proposal_LeaseDesk_Detalhe" EntityType="BB_DB_DEVModel.BB_Proposal_LeaseDesk_Detalhe" />
+    <EntitySet Name="BB_Proposal_Aprovacao_Quote" EntityType="BB_DB_DEVModel.BB_Proposal_Aprovacao_Quote" />
+    <EntitySet Name="BB_PrintingServices" EntityType="BB_DB_DEVModel.BB_PrintingServices" />
+    <EntitySet Name="BB_Proposal_PrintingServices2" EntityType="BB_DB_DEVModel.BB_Proposal_PrintingServices2" />
+    <AssociationSet Name="FK_BB_PrintingServices_BB_Proposal_PrintingServices2" Association="BB_DB_DEVModel.FK_BB_PrintingServices_BB_Proposal_PrintingServices2">
+      <End Role="BB_Proposal_PrintingServices2" EntitySet="BB_Proposal_PrintingServices2" />
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+    </AssociationSet>
+    <EntitySet Name="BB_Logs_Proposal" EntityType="BB_DB_DEVModel.BB_Logs_Proposal" />
+    <EntitySet Name="BB_Product" EntityType="BB_DB_DEVModel.BB_Product" />
+    <EntitySet Name="BB_Product_Category" EntityType="BB_DB_DEVModel.BB_Product_Category" />
+    <EntitySet Name="BB_Product_Group" EntityType="BB_DB_DEVModel.BB_Product_Group" />
+    <EntitySet Name="BB_Product_SubCategory" EntityType="BB_DB_DEVModel.BB_Product_SubCategory" />
+    <EntitySet Name="BB_Product_SubType" EntityType="BB_DB_DEVModel.BB_Product_SubType" />
+    <EntitySet Name="BB_Product_Type" EntityType="BB_DB_DEVModel.BB_Product_Type" />
+    <EntitySet Name="BB_Product_Unit" EntityType="BB_DB_DEVModel.BB_Product_Unit" />
+    <EntitySet Name="BB_Proposal_Consignments" EntityType="BB_DB_DEVModel.BB_Proposal_Consignments" />
+    <EntitySet Name="BB_Proposal_PrintingServiceValidationRequest" EntityType="BB_DB_DEVModel.BB_Proposal_PrintingServiceValidationRequest" />
+    <AssociationSet Name="FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices" Association="BB_DB_DEVModel.FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_Proposal_PrintingServiceValidationRequest" EntitySet="BB_Proposal_PrintingServiceValidationRequest" />
+    </AssociationSet>
+    <EntitySet Name="BB_Proposal_Client" EntityType="BB_DB_DEVModel.BB_Proposal_Client" />
+    <EntitySet Name="BB_VVA" EntityType="BB_DB_DEVModel.BB_VVA" />
+    <AssociationSet Name="FK_BB_VVA_BB_PrintingServices" Association="BB_DB_DEVModel.FK_BB_VVA_BB_PrintingServices">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_VVA" EntitySet="BB_VVA" />
+    </AssociationSet>
+    <EntitySet Name="BB_PrintingServices_NoVolume" EntityType="BB_DB_DEVModel.BB_PrintingServices_NoVolume" />
+    <AssociationSet Name="FK_BB_PrintingServices_NoVolume_BB_PrintingServices" Association="BB_DB_DEVModel.FK_BB_PrintingServices_NoVolume_BB_PrintingServices">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_PrintingServices_NoVolume" EntitySet="BB_PrintingServices_NoVolume" />
+    </AssociationSet>
+    <EntitySet Name="BB_Proposal_Upturn" EntityType="BB_DB_DEVModel.BB_Proposal_Upturn" />
+    <EntitySet Name="BB_OPS_Implement_Packs" EntityType="BB_DB_DEVModel.BB_OPS_Implement_Packs" />
+    <EntitySet Name="BB_OPS_Manage_Packs" EntityType="BB_DB_DEVModel.BB_OPS_Manage_Packs" />
+    <EntitySet Name="BB_Proposal_Quote" EntityType="BB_DB_DEVModel.BB_Proposal_Quote" />
+    <EntitySet Name="BB_PrintingService_Machines" EntityType="BB_DB_DEVModel.BB_PrintingService_Machines" />
+    <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
+    </AssociationSet>
+    <EntitySet Name="BB_PrintingServices_ClickPerModel" EntityType="BB_DB_DEVModel.BB_PrintingServices_ClickPerModel" />
+    <AssociationSet Name="FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" Association="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_PrintingServices_ClickPerModel" EntitySet="BB_PrintingServices_ClickPerModel" />
+    </AssociationSet>
+    <EntitySet Name="BB_Proposal_PrazoDiferenciado_History" EntityType="BB_DB_DEVModel.BB_Proposal_PrazoDiferenciado_History" />
+    <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
+    <EntitySet Name="BB_Proposal_ItemDoBasket" EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" />
+    <EntitySet Name="BB_Proposal_OPSManage" EntityType="BB_DB_DEVModel.BB_Proposal_OPSManage" />
+    <AssociationSet Name="FK_BB_Proposal_OPSManage_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal">
+      <End Role="BB_Proposal" EntitySet="BB_Proposal" />
+      <End Role="BB_Proposal_OPSManage" EntitySet="BB_Proposal_OPSManage" />
+    </AssociationSet>
+    <EntitySet Name="BB_Proposal_PrazoDiferenciado" EntityType="BB_DB_DEVModel.BB_Proposal_PrazoDiferenciado" />
+    <EntitySet Name="BB_Maquinas_Usadas" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas" />
+    <EntitySet Name="BB_Maquinas_Usadas_Pedidos" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Pedidos" />
+    <EntitySet Name="BB_Maquinas_Usadas_Gestor" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Gestor" />
+    <EntitySet Name="BB_Maquinas_Usadas_Tecnico" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Tecnico" />
+    <EntitySet Name="BB_Proposal_OPSImplement" EntityType="BB_DB_DEVModel.BB_Proposal_OPSImplement" />
+    <AssociationSet Name="FK_BB_Proposal_OPSImplement_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal">
+      <End Role="BB_Proposal" EntitySet="BB_Proposal" />
+      <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
+    </AssociationSet>
+    <EntitySet Name="BB_Maquinas_Usadas_Logistica" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Logistica" />
+    <EntitySet Name="BB_Permissions" EntityType="BB_DB_DEVModel.BB_Permissions" />
+    <EntitySet Name="BB_Permissions_History" EntityType="BB_DB_DEVModel.BB_Permissions_History" />
+    <EntitySet Name="BB_SLA_History" EntityType="BB_DB_DEVModel.BB_SLA_History" />
+    <EntitySet Name="BB_RD_MIF_Renovation_Programs" EntityType="BB_DB_DEVModel.BB_RD_MIF_Renovation_Programs" />
+    <EntitySet Name="BB_RD_MIF_Renovations_Program_Cost_Increments" EntityType="BB_DB_DEVModel.BB_RD_MIF_Renovations_Program_Cost_Increments" />
+    <EntitySet Name="BB_RD_MIF_Renovations_State" EntityType="BB_DB_DEVModel.BB_RD_MIF_Renovations_State" />
+    <EntitySet Name="BB_MIF_Renovations_Comments" EntityType="BB_DB_DEVModel.BB_MIF_Renovations_Comments" />
+    <EntitySet Name="BB_MIF_Renovations" EntityType="BB_DB_DEVModel.BB_MIF_Renovations" />
+    <EntitySet Name="BB_WFA_Approval_Email" EntityType="BB_DB_DEVModel.BB_WFA_Approval_Email" />
+    <EntitySet Name="BB_Proposal_Milestone" EntityType="BB_DB_DEVModel.BB_Proposal_Milestone" />
+    <EntitySet Name="BB_CRM_Approval_Comments" EntityType="BB_DB_DEVModel.BB_CRM_Approval_Comments" />
+    <EntitySet Name="BB_Milestone_Status" EntityType="BB_DB_DEVModel.BB_Milestone_Status" />
+    <EntitySet Name="BB_WFA_Department" EntityType="BB_DB_DEVModel.BB_WFA_Department" />
+    <EntitySet Name="BB_WFA_Approval_Control" EntityType="BB_DB_DEVModel.BB_WFA_Approval_Control" />
+    <EntitySet Name="BB_WFA" EntityType="BB_DB_DEVModel.BB_WFA" />
+  </EntityContainer>
+  <EntityType Name="BB_Acessories">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CodRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CompatiblesMachines" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Bank_Bnp">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type_Contract" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type_Duration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Contracto" Type="Double" />
+    <Property Name="Volume_Start" Type="Int32" />
+    <Property Name="Volume_End" Type="Int32" />
+    <Property Name="Value" Type="Double" />
+    <Property Name="DespesaContracto" Type="Double" />
+    <Property Name="Iva" Type="Double" />
+    <Property Name="UpdateDatetime" Type="DateTime" Precision="3" />
+    <Property Name="UpdateBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FinancingContractTypeID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Consumables">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CodRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CompatiblesMachines" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Data_Integration">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description_English" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description_Portuguese" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="Category_PT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Category_PT_Processed" Type="Boolean" />
+    <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="UpdateDatetime" Type="DateTime" Precision="3" />
+    <Property Name="UpdateBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="BinaryImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MarginBEU" Type="Double" />
+    <Property Name="IsMarginBEU" Type="Boolean" />
+    <Property Name="TCP" Type="Double" />
+    <Property Name="Enable" Type="Boolean" />
+    <Property Name="BEU" Type="Double" />
+  </EntityType>
+  <EntityType Name="BB_Equipamentos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="PCT" Type="Double" />
+    <Property Name="WorkSheet_MetadataID" Type="Int32" />
+    <Property Name="TCP" Type="Double" />
+    <Property Name="ClickPriceBW" Type="Double" />
+    <Property Name="ClickPriceC" Type="Double" />
+    <Property Name="CRM_BW" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CRM_COLOR" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="EndOfService" Type="DateTime" Precision="0" />
+    <Property Name="LifeExpectancy" Type="Int32" />
+    <Property Name="RecBWVolume" Type="Int32" />
+    <Property Name="RecCVolume" Type="Int32" />
+    <Property Name="BWBaseCost" Type="Double" />
+    <Property Name="CBaseCost" Type="Double" />
+    <Property Name="PHC1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PHC4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PHC5" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PHC2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PHC3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PHC7" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InLineup" Type="Boolean" />
+    <Property Name="AlfaModel" Type="Int32" />
+    <Property Name="Generation" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Margin">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Margin" Type="Double" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="BB_REL_Equipament_Acessorie">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ID_Equipament" Type="Int32" />
+    <Property Name="ID_Acessorie" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_REL_Equipament_Consumable">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ID_Equipament" Type="Int32" />
+    <Property Name="ID_Consumables" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_WorkSheet_Metadata">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WorkSheet" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_WorkSheet_PT_Metadata">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Worksheet" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Status">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Status_Order" Type="Int32" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+    <Property Name="BB_Edit" Type="Boolean" />
+    <Property Name="Phase" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Commission">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Discount_Start" Type="Int32" />
+    <Property Name="Discount_End" Type="Int32" />
+    <Property Name="HW_Printing" Type="Double" />
+    <Property Name="Product_ITS" Type="Double" />
+    <Property Name="Service_ITS" Type="Double" />
+    <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
+    <Property Name="UpdateBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Quote_RS">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountPercentage" Type="Double" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GPPercentage" Type="Double" />
+    <Property Name="GPTotal" Type="Double" />
+    <Property Name="Locked" Type="Boolean" />
+    <Property Name="Margin" Type="Double" />
+    <Property Name="MonthlyFee" Type="Double" />
+    <Property Name="MonthlyGP" Type="Double" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="Qty" Type="Int32" />
+    <Property Name="TotalCost" Type="Double" />
+    <Property Name="MonthlyFeeCost" Type="Double" />
+    <Property Name="TotalMonths" Type="Int32" />
+    <Property Name="TotalNetsale" Type="Double" />
+    <Property Name="TotalPVP" Type="Double" />
+    <Property Name="UnitDiscountPrice" Type="Double" />
+    <Property Name="UnitPriceCost" Type="Double" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="IsFinanced" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PsConfig">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="BWExcessCost" Type="Double" />
+    <Property Name="CExcessCost" Type="Double" />
+    <Property Name="BWDiscount" Type="Double" />
+    <Property Name="CDiscount" Type="Double" />
+    <Property Name="BWVolume" Type="Int32" />
+    <Property Name="BWCost" Type="Double" />
+    <Property Name="CVolume" Type="Int32" />
+    <Property Name="CCost" Type="Double" />
+    <Property Name="ItemID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Commission">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PrintingHW_Commission" Type="Double" />
+    <Property Name="ProductsITS_Commission" Type="Double" />
+    <Property Name="ServicesITS_Commission" Type="Double" />
+    <Property Name="IP_Commission" Type="Double" />
+    <Property Name="WPH_Commission" Type="Double" />
+    <Property Name="totalCommission" Type="Double" />
+    <Property Name="ProposalID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_FinancingContractType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Company" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_FinancingPaymentMethod">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_FinancingType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Code" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Counters">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="bwCounter" Type="Int32" />
+    <Property Name="cCounter" Type="Int32" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="OSID" Type="Int32" />
+    <Property Name="serialNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_FinancingMonthly">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Contracto" Type="Int32" />
+    <Property Name="Value" Type="Double" />
+    <Property Name="FinancingID" Type="Int32" />
+    <Property Name="ProposalID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_FinancingTrimestral">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Contracto" Type="Int32" />
+    <Property Name="Value" Type="Double" />
+    <Property Name="FinancingID" Type="Int32" />
+    <Property Name="ProposalID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Financing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ContractTypeId" Type="Int32" />
+    <Property Name="FinancingTypeCode1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PaymentMethodId" Type="Int32" />
+    <Property Name="PaymentAfter" Type="Int32" />
+    <Property Name="IncludeServices" Type="Boolean" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="FinancingTypeCode" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="CRM_QUOTE_ID" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="Name" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="StatusID" Type="Int32" />
+    <Property Name="ValueComission" Type="Double" />
+    <Property Name="ValueTotal" Type="Double" />
+    <Property Name="CreatedBy" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="ModifiedBy" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="CreatedTime" Precision="3" Type="DateTime" />
+    <Property Name="ModifiedTime" Precision="3" Type="DateTime" />
+    <Property Name="ParentID" Type="Int32" />
+    <Property Name="Locked" Type="Boolean" />
+    <Property Name="ClientID" Type="Int32" />
+    <Property Name="ClientAccountNumber" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="StatusCRM" Type="Int32" />
+    <Property Name="AccountManager" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="ToDelete" Type="Boolean" />
+    <Property Name="CampaignID" Type="Int32" />
+    <Property Name="StatusCRM1" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="SobreValorizacao" Type="Double" />
+    <Property Name="TaxaCopiaTotal" Type="Double" />
+    <Property Name="SubTotal" Type="Double" />
+    <NavigationProperty Name="BB_Proposal_OPSManage" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSManage" />
+    <Property Name="SapVersion" Type="Int32" />
+    <NavigationProperty Name="BB_Proposal_OPSImplement" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSImplement" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Overvaluation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Motive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Total" Type="Double" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProposalID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Clientes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="accountnumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Owner" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="address1_line1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="emailaddress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NIF" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Blocked" Type="Boolean" />
+    <Property Name="Holding" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GMA" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GMA_Identifier" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Industry" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+    <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsClienteBB" Type="Boolean" />
+    <Property Name="telephone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NUS_ACCOUNT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="new_businesssegmentname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="numberofemployees" Type="Int32" />
+    <Property Name="new_totalequipments" Type="Int32" />
+    <Property Name="new_totalequipmentskm" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Observations">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Observation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="Created" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="BB_CRM_Quotes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="quotenumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="owneridname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Guid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="statecodename" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="statuscodename" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="revisionnumber" Type="Int32" />
+    <Property Name="accountnumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="new_kmtotalamount" Type="Double" />
+    <Property Name="CreateTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="BB_Machines_Compatibility">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Codigo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Descricao" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="WorkSheet" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Coderef_Generic">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Coderef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Contactos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fullname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="emailaddress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="mobilephone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="telephone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsPrimary" Type="Boolean" />
+    <Property Name="ClientAccountNumberID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_CRM_Workflow">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="modifiedon" Type="DateTime" Precision="3" />
+    <Property Name="subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="modifiedbyname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="owneridname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="regardingobjectidname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="statecode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="statecodename" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Campanha">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Campanha" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Enable" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="BB_Campanha_Items">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CampanhaID" Type="Int32" />
+    <Property Name="CodRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PVP" Type="Double" />
+  </EntityType>
+  <EntityType Name="BB_Campanha_Financing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Month" Type="Int32" />
+    <Property Name="Value" Type="Double" />
+    <Property Name="CampaignID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Campanhas_Printing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TFM" Type="Int32" />
+    <Property Name="Value" Type="Double" />
+    <Property Name="PagExcendentes" Type="Double" />
+    <Property Name="CampanhaID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_LocaisEnvio">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Documento" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CodRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NomeCliente" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Quote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ShipCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Financing_Documentos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FinancingID" Type="Int32" />
+    <Property Name="ClassificationID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="LD_DocumentClassification">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Classification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PrintingServices">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="modeId" Type="Int32" />
+    <Property Name="ContractPeriod" Type="Int32" />
+    <Property Name="FeeFrequency" Type="Double" />
+    <Property Name="BillingFrequency" Type="Int32" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="VVAID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="LD_FinancingDocument">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TipoFinanciamentoID" Type="Int32" />
+    <Property Name="DocumentID" Type="Int32" />
+    <Property Name="IsRequired" Type="Boolean" />
+    <Property Name="Email" Type="Boolean" />
+    <Property Name="IsOptional" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="BB_Service_Collab">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="IsComplete" Type="Boolean" />
+    <Property Name="IsAproved" Type="Boolean" />
+    <Property Name="CommentsGC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CommentsSC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Contacts">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Vva">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BWVolume" Type="Int32" />
+    <Property Name="CVolume" Type="Int32" />
+    <Property Name="MonthlyFee" Type="Double" />
+    <Property Name="UseGlobalValues" Type="Boolean" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="UseGlobalExcess" Type="Boolean" />
+    <Property Name="BWExcess" Type="Double" />
+    <Property Name="CExcess" Type="Double" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Contacts_Documentation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Telefone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProposalID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Contacts_Signing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Telefone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProposalID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_SigningType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Tipo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Observacoes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProposalID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_LeaseDesk_Detalhe">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="PropostaID" Type="Int32" />
+    <Property Name="Group" Type="Int32" />
+    <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Qty" Type="Int32" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Aprovacao_Quote">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Proposal_ID" Type="Int32" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+    <Property Name="Locked" Type="Boolean" />
+    <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitPriceCost" Type="Double" />
+    <Property Name="Qty" Type="Int32" />
+    <Property Name="TotalCost" Type="Double" />
+    <Property Name="Margin" Type="Double" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="TotalPVP" Type="Double" />
+    <Property Name="DiscountPercentage" Type="Double" />
+    <Property Name="UnitDiscountPrice" Type="Double" />
+    <Property Name="GPTotal" Type="Double" />
+    <Property Name="GPPercentage" Type="Double" />
+    <Property Name="TotalNetsale" Type="Double" />
+    <Property Name="IsFinanced" Type="Boolean" />
+    <Property Name="TCP" Type="Double" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ClickPriceC" Type="Double" />
+    <Property Name="ClickPriceBW" Type="Double" />
+    <Property Name="IsMarginBEU" Type="Boolean" />
+    <Property Name="IsUsed" Type="Boolean" />
+    <Property Name="PrazoID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_PrintingServices">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="PrintingServices2ID" Type="Int32" Nullable="false" />
+    <Property Name="BWVolume" Type="Int32" />
+    <Property Name="CVolume" Type="Int32" />
+    <Property Name="ContractDuration" Type="Int32" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsPrecalc" Type="Boolean" />
+    <Property Name="Fee" Type="Double" />
+    <NavigationProperty Name="BB_Proposal_PrintingServices2" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_BB_Proposal_PrintingServices2" FromRole="BB_PrintingServices" ToRole="BB_Proposal_PrintingServices2" />
+    <NavigationProperty Name="BB_Proposal_PrintingServiceValidationRequest" Relationship="BB_DB_DEVModel.FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_Proposal_PrintingServiceValidationRequest" />
+    <NavigationProperty Name="BB_VVA" Relationship="BB_DB_DEVModel.FK_BB_VVA_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_VVA" />
+    <NavigationProperty Name="BB_PrintingServices_NoVolume" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_NoVolume_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_PrintingServices_NoVolume" />
+    <NavigationProperty Name="BB_PrintingService_Machines" Relationship="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_PrintingService_Machines" />
+    <NavigationProperty Name="BB_PrintingServices_ClickPerModel" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" FromRole="BB_PrintingServices" ToRole="BB_PrintingServices_ClickPerModel" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PrintingServices2">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="ActivePrintingService" Type="Int32" />
+    <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_BB_Proposal_PrintingServices2" FromRole="BB_Proposal_PrintingServices2" ToRole="BB_PrintingServices" />
+  </EntityType>
+  <Association Name="FK_BB_PrintingServices_BB_Proposal_PrintingServices2">
+    <End Type="BB_DB_DEVModel.BB_Proposal_PrintingServices2" Role="BB_Proposal_PrintingServices2" Multiplicity="1" />
+    <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_Proposal_PrintingServices2">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_PrintingServices">
+        <PropertyRef Name="PrintingServices2ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="BB_Logs_Proposal">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Action" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="Collum" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Value_New" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Product">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InternalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="ParentInternalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Product_Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InternalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="ParentInternalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Product_Group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InternalCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Product_SubCategory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InternalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="ParentInternalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Product_SubType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InternalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="ParentInternalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Product_Type">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InternalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="ParentInternalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Product_Unit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InternalCode" Type="Int32" />
+    <Property Name="Description" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Consignments">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Duration" Type="Int32" />
+    <Property Name="Motive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProposalID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PrintingServiceValidationRequest">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="PrintingServiceID" Type="Int32" Nullable="false" />
+    <Property Name="IsApproved" Type="Boolean" />
+    <Property Name="ApprovedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsComplete" Type="Boolean" />
+    <Property Name="SEObservations" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SCObservations" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RequestedAt" Type="DateTime" Precision="3" />
+    <Property Name="RequestedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ApprovedAt" Type="DateTime" Precision="3" />
+    <Property Name="ToDelete" Type="Boolean" />
+    <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices" FromRole="BB_Proposal_PrintingServiceValidationRequest" ToRole="BB_PrintingServices" />
+  </EntityType>
+  <Association Name="FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices">
+    <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="1" />
+    <End Type="BB_DB_DEVModel.BB_Proposal_PrintingServiceValidationRequest" Role="BB_Proposal_PrintingServiceValidationRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_Proposal_PrintingServiceValidationRequest">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="BB_Proposal_Client">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ClientID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsNewClient" Type="Boolean" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsPublicSector" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="BB_VVA">
+    <Key>
+      <PropertyRef Name="PrintingServiceID" />
+    </Key>
+    <Property Name="BWExcessPVP" Type="Double" />
+    <Property Name="CExcessPVP" Type="Double" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="ExcessBillingFrequency" Type="Int32" />
+    <Property Name="RentBillingFrequency" Type="Int32" />
+    <Property Name="PrintingServiceID" Type="Int32" Nullable="false" />
+    <Property Name="ReturnType" Type="Int32" />
+    <Property Name="RequestedBWExcess" Type="Double" />
+    <Property Name="RequestedCExcess" Type="Double" />
+    <Property Name="RequestedRent" Type="Double" />
+    <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_VVA_BB_PrintingServices" FromRole="BB_VVA" ToRole="BB_PrintingServices" />
+  </EntityType>
+  <Association Name="FK_BB_VVA_BB_PrintingServices">
+    <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="1" />
+    <End Type="BB_DB_DEVModel.BB_VVA" Role="BB_VVA" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_VVA">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="BB_PrintingServices_NoVolume">
+    <Key>
+      <PropertyRef Name="PrintingServiceID" />
+    </Key>
+    <Property Name="GlobalClickBW" Type="Double" />
+    <Property Name="GlobalClickC" Type="Double" />
+    <Property Name="PageBillingFrequency" Type="Int32" />
+    <Property Name="PrintingServiceID" Type="Int32" Nullable="false" />
+    <Property Name="RequestedGlobalClickBW" Type="Double" />
+    <Property Name="RequestedGlobalClickC" Type="Double" />
+    <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_NoVolume_BB_PrintingServices" FromRole="BB_PrintingServices_NoVolume" ToRole="BB_PrintingServices" />
+  </EntityType>
+  <Association Name="FK_BB_PrintingServices_NoVolume_BB_PrintingServices">
+    <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="1" />
+    <End Type="BB_DB_DEVModel.BB_PrintingServices_NoVolume" Role="BB_PrintingServices_NoVolume" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_PrintingServices_NoVolume">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="BB_Proposal_Upturn">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Total" Type="Double" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Contact" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Position" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_OPS_Implement_Packs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MinRange" Type="Int32" />
+    <Property Name="MaxRange" Type="Int32" />
+    <Property Name="InCatalog" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="BB_OPS_Manage_Packs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MinRange" Type="Int32" />
+    <Property Name="MaxRange" Type="Int32" />
+    <Property Name="InCatalog" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Quote">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Proposal_ID" Type="Int32" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+    <Property Name="Locked" Type="Boolean" />
+    <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitPriceCost" Type="Double" />
+    <Property Name="Qty" Type="Int32" />
+    <Property Name="TotalCost" Type="Double" />
+    <Property Name="Margin" Type="Double" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="TotalPVP" Type="Double" />
+    <Property Name="DiscountPercentage" Type="Double" />
+    <Property Name="UnitDiscountPrice" Type="Double" />
+    <Property Name="GPTotal" Type="Double" />
+    <Property Name="GPPercentage" Type="Double" />
+    <Property Name="TotalNetsale" Type="Double" />
+    <Property Name="IsFinanced" Type="Boolean" />
+    <Property Name="TCP" Type="Double" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ClickPriceC" Type="Double" />
+    <Property Name="ClickPriceBW" Type="Double" />
+    <Property Name="IsMarginBEU" Type="Boolean" />
+    <Property Name="IsUsed" Type="Boolean" />
+    <Property Name="IsInClient" Type="Boolean" />
+    <Property Name="UnitPriceCost_" Type="Double" />
+    <Property Name="TotalCost_" Type="Double" />
+  </EntityType>
+  <EntityType Name="BB_PrintingService_Machines">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="PrintingServiceID" Type="Int32" Nullable="false" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BWVolume" Type="Int32" />
+    <Property Name="CVolume" Type="Int32" />
+    <Property Name="BWPVP" Type="Double" />
+    <Property Name="CPVP" Type="Double" />
+    <Property Name="BWCost" Type="Double" />
+    <Property Name="CCost" Type="Double" />
+    <Property Name="ApprovedBW" Type="Double" />
+    <Property Name="ApprovedC" Type="Double" />
+    <Property Name="IsInClient" Type="Boolean" />
+    <Property Name="IsUsed" Type="Boolean" />
+    <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" FromRole="BB_PrintingService_Machines" ToRole="BB_PrintingServices" />
+    <Property Name="RequestedBWClickPrice" Type="Double" />
+    <Property Name="RequestedCClickPrice" Type="Double" />
+  </EntityType>
+  <Association Name="FK_BB_PrintingService_Machines_BB_PrintingServices">
+    <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="1" />
+    <End Type="BB_DB_DEVModel.BB_PrintingService_Machines" Role="BB_PrintingService_Machines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_PrintingService_Machines">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="BB_PrintingServices_ClickPerModel">
+    <Key>
+      <PropertyRef Name="PrintingServiceID" />
+    </Key>
+    <Property Name="PrintingServiceID" Type="Int32" Nullable="false" />
+    <Property Name="PageBillingFrequency" Type="Int32" />
+    <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" FromRole="BB_PrintingServices_ClickPerModel" ToRole="BB_PrintingServices" />
+  </EntityType>
+  <Association Name="FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel">
+    <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="1" />
+    <End Type="BB_DB_DEVModel.BB_PrintingServices_ClickPerModel" Role="BB_PrintingServices_ClickPerModel" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_PrintingServices_ClickPerModel">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="BB_Proposal_PrazoDiferenciado_History">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Action" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="PrazoDiferenciado" Type="Int32" />
+    <Property Name="ValorRenda" Type="Double" />
+    <Property Name="ValorFactor" Type="Double" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+    <Property Name="FinancingID" Type="Int32" />
+    <Property Name="ValorFinanciamento" Type="Double" />
+    <Property Name="IsComplete" Type="Boolean" />
+    <Property Name="Alocadora" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsAproved" Type="Boolean" />
+    <Property Name="Commets" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GestorContaObservacoes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NLocadora" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Frequency" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_DeliveryLocation">
+    <Key>
+      <PropertyRef Name="IDX" />
+    </Key>
+    <Property Name="IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_ItemDoBasket">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="parentIndex" Type="Int32" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitPriceCost" Type="Double" />
+    <Property Name="Qty" Type="Int32" />
+    <Property Name="TotalCost" Type="Double" />
+    <Property Name="Margin" Type="Double" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="TotalPVP" Type="Double" />
+    <Property Name="DiscountPercentage" Type="Double" />
+    <Property Name="UnitDiscountPrice" Type="Double" />
+    <Property Name="GPTotal" Type="Double" />
+    <Property Name="GPPercentage" Type="Double" />
+    <Property Name="TotalNetsale" Type="Double" />
+    <Property Name="IsFinanced" Type="Boolean" />
+    <Property Name="IsMarginBEU" Type="Boolean" />
+    <Property Name="TCP" Type="Double" />
+    <Property Name="ClickPriceBW" Type="Double" />
+    <Property Name="ClickPriceC" Type="Double" />
+    <Property Name="CounterID" Type="Int32" />
+    <Property Name="psConfigID" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Locked" Type="Boolean" />
+    <Property Name="DeliveryLocationID" Type="Int32" />
+    <Property Name="Group" Type="Int32" />
+    <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_OPSManage">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ProposalID" Type="Int32" Nullable="false" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InCatalog" Type="Boolean" />
+    <Property Name="MaxRange" Type="Int32" />
+    <Property Name="MinRange" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitDiscountPrice" Type="Double" />
+    <Property Name="TotalMonths" Type="Int32" />
+    <Property Name="Position" Type="Int32" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsValidated" Type="Boolean" />
+    <NavigationProperty Name="BB_Proposal" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" FromRole="BB_Proposal_OPSManage" ToRole="BB_Proposal" />
+  </EntityType>
+  <Association Name="FK_BB_Proposal_OPSManage_BB_Proposal">
+    <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
+    <End Type="BB_DB_DEVModel.BB_Proposal_OPSManage" Role="BB_Proposal_OPSManage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_Proposal">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_Proposal_OPSManage">
+        <PropertyRef Name="ProposalID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="BB_Proposal_PrazoDiferenciado">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="PrazoDiferenciado" Type="Int32" />
+    <Property Name="ValorRenda" Type="Double" />
+    <Property Name="ValorFactor" Type="Double" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+    <Property Name="FinancingID" Type="Int32" />
+    <Property Name="ValorFinanciamento" Type="Double" />
+    <Property Name="IsComplete" Type="Boolean" />
+    <Property Name="Alocadora" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsAproved" Type="Boolean" />
+    <Property Name="Commets" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GestorContaObservacoes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NLocadora" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DSO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Frequency" Type="Int32" />
+    <Property Name="BNP_ApprovedValue" Type="Double" />
+    <Property Name="DataExpiracao" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NUS_DVCT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NUS_DVCT_REGISTADA" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Cat_Cancelado" Type="Boolean" />
+    <Property Name="NUS_PS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Nr_Entrada_Armazem" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NUS_Referencia" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ARM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NUS_Modelo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NUS_Tipo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NUS_Nr_Serie" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Observacoes_Logistica" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NUS_Data_Entrada_Equip" Type="DateTime" Precision="3" />
+    <Property Name="Contador_Preto" Type="Int32" />
+    <Property Name="Contador_Cor" Type="Int32" />
+    <Property Name="Contador_Total" Type="Int32" />
+    <Property Name="Pedido_Por" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Validar" Type="Boolean" />
+    <Property Name="IsReserved" Type="Boolean" />
+    <Property Name="ReservedUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PriceUsed" Type="Double" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas_Pedidos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestTecnico" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RequestTime" Type="DateTime" Precision="3" />
+    <Property Name="AccountManager" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" />
+    <Property Name="Comentarios" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PS_NUS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas_Gestor">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="ReservedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ReservedDateTime" Type="DateTime" Precision="3" />
+    <Property Name="ExpireDate" Type="DateTime" Precision="3" />
+    <Property Name="PS_NUS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Codref" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type_MFP" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NrSerie" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NrCopyBW" Type="Int32" />
+    <Property Name="NrCopyCOLOR" Type="Int32" />
+    <Property Name="IsReserved" Type="Boolean" />
+    <Property Name="ClienteNr" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Comentarios" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas_Tecnico">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="ReservedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ReservedDateTime" Type="DateTime" Precision="3" />
+    <Property Name="ExpireDate" Type="DateTime" Precision="3" />
+    <Property Name="PS_NUS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Codref" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type_MFP" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NrSerie" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NrCopyBW" Type="Int32" />
+    <Property Name="NrCopyCOLOR" Type="Int32" />
+    <Property Name="IsReserved" Type="Boolean" />
+    <Property Name="ClienteNr" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsApproved" Type="Boolean" />
+    <Property Name="ClientNr" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Comentarios" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PontoEnvio_Morada_Recolha" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PontoEnvio_Contacto_Recolha" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PontoEnvio_Telefone_Recolha" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ContadorBW_Antigo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ContadorCOR_Antigo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Recolha_Opcionais" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PontoEnvio_CodPostal_Recolha" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PontoEnvio_Localidade_Recolha" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Leasedesk" Type="Boolean" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="PS_Recolha" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_OPSImplement">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ProposalID" Type="Int32" Nullable="false" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InCatalog" Type="Boolean" />
+    <Property Name="IsFinanced" Type="Boolean" />
+    <Property Name="MaxRange" Type="Int32" />
+    <Property Name="MinRange" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PVP" Type="Double" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitDiscountPrice" Type="Double" />
+    <Property Name="Position" Type="Int32" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsValidated" Type="Boolean" />
+    <NavigationProperty Name="BB_Proposal" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal_OPSImplement" ToRole="BB_Proposal" />
+  </EntityType>
+  <Association Name="FK_BB_Proposal_OPSImplement_BB_Proposal">
+    <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
+    <End Type="BB_DB_DEVModel.BB_Proposal_OPSImplement" Role="BB_Proposal_OPSImplement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_Proposal">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_Proposal_OPSImplement">
+        <PropertyRef Name="ProposalID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="BB_Maquinas_Usadas_Logistica">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="ReservedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ReservedDateTime" Type="DateTime" Precision="3" />
+    <Property Name="ExpireDate" Type="DateTime" Precision="3" />
+    <Property Name="PS_NUS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Codref" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type_MFP" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NrSerie" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="NrCopyBW" Type="Int32" />
+    <Property Name="NrCopyCOLOR" Type="Int32" />
+    <Property Name="IsReserved" Type="Boolean" />
+    <Property Name="ClienteNr" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Comentarios" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Permissions">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserEmaill" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InitialDate" Type="DateTime" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
+    <Property Name="IsPermanent" Type="Boolean" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+    <Property Name="CreatedUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_Permissions_History">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ChangeRecord" Type="DateTime" Precision="3" />
+    <Property Name="UserEmaill" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InitialDate" Type="DateTime" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
+    <Property Name="IsPermanent" Type="Boolean" />
+    <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+    <Property Name="CreatedUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_SLA_History">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CategoriaID" Type="Int32" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Comentario" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_RD_MIF_Renovation_Programs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Program_Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="BB_RD_MIF_Renovations_Program_Cost_Increments">
+    <Key>
+      <PropertyRef Name="Contract_Years" />
+    </Key>
+    <Property Name="Contract_Years" Type="Int32" Nullable="false" />
+    <Property Name="Program_ID" Type="Int32" />
+    <Property Name="Cost_Increase" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="BB_RD_MIF_Renovations_State">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="BB_MIF_Renovations_Comments">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ContractNr" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Comment" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+    <Property Name="CreatedBy" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="BB_MIF_Renovations">
+    <Key>
+      <PropertyRef Name="ContractNr" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ContractNr" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="ContractType" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="ParentContractNr" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="StartingDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="ExpirationDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="NewExpirationDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="CustomerNr" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="InvoiceCustomerNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="InvoiceCustomerName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Segmentation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="TypeOfContract" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Delegation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="SalespersonCode" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Salesperson" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="SalespersonEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="ManagerEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Model" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="SerialNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="PSNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Antiquity" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="EndOfSales" Type="Boolean" />
+    <Property Name="SupplyBreakOffPlanDate" Type="DateTime" Precision="0" />
+    <Property Name="SupplyBreakOffDate" Type="DateTime" Precision="0" />
+    <Property Name="TotalMif" Type="Int32" />
+    <Property Name="ProposalProgramCustomer" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Increase" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="SalesServiceExceptions" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="DeadLine" Type="DateTime" Precision="0" />
+    <Property Name="Comments" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="PriorityType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="State" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_WFA_Approval_Email">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ControlID" Type="Int32" />
+    <Property Name="Email_dest" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Subject" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SentDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Milestone">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Proposal_ID" Type="Int32" />
+    <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitPriceCost" Type="Double" />
+    <Property Name="Qty" Type="Int32" />
+    <Property Name="TotalCost" Type="Double" />
+    <Property Name="UnitDiscountPrice" Type="Double" />
+    <Property Name="TotalNetSale" Type="Double" />
+    <Property Name="Milestone" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BB_CRM_Approval_Comments">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+    <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="BB_Milestone_Status">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BB_WFA_Department">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="AssignName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="IsEnable" Type="Byte" />
+  </EntityType>
+  <EntityType Name="BB_WFA_Approval_Control">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="Quote" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DepartmentID" Type="Int32" />
+    <Property Name="IsApproved" Type="Int32" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" />
+    <Property Name="WFAID" Type="Int32" />
+    <Property Name="Observacoes" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="BB_WFA">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProposalID" Type="Int32" />
+    <Property Name="Quote" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ApprovalState" Type="Int32" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="MontanteTotalOportunidade" Type="Double" />
+    <Property Name="MontanteTotalDescontos" Type="Double" />
+    <Property Name="ProbabilidadeFecho" Type="Int32" />
+    <Property Name="IsActive" Type="Boolean" />
+    <Property Name="DateFechoPrevista" Type="DateTime" Precision="3" />
+  </EntityType>
+</Schema>
