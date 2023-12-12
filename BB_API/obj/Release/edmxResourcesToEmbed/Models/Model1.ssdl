@@ -1,0 +1,1496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BB_DB_DEVModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="BB_Acessories">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodRef" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="CompatiblesMachines" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Bank_Bnp">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type_Contract" Type="nvarchar(max)" />
+    <Property Name="Type_Duration" Type="nvarchar(max)" />
+    <Property Name="Contracto" Type="float" />
+    <Property Name="Volume_Start" Type="int" />
+    <Property Name="Volume_End" Type="int" />
+    <Property Name="Value" Type="float" />
+    <Property Name="DespesaContracto" Type="float" />
+    <Property Name="Iva" Type="float" />
+    <Property Name="UpdateDatetime" Type="datetime" />
+    <Property Name="UpdateBy" Type="nvarchar(max)" />
+    <Property Name="FinancingContractTypeID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Campanha">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Campanha" Type="nvarchar(max)" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedTime" Type="nvarchar(max)" />
+    <Property Name="Enable" Type="bit" />
+  </EntityType>
+  <EntityType Name="BB_Campanha_Financing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Month" Type="int" />
+    <Property Name="Value" Type="float" />
+    <Property Name="CampaignID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Campanha_Items">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CampanhaID" Type="int" />
+    <Property Name="CodRef" Type="nvarchar(max)" />
+    <Property Name="PVP" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_Campanhas_Printing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TFM" Type="int" />
+    <Property Name="Value" Type="float" />
+    <Property Name="PagExcendentes" Type="float" />
+    <Property Name="CampanhaID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Clientes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="accountnumber" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Owner" Type="nvarchar(max)" />
+    <Property Name="PostalCode" Type="nvarchar(max)" />
+    <Property Name="address1_line1" Type="nvarchar(max)" />
+    <Property Name="emailaddress1" Type="nvarchar(max)" />
+    <Property Name="NIF" Type="nvarchar(max)" />
+    <Property Name="Blocked" Type="bit" />
+    <Property Name="Holding" Type="nvarchar(max)" />
+    <Property Name="GMA" Type="nvarchar(max)" />
+    <Property Name="GMA_Identifier" Type="nvarchar" MaxLength="10" />
+    <Property Name="Industry" Type="nvarchar(max)" />
+    <Property Name="Segment" Type="nvarchar(max)" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="City" Type="nvarchar(max)" />
+    <Property Name="IsClienteBB" Type="bit" />
+    <Property Name="telephone1" Type="nvarchar(max)" />
+    <Property Name="NUS_ACCOUNT" Type="nvarchar(max)" />
+    <Property Name="new_businesssegmentname" Type="nvarchar(max)" />
+    <Property Name="numberofemployees" Type="int" />
+    <Property Name="new_totalequipments" Type="int" />
+    <Property Name="new_totalequipmentskm" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Coderef_Generic">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Coderef" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Commission">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Discount_Start" Type="int" />
+    <Property Name="Discount_End" Type="int" />
+    <Property Name="HW_Printing" Type="float" />
+    <Property Name="Product_ITS" Type="float" />
+    <Property Name="Service_ITS" Type="float" />
+    <Property Name="UpdateDateTime" Type="datetime" />
+    <Property Name="UpdateBy" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Consumables">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodRef" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="CompatiblesMachines" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Contactos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="fullname" Type="nvarchar(max)" />
+    <Property Name="emailaddress1" Type="nvarchar(max)" />
+    <Property Name="mobilephone" Type="nvarchar(max)" />
+    <Property Name="telephone1" Type="nvarchar(max)" />
+    <Property Name="IsPrimary" Type="bit" />
+    <Property Name="ClientAccountNumberID" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_CRM_Quotes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" />
+    <Property Name="quotenumber" Type="nvarchar(max)" />
+    <Property Name="owneridname" Type="nvarchar(max)" />
+    <Property Name="Guid" Type="nvarchar(max)" />
+    <Property Name="statecodename" Type="nvarchar(max)" />
+    <Property Name="statuscodename" Type="nvarchar(max)" />
+    <Property Name="revisionnumber" Type="int" />
+    <Property Name="accountnumber" Type="nvarchar(max)" />
+    <Property Name="new_kmtotalamount" Type="float" />
+    <Property Name="CreateTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="BB_CRM_Workflow">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="modifiedon" Type="datetime" />
+    <Property Name="subject" Type="nvarchar(max)" />
+    <Property Name="modifiedbyname" Type="nvarchar(max)" />
+    <Property Name="owneridname" Type="nvarchar(max)" />
+    <Property Name="regardingobjectidname" Type="nvarchar(max)" />
+    <Property Name="statecode" Type="nvarchar(max)" />
+    <Property Name="statecodename" Type="nvarchar(max)" />
+    <Property Name="description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Data_Integration">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Description_English" Type="nvarchar(max)" />
+    <Property Name="Description_Portuguese" Type="nvarchar(max)" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="Category_PT" Type="nvarchar(max)" />
+    <Property Name="Category_PT_Processed" Type="bit" />
+    <Property Name="Type" Type="nvarchar" MaxLength="1" />
+    <Property Name="UpdateDatetime" Type="datetime" />
+    <Property Name="UpdateBy" Type="nvarchar(max)" />
+    <Property Name="BinaryImage" Type="nvarchar(max)" />
+    <Property Name="MarginBEU" Type="float" />
+    <Property Name="IsMarginBEU" Type="bit" />
+    <Property Name="TCP" Type="float" />
+    <Property Name="Enable" Type="bit" />
+    <Property Name="BEU" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_Equipamentos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="PCT" Type="float" />
+    <Property Name="WorkSheet_MetadataID" Type="int" />
+    <Property Name="TCP" Type="float" />
+    <Property Name="ClickPriceBW" Type="float" />
+    <Property Name="ClickPriceC" Type="float" />
+    <Property Name="CRM_BW" Type="nvarchar(max)" />
+    <Property Name="CRM_COLOR" Type="nvarchar(max)" />
+    <Property Name="EndOfService" Type="date" />
+    <Property Name="LifeExpectancy" Type="int" />
+    <Property Name="RecBWVolume" Type="int" />
+    <Property Name="RecCVolume" Type="int" />
+    <Property Name="BWBaseCost" Type="float" />
+    <Property Name="CBaseCost" Type="float" />
+    <Property Name="PHC1" Type="nvarchar(max)" />
+    <Property Name="PHC2" Type="nvarchar(max)" />
+    <Property Name="PHC3" Type="nvarchar(max)" />
+    <Property Name="PHC4" Type="nvarchar(max)" />
+    <Property Name="PHC5" Type="nvarchar(max)" />
+    <Property Name="PHC7" Type="nvarchar(max)" />
+    <Property Name="InLineup" Type="bit" />
+    <Property Name="AlfaModel" Type="int" />
+    <Property Name="Generation" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Financing_Documentos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FinancingID" Type="int" />
+    <Property Name="ClassificationID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_FinancingContractType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Company" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_FinancingPaymentMethod">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_FinancingType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="Code" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_LocaisEnvio">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Documento" Type="nvarchar(max)" />
+    <Property Name="CodRef" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="AccountNumber" Type="nvarchar(max)" />
+    <Property Name="NomeCliente" Type="nvarchar(max)" />
+    <Property Name="Quote" Type="nvarchar(max)" />
+    <Property Name="ShipCode" Type="nvarchar(max)" />
+    <Property Name="Adress1" Type="nvarchar(max)" />
+    <Property Name="Adress2" Type="nvarchar(max)" />
+    <Property Name="City" Type="nvarchar(max)" />
+    <Property Name="Contacto" Type="nvarchar(max)" />
+    <Property Name="PostalCode" Type="nvarchar(max)" />
+    <Property Name="County" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Logs_Proposal">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Action" Type="nchar" MaxLength="10" />
+    <Property Name="ModifiedDate" Type="datetime" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="Collum" Type="nvarchar(max)" />
+    <Property Name="Value" Type="nvarchar(max)" />
+    <Property Name="Value_New" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Machines_Compatibility">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Codigo" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Descricao" Type="nvarchar(max)" />
+    <Property Name="WorkSheet" Type="nvarchar(max)" />
+    <Property Name="Type" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NUS_DVCT" Type="nvarchar(max)" />
+    <Property Name="NUS_DVCT_REGISTADA" Type="nvarchar(max)" />
+    <Property Name="Cat_Cancelado" Type="bit" />
+    <Property Name="NUS_PS" Type="nvarchar(max)" />
+    <Property Name="Nr_Entrada_Armazem" Type="nvarchar(max)" />
+    <Property Name="NUS_Referencia" Type="nvarchar(max)" />
+    <Property Name="ARM" Type="nvarchar(max)" />
+    <Property Name="NUS_Modelo" Type="nvarchar(max)" />
+    <Property Name="NUS_Tipo" Type="nvarchar(max)" />
+    <Property Name="NUS_Nr_Serie" Type="nvarchar(max)" />
+    <Property Name="Observacoes_Logistica" Type="nvarchar(max)" />
+    <Property Name="NUS_Data_Entrada_Equip" Type="datetime" />
+    <Property Name="Contador_Preto" Type="int" />
+    <Property Name="Contador_Cor" Type="int" />
+    <Property Name="Contador_Total" Type="int" />
+    <Property Name="Pedido_Por" Type="nvarchar(max)" />
+    <Property Name="Validar" Type="bit" />
+    <Property Name="IsReserved" Type="bit" />
+    <Property Name="ReservedUser" Type="nvarchar(max)" />
+    <Property Name="PriceUsed" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas_Gestor">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="ReservedBy" Type="nvarchar(max)" />
+    <Property Name="ReservedDateTime" Type="datetime" />
+    <Property Name="ExpireDate" Type="datetime" />
+    <Property Name="PS_NUS" Type="nvarchar(max)" />
+    <Property Name="Codref" Type="nvarchar(max)" />
+    <Property Name="Type_MFP" Type="nvarchar(max)" />
+    <Property Name="NrSerie" Type="nvarchar(max)" />
+    <Property Name="NrCopyBW" Type="int" />
+    <Property Name="NrCopyCOLOR" Type="int" />
+    <Property Name="IsReserved" Type="bit" />
+    <Property Name="ClienteNr" Type="nvarchar(max)" />
+    <Property Name="Comentarios" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas_Logistica">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="ReservedBy" Type="nvarchar(max)" />
+    <Property Name="ReservedDateTime" Type="datetime" />
+    <Property Name="ExpireDate" Type="datetime" />
+    <Property Name="PS_NUS" Type="nvarchar(max)" />
+    <Property Name="Codref" Type="nvarchar(max)" />
+    <Property Name="Type_MFP" Type="nvarchar(max)" />
+    <Property Name="NrSerie" Type="nvarchar(max)" />
+    <Property Name="NrCopyBW" Type="int" />
+    <Property Name="NrCopyCOLOR" Type="int" />
+    <Property Name="IsReserved" Type="bit" />
+    <Property Name="ClienteNr" Type="nvarchar(max)" />
+    <Property Name="Comentarios" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas_Pedidos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequestTecnico" Type="nvarchar(max)" />
+    <Property Name="RequestTime" Type="datetime" />
+    <Property Name="AccountManager" Type="nvarchar(max)" />
+    <Property Name="Status" Type="int" />
+    <Property Name="Comentarios" Type="nvarchar(max)" />
+    <Property Name="PS_NUS" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Maquinas_Usadas_Tecnico">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="ReservedBy" Type="nvarchar(max)" />
+    <Property Name="ReservedDateTime" Type="datetime" />
+    <Property Name="ExpireDate" Type="datetime" />
+    <Property Name="PS_NUS" Type="nvarchar(max)" />
+    <Property Name="Codref" Type="nvarchar(max)" />
+    <Property Name="Type_MFP" Type="nvarchar(max)" />
+    <Property Name="NrSerie" Type="nvarchar(max)" />
+    <Property Name="NrCopyBW" Type="int" />
+    <Property Name="NrCopyCOLOR" Type="int" />
+    <Property Name="IsReserved" Type="bit" />
+    <Property Name="ClienteNr" Type="nvarchar(max)" />
+    <Property Name="IsApproved" Type="bit" />
+    <Property Name="ClientNr" Type="nvarchar(max)" />
+    <Property Name="Comentarios" Type="nvarchar(max)" />
+    <Property Name="PontoEnvio_Morada_Recolha" Type="nvarchar(max)" />
+    <Property Name="PontoEnvio_Contacto_Recolha" Type="nvarchar(max)" />
+    <Property Name="PontoEnvio_Telefone_Recolha" Type="nvarchar(max)" />
+    <Property Name="ContadorBW_Antigo" Type="nvarchar(max)" />
+    <Property Name="ContadorCOR_Antigo" Type="nvarchar(max)" />
+    <Property Name="Recolha_Opcionais" Type="nvarchar(max)" />
+    <Property Name="PontoEnvio_CodPostal_Recolha" Type="nvarchar(max)" />
+    <Property Name="PontoEnvio_Localidade_Recolha" Type="nvarchar(max)" />
+    <Property Name="Leasedesk" Type="bit" />
+    <Property Name="ModifiedDate" Type="datetime" />
+    <Property Name="PS_Recolha" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Margin">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Margin" Type="float" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="BB_MIF_Renovations">
+    <Key>
+      <PropertyRef Name="ContractNr" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ContractNr" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="ContractType" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="ParentContractNr" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="StartingDate" Type="date" Nullable="false" />
+    <Property Name="ExpirationDate" Type="date" Nullable="false" />
+    <Property Name="NewExpirationDate" Type="date" Nullable="false" />
+    <Property Name="CustomerNr" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="CustomerName" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="InvoiceCustomerNr" Type="varchar" MaxLength="255" />
+    <Property Name="InvoiceCustomerName" Type="varchar" MaxLength="255" />
+    <Property Name="Segmentation" Type="varchar" MaxLength="255" />
+    <Property Name="TypeOfContract" Type="varchar" MaxLength="255" />
+    <Property Name="Delegation" Type="varchar" MaxLength="255" />
+    <Property Name="SalespersonCode" Type="varchar" MaxLength="255" />
+    <Property Name="Salesperson" Type="varchar" MaxLength="255" />
+    <Property Name="SalespersonEmail" Type="varchar" MaxLength="255" />
+    <Property Name="ManagerEmail" Type="varchar" MaxLength="255" />
+    <Property Name="Model" Type="varchar" MaxLength="255" />
+    <Property Name="SerialNumber" Type="varchar" MaxLength="255" />
+    <Property Name="PSNumber" Type="varchar" MaxLength="255" />
+    <Property Name="Antiquity" Type="varchar" MaxLength="255" />
+    <Property Name="EndOfSales" Type="bit" />
+    <Property Name="SupplyBreakOffPlanDate" Type="date" />
+    <Property Name="SupplyBreakOffDate" Type="date" />
+    <Property Name="TotalMif" Type="int" />
+    <Property Name="ProposalProgramCustomer" Type="varchar" MaxLength="255" />
+    <Property Name="Increase" Type="varchar" MaxLength="255" />
+    <Property Name="SalesServiceExceptions" Type="varchar" MaxLength="255" />
+    <Property Name="DeadLine" Type="date" />
+    <Property Name="Comments" Type="varchar" MaxLength="255" />
+    <Property Name="PriorityType" Type="varchar" MaxLength="255" />
+    <Property Name="State" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_MIF_Renovations_Comments">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ContractNr" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="Comment" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="CreatedDate" Type="date" />
+    <Property Name="CreatedBy" Type="varchar" MaxLength="255" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BB_OPS_Implement_Packs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="MinRange" Type="int" />
+    <Property Name="MaxRange" Type="int" />
+    <Property Name="InCatalog" Type="bit" />
+  </EntityType>
+  <EntityType Name="BB_OPS_Manage_Packs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="MinRange" Type="int" />
+    <Property Name="MaxRange" Type="int" />
+    <Property Name="InCatalog" Type="bit" />
+  </EntityType>
+  <EntityType Name="BB_Permissions">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserEmaill" Type="nvarchar(max)" />
+    <Property Name="InitialDate" Type="datetime" />
+    <Property Name="EndDate" Type="datetime" />
+    <Property Name="IsPermanent" Type="bit" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="CreatedUser" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Permissions_History">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Status" Type="nvarchar(max)" />
+    <Property Name="ChangeRecord" Type="datetime" />
+    <Property Name="UserEmaill" Type="nvarchar(max)" />
+    <Property Name="InitialDate" Type="datetime" />
+    <Property Name="EndDate" Type="datetime" />
+    <Property Name="IsPermanent" Type="bit" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="CreatedUser" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_PrintingService_Machines">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="PrintingServiceID" Type="int" Nullable="false" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BWVolume" Type="int" />
+    <Property Name="CVolume" Type="int" />
+    <Property Name="BWPVP" Type="float" />
+    <Property Name="CPVP" Type="float" />
+    <Property Name="BWCost" Type="float" />
+    <Property Name="CCost" Type="float" />
+    <Property Name="ApprovedBW" Type="float" />
+    <Property Name="ApprovedC" Type="float" />
+    <Property Name="IsInClient" Type="bit" />
+    <Property Name="IsUsed" Type="bit" />
+    <Property Name="RequestedBWClickPrice" Type="float" />
+    <Property Name="RequestedCClickPrice" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_PrintingServices">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="PrintingServices2ID" Type="int" Nullable="false" />
+    <Property Name="BWVolume" Type="int" />
+    <Property Name="CVolume" Type="int" />
+    <Property Name="ContractDuration" Type="int" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IsPrecalc" Type="bit" />
+    <Property Name="Fee" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_PrintingServices_ClickPerModel">
+    <Key>
+      <PropertyRef Name="PrintingServiceID" />
+    </Key>
+    <Property Name="PrintingServiceID" Type="int" Nullable="false" />
+    <Property Name="PageBillingFrequency" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_PrintingServices_NoVolume">
+    <Key>
+      <PropertyRef Name="PrintingServiceID" />
+    </Key>
+    <Property Name="GlobalClickBW" Type="float" />
+    <Property Name="GlobalClickC" Type="float" />
+    <Property Name="PageBillingFrequency" Type="int" />
+    <Property Name="PrintingServiceID" Type="int" Nullable="false" />
+    <Property Name="RequestedGlobalClickBW" Type="float" />
+    <Property Name="RequestedGlobalClickC" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_Product">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InternalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="ParentInternalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Product_Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InternalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="ParentInternalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Product_Group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InternalCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Product_SubCategory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InternalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="ParentInternalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Product_SubType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InternalCode" Type="nvarchar" MaxLength="10" />
+    <Property Name="ParentInternalCode" Type="nvarchar" MaxLength="10" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Product_Type">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InternalCode" Type="nvarchar" MaxLength="10" />
+    <Property Name="ParentInternalCode" Type="nvarchar" MaxLength="10" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Product_Unit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InternalCode" Type="int" />
+    <Property Name="Description" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="BB_Proposal">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CRM_QUOTE_ID" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="StatusID" Type="int" />
+    <Property Name="ValueTotal" Type="float" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="ClientAccountNumber" Type="nvarchar(max)" />
+    <Property Name="AccountManager" Type="nvarchar(max)" />
+    <Property Name="ToDelete" Type="bit" />
+    <Property Name="CampaignID" Type="int" />
+    <Property Name="StatusCRM1" Type="nvarchar(max)" />
+    <Property Name="SubTotal" Type="float" />
+    <Property Name="ClientID" Type="int" />
+    <Property Name="Locked" Type="bit" />
+    <Property Name="ParentID" Type="int" />
+    <Property Name="StatusCRM" Type="int" />
+    <Property Name="TaxaCopiaTotal" Type="float" />
+    <Property Name="SobreValorizacao" Type="float" />
+    <Property Name="ValueComission" Type="float" />
+    <Property Name="SapVersion" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Aprovacao_Quote">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Proposal_ID" Type="int" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="Locked" Type="bit" />
+    <Property Name="Family" Type="nvarchar" MaxLength="50" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="UnitPriceCost" Type="float" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="TotalCost" Type="float" />
+    <Property Name="Margin" Type="float" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="TotalPVP" Type="float" />
+    <Property Name="DiscountPercentage" Type="float" />
+    <Property Name="UnitDiscountPrice" Type="float" />
+    <Property Name="GPTotal" Type="float" />
+    <Property Name="GPPercentage" Type="float" />
+    <Property Name="TotalNetsale" Type="float" />
+    <Property Name="IsFinanced" Type="bit" />
+    <Property Name="TCP" Type="float" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="ClickPriceC" Type="float" />
+    <Property Name="ClickPriceBW" Type="float" />
+    <Property Name="IsMarginBEU" Type="bit" />
+    <Property Name="IsUsed" Type="bit" />
+    <Property Name="PrazoID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Client">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ClientID" Type="nvarchar(max)" />
+    <Property Name="IsNewClient" Type="bit" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="IsPublicSector" Type="bit" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Commission">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PrintingHW_Commission" Type="float" />
+    <Property Name="ProductsITS_Commission" Type="float" />
+    <Property Name="ServicesITS_Commission" Type="float" />
+    <Property Name="IP_Commission" Type="float" />
+    <Property Name="WPH_Commission" Type="float" />
+    <Property Name="totalCommission" Type="float" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Consignments">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Duration" Type="int" />
+    <Property Name="Motive" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Contacts">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Contacts_Documentation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar(max)" />
+    <Property Name="Telefone" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Contacts_Signing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar(max)" />
+    <Property Name="Telefone" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Counters">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="bwCounter" Type="int" />
+    <Property Name="cCounter" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="OSID" Type="int" />
+    <Property Name="serialNumber" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_DeliveryLocation">
+    <Key>
+      <PropertyRef Name="IDX" />
+    </Key>
+    <Property Name="IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="ID" Type="nvarchar(max)" />
+    <Property Name="Adress1" Type="nvarchar(max)" />
+    <Property Name="Adress2" Type="nvarchar(max)" />
+    <Property Name="PostalCode" Type="nvarchar(max)" />
+    <Property Name="City" Type="nvarchar(max)" />
+    <Property Name="County" Type="nvarchar(max)" />
+    <Property Name="Contacto" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar(max)" />
+    <Property Name="Phone" Type="nvarchar(max)" />
+    <Property Name="DeliveryDate" Type="date" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Financing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ContractTypeId" Type="int" />
+    <Property Name="FinancingTypeCode1" Type="nvarchar(max)" />
+    <Property Name="PaymentMethodId" Type="int" />
+    <Property Name="PaymentAfter" Type="int" />
+    <Property Name="IncludeServices" Type="bit" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="FinancingTypeCode" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_FinancingMonthly">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Contracto" Type="int" />
+    <Property Name="Value" Type="float" />
+    <Property Name="FinancingID" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_FinancingTrimestral">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Contracto" Type="int" />
+    <Property Name="Value" Type="float" />
+    <Property Name="FinancingID" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_ItemDoBasket">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="parentIndex" Type="int" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="UnitPriceCost" Type="float" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="TotalCost" Type="float" />
+    <Property Name="Margin" Type="float" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="TotalPVP" Type="float" />
+    <Property Name="DiscountPercentage" Type="float" />
+    <Property Name="UnitDiscountPrice" Type="float" />
+    <Property Name="GPTotal" Type="float" />
+    <Property Name="GPPercentage" Type="float" />
+    <Property Name="TotalNetsale" Type="float" />
+    <Property Name="IsFinanced" Type="bit" />
+    <Property Name="IsMarginBEU" Type="bit" />
+    <Property Name="TCP" Type="float" />
+    <Property Name="ClickPriceBW" Type="float" />
+    <Property Name="ClickPriceC" Type="float" />
+    <Property Name="CounterID" Type="int" />
+    <Property Name="psConfigID" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Locked" Type="bit" />
+    <Property Name="DeliveryLocationID" Type="int" />
+    <Property Name="Group" Type="int" />
+    <Property Name="DeliveryDate" Type="date" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_LeaseDesk_Detalhe">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="PropostaID" Type="int" />
+    <Property Name="Group" Type="int" />
+    <Property Name="Adress1" Type="nvarchar(max)" />
+    <Property Name="Adress2" Type="nvarchar(max)" />
+    <Property Name="PostalCode" Type="nvarchar(max)" />
+    <Property Name="City" Type="nvarchar(max)" />
+    <Property Name="Contacto" Type="nvarchar(max)" />
+    <Property Name="Phone" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar(max)" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Observations">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="Observation" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="Created" Type="datetime" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_OPSImplement">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ProposalID" Type="int" Nullable="false" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="InCatalog" Type="bit" />
+    <Property Name="IsFinanced" Type="bit" />
+    <Property Name="MaxRange" Type="int" />
+    <Property Name="MinRange" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="UnitDiscountPrice" Type="float" />
+    <Property Name="Position" Type="int" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IsValidated" Type="bit" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_OPSManage">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ProposalID" Type="int" Nullable="false" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="InCatalog" Type="bit" />
+    <Property Name="MaxRange" Type="int" />
+    <Property Name="MinRange" Type="int" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="UnitDiscountPrice" Type="float" />
+    <Property Name="TotalMonths" Type="int" />
+    <Property Name="Position" Type="int" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IsValidated" Type="bit" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Overvaluation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Motive" Type="nvarchar(max)" />
+    <Property Name="Total" Type="float" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PrazoDiferenciado">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="PrazoDiferenciado" Type="int" />
+    <Property Name="ValorRenda" Type="float" />
+    <Property Name="ValorFactor" Type="float" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="FinancingID" Type="int" />
+    <Property Name="ValorFinanciamento" Type="float" />
+    <Property Name="IsComplete" Type="bit" />
+    <Property Name="Alocadora" Type="nvarchar(max)" />
+    <Property Name="IsAproved" Type="bit" />
+    <Property Name="Commets" Type="nvarchar(max)" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="GestorContaObservacoes" Type="nvarchar(max)" />
+    <Property Name="FilePath" Type="nvarchar(max)" />
+    <Property Name="NLocadora" Type="nvarchar(max)" />
+    <Property Name="DSO" Type="nvarchar(max)" />
+    <Property Name="Frequency" Type="int" />
+    <Property Name="BNP_ApprovedValue" Type="float" />
+    <Property Name="DataExpiracao" Type="datetime" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PrazoDiferenciado_History">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Action" Type="nvarchar(max)" />
+    <Property Name="ModifiedDate" Type="datetime" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="PrazoDiferenciado" Type="int" />
+    <Property Name="ValorRenda" Type="float" />
+    <Property Name="ValorFactor" Type="float" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="FinancingID" Type="int" />
+    <Property Name="ValorFinanciamento" Type="float" />
+    <Property Name="IsComplete" Type="bit" />
+    <Property Name="Alocadora" Type="nvarchar(max)" />
+    <Property Name="IsAproved" Type="bit" />
+    <Property Name="Commets" Type="nvarchar(max)" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="GestorContaObservacoes" Type="nvarchar(max)" />
+    <Property Name="NLocadora" Type="nvarchar(max)" />
+    <Property Name="DSO" Type="nvarchar(max)" />
+    <Property Name="Frequency" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PrintingServices">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="modeId" Type="int" />
+    <Property Name="ContractPeriod" Type="int" />
+    <Property Name="FeeFrequency" Type="float" />
+    <Property Name="BillingFrequency" Type="int" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="VVAID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PrintingServices2">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="ActivePrintingService" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PrintingServiceValidationRequest">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="PrintingServiceID" Type="int" Nullable="false" />
+    <Property Name="IsApproved" Type="bit" />
+    <Property Name="ApprovedBy" Type="nvarchar(max)" />
+    <Property Name="IsComplete" Type="bit" />
+    <Property Name="SEObservations" Type="nvarchar(max)" />
+    <Property Name="SCObservations" Type="nvarchar(max)" />
+    <Property Name="RequestedAt" Type="datetime" />
+    <Property Name="RequestedBy" Type="nvarchar(max)" />
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ApprovedAt" Type="datetime" />
+    <Property Name="ToDelete" Type="bit" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_PsConfig">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="BWExcessCost" Type="float" />
+    <Property Name="CExcessCost" Type="float" />
+    <Property Name="BWDiscount" Type="float" />
+    <Property Name="CDiscount" Type="float" />
+    <Property Name="BWVolume" Type="int" />
+    <Property Name="BWCost" Type="float" />
+    <Property Name="CVolume" Type="int" />
+    <Property Name="CCost" Type="float" />
+    <Property Name="ItemID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Quote">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Proposal_ID" Type="int" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="Locked" Type="bit" />
+    <Property Name="Family" Type="nvarchar" MaxLength="50" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="UnitPriceCost" Type="float" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="TotalCost" Type="float" />
+    <Property Name="Margin" Type="float" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="TotalPVP" Type="float" />
+    <Property Name="DiscountPercentage" Type="float" />
+    <Property Name="UnitDiscountPrice" Type="float" />
+    <Property Name="GPTotal" Type="float" />
+    <Property Name="GPPercentage" Type="float" />
+    <Property Name="TotalNetsale" Type="float" />
+    <Property Name="IsFinanced" Type="bit" />
+    <Property Name="TCP" Type="float" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="ClickPriceC" Type="float" />
+    <Property Name="ClickPriceBW" Type="float" />
+    <Property Name="IsMarginBEU" Type="bit" />
+    <Property Name="IsUsed" Type="bit" />
+    <Property Name="IsInClient" Type="bit" />
+    <Property Name="UnitPriceCost_" Type="float" />
+    <Property Name="TotalCost_" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Quote_RS">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodeRef" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="DiscountPercentage" Type="float" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="GPPercentage" Type="float" />
+    <Property Name="GPTotal" Type="float" />
+    <Property Name="Locked" Type="bit" />
+    <Property Name="Margin" Type="float" />
+    <Property Name="MonthlyFee" Type="float" />
+    <Property Name="MonthlyGP" Type="float" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="TotalCost" Type="float" />
+    <Property Name="MonthlyFeeCost" Type="float" />
+    <Property Name="TotalMonths" Type="int" />
+    <Property Name="TotalNetsale" Type="float" />
+    <Property Name="TotalPVP" Type="float" />
+    <Property Name="UnitDiscountPrice" Type="float" />
+    <Property Name="UnitPriceCost" Type="float" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="IsFinanced" Type="bit" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_SigningType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Tipo" Type="nvarchar" MaxLength="50" />
+    <Property Name="Observacoes" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Status">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Status" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="Status_Order" Type="int" />
+    <Property Name="BB_Edit" Type="bit" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedTime" Type="datetime" />
+    <Property Name="Phase" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Upturn">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Total" Type="float" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="Type" Type="nvarchar(max)" />
+    <Property Name="Contact" Type="nvarchar(max)" />
+    <Property Name="Position" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Proposal_Vva">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BWVolume" Type="int" />
+    <Property Name="CVolume" Type="int" />
+    <Property Name="MonthlyFee" Type="float" />
+    <Property Name="UseGlobalValues" Type="bit" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="UseGlobalExcess" Type="bit" />
+    <Property Name="BWExcess" Type="float" />
+    <Property Name="CExcess" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_RD_MIF_Renovation_Programs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Program_Name" Type="varchar" MaxLength="255" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BB_RD_MIF_Renovations_Program_Cost_Increments">
+    <Key>
+      <PropertyRef Name="Contract_Years" />
+    </Key>
+    <Property Name="Contract_Years" Type="int" Nullable="false" />
+    <Property Name="Program_ID" Type="int" />
+    <Property Name="Cost_Increase" Type="varchar" MaxLength="15" />
+  </EntityType>
+  <EntityType Name="BB_RD_MIF_Renovations_State">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="State" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="BB_REL_Equipament_Acessorie">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ID_Equipament" Type="int" />
+    <Property Name="ID_Acessorie" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_REL_Equipament_Consumable">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ID_Equipament" Type="int" />
+    <Property Name="ID_Consumables" Type="int" />
+  </EntityType>
+  <EntityType Name="BB_Service_Collab">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProposalID" Type="int" />
+    <Property Name="IsComplete" Type="bit" />
+    <Property Name="IsAproved" Type="bit" />
+    <Property Name="CommentsGC" Type="nvarchar(max)" />
+    <Property Name="CommentsSC" Type="nvarchar(max)" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="CreatedTime" Type="datetime" />
+    <Property Name="ModifiedBy" Type="nvarchar(max)" />
+    <Property Name="ModifiedTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="BB_SLA_History">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="QuoteNumber" Type="nvarchar(max)" />
+    <Property Name="CategoriaID" Type="int" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="CreatedBy" Type="nvarchar(max)" />
+    <Property Name="Comentario" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_VVA">
+    <Key>
+      <PropertyRef Name="PrintingServiceID" />
+    </Key>
+    <Property Name="BWExcessPVP" Type="float" />
+    <Property Name="CExcessPVP" Type="float" />
+    <Property Name="PVP" Type="float" />
+    <Property Name="ExcessBillingFrequency" Type="int" />
+    <Property Name="RentBillingFrequency" Type="int" />
+    <Property Name="PrintingServiceID" Type="int" Nullable="false" />
+    <Property Name="ReturnType" Type="int" />
+    <Property Name="RequestedBWExcess" Type="float" />
+    <Property Name="RequestedCExcess" Type="float" />
+    <Property Name="RequestedRent" Type="float" />
+  </EntityType>
+  <EntityType Name="BB_WorkSheet_Metadata">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="WorkSheet" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="BB_WorkSheet_PT_Metadata">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Worksheet" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_DocumentClassification">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Classification" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="LD_FinancingDocument">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TipoFinanciamentoID" Type="int" />
+    <Property Name="DocumentID" Type="int" />
+    <Property Name="IsRequired" Type="bit" />
+    <Property Name="Email" Type="bit" />
+    <Property Name="IsOptional" Type="bit" />
+  </EntityType>
+  <Association Name="FK_BB_PrintingService_Machines_BB_PrintingServices">
+    <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="1" />
+    <End Role="BB_PrintingService_Machines" Type="Self.BB_PrintingService_Machines" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_PrintingService_Machines">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BB_PrintingServices_BB_Proposal_PrintingServices2">
+    <End Role="BB_Proposal_PrintingServices2" Type="Self.BB_Proposal_PrintingServices2" Multiplicity="1" />
+    <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_Proposal_PrintingServices2">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_PrintingServices">
+        <PropertyRef Name="PrintingServices2ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel">
+    <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="1" />
+    <End Role="BB_PrintingServices_ClickPerModel" Type="Self.BB_PrintingServices_ClickPerModel" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_PrintingServices_ClickPerModel">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BB_PrintingServices_NoVolume_BB_PrintingServices">
+    <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="1" />
+    <End Role="BB_PrintingServices_NoVolume" Type="Self.BB_PrintingServices_NoVolume" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_PrintingServices_NoVolume">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BB_Proposal_OPSImplement_BB_Proposal">
+    <End Role="BB_Proposal" Type="Self.BB_Proposal" Multiplicity="1" />
+    <End Role="BB_Proposal_OPSImplement" Type="Self.BB_Proposal_OPSImplement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_Proposal">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_Proposal_OPSImplement">
+        <PropertyRef Name="ProposalID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BB_Proposal_OPSManage_BB_Proposal">
+    <End Role="BB_Proposal" Type="Self.BB_Proposal" Multiplicity="1" />
+    <End Role="BB_Proposal_OPSManage" Type="Self.BB_Proposal_OPSManage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_Proposal">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_Proposal_OPSManage">
+        <PropertyRef Name="ProposalID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices">
+    <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="1" />
+    <End Role="BB_Proposal_PrintingServiceValidationRequest" Type="Self.BB_Proposal_PrintingServiceValidationRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_Proposal_PrintingServiceValidationRequest">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BB_VVA_BB_PrintingServices">
+    <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="1" />
+    <End Role="BB_VVA" Type="Self.BB_VVA" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="BB_PrintingServices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BB_VVA">
+        <PropertyRef Name="PrintingServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BB_DB_DEVModelStoreContainer">
+    <EntitySet Name="BB_Acessories" EntityType="Self.BB_Acessories" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Bank_Bnp" EntityType="Self.BB_Bank_Bnp" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Campanha" EntityType="Self.BB_Campanha" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Campanha_Financing" EntityType="Self.BB_Campanha_Financing" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Campanha_Items" EntityType="Self.BB_Campanha_Items" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Campanhas_Printing" EntityType="Self.BB_Campanhas_Printing" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Clientes" EntityType="Self.BB_Clientes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Coderef_Generic" EntityType="Self.BB_Coderef_Generic" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Commission" EntityType="Self.BB_Commission" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Consumables" EntityType="Self.BB_Consumables" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Contactos" EntityType="Self.BB_Contactos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_CRM_Quotes" EntityType="Self.BB_CRM_Quotes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_CRM_Workflow" EntityType="Self.BB_CRM_Workflow" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Data_Integration" EntityType="Self.BB_Data_Integration" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Equipamentos" EntityType="Self.BB_Equipamentos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Financing_Documentos" EntityType="Self.BB_Financing_Documentos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_FinancingContractType" EntityType="Self.BB_FinancingContractType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_FinancingPaymentMethod" EntityType="Self.BB_FinancingPaymentMethod" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_FinancingType" EntityType="Self.BB_FinancingType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_LocaisEnvio" EntityType="Self.BB_LocaisEnvio" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Logs_Proposal" EntityType="Self.BB_Logs_Proposal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Machines_Compatibility" EntityType="Self.BB_Machines_Compatibility" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Maquinas_Usadas" EntityType="Self.BB_Maquinas_Usadas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Maquinas_Usadas_Gestor" EntityType="Self.BB_Maquinas_Usadas_Gestor" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Maquinas_Usadas_Logistica" EntityType="Self.BB_Maquinas_Usadas_Logistica" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Maquinas_Usadas_Pedidos" EntityType="Self.BB_Maquinas_Usadas_Pedidos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Maquinas_Usadas_Tecnico" EntityType="Self.BB_Maquinas_Usadas_Tecnico" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Margin" EntityType="Self.BB_Margin" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_MIF_Renovations" EntityType="Self.BB_MIF_Renovations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_MIF_Renovations_Comments" EntityType="Self.BB_MIF_Renovations_Comments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_OPS_Implement_Packs" EntityType="Self.BB_OPS_Implement_Packs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_OPS_Manage_Packs" EntityType="Self.BB_OPS_Manage_Packs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Permissions" EntityType="Self.BB_Permissions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Permissions_History" EntityType="Self.BB_Permissions_History" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_PrintingService_Machines" EntityType="Self.BB_PrintingService_Machines" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_PrintingServices" EntityType="Self.BB_PrintingServices" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_PrintingServices_ClickPerModel" EntityType="Self.BB_PrintingServices_ClickPerModel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_PrintingServices_NoVolume" EntityType="Self.BB_PrintingServices_NoVolume" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Product" EntityType="Self.BB_Product" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Product_Category" EntityType="Self.BB_Product_Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Product_Group" EntityType="Self.BB_Product_Group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Product_SubCategory" EntityType="Self.BB_Product_SubCategory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Product_SubType" EntityType="Self.BB_Product_SubType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Product_Type" EntityType="Self.BB_Product_Type" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Product_Unit" EntityType="Self.BB_Product_Unit" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal" EntityType="Self.BB_Proposal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Aprovacao_Quote" EntityType="Self.BB_Proposal_Aprovacao_Quote" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Client" EntityType="Self.BB_Proposal_Client" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Commission" EntityType="Self.BB_Proposal_Commission" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Consignments" EntityType="Self.BB_Proposal_Consignments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Contacts" EntityType="Self.BB_Proposal_Contacts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="Self.BB_Proposal_Contacts_Documentation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Contacts_Signing" EntityType="Self.BB_Proposal_Contacts_Signing" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Counters" EntityType="Self.BB_Proposal_Counters" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="Self.BB_Proposal_DeliveryLocation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Financing" EntityType="Self.BB_Proposal_Financing" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_FinancingMonthly" EntityType="Self.BB_Proposal_FinancingMonthly" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_FinancingTrimestral" EntityType="Self.BB_Proposal_FinancingTrimestral" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_ItemDoBasket" EntityType="Self.BB_Proposal_ItemDoBasket" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_LeaseDesk_Detalhe" EntityType="Self.BB_Proposal_LeaseDesk_Detalhe" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Observations" EntityType="Self.BB_Proposal_Observations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_OPSImplement" EntityType="Self.BB_Proposal_OPSImplement" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_OPSManage" EntityType="Self.BB_Proposal_OPSManage" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Overvaluation" EntityType="Self.BB_Proposal_Overvaluation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_PrazoDiferenciado" EntityType="Self.BB_Proposal_PrazoDiferenciado" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_PrazoDiferenciado_History" EntityType="Self.BB_Proposal_PrazoDiferenciado_History" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_PrintingServices" EntityType="Self.BB_Proposal_PrintingServices" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_PrintingServices2" EntityType="Self.BB_Proposal_PrintingServices2" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_PrintingServiceValidationRequest" EntityType="Self.BB_Proposal_PrintingServiceValidationRequest" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_PsConfig" EntityType="Self.BB_Proposal_PsConfig" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Quote" EntityType="Self.BB_Proposal_Quote" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Quote_RS" EntityType="Self.BB_Proposal_Quote_RS" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_SigningType" EntityType="Self.BB_Proposal_SigningType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Status" EntityType="Self.BB_Proposal_Status" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Upturn" EntityType="Self.BB_Proposal_Upturn" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Proposal_Vva" EntityType="Self.BB_Proposal_Vva" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_RD_MIF_Renovation_Programs" EntityType="Self.BB_RD_MIF_Renovation_Programs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_RD_MIF_Renovations_Program_Cost_Increments" EntityType="Self.BB_RD_MIF_Renovations_Program_Cost_Increments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_RD_MIF_Renovations_State" EntityType="Self.BB_RD_MIF_Renovations_State" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_REL_Equipament_Acessorie" EntityType="Self.BB_REL_Equipament_Acessorie" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_REL_Equipament_Consumable" EntityType="Self.BB_REL_Equipament_Consumable" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_Service_Collab" EntityType="Self.BB_Service_Collab" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_SLA_History" EntityType="Self.BB_SLA_History" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_VVA" EntityType="Self.BB_VVA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_WorkSheet_Metadata" EntityType="Self.BB_WorkSheet_Metadata" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BB_WorkSheet_PT_Metadata" EntityType="Self.BB_WorkSheet_PT_Metadata" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_DocumentClassification" EntityType="Self.LD_DocumentClassification" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LD_FinancingDocument" EntityType="Self.LD_FinancingDocument" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="Self.FK_BB_PrintingService_Machines_BB_PrintingServices">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BB_PrintingServices_BB_Proposal_PrintingServices2" Association="Self.FK_BB_PrintingServices_BB_Proposal_PrintingServices2">
+      <End Role="BB_Proposal_PrintingServices2" EntitySet="BB_Proposal_PrintingServices2" />
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" Association="Self.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_PrintingServices_ClickPerModel" EntitySet="BB_PrintingServices_ClickPerModel" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BB_PrintingServices_NoVolume_BB_PrintingServices" Association="Self.FK_BB_PrintingServices_NoVolume_BB_PrintingServices">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_PrintingServices_NoVolume" EntitySet="BB_PrintingServices_NoVolume" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BB_Proposal_OPSImplement_BB_Proposal" Association="Self.FK_BB_Proposal_OPSImplement_BB_Proposal">
+      <End Role="BB_Proposal" EntitySet="BB_Proposal" />
+      <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BB_Proposal_OPSManage_BB_Proposal" Association="Self.FK_BB_Proposal_OPSManage_BB_Proposal">
+      <End Role="BB_Proposal" EntitySet="BB_Proposal" />
+      <End Role="BB_Proposal_OPSManage" EntitySet="BB_Proposal_OPSManage" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices" Association="Self.FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_Proposal_PrintingServiceValidationRequest" EntitySet="BB_Proposal_PrintingServiceValidationRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BB_VVA_BB_PrintingServices" Association="Self.FK_BB_VVA_BB_PrintingServices">
+      <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+      <End Role="BB_VVA" EntitySet="BB_VVA" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

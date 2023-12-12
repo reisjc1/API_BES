@@ -39,19 +39,19 @@ namespace WebApplication1.Controllers
                 if (p.Draft.details.ID == 0)
                 {
                     ac = pBLL.ProposalDraftSaveAs(p);
-                    ac.Message = "Proposta gravada com sucesso!";
+                    ac.Message = "Propuesta guardada éxito!";
                 }
                 else
                 {
                     ac = pBLL.ProposalDraftSave(p);
-                    ac.Message = "Proposta gravada com sucesso!";
+                    ac.Message = "Propuesta guardada éxito!";
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, ac);
             }
             catch (Exception ex)
 
             {
-                throw new ActionFailResponse("Nao gravou")
+                throw new ActionFailResponse("No gravou")
                 {
                     StatusCode = 501
                 };
