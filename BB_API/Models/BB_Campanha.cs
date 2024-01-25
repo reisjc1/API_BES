@@ -21,5 +21,6 @@ namespace WebApplication1.Models
         public string ModifiedBy { get; set; }
         public string ModifiedTime { get; set; }
         public Nullable<bool> Enable { get; set; }
+        public Nullable<int> ApplySettings { get; set; }
     }
 }

@@ -44,6 +44,7 @@
           <Property Name="ModifiedBy" Type="nvarchar(max)" />
           <Property Name="ModifiedTime" Type="nvarchar(max)" />
           <Property Name="Enable" Type="bit" />
+          <Property Name="ApplySettings" Type="int" />
         </EntityType>
         <EntityType Name="BB_Campanha_Financing">
           <Key>
@@ -812,6 +813,8 @@
           <Property Name="IncludeServices" Type="bit" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="FinancingTypeCode" Type="int" />
+          <Property Name="Months" Type="int" />
+          <Property Name="MonthlyIncome" Type="float" />
         </EntityType>
         <EntityType Name="BB_Proposal_FinancingMonthly">
           <Key>
@@ -1911,6 +1914,8 @@
           <Property Name="IncludeServices" Type="Boolean" />
           <Property Name="ProposalID" Type="Int32" />
           <Property Name="FinancingTypeCode" Type="Int32" />
+          <Property Name="Months" Type="Int32" />
+          <Property Name="MonthlyIncome" Type="Double" />
         </EntityType>
         <EntityType Name="BB_Proposal">
           <Key>
@@ -2068,6 +2073,7 @@
           <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ModifiedTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Enable" Type="Boolean" />
+          <Property Name="ApplySettings" Type="Int32" />
         </EntityType>
         <EntityType Name="BB_Campanha_Items">
           <Key>
@@ -3315,6 +3321,8 @@
           <EntitySetMapping Name="BB_Proposal_Financing">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
               <MappingFragment StoreEntitySet="BB_Proposal_Financing">
+                <ScalarProperty Name="MonthlyIncome" ColumnName="MonthlyIncome" />
+                <ScalarProperty Name="Months" ColumnName="Months" />
                 <ScalarProperty Name="FinancingTypeCode" ColumnName="FinancingTypeCode" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="IncludeServices" ColumnName="IncludeServices" />
@@ -3481,6 +3489,7 @@
           <EntitySetMapping Name="BB_Campanha">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Campanha">
               <MappingFragment StoreEntitySet="BB_Campanha">
+                <ScalarProperty Name="ApplySettings" ColumnName="ApplySettings" />
                 <ScalarProperty Name="Enable" ColumnName="Enable" />
                 <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />

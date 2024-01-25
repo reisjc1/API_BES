@@ -22,5 +22,7 @@ namespace WebApplication1.Models
         public Nullable<bool> IncludeServices { get; set; }
         public Nullable<int> ProposalID { get; set; }
         public Nullable<int> FinancingTypeCode { get; set; }
+        public Nullable<int> Months { get; set; }
+        public Nullable<double> MonthlyIncome { get; set; }
     }
 }
