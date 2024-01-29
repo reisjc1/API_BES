@@ -388,6 +388,8 @@ namespace WebApplication1.Models
         public DiffTerm diffTerm { get; set; }
 
         public DateTime? DataExpiracao { get; set; }
+        public DateTime? DateApproval { get; set; }
+        public DateTime? DateExpired { get; set; }
     }
 
     public class DiffTerm
