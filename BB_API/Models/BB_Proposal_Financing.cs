@@ -24,5 +24,7 @@ namespace WebApplication1.Models
         public Nullable<int> FinancingTypeCode { get; set; }
         public Nullable<int> Months { get; set; }
         public Nullable<double> MonthlyIncome { get; set; }
+        public Nullable<System.DateTime> DateApproval { get; set; }
+        public Nullable<System.DateTime> DateExpired { get; set; }
     }
 }

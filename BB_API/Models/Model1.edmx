@@ -815,6 +815,8 @@
           <Property Name="FinancingTypeCode" Type="int" />
           <Property Name="Months" Type="int" />
           <Property Name="MonthlyIncome" Type="float" />
+          <Property Name="DateApproval" Type="datetime" />
+          <Property Name="DateExpired" Type="datetime" />
         </EntityType>
         <EntityType Name="BB_Proposal_FinancingMonthly">
           <Key>
@@ -1916,6 +1918,8 @@
           <Property Name="FinancingTypeCode" Type="Int32" />
           <Property Name="Months" Type="Int32" />
           <Property Name="MonthlyIncome" Type="Double" />
+          <Property Name="DateApproval" Type="DateTime" Precision="3" />
+          <Property Name="DateExpired" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="BB_Proposal">
           <Key>
@@ -3321,6 +3325,8 @@
           <EntitySetMapping Name="BB_Proposal_Financing">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
               <MappingFragment StoreEntitySet="BB_Proposal_Financing">
+                <ScalarProperty Name="DateExpired" ColumnName="DateExpired" />
+                <ScalarProperty Name="DateApproval" ColumnName="DateApproval" />
                 <ScalarProperty Name="MonthlyIncome" ColumnName="MonthlyIncome" />
                 <ScalarProperty Name="Months" ColumnName="Months" />
                 <ScalarProperty Name="FinancingTypeCode" ColumnName="FinancingTypeCode" />
