@@ -29,14 +29,16 @@ namespace WebApplication1.Controllers
             x.Function == "MCS Business Developer" ||
             x.Function == "Sales Executive" ||
             x.Function == "OPD Lisboa Sales Manager" ||
-            x.Function == "OPD Porto Sales Manager") && x.Email != Owner.Owner).ToList();
+            x.Function == "OPD Porto Sales Manager") && 
+            x.Email != Owner.Owner &&
+            x.Country == "BES").ToList();
         }
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetSalesExecutive")]
         public List<AspNetUsers> GetSalesExecutive()
         {
-            return usersDB.AspNetUsers.Where(x => x.Function == "Sales Executive").ToList();
+            return usersDB.AspNetUsers.Where(x => x.Function == "Sales Executive" && x.Country == "BES").ToList();
         }
 
         [AcceptVerbs("GET", "POST")]
@@ -54,7 +56,7 @@ namespace WebApplication1.Controllers
                 //Accao de SAVE
                 ProposalBLL pBLL = new ProposalBLL();
                 ActionResponse ac = pBLL.ProposalDraftSave(p);
-                AspNetUsers user = usersDB.AspNetUsers.Where(x => x.Email == a.coworkerEmail).FirstOrDefault();
+                AspNetUsers user = usersDB.AspNetUsers.Where(x => x.Email == a.coworkerEmail && x.Country == "BES").FirstOrDefault();
 
                 proposal = diDB.BB_Proposal.Where(x => x.ID == ac.ProposalObj.Draft.details.ID).FirstOrDefault();
                 //Default colaboracao
@@ -78,7 +80,7 @@ namespace WebApplication1.Controllers
                 diDB.Entry(proposal).State = EntityState.Modified;
                 diDB.SaveChanges();
 
-                err.Message = "Proposta Atribuida";
+                err.Message = "Propuesta Asignada";
             }
             catch (Exception ex)
             {
@@ -91,19 +93,19 @@ namespace WebApplication1.Controllers
             EmailMesage message = new EmailMesage();
 
             message.Destination = a.coworkerEmail;
-            message.Subject = "Business Builder - Pedido de Colaboração - " + a.Draft.details.Name;
+            message.Subject = "Business Builder - Solicitud de Colaboración - " + a.Draft.details.Name;
             //message.Subject = "Business Team - ";
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append("<p><strong><span style='font-size: 48px;'>//Business Builder</span></strong></p>");
             strBuilder.Append("<br/>");
-            strBuilder.Append("Foi-lhe solicitado um pedido de colaboração na plataforma Business Builder.");
+            strBuilder.Append("Se le ha solicitado una solicitud de colaboración en la plataforma Business Builder.");
             strBuilder.Append("<br/>");
-            strBuilder.Append("Para aceder ao mesmo por favor utilize o seguinte link " + "https://bb.konicaminolta.pt/BusinessBuilder/Draft/" + proposal.ID + "/Overview" + " . Em alternativa pode aceder ao aplicativo e selecionar a opção Oportunidades.");
+            strBuilder.Append("Para acceder a él utilice el siguiente enlace " + "https://bb.konicaminolta.pt/BusinessBuilder/Draft/" + proposal.ID + "/Overview" + " . Alternativamente, puede acceder a la aplicación y seleccionar la opción Oportunidades.");
             strBuilder.Append("<br/>");
-            strBuilder.Append("Obrigado");
+            strBuilder.Append("Gracias");
             strBuilder.Append("<br/>");
             strBuilder.Append("<br/>");
-            strBuilder.Append("Business Builder - Por favor, não responder a este email");
+            strBuilder.Append("Business Builder - Por favor no responda a este correo electrónico.");
             message.Body = strBuilder.ToString();
 
             await emailSend.SendEmailaync(message);

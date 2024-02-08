@@ -100,7 +100,7 @@ namespace WebApplication1.Controllers
                 {
                     lpi.ProposalId = p.Draft.details.ID;
                     ac = pBLL.LoadProposal(lpi);
-                    ac.Message = "Processo de venda em processamento, contactar o Leasdesk!";
+                    ac.Message = "Proceso de venta en curso, ¡contacta a Leasdesk!";
                     return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, ac);
                 }
 
@@ -115,12 +115,12 @@ namespace WebApplication1.Controllers
 
                 lpi.ProposalId = p.Draft.details.ID;
                 ac = pBLL.LoadProposal(lpi);
-                ac.Message = "Proposta em Rascunho!";
+                ac.Message = "¡Propuesta en borrador!";
                 return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, ac);
             }
             catch (Exception ex)
             {
-                throw new ActionFailResponse("Nao gravou")
+                throw new ActionFailResponse("No grabó")
                 {
                     StatusCode = 501
                 };
@@ -350,7 +350,7 @@ namespace WebApplication1.Controllers
                 pa.StatusID = 6;
                 db.Entry(pa).State = EntityState.Modified;
                 db.SaveChanges();
-                err.Message = "Gestor Atribuido com Sucesso!";
+                err.Message = "Gestor asignado con éxito.";
                 err.ProposalIDReturn = pa.ID;
             }
             catch (Exception ex)
@@ -395,7 +395,7 @@ namespace WebApplication1.Controllers
 
                 if (ProposalID == null)
                 {
-                    err.Message = "Por favor grave a sua proposta, e tente novamente!";
+                    err.Message = "Por favor, grabe su propuesta y vuelva a intentarlo.";
                     return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
                 }
 
@@ -414,7 +414,7 @@ namespace WebApplication1.Controllers
                 i1.ProposalId = ProposalID.Value;
                 ActionResponse a1 = p1.LoadProposal(i1);
                 err.ProposalObj = a1.ProposalObj;
-                err.Message = "Por motivos técnicos, use o botão Termine Processo! (Temporariamente)";
+                err.Message = "Por motivos técnicos, utilice el botón 'Terminar Proceso' (temporalmente).";
                 //return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
                 StringBuilder err1 = ValidarProcessoVenda_encomenda(pz, ft, a1, proposal);
 
@@ -463,9 +463,9 @@ namespace WebApplication1.Controllers
                                 ld.CreatedTime = DateTime.Now;
                                 ld.ModifiedTime = DateTime.Now;
                                 ld.TipoContratoID = ContractType;
-                                ld.Comments = "Pedido Encomenda Fabrica";
+                                ld.Comments = "Pedido de fabricación del pedido.";
                                 //ld.SystemAssinaturaID = assnaturaID;
-                                ld.ComentariosGC = "Pedido Encomenda Fabrica " + "- " + Observations;
+                                ld.ComentariosGC = "Pedido de fabricación en fábrica " + "- " + Observations;
                                 ld.IsClosed = false;
                                 ld.Retorno = false;
                                 ld.StatusID = 1;
@@ -490,7 +490,7 @@ namespace WebApplication1.Controllers
                                 ContractoId = ld.ID;
                             }
                         }
-                        err.Message = "Pedido de encomenda à fábrica, por favor depois tem que terminar o processo de venda, preenchendo a informação que falta!";
+                        err.Message = "Pedido de encargo a la fábrica, por favor después debe finalizar el proceso de venta, completando la información que falta.";
                         BB_Proposal p = new BB_Proposal();
                         using (var db = new BB_DB_DEVEntities2())
                         {
@@ -553,7 +553,7 @@ namespace WebApplication1.Controllers
             catch (Exception ex)
             {
                 ex.Message.ToString();
-                err.Message = "Nao foi possivel efectuar a encomenda, contacte a equipa BB";
+                err.Message = "No ha sido posible realizar el pedido, por favor, póngase en contacto con el equipo de BB.";
             }
 
             //ProposalBLL p1 = new ProposalBLL();
@@ -583,7 +583,7 @@ namespace WebApplication1.Controllers
                 if (ProposalID == null)
                 {
 
-                    err.Message = "Por favor grave a sua proposta, e tente novamente!";
+                    err.Message = "Por favor, guarde su propuesta y vuelva a intentarlo.";
                     return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
                 }
 
@@ -763,7 +763,7 @@ namespace WebApplication1.Controllers
 
             //err.ProposalObj = a1.ProposalObj;
 
-            err.Message = "Processo concluído e transferido para o BPT_Clientes";
+            err.Message = "Proceso concluido y transferido al BPT_Clientes.";
 
 
 
@@ -968,7 +968,7 @@ namespace WebApplication1.Controllers
                     {
 
                         StringBuilder builder = new StringBuilder();
-                        builder.Append("<p style='color: #000000; background-color: #ffffff'>Configuração negócio <br> </ p>");
+                        builder.Append("<p style='color: #000000; background-color: #ffffff'>Configuración del negocio <br> </ p>");
                         builder.Append("<table border=1 ><tr>");
 
                         builder.Append("<table border=1 ><tr>");
@@ -1025,25 +1025,29 @@ namespace WebApplication1.Controllers
                         EmailService emailSend = new EmailService();
                         EmailMesage message = new EmailMesage();
 
+                        // Corpo do email ----
+                        message.Subject = "BusinessBuilder - Cierre del proceso - Quote: " + proposal.CRM_QUOTE_ID + " - Gestor de cuenta: " + proposal.CreatedBy;
+                        StringBuilder strBuilder = new StringBuilder();
+                        strBuilder.Append("<p>Estimado(a),</p>");
+                        strBuilder.Append("<p>Se ha registrado un nuevo proceso con la siguiente cotización: " + proposal.CRM_QUOTE_ID + "</p>");
+                        strBuilder.Append("<br/>");
+                        strBuilder.Append("<p>Gerente de cuenta: " + proposal.CreatedBy + "</p>");
+                        strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
+                        strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
+                        strBuilder.Append("<br/>");
+                        strBuilder.Append(builder);
+                        strBuilder.Append("<br/>");
+                        strBuilder.Append("<p>A su disposición,</p>");
+                        strBuilder.Append("<p>Business Builder</p>");
+                        message.Body = strBuilder.ToString();
+
+
+
                         StringBuilder email = new StringBuilder();
                         if (isPRS)
                         {
                             email.Append("BPT_PRS_CE_DL@konicaminolta.pt;");
                             message.Destination = "BPT_PRS_CE_DL_@connectkonicaminolta.onmicrosoft.com;";
-                            message.Subject = "BusinessBuilder - Fecho Processo - Quote: " + proposal.CRM_QUOTE_ID + " - GestorConta: " + proposal.CreatedBy;
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.Append("<p>Caro(a),</p>");
-                            strBuilder.Append("<p>Foi registado um novo processo com a seguinte Quote: " + proposal.CRM_QUOTE_ID + "</p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Gestor de conta: " + proposal.CreatedBy + "</p>");
-                            strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
-                            strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append(builder);
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Ao seu dispor,</p>");
-                            strBuilder.Append("<p>Business Builder</p>");
-                            message.Body = strBuilder.ToString();
 
                             await emailSend.SendEmailaync(message);
                         }
@@ -1051,20 +1055,6 @@ namespace WebApplication1.Controllers
                         {
                             email.Append("BPT_IMS_CE_DL@konicaminolta.pt;");
                             message.Destination = "BPT_IMS_CE_DL_@connectkonicaminolta.onmicrosoft.com;";
-                            message.Subject = "BusinessBuilder - Fecho Processo - Quote: " + proposal.CRM_QUOTE_ID + " - GestorConta: " + proposal.CreatedBy;
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.Append("<p>Caro(a),</p>");
-                            strBuilder.Append("<p>Foi registado um novo processo com a seguinte Quote: " + proposal.CRM_QUOTE_ID + "</p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Gestor de conta: " + proposal.CreatedBy + "</p>");
-                            strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
-                            strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append(builder);
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Ao seu dispor,</p>");
-                            strBuilder.Append("<p>Business Builder</p>");
-                            message.Body = strBuilder.ToString();
 
                             await emailSend.SendEmailaync(message);
                         }
@@ -1072,20 +1062,6 @@ namespace WebApplication1.Controllers
                         {
                             email.Append("bpt_mcs_dl@konicaminolta.pt;");
                             message.Destination = "bpt_mcs_dl_@connectkonicaminolta.onmicrosoft.com;";
-                            message.Subject = "BusinessBuilder - Fecho Processo - Quote: " + proposal.CRM_QUOTE_ID + " - GestorConta: " + proposal.CreatedBy;
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.Append("<p>Caro(a),</p>");
-                            strBuilder.Append("<p>Foi registado um novo processo com a seguinte Quote: " + proposal.CRM_QUOTE_ID + "</p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Gestor de conta: " + proposal.CreatedBy + "</p>");
-                            strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
-                            strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append(builder);
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Ao seu dispor,</p>");
-                            strBuilder.Append("<p>Business Builder</p>");
-                            message.Body = strBuilder.ToString();
 
                             await emailSend.SendEmailaync(message);
                         }
@@ -1093,20 +1069,6 @@ namespace WebApplication1.Controllers
                         {
                             email.Append("BPT_OPD_CE_DL@konicaminolta.pt;");
                             message.Destination = "BPT_OPD_CE_DL_@connectkonicaminolta.onmicrosoft.com;";
-                            message.Subject = "BusinessBuilder - Fecho Processo - Quote: " + proposal.CRM_QUOTE_ID + " - GestorConta: " + proposal.CreatedBy;
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.Append("<p>Caro(a),</p>");
-                            strBuilder.Append("<p>Foi registado um novo processo com a seguinte Quote: " + proposal.CRM_QUOTE_ID + "</p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Gestor de conta: " + proposal.CreatedBy + "</p>");
-                            strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
-                            strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append(builder);
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Ao seu dispor,</p>");
-                            strBuilder.Append("<p>Business Builder</p>");
-                            message.Body = strBuilder.ToString();
 
                             await emailSend.SendEmailaync(message);
                             //email.Append("nuno.silva@konicaminolta.pt");
@@ -1116,20 +1078,6 @@ namespace WebApplication1.Controllers
                         {
                             email.Append("bpt_pmo_dl@konicaminolta.pt;");
                             message.Destination = "bpt_pmo_dl_@connectkonicaminolta.onmicrosoft.com;";
-                            message.Subject = "BusinessBuilder - Fecho Processo - Quote: " + proposal.CRM_QUOTE_ID + " - GestorConta: " + proposal.CreatedBy;
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.Append("<p>Caro(a),</p>");
-                            strBuilder.Append("<p>Foi registado um novo processo com a seguinte Quote: " + proposal.CRM_QUOTE_ID + "</p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Gestor de conta: " + proposal.CreatedBy + "</p>");
-                            strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
-                            strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append(builder);
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Ao seu dispor,</p>");
-                            strBuilder.Append("<p>Business Builder</p>");
-                            message.Body = strBuilder.ToString();
 
                             await emailSend.SendEmailaync(message);
                         }
@@ -1138,20 +1086,6 @@ namespace WebApplication1.Controllers
                         {
                             email.Append("BPT_SDM_DL@konicaminolta.pt;");
                             message.Destination = "BPT_SDM_DL_@connectkonicaminolta.onmicrosoft.com;";
-                            message.Subject = "BusinessBuilder - Fecho Processo - Quote: " + proposal.CRM_QUOTE_ID + " - GestorConta: " + proposal.CreatedBy;
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.Append("<p>Caro(a),</p>");
-                            strBuilder.Append("<p>Foi registado um novo processo com a seguinte Quote: " + proposal.CRM_QUOTE_ID + "</p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Gestor de conta: " + proposal.CreatedBy + "</p>");
-                            strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
-                            strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append(builder);
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Ao seu dispor,</p>");
-                            strBuilder.Append("<p>Business Builder</p>");
-                            message.Body = strBuilder.ToString();
 
                             await emailSend.SendEmailaync(message);
                         }
@@ -1160,20 +1094,6 @@ namespace WebApplication1.Controllers
                         {
                             email.Append("BPT_DL_PP_Presale@connectkonicaminolta.onmicrosoft.com;");
                             message.Destination = "BPT_DL_PP_Presale_@konicaminolta.pt;";
-                            message.Subject = "BusinessBuilder - Fecho Processo - Quote: " + proposal.CRM_QUOTE_ID + " - GestorConta: " + proposal.CreatedBy;
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.Append("<p>Caro(a),</p>");
-                            strBuilder.Append("<p>Foi registado um novo processo com a seguinte Quote: " + proposal.CRM_QUOTE_ID + "</p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Gestor de conta: " + proposal.CreatedBy + "</p>");
-                            strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
-                            strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append(builder);
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Ao seu dispor,</p>");
-                            strBuilder.Append("<p>Business Builder</p>");
-                            message.Body = strBuilder.ToString();
 
                             await emailSend.SendEmailaync(message);
                         }
@@ -1182,30 +1102,10 @@ namespace WebApplication1.Controllers
                         {
                             email.Append("qualidade@konicaminolta.pt;");
                             message.Destination = "qualidade@konicaminolta.pt;";
-                            message.Subject = "BusinessBuilder - Fecho Processo - Quote: " + proposal.CRM_QUOTE_ID + " - GestorConta: " + proposal.CreatedBy;
-                            StringBuilder strBuilder = new StringBuilder();
-                            strBuilder.Append("<p>Caro(a),</p>");
-                            strBuilder.Append("<p>Foi registado um novo processo com a seguinte Quote: " + proposal.CRM_QUOTE_ID + "</p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Gestor de conta: " + proposal.CreatedBy + "</p>");
-                            strBuilder.Append("<p>Cliente: " + cliente.Name + "</p>");
-                            strBuilder.Append("<p>NrConta: " + cliente.accountnumber + " </p>");
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append(builder);
-                            strBuilder.Append("<br/>");
-                            strBuilder.Append("<p>Ao seu dispor,</p>");
-                            strBuilder.Append("<p>Business Builder</p>");
-                            message.Body = strBuilder.ToString();
 
                             await emailSend.SendEmailaync(message);
                         }
-
-
-
-
-
                     }
-
                 }
             }
             catch (Exception ex)
@@ -1253,21 +1153,21 @@ namespace WebApplication1.Controllers
             EmailMesage message = new EmailMesage();
 
             message.Destination = AppSettingsGet.PedidoPrazoDiferenciadoEmail;
-            message.Subject = "Leasedesk - Processo Reenviado - Quote: " + proposal.CRM_QUOTE_ID + "";
+            message.Subject = "Leasedesk - Proceso reenviado - Quote: " + proposal.CRM_QUOTE_ID + "";
             //message.Subject = "Business Team - ";
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append("<p><strong><span style='font-size: 48px;'>//Business Builder</span></strong></p>");
             strBuilder.Append("<br/>");
-            strBuilder.Append("Foi reenviado um processo para o Leasedesk pelo " + proposal.CreatedBy);
+            strBuilder.Append("Fue reenviado un proceso al Leasedesk por " + proposal.CreatedBy);
             strBuilder.Append("<br/>");
             strBuilder.Append("Quote: " + proposal.CRM_QUOTE_ID);
             strBuilder.Append("<br/>");
-            strBuilder.Append("Observaçoes: " + (!string.IsNullOrEmpty(observaçoes) ? observaçoes : "NA"));
+            strBuilder.Append("Observaciones: " + (!string.IsNullOrEmpty(observaçoes) ? observaçoes : "NA"));
             strBuilder.Append("<br/>");
-            strBuilder.Append("Para aceder à aplicação Business Builder e responder, por favor utilize o seguinte link: " + "https://bb.konicaminolta.pt/LeaseDeskRent/Index" + " e selecionar a opção Aprovações Pendentes.");
+            strBuilder.Append("Para acceder a la aplicación Business Builder y responder, por favor utilice el siguiente enlace: " + "https://bb.konicaminolta.pt/LeaseDeskRent/Index" + " y seleccione la opción 'Aprobaciones Pendientes.");
             strBuilder.Append("<br/>");
             strBuilder.Append("<br/>");
-            strBuilder.Append("Business Builder - Por favor, não responder a este email.");
+            strBuilder.Append("Business Builder - Por favor, no responda a este correo electrónico.");
             message.Body = strBuilder.ToString();
 
             await emailSend.SendEmailaync(message);
@@ -1363,7 +1263,7 @@ namespace WebApplication1.Controllers
                     }
                     else
                     {
-                        strErro.AppendFormat("É preciso preencher o contacto da Assinatura!", Environment.NewLine);
+                        strErro.AppendFormat("¡Es necesario completar el contacto de la firma!", Environment.NewLine);
                     }
                 }
 
@@ -1408,32 +1308,32 @@ namespace WebApplication1.Controllers
                     }
                     else
                     {
-                        strErro.AppendFormat("É preciso preencher o contacto de pedido de Documentação!", Environment.NewLine);
+                        strErro.AppendFormat("Es necesario completar el contacto para el pedido de documentación.", Environment.NewLine);
                     }
                 }
 
                 if (SigningType == null || SigningType == "")
                 {
-                    strErro.AppendFormat("É preciso preencher o tipo da Assinatura na pagina da Adjudicação!", Environment.NewLine);
+                    strErro.AppendFormat("Es necesario completar el tipo de firma en la página de Adjudicación.", Environment.NewLine);
                 }
 
                 if (SigningType == "Outro" && (SigningTypeObservations == null || SigningTypeObservations == ""))
                 {
-                    strErro.AppendFormat("No tipo de assinatura Outro, tem que preencher o campo das Observações", Environment.NewLine);
+                    strErro.AppendFormat("En el tipo de firma 'Otro', debe completar el campo de Observaciones.", Environment.NewLine);
                 }
 
                 if (ft.FinancingTypeCode != 0 && pz == null)
                 {
-                    strErro.AppendFormat("Tem que fazer o pedido de Aprovação Financeira!", Environment.NewLine);
+                    strErro.AppendFormat("Debe realizar el pedido de Aprobación Financiera.", Environment.NewLine);
 
                 }
 
                 if (ft.FinancingTypeCode != 0 && pz != null)
                 {
                     if (!pz.IsComplete.Value)
-                        strErro.AppendFormat("Pedido de Aprovação em análise!", Environment.NewLine);
+                        strErro.AppendFormat("Solicitud de aprobación en análisis.", Environment.NewLine);
                     if (pz.IsComplete.Value && pz.IsAproved != null && !pz.IsAproved.Value)
-                        strErro.AppendFormat("Pedido de Aprovação reprovado!", Environment.NewLine);
+                        strErro.AppendFormat("Solicitud de aprobación rechazada.", Environment.NewLine);
                 }
 
 
@@ -1449,12 +1349,12 @@ namespace WebApplication1.Controllers
                         diferenca1Euro = pz.ValorFinanciamento.Value - (proposal.SubTotal.Value - servicosReecorrents);
 
                     if (diferenca1Euro > 1)
-                        strErro.AppendFormat("O valor financiado do negócio " + (proposal.SubTotal.Value - servicosReecorrents) + " € é diferente do pedido da aprovação no momento em que pediu (" + pz.ValorFinanciamento.Value + "€), por favor faça um novo pedido.", Environment.NewLine);
+                        strErro.AppendFormat("O valor financiado do negócio " + (proposal.SubTotal.Value - servicosReecorrents) + " € es diferente de la solicitud de aprobación en el momento en que fue solicitada (" + pz.ValorFinanciamento.Value + "€), Por favor, haga una nueva solicitud.", Environment.NewLine);
                 }
 
                 if (pz != null && ft.FinancingTypeCode != 0 && pz.FinancingID != ft.FinancingTypeCode)
                 {
-                    strErro.AppendFormat("O tipo de financiamento é diferente do pedido da aprovação financeira");
+                    strErro.AppendFormat("El tipo de financiamiento es diferente a la solicitud de aprobación financiera.");
                 }
 
                 string frequencyPrinting = "";
@@ -1478,7 +1378,7 @@ namespace WebApplication1.Controllers
 
                     if (frequnecyPrazo != frequencyPrinting)
                     {
-                        strErro.AppendFormat("A periodicidade (Mensal ou Trimestral) de financiamento é diferente da cotação activa de serviço (Mensal ou Trimestral)!");
+                        strErro.AppendFormat("La periodicidad (mensual o trimestral) del financiamiento es diferente a la cotización activa del servicio (mensual o trimestral).");
                     }
                 }
 
@@ -1486,7 +1386,7 @@ namespace WebApplication1.Controllers
                 if(pz != null && pz.DataExpiracao != null)
                 {
                     if(pz.DataExpiracao <= DateTime.Now)
-                        strErro.AppendFormat("Foi ultrapassado a data de expiração da aprovação do crédito. Solicite um novo Pedido de Financiamento!");
+                        strErro.AppendFormat("Se ha superado la fecha de expiración de la aprobación de crédito. ¡Solicite un nuevo Pedido de Financiamiento!");
                 }
 
 
@@ -1541,9 +1441,9 @@ namespace WebApplication1.Controllers
                 if (ft.FinancingTypeCode != 0 && pz != null)
                 {
                     if (!pz.IsComplete.Value)
-                        strErro.AppendFormat("Pedido de Aprovação em análise!", Environment.NewLine);
+                        strErro.AppendFormat("Solicitud de aprobación en análisis.", Environment.NewLine);
                     if (pz.IsComplete.Value && pz.IsAproved != null && !pz.IsAproved.Value)
-                        strErro.AppendFormat("Pedido de Aprovação reprovado!", Environment.NewLine);
+                        strErro.AppendFormat("Solicitud de aprobación rechazada.", Environment.NewLine);
                 }
 
                 double servicosReecorrents = 0;
@@ -1551,12 +1451,12 @@ namespace WebApplication1.Controllers
                 if (pz != null && ft.FinancingTypeCode != 0)
                 {
                     if (pz.ValorFinanciamento.Value != (proposal.SubTotal.Value - servicosReecorrents))
-                        strErro.AppendFormat("O valor financiado do negócio " + (proposal.SubTotal.Value - servicosReecorrents) + " € é diferente do pedido da aprovação no momento em que pediu (" + pz.ValorFinanciamento.Value + "€), por favor faça um novo pedido.", Environment.NewLine);
+                        strErro.AppendFormat("El valor financiado del negocio " + (proposal.SubTotal.Value - servicosReecorrents) + " € es diferente al pedido de aprobación en el momento en que fue solicitado (" + pz.ValorFinanciamento.Value + "€), por favor, haga una nueva solicitud..", Environment.NewLine);
                 }
 
                 if (pz != null && ft.FinancingTypeCode != 0 && pz.FinancingID != ft.FinancingTypeCode)
                 {
-                    strErro.AppendFormat("O tipo de financiamento é diferente do pedido da aprovação financeira");
+                    strErro.AppendFormat("El tipo de financiamiento es diferente al solicitado en la aprobación financiera.");
                 }
 
 
@@ -1647,13 +1547,13 @@ namespace WebApplication1.Controllers
                         EmailMesage message = new EmailMesage();
 
                         message.Destination = "joao.reis@konicaminolta.pt";
-                        message.Subject = "Solicitação de documentos para seguimento do processo - Quote: " + proposal.CRM_QUOTE_ID;
+                        message.Subject = "Solicitud de documentos para seguimiento del proceso - Quote: " + proposal.CRM_QUOTE_ID;
                         //message.Subject = "Business Team - ";
                         StringBuilder strBuilder = new StringBuilder();
-                        strBuilder.Append("<p>Caro(a) Cliente,</p>");
-                        strBuilder.Append("Agradecemos a confiança por ter optado pelos nossos serviços!");
-                        strBuilder.Append("<p>Para darmos seguimento ao vosso processo, pedimos o envio da documentação constante da lista abaixo.</p>");
-                        strBuilder.Append("<b>Lista de documentos a remeter:</b>");
+                        strBuilder.Append("<p>Estimado/a cliente,</p>");
+                        strBuilder.Append("Agradecemos la confianza por haber elegido nuestros servicios.");
+                        strBuilder.Append("<p>Para dar seguimiento a su proceso, solicitamos el envío de la documentación que figura en la lista a continuación.</p>");
+                        strBuilder.Append("<b>Lista de documentos a enviar:</b>");
                         strBuilder.Append("<br/>");
                         foreach (var item in fd)
                         {
@@ -1667,14 +1567,14 @@ namespace WebApplication1.Controllers
 
 
                         }
-                        strBuilder.Append("<p>Para enviar-nos os documentos basta responder a este email com os documentos solicitados em anexo. Pedimos o favor de não alterar o “Assunto/Subject”.</p>");
-                        strBuilder.Append("<p>Ao seu dispor,</p>");
+                        strBuilder.Append("<p>Para enviarnos los documentos, simplemente responda a este correo electrónico adjuntando los documentos solicitados. Por favor, no cambie el  “Assunto/Subject”.</p>");
+                        strBuilder.Append("<p>A su disposición,</p>");
                         strBuilder.Append("<p>Konica Minolta</p>");
                         message.Body = strBuilder.ToString();
 
                         await emailSend.SendEmailaync(message);
 
-                        err.Message = "Email enviado ao cliente";
+                        err.Message = "Correo electrónico enviado al cliente.";
 
                         proposal.StatusID = 11;
                         db.Entry(proposal).State = EntityState.Modified;
@@ -2184,13 +2084,13 @@ namespace WebApplication1.Controllers
                     switch (i.Value_New)
                     {
                         case "1":
-                            h.Status = "Rascunho";
+                            h.Status = "Borrador";
                             break;
                         case "5":
-                            h.Status = "Adjudicação";
+                            h.Status = "Adjudicación";
                             break;
                         case "7":
-                            h.Status = "Submtido em CRM";
+                            h.Status = "Presentado en CRM";
                             break;
                         case "11":
                             h.Status = "LeaseDesk";
@@ -2362,7 +2262,7 @@ namespace WebApplication1.Controllers
                 db.BB_Permissions.Add(newPermission);
                 db.SaveChanges();
             }
-            ac.Message = "Permissão gravada com sucesso!";
+            ac.Message = "Permiso guardado con éxito.";
             return Request.CreateResponse(HttpStatusCode.OK, ac);
         }
 

@@ -29,6 +29,7 @@
           <Property Name="Function" Type="nvarchar(max)" />
           <Property Name="Location" Type="nvarchar(max)" />
           <Property Name="DisplayName1" Type="nvarchar(max)" />
+          <Property Name="Country" Type="nchar" MaxLength="3" />
         </EntityType>
         <EntityType Name="KM_UserRole">
           <Key>
@@ -70,6 +71,7 @@
           <Property Name="Function" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DisplayName1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityContainer Name="masterEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" />
@@ -92,6 +94,7 @@
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="masterModel.AspNetUsers">
               <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="DisplayName1" ColumnName="DisplayName1" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="Function" ColumnName="Function" />

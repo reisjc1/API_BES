@@ -34,5 +34,6 @@ namespace WebApplication1.Models
         public string Function { get; set; }
         public string Location { get; set; }
         public string DisplayName1 { get; set; }
+        public string Country { get; set; }
     }
 }
