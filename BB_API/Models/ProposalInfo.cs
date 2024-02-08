@@ -278,6 +278,7 @@ namespace WebApplication1.Models
         public DateTime ModifiedTime { get; set; }
 
         public ProposalStatus Status { get; set; }
+        public int StatusID { get; set; }
 
         public List<CRObservations> CRObservations { get; set; }
 
