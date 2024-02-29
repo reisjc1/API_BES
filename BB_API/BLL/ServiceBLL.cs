@@ -159,7 +159,7 @@ namespace WebApplication1.BLL
                         string origin = proposal.Draft.details.ModifiedBy;
                         //SendServiceRequestEmail(origin, requestID, serviceType);
                         proposal.Draft.printingServices2.PendingServiceQuoteRequests.Add(pendingQuoteRequest);
-                        err.Message = "Pedido de Serviço efectuado com sucesso!";
+                        err.Message = "¡Pedido de Servicio realizado con éxito!";
                     }
                 }
                 err.ProposalObj = proposal;
@@ -167,7 +167,7 @@ namespace WebApplication1.BLL
             }
             catch (Exception e)
             {
-                err.Message = "Falhou Pedido de serviço! Contactar a equipa do BB.";
+                err.Message = "¡Fallo en el pedido de servicio! Contactar al equipo de BB.";
                 return err;
             }
         }
