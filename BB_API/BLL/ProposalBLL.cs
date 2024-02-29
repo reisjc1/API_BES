@@ -1336,11 +1336,11 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    if(proposalPS2.ApprovedPrintingServices.Count != 0)
-                    {
+                    //if(proposalPS2.ApprovedPrintingServices.Count != 0)
+                    //{
                         proposalPS2.ApprovedPrintingServices = proposalPS2.ApprovedPrintingServices.OrderBy(x => x.IsPrecalc).ToList();
                         err.ProposalObj.Draft.printingServices2 = proposalPS2;
-                    }
+                    //}
 
                     
 
