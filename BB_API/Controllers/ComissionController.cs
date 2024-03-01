@@ -95,6 +95,85 @@ namespace WebApplication1.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
+        [ActionName("GetProcessosVendasShared")]
+        public List<BB_PROPOSALS_GET_V1> GetProcessosVendasShared([FromBody] UserName1 Owner)
+        {
+            //AspNetUsers user = dbUsers.AspNetUsers.Where(x => x.UserName == Owner.Owner).FirstOrDefault();
+            List<BB_PROPOSALS_GET_V1> lst = new List<BB_PROPOSALS_GET_V1>();
+            try
+            {
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
+
+                    conn.Open();
+
+                    // 1.  create a command object identifying the stored procedure
+                    SqlCommand cmd = new SqlCommand("sp_Get_proposals_by_Shared", conn);
+                    cmd.CommandTimeout = 180;
+                    // 2. set the command object so it knows to execute a stored procedure
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userEmail", Owner.username);
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+
+                    // iterate through results, printing each to console
+                    while (rdr.Read())
+                    {
+                        try
+                        {
+                            BB_PROPOSALS_GET_V1 m = new BB_PROPOSALS_GET_V1();
+                            m.ID = (int)rdr["ID"];
+                            m.AccountNumber = rdr["NCliente"].ToString();
+                            m.ClientName = rdr["Cliente"].ToString();
+                            m.Name = rdr["Name"].ToString();
+                            //m.Description = rdr["Description"].ToString();
+                            m.TotalValue = rdr["valor"].ToString() != "" ? (double.Parse(rdr["valor"].ToString())) : 0;
+                            m.QuoteCRM = rdr["QuoteCRM"].ToString();
+                            m.ModifiedTime = rdr["UltimaModificacao"] != null ? DateTime.Parse(rdr["UltimaModificacao"].ToString()) : new DateTime();
+                            m.CreatedTime = rdr["CreatedTime"] != null ? DateTime.Parse(rdr["CreatedTime"].ToString()) : new DateTime();
+                            //m.Status = new BB_Proposal_Status
+                            //{
+                            //    Description = rdr["Estado"].ToString(),
+                            //    Phase = (int)rdr["Phase"],
+                            //    ID = (int)rdr["EstadoID"],
+                            //};
+                            m.FinancingStatus = rdr["Financeiro"].ToString();
+                            m.ServiceStatus = rdr["Servico"].ToString();
+                            m.LeaseDeskStatus = rdr["PosVenda"].ToString();
+                            m.CreatedByEmail = rdr["CreatedByEmail"].ToString();
+                            m.CreatedByName = rdr["CreatedByName"].ToString();
+                            m.AccountManagerName = rdr["AccountManagerName"].ToString();
+                            m.AccountManagerEmail = rdr["AccountManagerEmail"].ToString();
+                            m.ModifiedByEmail = rdr["ModifiedByEmail"].ToString();
+                            m.ModifiedByName = rdr["ModifiedByName"].ToString();
+                            lst.Add(m);
+
+                            if ((int)rdr["ID"] > 2000)
+                            {
+                                var test = m;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
+                    }
+
+                    rdr.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+
+
+            return lst;
+        }
+
+        [AcceptVerbs("GET", "POST")]
         [ActionName("GetProposta")]
         public IHttpActionResult GetProposta(int? proposalID)
         {
