@@ -22,5 +22,7 @@ namespace WebApplication1.Models
         public Nullable<System.DateTime> CreatedTime { get; set; }
         public Nullable<System.DateTime> ModifiedTime { get; set; }
         public string CreatedUser { get; set; }
+        public Nullable<int> ProposalID { get; set; }
+        public string PermissionType { get; set; }
     }
 }

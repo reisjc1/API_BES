@@ -520,6 +520,8 @@
           <Property Name="CreatedTime" Type="datetime" />
           <Property Name="ModifiedTime" Type="datetime" />
           <Property Name="CreatedUser" Type="nvarchar(max)" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="PermissionType" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="BB_Permissions_History">
           <Key>
@@ -2923,6 +2925,8 @@
           <Property Name="CreatedTime" Type="DateTime" Precision="3" />
           <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
           <Property Name="CreatedUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="PermissionType" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BB_Permissions_History">
           <Key>
@@ -4279,6 +4283,8 @@
           <EntitySetMapping Name="BB_Permissions">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Permissions">
               <MappingFragment StoreEntitySet="BB_Permissions">
+                <ScalarProperty Name="PermissionType" ColumnName="PermissionType" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
                 <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
                 <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />

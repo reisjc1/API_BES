@@ -760,7 +760,9 @@ namespace WebApplication1.Models
         public string initialDate { get; set; }
         public string endDate { get; set; }
         public string isPermanent { get; set; }         //public ProposalRootObject proposalData { get; set; }
-        public Draft Draft { get; set; }
+        public string PermissionType { get; set; }
+        public string CreatedBy { get; set; }
+        public Draft Draft { get; set; }
         public Summary Summary { get; set; }
     }
     public class BB_ProposalModel

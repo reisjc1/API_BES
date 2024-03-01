@@ -2247,7 +2247,7 @@ namespace WebApplication1.Controllers
                     newPermission.InitialDate = DateTime.Parse(p.initialDate);
                     newPermission.EndDate = DateTime.Parse(p.endDate);
                 }
-                if (p.isPermanent == "Sim")
+                if (p.isPermanent == "Sim" || p.isPermanent == "Sí")
                 {
                     newPermission.IsPermanent = true;
                 }
@@ -2255,14 +2255,16 @@ namespace WebApplication1.Controllers
                 {
                     newPermission.IsPermanent = false;
                 }
-                //newPermission.CreatedUser = User.Identity.Name;
+                newPermission.CreatedUser = p.CreatedBy;
                 newPermission.CreatedTime = DateTime.Now;
                 newPermission.ModifiedTime = DateTime.Now;
+                newPermission.ProposalID = proposalID;
+                newPermission.PermissionType = p.PermissionType;
 
                 db.BB_Permissions.Add(newPermission);
                 db.SaveChanges();
             }
-            ac.Message = "Permiso guardado con éxito.";
+            ac.Message = "Permissão gravada com sucesso!";
             return Request.CreateResponse(HttpStatusCode.OK, ac);
         }
 
