@@ -24,5 +24,6 @@ namespace WebApplication1.Models
         public string CreatedUser { get; set; }
         public Nullable<int> ProposalID { get; set; }
         public string PermissionType { get; set; }
+        public Nullable<bool> ToDelete { get; set; }
     }
 }

@@ -175,6 +175,7 @@ namespace WebApplication1.Models
         public Consignment consignment { get; set; }
 
         public List<Maquinas_Usadas_Gestor> Maquinas_Usadas_Gestor { get; set; }
+        public List<BB_Permissions> shareProfileDelegation { get; set; }
     }
 
     public class OPSPacks
@@ -756,6 +757,7 @@ namespace WebApplication1.Models
 
     public class ShareOportunity
     {
+        public int ID { get; set; }
         public string user { get; set; }
         public string initialDate { get; set; }
         public string endDate { get; set; }

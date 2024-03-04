@@ -990,6 +990,23 @@ namespace WebApplication1.BLL
                     consignment.ProposalID = ProposalID;
 
                     db.BB_Proposal_Consignments.Add(consignment);
+
+                    //BB_Permissions
+                    if (p.Draft.shareProfileDelegation != null)
+                    {
+                        List<BB_Permissions> bB_Permissions_db = db.BB_Permissions.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
+                        
+                        if(p.Draft.shareProfileDelegation.Count != bB_Permissions_db.Count)
+                        {
+                            bB_Permissions_db.ForEach(permission => permission.ToDelete = !p.Draft.shareProfileDelegation.Any(i => i.ID == permission.ID));
+
+                        }
+                    }
+                    else
+                    {
+                        err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
+                    }
+
                     try
                     {
                         db.SaveChanges();
@@ -1523,6 +1540,18 @@ namespace WebApplication1.BLL
                     m.Modelo = db.BB_Maquinas_Usadas.Where(x => x.NUS_Referencia == item.Codref).Select(x => x.NUS_Modelo).FirstOrDefault();
 
                     err.ProposalObj.Draft.Maquinas_Usadas_Gestor.Add(m);
+                }
+
+                //BB_Permissions
+                err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
+                List<BB_Permissions> bB_Permissions = db.BB_Permissions.Where(x => x.ProposalID == proposal.ID).Where(x => x.ToDelete == false).ToList();
+                if (bB_Permissions != null)
+                {
+                    err.ProposalObj.Draft.shareProfileDelegation = bB_Permissions;
+                }
+                else
+                {
+                    err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
                 }
             }
             catch (Exception ex)
@@ -2204,6 +2233,17 @@ namespace WebApplication1.BLL
                 consignment.ProposalID = ProposalID;
 
                 db.BB_Proposal_Consignments.Add(consignment);
+
+                ////BB_Permissions
+                //if (p.Draft.shareProfileDelegation != null)
+                //{
+                //    err.ProposalObj.Draft.shareProfileDelegation = p.Draft.shareProfileDelegation;
+                //}
+                //else
+                //{
+                //    err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
+                //}
+
                 try
                 {
                     db.SaveChanges();

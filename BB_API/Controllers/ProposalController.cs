@@ -2260,6 +2260,7 @@ namespace WebApplication1.Controllers
                 newPermission.ModifiedTime = DateTime.Now;
                 newPermission.ProposalID = proposalID;
                 newPermission.PermissionType = p.PermissionType;
+                newPermission.ToDelete = false;
 
                 db.BB_Permissions.Add(newPermission);
                 db.SaveChanges();
