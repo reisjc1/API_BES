@@ -26,5 +26,19 @@ namespace WebApplication1.Models
         public string Email { get; set; }
         public string Phone { get; set; }
         public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public string Department { get; set; }
+        public string Floor { get; set; }
+        public string Building { get; set; }
+        public string Room { get; set; }
+        public string Schedule { get; set; }
+        public string Payer { get; set; }
+        public string BillReceiver { get; set; }
+        public Nullable<int> DeliveryContact { get; set; }
+        public Nullable<int> ITContact { get; set; }
+        public Nullable<int> ServiceContact { get; set; }
+        public Nullable<int> CopiesContact { get; set; }
+        public Nullable<int> DeliveryDelegation { get; set; }
+        public Nullable<int> EquipmentID { get; set; }
+        public Nullable<int> AccessoryID { get; set; }
     }
 }

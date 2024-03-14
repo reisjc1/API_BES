@@ -101,6 +101,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_MIF_Renovations_State" Width="1.5" PointX="28.375" PointY="10.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_MIF_Renovations_Comments" Width="1.5" PointX="28.375" PointY="13.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_MIF_Renovations" Width="1.5" PointX="14.375" PointY="29.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_DeliveryContactsInfo" Width="1.5" PointX="28.375" PointY="19.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -28,5 +28,13 @@ namespace WebApplication1.Models
         public string Contacto { get; set; }
         public string PostalCode { get; set; }
         public string County { get; set; }
+        public string AddressType { get; set; }
+        public string SAPCustomerNr { get; set; }
+        public string NIF_CIF { get; set; }
+        public string BusinessCode { get; set; }
+        public string Customer1 { get; set; }
+        public string Customer2 { get; set; }
+        public string StreetAndNr { get; set; }
+        public string Country { get; set; }
     }
 }

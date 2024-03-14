@@ -113,5 +113,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_RD_MIF_Renovations_State> BB_RD_MIF_Renovations_State { get; set; }
         public virtual DbSet<BB_MIF_Renovations_Comments> BB_MIF_Renovations_Comments { get; set; }
         public virtual DbSet<BB_MIF_Renovations> BB_MIF_Renovations { get; set; }
+        public virtual DbSet<BB_DeliveryContactsInfo> BB_DeliveryContactsInfo { get; set; }
     }
 }

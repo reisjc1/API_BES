@@ -203,6 +203,18 @@
           <Property Name="Enable" Type="bit" />
           <Property Name="BEU" Type="float" />
         </EntityType>
+        <EntityType Name="BB_DeliveryContactsInfo">
+          <Key>
+            <PropertyRef Name="ContactID" />
+          </Key>
+          <Property Name="ContactID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" />
+          <Property Name="Surname" Type="varchar" MaxLength="100" />
+          <Property Name="Tel" Type="int" />
+          <Property Name="Movel" Type="int" />
+          <Property Name="Email" Type="varchar" MaxLength="255" />
+          <Property Name="Department" Type="varchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="BB_Equipamentos">
           <Key>
             <PropertyRef Name="ID" />
@@ -284,6 +296,14 @@
           <Property Name="Contacto" Type="nvarchar(max)" />
           <Property Name="PostalCode" Type="nvarchar(max)" />
           <Property Name="County" Type="nvarchar(max)" />
+          <Property Name="AddressType" Type="varchar" MaxLength="255" />
+          <Property Name="SAPCustomerNr" Type="varchar" MaxLength="255" />
+          <Property Name="NIF_CIF" Type="varchar" MaxLength="255" />
+          <Property Name="BusinessCode" Type="varchar" MaxLength="255" />
+          <Property Name="Customer1" Type="varchar" MaxLength="255" />
+          <Property Name="Customer2" Type="varchar" MaxLength="255" />
+          <Property Name="StreetAndNr" Type="varchar" MaxLength="255" />
+          <Property Name="Country" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="BB_Logs_Proposal">
           <Key>
@@ -803,6 +823,20 @@
           <Property Name="Email" Type="nvarchar(max)" />
           <Property Name="Phone" Type="nvarchar(max)" />
           <Property Name="DeliveryDate" Type="date" />
+          <Property Name="Department" Type="varchar" MaxLength="255" />
+          <Property Name="Floor" Type="varchar" MaxLength="255" />
+          <Property Name="Building" Type="varchar" MaxLength="255" />
+          <Property Name="Room" Type="varchar" MaxLength="255" />
+          <Property Name="Schedule" Type="varchar" MaxLength="255" />
+          <Property Name="Payer" Type="varchar" MaxLength="255" />
+          <Property Name="BillReceiver" Type="varchar" MaxLength="255" />
+          <Property Name="DeliveryContact" Type="int" />
+          <Property Name="ITContact" Type="int" />
+          <Property Name="ServiceContact" Type="int" />
+          <Property Name="CopiesContact" Type="int" />
+          <Property Name="DeliveryDelegation" Type="int" />
+          <Property Name="EquipmentID" Type="int" />
+          <Property Name="AccessoryID" Type="int" />
         </EntityType>
         <EntityType Name="BB_Proposal_Financing">
           <Key>
@@ -1399,6 +1433,7 @@
           <EntitySet Name="BB_CRM_Quotes" EntityType="Self.BB_CRM_Quotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_CRM_Workflow" EntityType="Self.BB_CRM_Workflow" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Data_Integration" EntityType="Self.BB_Data_Integration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_DeliveryContactsInfo" EntityType="Self.BB_DeliveryContactsInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Equipamentos" EntityType="Self.BB_Equipamentos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Financing_Documentos" EntityType="Self.BB_Financing_Documentos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_FinancingContractType" EntityType="Self.BB_FinancingContractType" Schema="dbo" store:Type="Tables" />
@@ -1631,6 +1666,7 @@
           <EntitySet Name="BB_RD_MIF_Renovations_State" EntityType="BB_DB_DEVModel.BB_RD_MIF_Renovations_State" />
           <EntitySet Name="BB_MIF_Renovations_Comments" EntityType="BB_DB_DEVModel.BB_MIF_Renovations_Comments" />
           <EntitySet Name="BB_MIF_Renovations" EntityType="BB_DB_DEVModel.BB_MIF_Renovations" />
+          <EntitySet Name="BB_DeliveryContactsInfo" EntityType="BB_DB_DEVModel.BB_DeliveryContactsInfo" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -2128,6 +2164,14 @@
           <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddressType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SAPCustomerNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NIF_CIF" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessCode" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Customer1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Customer2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="StreetAndNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BB_Financing_Documentos">
           <Key>
@@ -2676,6 +2720,20 @@
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
+          <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Floor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Building" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Room" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Schedule" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Payer" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BillReceiver" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="DeliveryContact" Type="Int32" />
+          <Property Name="ITContact" Type="Int32" />
+          <Property Name="ServiceContact" Type="Int32" />
+          <Property Name="CopiesContact" Type="Int32" />
+          <Property Name="DeliveryDelegation" Type="Int32" />
+          <Property Name="EquipmentID" Type="Int32" />
+          <Property Name="AccessoryID" Type="Int32" />
         </EntityType>
         <EntityType Name="BB_Proposal_ItemDoBasket">
           <Key>
@@ -3025,6 +3083,18 @@
           <Property Name="Comments" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="PriorityType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="State" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_DeliveryContactsInfo">
+          <Key>
+            <PropertyRef Name="ContactID" />
+          </Key>
+          <Property Name="ContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Surname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Tel" Type="Int32" />
+          <Property Name="Movel" Type="Int32" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -3546,6 +3616,14 @@
           <EntitySetMapping Name="BB_LocaisEnvio">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
               <MappingFragment StoreEntitySet="BB_LocaisEnvio">
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="StreetAndNr" ColumnName="StreetAndNr" />
+                <ScalarProperty Name="Customer2" ColumnName="Customer2" />
+                <ScalarProperty Name="Customer1" ColumnName="Customer1" />
+                <ScalarProperty Name="BusinessCode" ColumnName="BusinessCode" />
+                <ScalarProperty Name="NIF_CIF" ColumnName="NIF_CIF" />
+                <ScalarProperty Name="SAPCustomerNr" ColumnName="SAPCustomerNr" />
+                <ScalarProperty Name="AddressType" ColumnName="AddressType" />
                 <ScalarProperty Name="County" ColumnName="County" />
                 <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
                 <ScalarProperty Name="Contacto" ColumnName="Contacto" />
@@ -4047,6 +4125,20 @@
           <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
               <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
+                <ScalarProperty Name="AccessoryID" ColumnName="AccessoryID" />
+                <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
+                <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
+                <ScalarProperty Name="CopiesContact" ColumnName="CopiesContact" />
+                <ScalarProperty Name="ServiceContact" ColumnName="ServiceContact" />
+                <ScalarProperty Name="ITContact" ColumnName="ITContact" />
+                <ScalarProperty Name="DeliveryContact" ColumnName="DeliveryContact" />
+                <ScalarProperty Name="BillReceiver" ColumnName="BillReceiver" />
+                <ScalarProperty Name="Payer" ColumnName="Payer" />
+                <ScalarProperty Name="Schedule" ColumnName="Schedule" />
+                <ScalarProperty Name="Room" ColumnName="Room" />
+                <ScalarProperty Name="Building" ColumnName="Building" />
+                <ScalarProperty Name="Floor" ColumnName="Floor" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
                 <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -4399,6 +4491,19 @@
                 <ScalarProperty Name="ContractType" ColumnName="ContractType" />
                 <ScalarProperty Name="ContractNr" ColumnName="ContractNr" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_DeliveryContactsInfo">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_DeliveryContactsInfo">
+              <MappingFragment StoreEntitySet="BB_DeliveryContactsInfo">
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Movel" ColumnName="Movel" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

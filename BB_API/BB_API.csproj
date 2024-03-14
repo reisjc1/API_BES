@@ -254,6 +254,7 @@
     <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\HumanResourcesController.cs" />
     <Compile Include="Controllers\LeaseDeskApprovalController.cs" />
+    <Compile Include="Controllers\ShiptoController.cs" />
     <Compile Include="Controllers\MIFRenovationsController.cs" />
     <Compile Include="Controllers\SLAsController.cs" />
     <Compile Include="Controllers\LeaseDeskController.cs" />
@@ -310,6 +311,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Data_Integration.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BB_DeliveryContactsInfo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Documents_Type.cs">
