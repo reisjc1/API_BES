@@ -34,25 +34,25 @@ namespace WebApplication1.Controllers
         // ##################################################################################
         // ##################################################################################
 
-        //[AcceptVerbs("GET", "POST")]
-        //[ActionName("Save_DeliveryLocationInfo")]
-        //public IHttpActionResult Save_DeliveryLocationInfo(ProposalRootObject p)
-        //{
-        //    try
-        //    {
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("AddNewDeliveryLocation")]
+        public IHttpActionResult AddNewDeliveryLocation(BB_LocaisEnvio deliveryLocation)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    db.BB_LocaisEnvio.Add(deliveryLocation);
+                    db.SaveChanges();
+                }
 
-        //        using (var db = new BB_DB_DEVEntities2())
-        //        {
-        //            lst_Locais = db.BB_LocaisEnvio.ToList();
-        //        }
-
-        //        return Ok(lst_Locais);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NotFound();
-        //    }
-        //}
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
 
         // ##################################################################################
         // ##################################################################################
