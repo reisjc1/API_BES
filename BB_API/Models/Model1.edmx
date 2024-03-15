@@ -1583,7 +1583,6 @@
           <EntitySet Name="BB_Campanha_Items" EntityType="BB_DB_DEVModel.BB_Campanha_Items" />
           <EntitySet Name="BB_Campanha_Financing" EntityType="BB_DB_DEVModel.BB_Campanha_Financing" />
           <EntitySet Name="BB_Campanhas_Printing" EntityType="BB_DB_DEVModel.BB_Campanhas_Printing" />
-          <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           <EntitySet Name="BB_Financing_Documentos" EntityType="BB_DB_DEVModel.BB_Financing_Documentos" />
           <EntitySet Name="LD_DocumentClassification" EntityType="BB_DB_DEVModel.LD_DocumentClassification" />
           <EntitySet Name="BB_Proposal_PrintingServices" EntityType="BB_DB_DEVModel.BB_Proposal_PrintingServices" />
@@ -1669,6 +1668,7 @@
           <EntitySet Name="BB_MIF_Renovations_Comments" EntityType="BB_DB_DEVModel.BB_MIF_Renovations_Comments" />
           <EntitySet Name="BB_MIF_Renovations" EntityType="BB_DB_DEVModel.BB_MIF_Renovations" />
           <EntitySet Name="BB_DeliveryContactsInfo" EntityType="BB_DB_DEVModel.BB_DeliveryContactsInfo" />
+          <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -2147,36 +2147,6 @@
           <Property Name="Value" Type="Double" />
           <Property Name="PagExcendentes" Type="Double" />
           <Property Name="CampanhaID" Type="Int32" />
-        </EntityType>
-        <EntityType Name="BB_LocaisEnvio">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Documento" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CodRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="AccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="NomeCliente" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Quote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ShipCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="AddressType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="SAPCustomerNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="NIF_CIF" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="BusinessCode" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Customer1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Customer2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="StreetAndNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RoadType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="RoadName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="RoadNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BB_Financing_Documentos">
           <Key>
@@ -3101,6 +3071,35 @@
           <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="BB_LocaisEnvio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Documento" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CodRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NomeCliente" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Quote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ShipCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddressType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SAPCustomerNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NIF_CIF" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessCode" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Customer1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Customer2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RoadType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="RoadName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="RoadNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3614,36 +3613,6 @@
                 <ScalarProperty Name="PagExcendentes" ColumnName="PagExcendentes" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="TFM" ColumnName="TFM" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_LocaisEnvio">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
-              <MappingFragment StoreEntitySet="BB_LocaisEnvio">
-                <ScalarProperty Name="RoadNumber" ColumnName="RoadNumber" />
-                <ScalarProperty Name="RoadName" ColumnName="RoadName" />
-                <ScalarProperty Name="RoadType" ColumnName="RoadType" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="Customer2" ColumnName="Customer2" />
-                <ScalarProperty Name="Customer1" ColumnName="Customer1" />
-                <ScalarProperty Name="BusinessCode" ColumnName="BusinessCode" />
-                <ScalarProperty Name="NIF_CIF" ColumnName="NIF_CIF" />
-                <ScalarProperty Name="SAPCustomerNr" ColumnName="SAPCustomerNr" />
-                <ScalarProperty Name="AddressType" ColumnName="AddressType" />
-                <ScalarProperty Name="County" ColumnName="County" />
-                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
-                <ScalarProperty Name="Contacto" ColumnName="Contacto" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="Adress2" ColumnName="Adress2" />
-                <ScalarProperty Name="Adress1" ColumnName="Adress1" />
-                <ScalarProperty Name="ShipCode" ColumnName="ShipCode" />
-                <ScalarProperty Name="Quote" ColumnName="Quote" />
-                <ScalarProperty Name="NomeCliente" ColumnName="NomeCliente" />
-                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CodRef" ColumnName="CodRef" />
-                <ScalarProperty Name="Documento" ColumnName="Documento" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -4511,6 +4480,36 @@
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_LocaisEnvio">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
+              <MappingFragment StoreEntitySet="BB_LocaisEnvio">
+                <ScalarProperty Name="RoadNumber" ColumnName="RoadNumber" />
+                <ScalarProperty Name="RoadName" ColumnName="RoadName" />
+                <ScalarProperty Name="RoadType" ColumnName="RoadType" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Customer2" ColumnName="Customer2" />
+                <ScalarProperty Name="Customer1" ColumnName="Customer1" />
+                <ScalarProperty Name="BusinessCode" ColumnName="BusinessCode" />
+                <ScalarProperty Name="NIF_CIF" ColumnName="NIF_CIF" />
+                <ScalarProperty Name="SAPCustomerNr" ColumnName="SAPCustomerNr" />
+                <ScalarProperty Name="AddressType" ColumnName="AddressType" />
+                <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Contacto" ColumnName="Contacto" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Adress2" ColumnName="Adress2" />
+                <ScalarProperty Name="Adress1" ColumnName="Adress1" />
+                <ScalarProperty Name="ShipCode" ColumnName="ShipCode" />
+                <ScalarProperty Name="Quote" ColumnName="Quote" />
+                <ScalarProperty Name="NomeCliente" ColumnName="NomeCliente" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CodRef" ColumnName="CodRef" />
+                <ScalarProperty Name="Documento" ColumnName="Documento" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

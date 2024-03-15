@@ -60,7 +60,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Campanha_Items> BB_Campanha_Items { get; set; }
         public virtual DbSet<BB_Campanha_Financing> BB_Campanha_Financing { get; set; }
         public virtual DbSet<BB_Campanhas_Printing> BB_Campanhas_Printing { get; set; }
-        public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
         public virtual DbSet<BB_Financing_Documentos> BB_Financing_Documentos { get; set; }
         public virtual DbSet<LD_DocumentClassification> LD_DocumentClassification { get; set; }
         public virtual DbSet<BB_Proposal_PrintingServices> BB_Proposal_PrintingServices { get; set; }
@@ -114,5 +113,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_MIF_Renovations_Comments> BB_MIF_Renovations_Comments { get; set; }
         public virtual DbSet<BB_MIF_Renovations> BB_MIF_Renovations { get; set; }
         public virtual DbSet<BB_DeliveryContactsInfo> BB_DeliveryContactsInfo { get; set; }
+        public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
     }
 }

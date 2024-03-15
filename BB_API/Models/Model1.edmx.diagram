@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="92e69cd63c354872a780272c018650b2" Name="Diagram1" ZoomLevel="72">
+      <Diagram DiagramId="92e69cd63c354872a780272c018650b2" Name="Diagram1" ZoomLevel="93">
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Acessories" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Bank_Bnp" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Consumables" Width="1.5" PointX="0.75" PointY="4.75" />
@@ -40,7 +40,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Campanha_Items" Width="1.5" PointX="17.375" PointY="11.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Campanha_Financing" Width="1.5" PointX="17.375" PointY="14.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Campanhas_Printing" Width="1.5" PointX="17.375" PointY="17.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_LocaisEnvio" Width="1.5" PointX="19.375" PointY="4.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Financing_Documentos" Width="1.5" PointX="0.75" PointY="20.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentClassification" Width="1.5" PointX="2.75" PointY="20.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_PrintingServices" Width="1.875" PointX="13.375" PointY="19.75" />
@@ -102,6 +101,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_MIF_Renovations_Comments" Width="1.5" PointX="28.375" PointY="13.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_MIF_Renovations" Width="1.5" PointX="14.375" PointY="29.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_DeliveryContactsInfo" Width="1.5" PointX="28.375" PointY="19.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_LocaisEnvio" Width="1.5" PointX="29.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
