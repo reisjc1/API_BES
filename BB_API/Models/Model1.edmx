@@ -302,8 +302,10 @@
           <Property Name="BusinessCode" Type="varchar" MaxLength="255" />
           <Property Name="Customer1" Type="varchar" MaxLength="255" />
           <Property Name="Customer2" Type="varchar" MaxLength="255" />
-          <Property Name="StreetAndNr" Type="varchar" MaxLength="255" />
           <Property Name="Country" Type="varchar" MaxLength="50" />
+          <Property Name="RoadType" Type="varchar" MaxLength="255" />
+          <Property Name="RoadName" Type="varchar" MaxLength="255" />
+          <Property Name="RoadNumber" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="BB_Logs_Proposal">
           <Key>
@@ -2172,6 +2174,9 @@
           <Property Name="Customer2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="StreetAndNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RoadType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="RoadName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="RoadNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BB_Financing_Documentos">
           <Key>
@@ -3616,8 +3621,10 @@
           <EntitySetMapping Name="BB_LocaisEnvio">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
               <MappingFragment StoreEntitySet="BB_LocaisEnvio">
+                <ScalarProperty Name="RoadNumber" ColumnName="RoadNumber" />
+                <ScalarProperty Name="RoadName" ColumnName="RoadName" />
+                <ScalarProperty Name="RoadType" ColumnName="RoadType" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="StreetAndNr" ColumnName="StreetAndNr" />
                 <ScalarProperty Name="Customer2" ColumnName="Customer2" />
                 <ScalarProperty Name="Customer1" ColumnName="Customer1" />
                 <ScalarProperty Name="BusinessCode" ColumnName="BusinessCode" />
