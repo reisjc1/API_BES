@@ -34,7 +34,6 @@ namespace WebApplication1.Models
         public string BusinessCode { get; set; }
         public string Customer1 { get; set; }
         public string Customer2 { get; set; }
-        public string StreetAndNr { get; set; }
         public string Country { get; set; }
         public string RoadType { get; set; }
         public string RoadName { get; set; }
