@@ -1324,6 +1324,15 @@
           <Property Name="Email" Type="bit" />
           <Property Name="IsOptional" Type="bit" />
         </EntityType>
+        <EntityType Name="RD_AddressAcronyms">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NrSAP" Type="int" />
+          <Property Name="SA" Type="varchar" MaxLength="10" />
+          <Property Name="Street" Type="text" />
+        </EntityType>
         <Association Name="FK_BB_PrintingService_Machines_BB_PrintingServices">
           <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="1" />
           <End Role="BB_PrintingService_Machines" Type="Self.BB_PrintingService_Machines" Multiplicity="*" />
@@ -1510,6 +1519,7 @@
           <EntitySet Name="BB_WorkSheet_PT_Metadata" EntityType="Self.BB_WorkSheet_PT_Metadata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LD_DocumentClassification" EntityType="Self.LD_DocumentClassification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LD_FinancingDocument" EntityType="Self.LD_FinancingDocument" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RD_AddressAcronyms" EntityType="Self.RD_AddressAcronyms" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="Self.FK_BB_PrintingService_Machines_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
@@ -1669,6 +1679,7 @@
           <EntitySet Name="BB_MIF_Renovations" EntityType="BB_DB_DEVModel.BB_MIF_Renovations" />
           <EntitySet Name="BB_DeliveryContactsInfo" EntityType="BB_DB_DEVModel.BB_DeliveryContactsInfo" />
           <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
+          <EntitySet Name="RD_AddressAcronyms" EntityType="BB_DB_DEVModel.RD_AddressAcronyms" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3100,6 +3111,15 @@
           <Property Name="RoadName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="RoadNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="RD_AddressAcronyms">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NrSAP" Type="Int32" />
+          <Property Name="SA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Street" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4509,6 +4529,16 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CodRef" ColumnName="CodRef" />
                 <ScalarProperty Name="Documento" ColumnName="Documento" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RD_AddressAcronyms">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.RD_AddressAcronyms">
+              <MappingFragment StoreEntitySet="RD_AddressAcronyms">
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="SA" ColumnName="SA" />
+                <ScalarProperty Name="NrSAP" ColumnName="NrSAP" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

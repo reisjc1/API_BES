@@ -1211,6 +1211,14 @@ namespace WebApplication1.Controllers
             // Return true if the URL is an HTTPS URL.
             return url.ToLower().StartsWith("https://");
         }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetAddressAcronyms")]
+        public List<string> GetAddressAcronyms()
+        {
+            List<string> addressAcronyms = db.RD_AddressAcronyms.Select(x => x.SA).ToList();
+            return addressAcronyms;
+        }
     }
 
 

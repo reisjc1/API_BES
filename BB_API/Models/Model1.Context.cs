@@ -114,5 +114,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_MIF_Renovations> BB_MIF_Renovations { get; set; }
         public virtual DbSet<BB_DeliveryContactsInfo> BB_DeliveryContactsInfo { get; set; }
         public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
+        public virtual DbSet<RD_AddressAcronyms> RD_AddressAcronyms { get; set; }
     }
 }

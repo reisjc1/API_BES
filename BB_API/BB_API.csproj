@@ -658,6 +658,9 @@
       <DependentUpon>PortalUsers.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\ProposalInfo.cs" />
+    <Compile Include="Models\RD_AddressAcronyms.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RequestModels\ServiceQuoteDeleteRequest.cs" />
     <Compile Include="Models\SLAs\SLA.cs" />
     <Compile Include="Models\SLAs\SLAsFromDB.cs" />
