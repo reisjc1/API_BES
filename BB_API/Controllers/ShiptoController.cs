@@ -80,7 +80,7 @@ namespace WebApplication1.Controllers
                     db.SaveChanges();
                 }
 
-                return Ok();
+                return Ok(bb_proposal_deliveryLocation);
             }
             catch (Exception ex)
             {
