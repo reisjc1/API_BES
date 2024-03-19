@@ -68,5 +68,24 @@ namespace WebApplication1.Controllers
         // ##################################################################################
         // ##################################################################################
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("AddNewBBProposalDeliveryLocation")]
+        public IHttpActionResult AddNewBBProposalDeliveryLocation(BB_Proposal_DeliveryLocation bb_proposal_deliveryLocation)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    db.BB_Proposal_DeliveryLocation.Add(bb_proposal_deliveryLocation);
+                    db.SaveChanges();
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
     }
 }

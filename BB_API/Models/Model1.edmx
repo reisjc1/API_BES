@@ -306,6 +306,9 @@
           <Property Name="RoadType" Type="varchar" MaxLength="255" />
           <Property Name="RoadName" Type="varchar" MaxLength="255" />
           <Property Name="RoadNumber" Type="varchar" MaxLength="255" />
+          <Property Name="ParentAccountNumber" Type="nvarchar(max)" />
+          <Property Name="TypeAccount" Type="nvarchar(max)" />
+          <Property Name="AccountID" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BB_Logs_Proposal">
           <Key>
@@ -839,6 +842,7 @@
           <Property Name="DeliveryDelegation" Type="int" />
           <Property Name="EquipmentID" Type="int" />
           <Property Name="AccessoryID" Type="int" />
+          <Property Name="AccountType" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="BB_Proposal_Financing">
           <Key>
@@ -2720,6 +2724,7 @@
           <Property Name="DeliveryDelegation" Type="Int32" />
           <Property Name="EquipmentID" Type="Int32" />
           <Property Name="AccessoryID" Type="Int32" />
+          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BB_Proposal_ItemDoBasket">
           <Key>
@@ -3110,6 +3115,9 @@
           <Property Name="RoadType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="RoadName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="RoadNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ParentAccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TypeAccount" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="RD_AddressAcronyms">
           <Key>
@@ -4121,6 +4129,7 @@
           <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
               <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
                 <ScalarProperty Name="AccessoryID" ColumnName="AccessoryID" />
                 <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
                 <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
@@ -4506,6 +4515,9 @@
           <EntitySetMapping Name="BB_LocaisEnvio">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
               <MappingFragment StoreEntitySet="BB_LocaisEnvio">
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="TypeAccount" ColumnName="TypeAccount" />
+                <ScalarProperty Name="ParentAccountNumber" ColumnName="ParentAccountNumber" />
                 <ScalarProperty Name="RoadNumber" ColumnName="RoadNumber" />
                 <ScalarProperty Name="RoadName" ColumnName="RoadName" />
                 <ScalarProperty Name="RoadType" ColumnName="RoadType" />

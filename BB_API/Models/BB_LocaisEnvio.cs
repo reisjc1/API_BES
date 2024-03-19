@@ -38,5 +38,8 @@ namespace WebApplication1.Models
         public string RoadType { get; set; }
         public string RoadName { get; set; }
         public string RoadNumber { get; set; }
+        public string ParentAccountNumber { get; set; }
+        public string TypeAccount { get; set; }
+        public string AccountID { get; set; }
     }
 }
