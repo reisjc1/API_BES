@@ -442,6 +442,9 @@
     <Compile Include="Models\BB_Proposal_DeliveryLocation.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_Proposal_DL_ClientContacts.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_Proposal_Financing.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

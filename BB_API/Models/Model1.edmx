@@ -844,6 +844,18 @@
           <Property Name="AccessoryID" Type="int" />
           <Property Name="AccountType" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="BB_Proposal_DL_ClientContacts">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientID" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Surname" Type="varchar" MaxLength="50" />
+          <Property Name="Tel" Type="int" />
+          <Property Name="Movil" Type="int" />
+          <Property Name="Email" Type="varchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="BB_Proposal_Financing">
           <Key>
             <PropertyRef Name="ID" />
@@ -1490,6 +1502,7 @@
           <EntitySet Name="BB_Proposal_Contacts_Signing" EntityType="Self.BB_Proposal_Contacts_Signing" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Counters" EntityType="Self.BB_Proposal_Counters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="Self.BB_Proposal_DeliveryLocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="Self.BB_Proposal_DL_ClientContacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="Self.BB_Proposal_Financing" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_FinancingMonthly" EntityType="Self.BB_Proposal_FinancingMonthly" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_FinancingTrimestral" EntityType="Self.BB_Proposal_FinancingTrimestral" Schema="dbo" store:Type="Tables" />
@@ -1684,6 +1697,7 @@
           <EntitySet Name="BB_DeliveryContactsInfo" EntityType="BB_DB_DEVModel.BB_DeliveryContactsInfo" />
           <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           <EntitySet Name="RD_AddressAcronyms" EntityType="BB_DB_DEVModel.RD_AddressAcronyms" />
+          <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3128,6 +3142,18 @@
           <Property Name="SA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Street" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="BB_Proposal_DL_ClientContacts">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Tel" Type="Int32" />
+          <Property Name="Movil" Type="Int32" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4551,6 +4577,19 @@
                 <ScalarProperty Name="Street" ColumnName="Street" />
                 <ScalarProperty Name="SA" ColumnName="SA" />
                 <ScalarProperty Name="NrSAP" ColumnName="NrSAP" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_DL_ClientContacts">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts">
+              <MappingFragment StoreEntitySet="BB_Proposal_DL_ClientContacts">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Movil" ColumnName="Movil" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

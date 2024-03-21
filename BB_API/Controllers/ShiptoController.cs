@@ -11,7 +11,7 @@ namespace WebApplication1.Controllers
     {
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetAllDeliveryLocations")]
-        public IHttpActionResult GetAllDeliveryLocations(string NIF, int selectedTab)
+        public IHttpActionResult GetAllDeliveryLocations(string AccountNumber, int selectedTab)
         {
             try
             {
@@ -19,19 +19,17 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    IQueryable<BB_LocaisEnvio> locations = db.BB_LocaisEnvio.Where(x => x.NIF_CIF == NIF);
+                    string ParentAccountLocation = db.BB_LocaisEnvio.Where(x => x.AccountNumber == AccountNumber).Select(x => x.ParentAccountNumber).FirstOrDefault();
 
                     switch (selectedTab)
                     {
                         case 2:
-                            locations = locations.Where(x => x.AddressType == "Entrega/Recogida");
+                            lst_Locais = db.BB_LocaisEnvio.Where(x => x.ParentAccountNumber == ParentAccountLocation).Where(x => x.AddressType == "Entrega/Recogida").ToList();
                             break;
                         case 3:
-                            locations = locations.Where(x => x.AddressType == "Pagador/Receptor de la factura");
+                            lst_Locais = db.BB_LocaisEnvio.Where(x => x.ParentAccountNumber == ParentAccountLocation).Where(x => x.AddressType == "Pagador/Receptor de la factura").ToList();
                             break;
                     }
-
-                    lst_Locais = locations.ToList();
                 }
 
                 return Ok(lst_Locais);
@@ -57,7 +55,7 @@ namespace WebApplication1.Controllers
                     db.SaveChanges();
                 }
 
-                return Ok();
+                return Ok(deliveryLocation);
             }
             catch (Exception ex)
             {
@@ -81,6 +79,30 @@ namespace WebApplication1.Controllers
                 }
 
                 return Ok(bb_proposal_deliveryLocation);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
+
+        // ##################################################################################
+        // ##################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("AddNewContact")]
+        public IHttpActionResult AddNewContact(BB_Proposal_DL_ClientContacts newContact)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    db.BB_Proposal_DL_ClientContacts.Add(newContact);
+                    db.SaveChanges();
+                }
+
+                return Ok("Nuevo contacto añadido exitosamente.");
             }
             catch (Exception ex)
             {

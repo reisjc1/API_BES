@@ -115,5 +115,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_DeliveryContactsInfo> BB_DeliveryContactsInfo { get; set; }
         public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
         public virtual DbSet<RD_AddressAcronyms> RD_AddressAcronyms { get; set; }
+        public virtual DbSet<BB_Proposal_DL_ClientContacts> BB_Proposal_DL_ClientContacts { get; set; }
     }
 }
