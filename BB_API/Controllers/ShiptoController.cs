@@ -118,13 +118,16 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                int contactID = 0;
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     db.BB_Proposal_DL_ClientContacts.Add(newContact);
                     db.SaveChanges();
+
+                    contactID = newContact.ID;
                 }
 
-                return Ok(newContact.ID);
+                return Ok(contactID);
             }
             catch (Exception ex)
             {
