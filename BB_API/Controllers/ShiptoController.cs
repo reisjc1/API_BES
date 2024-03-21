@@ -23,22 +23,28 @@ namespace WebApplication1.Controllers
 
                     string parentAccountNr = locations.Where(x => x.AccountNumber == AccountNumber).Select(x => x.ParentAccountNumber).FirstOrDefault();
 
-                    if(parentAccountNr != "" || parentAccountNr != null)
+                    if(parentAccountNr != "")
                     {
                         switch (selectedTab)
-                    {
-                        case 2:
-                            lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).Where(x => x.TypeAccount == "Ship To").ToList();
-                            break;
-                        case 3:
-                            lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).Where(x => x.TypeAccount == "Bill To").ToList();
-                            break;
-                    }
+                        {
+                            case 1:
+                                lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).ToList();
+                                break;
+                            case 2:
+                                lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).Where(x => x.TypeAccount == "Ship To").ToList();
+                                break;
+                            case 3:
+                                lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).Where(x => x.TypeAccount == "Bill To").ToList();
+                                break;
+                        }
                     }
                     else
                     {
                         switch (selectedTab)
                         {
+                            case 1:
+                                lst_Locais = locations.Where(x => x.AccountNumber == AccountNumber).ToList();
+                                break;
                             case 2:
                                 lst_Locais = locations.Where(x => x.AccountNumber == AccountNumber).Where(x => x.TypeAccount == "Ship To").ToList();
                                 break;
