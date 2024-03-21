@@ -19,32 +19,30 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    var query = db.BB_LocaisEnvio.AsQueryable();
-
                     if (!string.IsNullOrEmpty(AccountNumber))
                     {
-                        string ParentAccountLocation = db.BB_LocaisEnvio
-                                                        .Where(x => x.AccountNumber == AccountNumber)
-                                                        .Select(x => x.ParentAccountNumber)
-                                                        .FirstOrDefault();
+                        List<BB_LocaisEnvio> lst_Locations = db.BB_LocaisEnvio.ToList();
 
-                        if (!string.IsNullOrEmpty(ParentAccountLocation))
+                        string parentAccountNumber = lst_Locations.Where(x => x.AccountNumber == AccountNumber).FirstOrDefault().ParentAccountNumber;
+
+                        if (!string.IsNullOrEmpty(parentAccountNumber))
                         {
-                            query = query.Where(x => x.ParentAccountNumber == ParentAccountLocation);
+                            lst_Locais = lst_Locations.Where(x => x.ParentAccountNumber == parentAccountNumber).ToList();
                         }
-                    }
 
-                    switch (selectedTab)
-                    {
-                        case 2:
-                            query = query.Where(x => x.AddressType == "Entrega/Recogida");
-                            break;
-                        case 3:
-                            query = query.Where(x => x.AddressType == "Pagador/Receptor de la factura");
-                            break;
-                    }
 
-                    lst_Locais = query.ToList();
+                        switch (selectedTab)
+                        {
+                            case 2:
+                                lst_Locais = lst_Locations.Where(x => x.AddressType == "Entrega/Recogida").ToList();
+                                break;
+                            case 3:
+                                lst_Locais = lst_Locations.Where(x => x.AddressType == "Pagador/Receptor de la factura").ToList();
+                                break;
+                        }
+
+                        lst_Locais = lst_Locais.ToList();
+                    }
                 }
 
                 return Ok(lst_Locais);
