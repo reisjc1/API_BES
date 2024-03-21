@@ -19,20 +19,36 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    string ParentAccountLocation = db.BB_LocaisEnvio.Where(x => x.AccountNumber == AccountNumber).Select(x => x.ParentAccountNumber).FirstOrDefault();
+                    var query = db.BB_LocaisEnvio.AsQueryable();
+
+                    if (!string.IsNullOrEmpty(AccountNumber))
+                    {
+                        string ParentAccountLocation = db.BB_LocaisEnvio
+                                                        .Where(x => x.AccountNumber == AccountNumber)
+                                                        .Select(x => x.ParentAccountNumber)
+                                                        .FirstOrDefault();
+
+                        if (!string.IsNullOrEmpty(ParentAccountLocation))
+                        {
+                            query = query.Where(x => x.ParentAccountNumber == ParentAccountLocation);
+                        }
+                    }
 
                     switch (selectedTab)
                     {
                         case 2:
-                            lst_Locais = db.BB_LocaisEnvio.Where(x => x.ParentAccountNumber == ParentAccountLocation).Where(x => x.AddressType == "Entrega/Recogida").ToList();
+                            query = query.Where(x => x.AddressType == "Entrega/Recogida");
                             break;
                         case 3:
-                            lst_Locais = db.BB_LocaisEnvio.Where(x => x.ParentAccountNumber == ParentAccountLocation).Where(x => x.AddressType == "Pagador/Receptor de la factura").ToList();
+                            query = query.Where(x => x.AddressType == "Pagador/Receptor de la factura");
                             break;
                     }
+
+                    lst_Locais = query.ToList();
                 }
 
                 return Ok(lst_Locais);
+
             }
             catch (Exception ex)
             {
