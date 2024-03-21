@@ -23,47 +23,35 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
 
+                    lst_Locais = GetDeliveryLocationsFromSP(AccountNumber, null);
 
+                    string parentAccountNr = lst_Locais.Select(x => x.ParentAccountNumber).FirstOrDefault();
 
-                    // 
-                    //CHAMAR A SP SEM PARENTACCOUNT
-
-
-                    string parentAccountNr = lst_Locais_Saved.Where(x => x.AccountNumber == AccountNumber).Select(x => x.ParentAccountNumber).FirstOrDefault();
-
-                    if(parentAccountNr != "")
+                    if (parentAccountNr != "")
                     {
+                        lst_Locais = GetDeliveryLocationsFromSP(null, parentAccountNr);
                         switch (selectedTab)
                         {
-                            //CHAMAR A SP COM PARENTACCOUNT
-                            case 1:
-                                lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).ToList();
-                                break;
                             case 2:
-                                lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).Where(x => x.TypeAccount == "Ship To").ToList();
-                                break;
+                                lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Ship To").ToList();
+                        break;
                             case 3:
-                                lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).Where(x => x.TypeAccount == "Bill To").ToList();
-                                break;
-                        }
-                    }
+                                lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Bill To").ToList();
+                        break;
+                    } }
+                    
                     else
                     {
                         switch (selectedTab)
-                        {
-                            case 1:
-                                lst_Locais = locations.Where(x => x.AccountNumber == AccountNumber).ToList();
-                                break;
+                        {                     
                             case 2:
-                                lst_Locais = locations.Where(x => x.AccountNumber == AccountNumber).Where(x => x.TypeAccount == "Ship To").ToList();
+                                lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Ship To").ToList();
                                 break;
                             case 3:
-                                lst_Locais = locations.Where(x => x.AccountNumber == AccountNumber).Where(x => x.TypeAccount == "Bill To").ToList();
+                                lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Bill To").ToList();
                                 break;
                         }
-
                     }
-
                 }
 
                 return Ok(lst_Locais);
