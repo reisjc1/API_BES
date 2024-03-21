@@ -22,7 +22,7 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-
+                    //nunca enviar ambos os parametros != null
                     lst_Locais = GetDeliveryLocationsFromSP(AccountNumber, null);
 
                     string parentAccountNr = lst_Locais.Select(x => x.ParentAccountNumber).FirstOrDefault();
@@ -141,15 +141,14 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetAllSavedContacts")]
-        public IHttpActionResult GetAllSavedContacts()
+        public IHttpActionResult GetAllSavedContacts(int ClientID)
         {
             try
             {
                 List <BB_Proposal_DL_ClientContacts> lst_contacts = new List<BB_Proposal_DL_ClientContacts>();
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    lst_contacts = db.BB_Proposal_DL_ClientContacts.ToList();
-                    db.SaveChanges();
+                    lst_contacts = db.BB_Proposal_DL_ClientContacts.Where(x => x.ClientID == ClientID).ToList();
                 }
 
                 return Ok(lst_contacts);
