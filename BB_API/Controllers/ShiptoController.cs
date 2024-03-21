@@ -19,34 +19,39 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    if (!string.IsNullOrEmpty(AccountNumber))
+                    List<BB_LocaisEnvio> locations = db.BB_LocaisEnvio.Where(x => x.AddressType == "Entrega/Recogida" && x.AddressType == "Pagador/Receptor de la factura").ToList();
+
+                    string parentAccountNr = locations.Where(x => x.AccountNumber == AccountNumber).Select(x => x.ParentAccountNumber).FirstOrDefault();
+
+                    if(parentAccountNr != "" || parentAccountNr != null)
                     {
-                        List<BB_LocaisEnvio> lst_Locations = db.BB_LocaisEnvio.ToList();
-
-                        string parentAccountNumber = lst_Locations.Where(x => x.AccountNumber == AccountNumber).FirstOrDefault().ParentAccountNumber;
-
-                        if (!string.IsNullOrEmpty(parentAccountNumber))
-                        {
-                            lst_Locais = lst_Locations.Where(x => x.ParentAccountNumber == parentAccountNumber).ToList();
-                        }
-
-
+                        switch (selectedTab)
+                    {
+                        case 2:
+                            lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).Where(x => x.AddressType == "Entrega/Recogida").ToList();
+                            break;
+                        case 3:
+                            lst_Locais = locations.Where(x => x.ParentAccountNumber == parentAccountNr).Where(x => x.AddressType == "Pagador/Receptor de la factura").ToList();
+                            break;
+                    }
+                    }
+                    else
+                    {
                         switch (selectedTab)
                         {
                             case 2:
-                                lst_Locais = lst_Locations.Where(x => x.AddressType == "Entrega/Recogida").ToList();
+                                lst_Locais = locations.Where(x => x.AccountNumber == AccountNumber).Where(x => x.AddressType == "Entrega/Recogida").ToList();
                                 break;
                             case 3:
-                                lst_Locais = lst_Locations.Where(x => x.AddressType == "Pagador/Receptor de la factura").ToList();
+                                lst_Locais = locations.Where(x => x.AccountNumber == AccountNumber).Where(x => x.AddressType == "Pagador/Receptor de la factura").ToList();
                                 break;
                         }
 
-                        lst_Locais = lst_Locais.ToList();
                     }
+
                 }
 
                 return Ok(lst_Locais);
-
             }
             catch (Exception ex)
             {
