@@ -31,8 +31,8 @@ namespace WebApplication1.Models
         public string Building { get; set; }
         public string Room { get; set; }
         public string Schedule { get; set; }
-        public string Payer { get; set; }
-        public string BillReceiver { get; set; }
+        public Nullable<bool> Payer { get; set; }
+        public Nullable<bool> BillReceiver { get; set; }
         public Nullable<int> DeliveryContact { get; set; }
         public Nullable<int> ITContact { get; set; }
         public Nullable<int> ServiceContact { get; set; }
