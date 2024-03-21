@@ -124,7 +124,7 @@ namespace WebApplication1.Controllers
                     db.SaveChanges();
                 }
 
-                return Ok("Nuevo contacto añadido exitosamente.");
+                return Ok(newContact.ID);
             }
             catch (Exception ex)
             {
@@ -157,7 +157,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // -------------- HELPERS --------------------
+        // ----------------------------- HELPERS -----------------------------
 
         public List<BB_LocaisEnvio> GetDeliveryLocationsFromSP(string AccountNumber, string ParentAccountNumber)
         {
