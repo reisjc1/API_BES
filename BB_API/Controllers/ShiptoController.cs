@@ -19,7 +19,7 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    List<BB_LocaisEnvio> locations = db.BB_LocaisEnvio.Where(x => x.TypeAccount == "Ship To" && x.TypeAccount == "Bill To").ToList();
+                    List<BB_LocaisEnvio> locations = db.BB_LocaisEnvio.Where(x => x.TypeAccount == "Ship To" || x.TypeAccount == "Bill To").ToList();
 
                     string parentAccountNr = locations.Where(x => x.AccountNumber == AccountNumber).Select(x => x.ParentAccountNumber).FirstOrDefault();
 
