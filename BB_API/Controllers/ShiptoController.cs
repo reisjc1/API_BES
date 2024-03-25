@@ -14,18 +14,35 @@ namespace WebApplication1.Controllers
     {
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetAllDeliveryLocations")]
-        public IHttpActionResult GetAllDeliveryLocations(string AccountNumber, int selectedTab)
+        public IHttpActionResult GetAllDeliveryLocations(int proposalID, string AccountNumber, int selectedTab)
         {
             try
             {
                 List<BB_LocaisEnvio> lst_Locais = new List<BB_LocaisEnvio>();
+                List<BB_LocaisEnvio> locaisGuardados = new List<BB_LocaisEnvio>();
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
+                    // tabela BB_Proposal_DeliveryLocation ---------------------
+                    List<BB_Proposal_DeliveryLocation> dl = new List<BB_Proposal_DeliveryLocation>();
+
+                    dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
+
+
+                    foreach (var localEnvio in dl)
+                    {
+                        locaisGuardados.Add(db.BB_LocaisEnvio.Where(i => i.ID.ToString() == localEnvio.ID).FirstOrDefault());
+                    }
+
+                    // tabela BB_LocaisEnvio ---------------------
+
                     //nunca enviar ambos os parametros != null
                     lst_Locais = GetDeliveryLocationsFromSP(AccountNumber, null);
 
                     string parentAccountNr = lst_Locais.Select(x => x.ParentAccountNumber).FirstOrDefault();
+
+                    // qd vou ao selectedTab 2.. vou ao BB_LocaisEnvio.. ver pelo AccountNumber ver o que é shipto
+                    // dps vou à BB_DeliveryLocations buscar pelo ID da proposal
 
                     if (parentAccountNr != "")
                     {
@@ -34,10 +51,12 @@ namespace WebApplication1.Controllers
                         {
                             case 2:
                                 lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Ship To").ToList();
-                        break;
+                                locaisGuardados = locaisGuardados.Where(x => x.TypeAccount == "Ship To").ToList();
+                                break;
                             case 3:
                                 lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Bill To").ToList();
-                        break;
+                                locaisGuardados = locaisGuardados.Where(x => x.TypeAccount == "Bill To").ToList();
+                                break;
                     } }
                     
                     else
@@ -46,13 +65,17 @@ namespace WebApplication1.Controllers
                         {                     
                             case 2:
                                 lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Ship To").ToList();
+                                locaisGuardados = locaisGuardados.Where(x => x.TypeAccount == "Ship To").ToList();
                                 break;
                             case 3:
                                 lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Bill To").ToList();
+                                locaisGuardados = locaisGuardados.Where(x => x.TypeAccount == "Bill To").ToList();
                                 break;
                         }
                     }
                 }
+
+                lst_Locais.AddRange(locaisGuardados);
 
                 return Ok(lst_Locais);
             }
