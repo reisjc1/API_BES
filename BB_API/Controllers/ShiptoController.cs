@@ -290,40 +290,22 @@ namespace WebApplication1.Controllers
                         object objBillReceiver = rdr["BillReceiver"];
                         object objPayer = rdr["Payer"];
 
-                        if (objBillReceiver != null && objBillReceiver != DBNull.Value)
+                        if (objBillReceiver != null)
                         {
-                            string stringValue = objBillReceiver.ToString().ToLower();
-
-                            if (stringValue == "true")
-                            {
-                                dl.BillReceiver = true;
-                            }
-                            else if (stringValue == "false")
-                            {
-                                dl.BillReceiver = false;
-                            }
-                            else
-                            {
-                                dl.BillReceiver = false;
-                            }
+                            dl.BillReceiver = ConvertToBoolean(objBillReceiver);
+                        }
+                        else
+                        {
+                            dl.BillReceiver = false;
                         }
 
-                        if (objPayer != null && objPayer != DBNull.Value)
+                        if (objPayer != null)
                         {
-                            string stringValue = objPayer.ToString().ToLower();
-
-                            if (stringValue == "true")
-                            {
-                                dl.BillReceiver = true;
-                            }
-                            else if (stringValue == "false")
-                            {
-                                dl.BillReceiver = false;
-                            }
-                            else
-                            {
-                                dl.BillReceiver = false;
-                            }
+                            dl.Payer = ConvertToBoolean(objPayer);
+                        }
+                        else
+                        {
+                            dl.Payer = false;
                         }
 
 
@@ -350,6 +332,26 @@ namespace WebApplication1.Controllers
             {
                 return null;
             }
+        }
+
+        // Converter um obj para um bool
+        bool ConvertToBoolean(object value)
+        {
+            if (value != null && value != DBNull.Value)
+            {
+                string stringValue = value.ToString().ToLower();
+
+                if (stringValue == "true")
+                {
+                    return true;
+                }
+                else if (stringValue == "false")
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
     }
     public class DeliveryLocations
