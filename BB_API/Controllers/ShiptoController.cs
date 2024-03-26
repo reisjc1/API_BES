@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetAllDeliveryLocations")]
-        public IHttpActionResult GetAllDeliveryLocations(int proposalID, string AccountNumber, int selectedTab)
+        public IHttpActionResult GetAllDeliveryLocations(int proposalID, string AccountNumber, int? selectedTab)
         {
             try
             {
