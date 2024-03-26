@@ -154,6 +154,30 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // ##################################################################################
+        // ##################################################################################
+
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetAllAddressAcronyms")]
+        public IHttpActionResult GetAllAddressAcronyms()
+        {
+            try
+            {
+                List<RD_AddressAcronyms> lst_AddressAcronyms = new List<RD_AddressAcronyms>();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    lst_AddressAcronyms = db.RD_AddressAcronyms.ToList();
+                }
+
+                return Ok(lst_AddressAcronyms);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
         // ----------------------------- HELPERS -----------------------------
 
         public List<BB_LocaisEnvio> GetDeliveryLocationsFromSP(string AccountNumber, string ParentAccountNumber)
