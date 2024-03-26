@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetAllDeliveryLocations")]
-        public IHttpActionResult GetAllDeliveryLocations(int proposalID, string AccountNumber, int? selectedTab)
+        public IHttpActionResult GetAllDeliveryLocations(int proposalID, string AccountNumber)
         {
             try
             {
@@ -286,8 +286,49 @@ namespace WebApplication1.Controllers
                         dl.Building = rdr["Building"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Building")) : "";
                         dl.Room = rdr["Room"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Room")) : "";
                         dl.Schedule = rdr["Schedule"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Schedule")) : "";
-                        dl.Payer = rdr["Payer"] != null ? Boolean.Parse(rdr["Payer"].ToString()) : false;
-                        dl.BillReceiver = rdr["BillReceiver"] != null ? Boolean.Parse(rdr["BillReceiver"].ToString()) : false;
+
+                        object objBillReceiver = rdr["BillReceiver"];
+                        object objPayer = rdr["Payer"];
+
+                        if (objBillReceiver != null && objBillReceiver != DBNull.Value)
+                        {
+                            string stringValue = objBillReceiver.ToString().ToLower();
+
+                            if (stringValue == "true")
+                            {
+                                dl.BillReceiver = true;
+                            }
+                            else if (stringValue == "false")
+                            {
+                                dl.BillReceiver = false;
+                            }
+                            else
+                            {
+                                dl.BillReceiver = false;
+                            }
+                        }
+
+                        if (objPayer != null && objPayer != DBNull.Value)
+                        {
+                            string stringValue = objPayer.ToString().ToLower();
+
+                            if (stringValue == "true")
+                            {
+                                dl.BillReceiver = true;
+                            }
+                            else if (stringValue == "false")
+                            {
+                                dl.BillReceiver = false;
+                            }
+                            else
+                            {
+                                dl.BillReceiver = false;
+                            }
+                        }
+
+
+                        //dl.Payer = rdr["Payer"] != null ? Boolean.Parse(rdr["Payer"].ToString()) : false;
+                        //dl.BillReceiver = rdr["BillReceiver"] != null ? Boolean.Parse(rdr["BillReceiver"].ToString()) : false;
                         dl.DeliveryContact = (int)rdr["DeliveryContact"];
                         dl.ITContact = (int)rdr["ITContact"];
                         dl.ServiceContact = (int)rdr["ServiceContact"];
