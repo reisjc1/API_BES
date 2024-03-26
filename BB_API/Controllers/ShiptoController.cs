@@ -12,6 +12,7 @@ namespace WebApplication1.Controllers
 {
     public class ShiptoController : ApiController
     {
+
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetAllDeliveryLocations")]
         public IHttpActionResult GetAllDeliveryLocations(int proposalID, string AccountNumber, int selectedTab)
@@ -19,65 +20,36 @@ namespace WebApplication1.Controllers
             try
             {
                 List<BB_LocaisEnvio> lst_Locais = new List<BB_LocaisEnvio>();
-                List<BB_LocaisEnvio> locaisGuardados = new List<BB_LocaisEnvio>();
+                List<BB_Proposal_DeliveryLocation> lst_DeliverLocations = new List<BB_Proposal_DeliveryLocation>();
+                DeliveryLocations dl = new DeliveryLocations();
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    // tabela BB_Proposal_DeliveryLocation ---------------------
-                    List<BB_Proposal_DeliveryLocation> dl = new List<BB_Proposal_DeliveryLocation>();
-
-                    dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
-
-
-                    foreach (var localEnvio in dl)
-                    {
-                        locaisGuardados.Add(db.BB_LocaisEnvio.Where(i => i.ID.ToString() == localEnvio.ID).FirstOrDefault());
-                    }
-
-                    // tabela BB_LocaisEnvio ---------------------
-
                     //nunca enviar ambos os parametros != null
                     lst_Locais = GetDeliveryLocationsFromSP(AccountNumber, null);
-
                     string parentAccountNr = lst_Locais.Select(x => x.ParentAccountNumber).FirstOrDefault();
+                    
+                    lst_DeliverLocations = GetDeliveryLocationsByProposalIDFromSP(proposalID);
 
-                    // qd vou ao selectedTab 2.. vou ao BB_LocaisEnvio.. ver pelo AccountNumber ver o que é shipto
-                    // dps vou à BB_DeliveryLocations buscar pelo ID da proposal
+                    dl.lst_LocaisEnvio = new List<BB_LocaisEnvio>();
+                    dl.lst_LocaisEnvio = lst_Locais;
+
+                    dl.lst_BB_Proposal_DeliveryLocation = new List<BB_Proposal_DeliveryLocation>();
+                    dl.lst_BB_Proposal_DeliveryLocation = lst_DeliverLocations;
+
+
+
 
                     if (parentAccountNr != "")
                     {
+                        //nunca enviar ambos os parametros != null
                         lst_Locais = GetDeliveryLocationsFromSP(null, parentAccountNr);
-                        switch (selectedTab)
-                        {
-                            case 2:
-                                lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Ship To").ToList();
-                                locaisGuardados = locaisGuardados.Where(x => x.TypeAccount == "Ship To").ToList();
-                                break;
-                            case 3:
-                                lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Bill To").ToList();
-                                locaisGuardados = locaisGuardados.Where(x => x.TypeAccount == "Bill To").ToList();
-                                break;
-                    } }
-                    
-                    else
-                    {
-                        switch (selectedTab)
-                        {                     
-                            case 2:
-                                lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Ship To").ToList();
-                                locaisGuardados = locaisGuardados.Where(x => x.TypeAccount == "Ship To").ToList();
-                                break;
-                            case 3:
-                                lst_Locais = lst_Locais.Where(x => x.TypeAccount == "Bill To").ToList();
-                                locaisGuardados = locaisGuardados.Where(x => x.TypeAccount == "Bill To").ToList();
-                                break;
-                        }
+                        dl.lst_LocaisEnvio = lst_Locais;
                     }
                 }
 
-                lst_Locais.AddRange(locaisGuardados);
 
-                return Ok(lst_Locais);
+                return Ok(dl);
             }
             catch (Exception ex)
             {
@@ -168,7 +140,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                List <BB_Proposal_DL_ClientContacts> lst_contacts = new List<BB_Proposal_DL_ClientContacts>();
+                List<BB_Proposal_DL_ClientContacts> lst_contacts = new List<BB_Proposal_DL_ClientContacts>();
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     lst_contacts = db.BB_Proposal_DL_ClientContacts.Where(x => x.ClientID == ClientID).ToList();
@@ -248,5 +220,77 @@ namespace WebApplication1.Controllers
                 return null;
             }
         }
+
+        // ##############################################################################################################
+
+        public List<BB_Proposal_DeliveryLocation> GetDeliveryLocationsByProposalIDFromSP(int proposalID)
+        {
+            try
+            {
+                List<BB_Proposal_DeliveryLocation> lst_BBP_DL_Saved = new List<BB_Proposal_DeliveryLocation>();
+
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
+
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("sp_GetAllDeliveryLocationsByProposalID", conn);
+                    cmd.CommandTimeout = 180;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@ProposalID", proposalID);
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+                    while (rdr.Read())
+                    {
+                        BB_Proposal_DeliveryLocation dl = new BB_Proposal_DeliveryLocation();
+
+                        dl.IDX = (int)rdr["IDX"];
+                        dl.ProposalID = (int)rdr["ProposalID"];
+                        dl.ID = rdr["ID"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ID")) : "";
+                        dl.Adress1 = rdr["Adress1"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Adress1")) : "";
+                        dl.Adress2 = rdr["Adress2"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Adress2")) : "";
+                        dl.PostalCode = rdr["PostalCode"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("PostalCode")) : "";
+                        dl.City = rdr["City"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("City")) : "";
+                        dl.County = rdr["County"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("County")) : "";
+                        dl.Contacto = rdr["Contacto"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Contacto")) : "";
+                        dl.Email = rdr["Email"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Email")) : "";
+                        dl.Phone = rdr["Phone"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Phone")) : "";
+                        dl.DeliveryDate = rdr["DeliveryDate"] != DBNull.Value ? (DateTime?)rdr["DeliveryDate"] : null;
+                        dl.Department = rdr["Department"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Department")) : "";
+                        dl.Floor = rdr["Floor"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Floor")) : "";
+                        dl.Building = rdr["Building"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Building")) : "";
+                        dl.Room = rdr["Room"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Room")) : "";
+                        dl.Schedule = rdr["Schedule"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Schedule")) : "";
+                        dl.Payer = rdr["Payer"] != null ? Boolean.Parse(rdr["Payer"].ToString()) : false;
+                        dl.BillReceiver = rdr["BillReceiver"] != null ? Boolean.Parse(rdr["BillReceiver"].ToString()) : false;
+                        dl.DeliveryContact = (int)rdr["DeliveryContact"];
+                        dl.ITContact = (int)rdr["ITContact"];
+                        dl.ServiceContact = (int)rdr["ServiceContact"];
+                        dl.CopiesContact = (int)rdr["CopiesContact"];
+                        dl.DeliveryDelegation = (int)rdr["DeliveryDelegation"];
+                        dl.EquipmentID = (int)rdr["EquipmentID"];
+                        dl.AccessoryID = (int)rdr["AccessoryID"];
+                        dl.AccountType = rdr["AccountType"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("AccountType")) : "";
+
+                        lst_BBP_DL_Saved.Add(dl);
+                    }
+                    rdr.Close();
+
+                }
+
+                return lst_BBP_DL_Saved;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+    }
+    public class DeliveryLocations
+    {
+        public List<BB_LocaisEnvio> lst_LocaisEnvio { get; set; }
+
+        public List<BB_Proposal_DeliveryLocation> lst_BB_Proposal_DeliveryLocation { get; set; }
     }
 }
