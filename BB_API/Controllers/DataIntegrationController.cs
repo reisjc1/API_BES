@@ -1219,6 +1219,36 @@ namespace WebApplication1.Controllers
             List<string> addressAcronyms = db.RD_AddressAcronyms.Select(x => x.SA).ToList();
             return addressAcronyms;
         }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetDataIntegrationByPage")]
+        public List<DIItem> GetDataIntegrationByPage(int begin, int end)
+        {
+            // return db.BB_Data_Integration.Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
+            if (begin == 0)
+            {
+                return db.BB_Data_Integration.Take(10).Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
+
+            }
+            else
+            {
+                return db.BB_Data_Integration
+                .Skip(begin) // Skip the first 10 records
+                .Take(end) // Take the next 10 records
+                .Select(x => new DIItem
+                {
+                    CodeRef = x.CodeRef,
+                    Family = x.Family,
+                    Name = x.Description_English,
+                    Description = x.Description_Portuguese,
+                    PVP = x.PVP,
+                    BinaryImage = x.BinaryImage,
+                    IsMarginBEU = x.IsMarginBEU,
+                    MarginBEU = x.MarginBEU
+                })
+                .ToList();
+            }
+        }
     }
 
 
