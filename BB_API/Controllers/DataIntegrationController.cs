@@ -31,10 +31,10 @@ namespace WebApplication1.Controllers
         [ActionName("GetDataIntegration")]
         public List<DIItem> GetDataIntegration()
         {
-            List<BB_Data_Integration> lst_BBDI = db.BB_Data_Integration.ToList();
-            //return db.BB_Data_Integration.Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
+            //List<BB_Data_Integration> lst_BBDI = db.BB_Data_Integration.ToList();
             //return db.BB_Data_Integration.Take(10).Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
-            return lst_BBDI.Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
+            //return lst_BBDI.Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
+            return db.BB_Data_Integration.Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
         }
 
         public BB_Data_Integration Get(int id)

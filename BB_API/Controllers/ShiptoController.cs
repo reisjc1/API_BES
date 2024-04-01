@@ -311,11 +311,12 @@ namespace WebApplication1.Controllers
 
                         //dl.Payer = rdr["Payer"] != null ? Boolean.Parse(rdr["Payer"].ToString()) : false;
                         //dl.BillReceiver = rdr["BillReceiver"] != null ? Boolean.Parse(rdr["BillReceiver"].ToString()) : false;
-                        dl.DeliveryContact = (int)rdr["DeliveryContact"];
-                        dl.ITContact = (int)rdr["ITContact"];
-                        dl.ServiceContact = (int)rdr["ServiceContact"];
-                        dl.CopiesContact = (int)rdr["CopiesContact"];
-                        dl.DeliveryDelegation = (int)rdr["DeliveryDelegation"];
+                        dl.DeliveryContact = !rdr.IsDBNull(rdr.GetOrdinal("DeliveryContact")) ? (int)rdr["DeliveryContact"] : 1;
+                        dl.ITContact = !rdr.IsDBNull(rdr.GetOrdinal("ITContact")) ? (int)rdr["ITContact"] : 1;
+                        dl.ServiceContact = !rdr.IsDBNull(rdr.GetOrdinal("ServiceContact")) ? (int)rdr["ServiceContact"] : 1;
+                        dl.CopiesContact = !rdr.IsDBNull(rdr.GetOrdinal("CopiesContact")) ? (int)rdr["CopiesContact"] : 1;
+                        dl.DeliveryDelegation = !rdr.IsDBNull(rdr.GetOrdinal("DeliveryDelegation")) ? (int)rdr["DeliveryDelegation"] : 1;
+
 
                         dl.EquipmentID = !rdr.IsDBNull(rdr.GetOrdinal("EquipmentID")) ? (int?)rdr["EquipmentID"] : null;
                         dl.AccessoryID = !rdr.IsDBNull(rdr.GetOrdinal("AccessoryID")) ? (int?)rdr["AccessoryID"] : null;
