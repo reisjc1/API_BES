@@ -1007,6 +1007,65 @@ namespace WebApplication1.BLL
                         err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
                     }
 
+
+
+                    // PONTOS DE ENVIO
+
+                    if(p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
+                    {
+
+                        List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
+
+                        if (dl_lst_toDelete.Count() > 0)
+                        {
+                            db.BB_Proposal_DeliveryLocation.RemoveRange(dl_lst_toDelete);
+                            try
+                            {
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                ex.Message.ToString();
+                            }
+                        }
+
+
+                        List<BB_Proposal_DeliveryLocation> dl_lst_toSave = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo
+                                                                        .Select(dl => new BB_Proposal_DeliveryLocation
+                                                                        {
+                                                                            ProposalID = dl.ProposalID,
+                                                                            ID = dl.ID,
+                                                                            Adress1 = dl.Adress1,
+                                                                            Adress2 = dl.Adress2,
+                                                                            PostalCode = dl.PostalCode,
+                                                                            City = dl.City,
+                                                                            County = dl.County,
+                                                                            Contacto = dl.Contacto,
+                                                                            Email = dl.Email,
+                                                                            Phone = dl.Phone,
+                                                                            DeliveryDate = dl.DeliveryDate,
+                                                                            Department = dl.Department,
+                                                                            Floor = dl.Floor,
+                                                                            Building = dl.Building,
+                                                                            Room = dl.Room,
+                                                                            Schedule = dl.Schedule,
+                                                                            Payer = dl.Payer,
+                                                                            BillReceiver = dl.BillReceiver,
+                                                                            DeliveryContact = dl.DeliveryContact,
+                                                                            ITContact = dl.ITContact,
+                                                                            ServiceContact = dl.ServiceContact,
+                                                                            CopiesContact = dl.CopiesContact,
+                                                                            DeliveryDelegation = dl.DeliveryDelegation,
+                                                                            EquipmentID = dl.EquipmentID,
+                                                                            AccessoryID = dl.AccessoryID,
+                                                                            AccountType = dl.AccountType
+                                                                        })
+                                                                        .ToList();
+
+                        db.BB_Proposal_DeliveryLocation.AddRange(dl_lst_toSave);
+                        //err.ProposalObj.Draft.deliveryLocationsBES = 
+                    }
+
                     try
                     {
                         db.SaveChanges();

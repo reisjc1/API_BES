@@ -165,12 +165,12 @@ namespace WebApplication1.Models
         public OPSPacks opsPacks { get; set; }
         public List<Overvaluation> overvaluations { get; set; }
         public PrintingServices printingServices { get; set; }
-
         public PrintingServices2 printingServices2 { get; set; }
 
         public List<Upturn> upturns { get; set; }
 
         public List<DeliveryLocation> deliveryLocations { get; set; }
+        public DeliveryLocationsBes deliveryLocationsBES { get; set; }
 
         public Consignment consignment { get; set; }
 
@@ -374,6 +374,11 @@ namespace WebApplication1.Models
     {
         public List<OsBasket> os_basket { get; set; }
         public List<RsBasket> rs_basket { get; set; }
+    }
+
+    public class DeliveryLocationsBes
+    {
+        public List<BB_Proposal_DeliveryLocation> deliveryLocationsShipToBillTo { get; set; }
     }
 
     public class Financing
