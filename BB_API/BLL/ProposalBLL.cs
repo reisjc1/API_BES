@@ -1011,7 +1011,7 @@ namespace WebApplication1.BLL
 
                     // PONTOS DE ENVIO
 
-                    if(p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
+                    if(p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo != null || p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
                     {
 
                         List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
