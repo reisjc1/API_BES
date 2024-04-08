@@ -316,13 +316,6 @@ namespace WebApplication1.Controllers
                         dl.ServiceContact = !rdr.IsDBNull(rdr.GetOrdinal("ServiceContact")) ? (int)rdr["ServiceContact"] : 1;
                         dl.CopiesContact = !rdr.IsDBNull(rdr.GetOrdinal("CopiesContact")) ? (int)rdr["CopiesContact"] : 1;
                         dl.DeliveryDelegation = !rdr.IsDBNull(rdr.GetOrdinal("DeliveryDelegation")) ? (int)rdr["DeliveryDelegation"] : 1;
-
-
-                        dl.EquipmentID = rdr["EquipmentID"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("EquipmentID")) : "";
-                        dl.AccessoryID = rdr["AccessoryID"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("AccessoryID")) : "";
-
-                        //dl.EquipmentID = (int)rdr["EquipmentID"];
-                        //dl.AccessoryID = (int?)rdr["AccessoryID"];
                         dl.AccountType = rdr["AccountType"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("AccountType")) : "";
 
                         lst_BBP_DL_Saved.Add(dl);

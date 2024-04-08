@@ -77,16 +77,16 @@ namespace WebApplication1.BLL
                     List<BB_Proposal_Consignments> lstConsignacoes = db.BB_Proposal_Consignments.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_Consignments.RemoveRange(lstConsignacoes);
 
-                    List<BB_Proposal_DeliveryLocation> lstd = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposal.ID).ToList();
+                    //List<BB_Proposal_DeliveryLocation> lstd = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposal.ID).ToList();
 
-                    foreach (var item in lstd)
-                    {
-                        List<BB_Proposal_ItemDoBasket> bb_Proposal_ItemDoBasket1 = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == item.IDX).ToList();
+                    //foreach (var item in lstd)
+                    //{
+                    //    List<BB_Proposal_ItemDoBasket> bb_Proposal_ItemDoBasket1 = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == item.IDX).ToList();
 
-                        db.BB_Proposal_ItemDoBasket.RemoveRange(bb_Proposal_ItemDoBasket1);
+                    //    db.BB_Proposal_ItemDoBasket.RemoveRange(bb_Proposal_ItemDoBasket1);
 
-                    }
-                    db.BB_Proposal_DeliveryLocation.RemoveRange(lstd);
+                    //}
+                    //db.BB_Proposal_DeliveryLocation.RemoveRange(lstd);
                     db.Entry(proposal).State = proposal.ID == 0 ? EntityState.Added : EntityState.Modified;
                     db.SaveChanges();
                 }
@@ -981,7 +981,7 @@ namespace WebApplication1.BLL
 
                     // PONTOS DE ENVIO
 
-                    if (p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo != null || p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
+                    if (p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
                     {
 
                         List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
@@ -1026,8 +1026,6 @@ namespace WebApplication1.BLL
                                                                             ServiceContact = dl.ServiceContact,
                                                                             CopiesContact = dl.CopiesContact,
                                                                             DeliveryDelegation = dl.DeliveryDelegation,
-                                                                            EquipmentID = dl.EquipmentID,
-                                                                            AccessoryID = dl.AccessoryID,
                                                                             AccountType = dl.AccountType
                                                                         })
                                                                         .ToList();
@@ -1046,7 +1044,7 @@ namespace WebApplication1.BLL
 
 
 
-                    if (p.Draft.deliveryLocationsBES.AssignedItems != null)
+                    if (p.Draft.deliveryLocationsBES.AssignedItems.Count() > 0)
                     {
 
                         foreach (var assignItem in p.Draft.deliveryLocationsBES.AssignedItems)
@@ -1064,51 +1062,21 @@ namespace WebApplication1.BLL
                                 foreach (var item in p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo)
                                 {
                                 // é equipamento
-                                    if(item.EquipmentID != null)
-                                {
-                                    DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).Where(x => x.EquipmentID == item.EquipmentID).Select(x => x.IDX).FirstOrDefault();
+                                    DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID && x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
+                                    
+                                    BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
+                                    bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
+                                    db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
+                                    try
+                                    {
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        ex.Message.ToString();
+                                    }
+                                    
                                 }
-                                // é acessório
-                                else
-                                {
-                                    DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).Where(x => x.EquipmentID == item.AccessoryID).Select(x => x.IDX).FirstOrDefault();
-                                }
-
-                                BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
-                                bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
-                                db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
-                                try
-                                {
-                                    db.SaveChanges();
-                                }
-                                catch (Exception ex)
-                                {
-                                    ex.Message.ToString();
-                                }
-                            }
- 
-
-                            
-                            //var configpDelivery = new MapperConfiguration(cfg =>
-                            //{
-                            //    cfg.CreateMap<DeliveryLocation, BB_Proposal_DeliveryLocation>();
-                            //});
-
-                            //IMapper iMapperDelivery = configpDelivery.CreateMapper();
-
-                            //BB_Proposal_DeliveryLocation bb_Proposal_DeliveryLocation = iMapperDelivery.Map<DeliveryLocation, BB_Proposal_DeliveryLocation>(item);
-                            //bb_Proposal_DeliveryLocation.ProposalID = ProposalID;
-                            //db.BB_Proposal_DeliveryLocation.Add(bb_Proposal_DeliveryLocation);
-
-                            //try
-                            //{
-                            //    db.SaveChanges();
-                            //}
-                            //catch (Exception ex)
-                            //{
-                            //    ex.Message.ToString();
-                            //}
-
 
                         }
                     }

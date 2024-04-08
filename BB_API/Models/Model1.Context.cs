@@ -94,7 +94,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_PrintingService_Machines> BB_PrintingService_Machines { get; set; }
         public virtual DbSet<BB_PrintingServices_ClickPerModel> BB_PrintingServices_ClickPerModel { get; set; }
         public virtual DbSet<BB_Proposal_PrazoDiferenciado_History> BB_Proposal_PrazoDiferenciado_History { get; set; }
-        public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
         public virtual DbSet<BB_Proposal_OPSManage> BB_Proposal_OPSManage { get; set; }
         public virtual DbSet<BB_Proposal_PrazoDiferenciado> BB_Proposal_PrazoDiferenciado { get; set; }
         public virtual DbSet<BB_Maquinas_Usadas> BB_Maquinas_Usadas { get; set; }
@@ -116,5 +115,6 @@ namespace WebApplication1.Models
         public virtual DbSet<RD_AddressAcronyms> RD_AddressAcronyms { get; set; }
         public virtual DbSet<BB_Proposal_DL_ClientContacts> BB_Proposal_DL_ClientContacts { get; set; }
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
+        public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
     }
 }

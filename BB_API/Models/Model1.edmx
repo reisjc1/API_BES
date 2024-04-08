@@ -840,8 +840,6 @@
           <Property Name="ServiceContact" Type="int" />
           <Property Name="CopiesContact" Type="int" />
           <Property Name="DeliveryDelegation" Type="int" />
-          <Property Name="EquipmentID" Type="varchar" MaxLength="50" />
-          <Property Name="AccessoryID" Type="varchar" MaxLength="50" />
           <Property Name="AccountType" Type="varchar" MaxLength="50" />
           <Property Name="ContractNumber" Type="int" />
         </EntityType>
@@ -1669,7 +1667,6 @@
             <End Role="BB_PrintingServices_ClickPerModel" EntitySet="BB_PrintingServices_ClickPerModel" />
           </AssociationSet>
           <EntitySet Name="BB_Proposal_PrazoDiferenciado_History" EntityType="BB_DB_DEVModel.BB_Proposal_PrazoDiferenciado_History" />
-          <EntitySet Name="BB_Proposal_ItemDoBasket" EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" />
           <EntitySet Name="BB_Proposal_OPSManage" EntityType="BB_DB_DEVModel.BB_Proposal_OPSManage" />
           <AssociationSet Name="FK_BB_Proposal_OPSManage_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal">
             <End Role="BB_Proposal" EntitySet="BB_Proposal" />
@@ -1699,6 +1696,7 @@
           <EntitySet Name="RD_AddressAcronyms" EntityType="BB_DB_DEVModel.RD_AddressAcronyms" />
           <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
           <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
+          <EntitySet Name="BB_Proposal_ItemDoBasket" EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -2709,39 +2707,6 @@
           <Property Name="NLocadora" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Frequency" Type="Int32" />
         </EntityType>
-        <EntityType Name="BB_Proposal_ItemDoBasket">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="parentIndex" Type="Int32" />
-          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="UnitPriceCost" Type="Double" />
-          <Property Name="Qty" Type="Int32" />
-          <Property Name="TotalCost" Type="Double" />
-          <Property Name="Margin" Type="Double" />
-          <Property Name="PVP" Type="Double" />
-          <Property Name="TotalPVP" Type="Double" />
-          <Property Name="DiscountPercentage" Type="Double" />
-          <Property Name="UnitDiscountPrice" Type="Double" />
-          <Property Name="GPTotal" Type="Double" />
-          <Property Name="GPPercentage" Type="Double" />
-          <Property Name="TotalNetsale" Type="Double" />
-          <Property Name="IsFinanced" Type="Boolean" />
-          <Property Name="IsMarginBEU" Type="Boolean" />
-          <Property Name="TCP" Type="Double" />
-          <Property Name="ClickPriceBW" Type="Double" />
-          <Property Name="ClickPriceC" Type="Double" />
-          <Property Name="CounterID" Type="Int32" />
-          <Property Name="psConfigID" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Locked" Type="Boolean" />
-          <Property Name="DeliveryLocationID" Type="Int32" />
-          <Property Name="Group" Type="Int32" />
-          <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
-        </EntityType>
         <EntityType Name="BB_Proposal_OPSManage">
           <Key>
             <PropertyRef Name="ID" />
@@ -3151,10 +3116,41 @@
           <Property Name="ServiceContact" Type="Int32" />
           <Property Name="CopiesContact" Type="Int32" />
           <Property Name="DeliveryDelegation" Type="Int32" />
-          <Property Name="EquipmentID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="AccessoryID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ContractNumber" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_ItemDoBasket">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="parentIndex" Type="Int32" />
+          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UnitPriceCost" Type="Double" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="TotalCost" Type="Double" />
+          <Property Name="Margin" Type="Double" />
+          <Property Name="PVP" Type="Double" />
+          <Property Name="TotalPVP" Type="Double" />
+          <Property Name="DiscountPercentage" Type="Double" />
+          <Property Name="UnitDiscountPrice" Type="Double" />
+          <Property Name="GPTotal" Type="Double" />
+          <Property Name="GPPercentage" Type="Double" />
+          <Property Name="TotalNetsale" Type="Double" />
+          <Property Name="IsFinanced" Type="Boolean" />
+          <Property Name="IsMarginBEU" Type="Boolean" />
+          <Property Name="TCP" Type="Double" />
+          <Property Name="ClickPriceBW" Type="Double" />
+          <Property Name="ClickPriceC" Type="Double" />
+          <Property Name="CounterID" Type="Int32" />
+          <Property Name="psConfigID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Locked" Type="Boolean" />
+          <Property Name="DeliveryLocationID" Type="Int32" />
+          <Property Name="Group" Type="Int32" />
+          <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -4154,40 +4150,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_ItemDoBasket">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_ItemDoBasket">
-              <MappingFragment StoreEntitySet="BB_Proposal_ItemDoBasket">
-                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
-                <ScalarProperty Name="Group" ColumnName="Group" />
-                <ScalarProperty Name="DeliveryLocationID" ColumnName="DeliveryLocationID" />
-                <ScalarProperty Name="Locked" ColumnName="Locked" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="psConfigID" ColumnName="psConfigID" />
-                <ScalarProperty Name="CounterID" ColumnName="CounterID" />
-                <ScalarProperty Name="ClickPriceC" ColumnName="ClickPriceC" />
-                <ScalarProperty Name="ClickPriceBW" ColumnName="ClickPriceBW" />
-                <ScalarProperty Name="TCP" ColumnName="TCP" />
-                <ScalarProperty Name="IsMarginBEU" ColumnName="IsMarginBEU" />
-                <ScalarProperty Name="IsFinanced" ColumnName="IsFinanced" />
-                <ScalarProperty Name="TotalNetsale" ColumnName="TotalNetsale" />
-                <ScalarProperty Name="GPPercentage" ColumnName="GPPercentage" />
-                <ScalarProperty Name="GPTotal" ColumnName="GPTotal" />
-                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
-                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
-                <ScalarProperty Name="TotalPVP" ColumnName="TotalPVP" />
-                <ScalarProperty Name="PVP" ColumnName="PVP" />
-                <ScalarProperty Name="Margin" ColumnName="Margin" />
-                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="UnitPriceCost" ColumnName="UnitPriceCost" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
-                <ScalarProperty Name="Family" ColumnName="Family" />
-                <ScalarProperty Name="parentIndex" ColumnName="parentIndex" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_Proposal_OPSManage">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_OPSManage">
               <MappingFragment StoreEntitySet="BB_Proposal_OPSManage">
@@ -4568,8 +4530,6 @@
               <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
                 <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
                 <ScalarProperty Name="AccountType" ColumnName="AccountType" />
-                <ScalarProperty Name="AccessoryID" ColumnName="AccessoryID" />
-                <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />
                 <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
                 <ScalarProperty Name="CopiesContact" ColumnName="CopiesContact" />
                 <ScalarProperty Name="ServiceContact" ColumnName="ServiceContact" />
@@ -4594,6 +4554,40 @@
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="IDX" ColumnName="IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_ItemDoBasket">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_ItemDoBasket">
+              <MappingFragment StoreEntitySet="BB_Proposal_ItemDoBasket">
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="DeliveryLocationID" ColumnName="DeliveryLocationID" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="psConfigID" ColumnName="psConfigID" />
+                <ScalarProperty Name="CounterID" ColumnName="CounterID" />
+                <ScalarProperty Name="ClickPriceC" ColumnName="ClickPriceC" />
+                <ScalarProperty Name="ClickPriceBW" ColumnName="ClickPriceBW" />
+                <ScalarProperty Name="TCP" ColumnName="TCP" />
+                <ScalarProperty Name="IsMarginBEU" ColumnName="IsMarginBEU" />
+                <ScalarProperty Name="IsFinanced" ColumnName="IsFinanced" />
+                <ScalarProperty Name="TotalNetsale" ColumnName="TotalNetsale" />
+                <ScalarProperty Name="GPPercentage" ColumnName="GPPercentage" />
+                <ScalarProperty Name="GPTotal" ColumnName="GPTotal" />
+                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
+                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+                <ScalarProperty Name="TotalPVP" ColumnName="TotalPVP" />
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="Margin" ColumnName="Margin" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="UnitPriceCost" ColumnName="UnitPriceCost" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="parentIndex" ColumnName="parentIndex" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
