@@ -977,41 +977,11 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    //BB_PROPOSAL_COnsigments
-                    var configConsigments = new MapperConfiguration(cfg =>
-                    {
-                        cfg.CreateMap<Consignment, BB_Proposal_Consignments>();
-                    });
-
-                    IMapper iMapperConsigments = configConsigments.CreateMapper();
-
-                    BB_Proposal_Consignments consignment = iMapperConsigments.Map<Consignment, BB_Proposal_Consignments>(p.Draft.consignment);
-
-                    consignment.ProposalID = ProposalID;
-
-                    db.BB_Proposal_Consignments.Add(consignment);
-
-                    //BB_Permissions
-                    if (p.Draft.shareProfileDelegation != null)
-                    {
-                        List<BB_Permissions> bB_Permissions_db = db.BB_Permissions.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
-                        
-                        if(p.Draft.shareProfileDelegation.Count != bB_Permissions_db.Count)
-                        {
-                            bB_Permissions_db.ForEach(permission => permission.ToDelete = !p.Draft.shareProfileDelegation.Any(i => i.ID == permission.ID));
-
-                        }
-                    }
-                    else
-                    {
-                        err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
-                    }
-
-
+                    // ################# WORKING ON IT #######################
 
                     // PONTOS DE ENVIO
 
-                    if(p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo != null || p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
+                    if (p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo != null || p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
                     {
 
                         List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
@@ -1063,8 +1033,118 @@ namespace WebApplication1.BLL
                                                                         .ToList();
 
                         db.BB_Proposal_DeliveryLocation.AddRange(dl_lst_toSave);
-                        //err.ProposalObj.Draft.deliveryLocationsBES = 
                     }
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Message.ToString();
+                    }
+
+
+
+                    if (p.Draft.deliveryLocationsBES.AssignedItems != null)
+                    {
+
+                        foreach (var assignItem in p.Draft.deliveryLocationsBES.AssignedItems)
+                        {
+
+                                var configpItemns = new MapperConfiguration(cfg =>
+                                {
+                                    cfg.CreateMap<AssignedItems, BB_Proposal_ItemDoBasket>();
+                                });
+
+                                IMapper iMapperItems = configpItemns.CreateMapper();
+
+                                int DL_IDX = 0;
+
+                                foreach (var item in p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo)
+                                {
+                                // é equipamento
+                                    if(item.EquipmentID != null)
+                                {
+                                    DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).Where(x => x.EquipmentID == item.EquipmentID).Select(x => x.IDX).FirstOrDefault();
+                                }
+                                // é acessório
+                                else
+                                {
+                                    DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).Where(x => x.EquipmentID == item.AccessoryID).Select(x => x.IDX).FirstOrDefault();
+                                }
+
+                                BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
+                                bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
+                                db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
+                                try
+                                {
+                                    db.SaveChanges();
+                                }
+                                catch (Exception ex)
+                                {
+                                    ex.Message.ToString();
+                                }
+                            }
+ 
+
+                            
+                            //var configpDelivery = new MapperConfiguration(cfg =>
+                            //{
+                            //    cfg.CreateMap<DeliveryLocation, BB_Proposal_DeliveryLocation>();
+                            //});
+
+                            //IMapper iMapperDelivery = configpDelivery.CreateMapper();
+
+                            //BB_Proposal_DeliveryLocation bb_Proposal_DeliveryLocation = iMapperDelivery.Map<DeliveryLocation, BB_Proposal_DeliveryLocation>(item);
+                            //bb_Proposal_DeliveryLocation.ProposalID = ProposalID;
+                            //db.BB_Proposal_DeliveryLocation.Add(bb_Proposal_DeliveryLocation);
+
+                            //try
+                            //{
+                            //    db.SaveChanges();
+                            //}
+                            //catch (Exception ex)
+                            //{
+                            //    ex.Message.ToString();
+                            //}
+
+
+                        }
+                    }
+
+                    // ################# WORKING ON IT #######################
+
+                    //BB_PROPOSAL_COnsigments
+                    var configConsigments = new MapperConfiguration(cfg =>
+                    {
+                        cfg.CreateMap<Consignment, BB_Proposal_Consignments>();
+                    });
+
+                    IMapper iMapperConsigments = configConsigments.CreateMapper();
+
+                    BB_Proposal_Consignments consignment = iMapperConsigments.Map<Consignment, BB_Proposal_Consignments>(p.Draft.consignment);
+
+                    consignment.ProposalID = ProposalID;
+
+                    db.BB_Proposal_Consignments.Add(consignment);
+
+                    //BB_Permissions
+                    if (p.Draft.shareProfileDelegation != null)
+                    {
+                        List<BB_Permissions> bB_Permissions_db = db.BB_Permissions.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
+                        
+                        if(p.Draft.shareProfileDelegation.Count != bB_Permissions_db.Count)
+                        {
+                            bB_Permissions_db.ForEach(permission => permission.ToDelete = !p.Draft.shareProfileDelegation.Any(i => i.ID == permission.ID));
+
+                        }
+                    }
+                    else
+                    {
+                        err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
+                    }
+
 
                     try
                     {

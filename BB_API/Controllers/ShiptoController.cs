@@ -318,8 +318,8 @@ namespace WebApplication1.Controllers
                         dl.DeliveryDelegation = !rdr.IsDBNull(rdr.GetOrdinal("DeliveryDelegation")) ? (int)rdr["DeliveryDelegation"] : 1;
 
 
-                        dl.EquipmentID = !rdr.IsDBNull(rdr.GetOrdinal("EquipmentID")) ? (int?)rdr["EquipmentID"] : null;
-                        dl.AccessoryID = !rdr.IsDBNull(rdr.GetOrdinal("AccessoryID")) ? (int?)rdr["AccessoryID"] : null;
+                        dl.EquipmentID = rdr["EquipmentID"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("EquipmentID")) : "";
+                        dl.AccessoryID = rdr["AccessoryID"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("AccessoryID")) : "";
 
                         //dl.EquipmentID = (int)rdr["EquipmentID"];
                         //dl.AccessoryID = (int?)rdr["AccessoryID"];

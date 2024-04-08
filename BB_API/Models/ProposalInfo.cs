@@ -380,7 +380,7 @@ namespace WebApplication1.Models
     public class DeliveryLocationsBes
     {
         public List<BB_Proposal_DeliveryLocation> deliveryLocationsShipToBillTo { get; set; }
-        public List<AssignedItems> AssignedItemsList { get; set; }
+        public List<AssignedItems> AssignedItems { get; set; }
     }
 
     public class Financing

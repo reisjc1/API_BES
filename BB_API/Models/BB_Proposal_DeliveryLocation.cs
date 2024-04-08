@@ -38,8 +38,8 @@ namespace WebApplication1.Models
         public Nullable<int> ServiceContact { get; set; }
         public Nullable<int> CopiesContact { get; set; }
         public Nullable<int> DeliveryDelegation { get; set; }
-        public Nullable<int> EquipmentID { get; set; }
-        public Nullable<int> AccessoryID { get; set; }
+        public string EquipmentID { get; set; }
+        public string AccessoryID { get; set; }
         public string AccountType { get; set; }
         public Nullable<int> ContractNumber { get; set; }
     }

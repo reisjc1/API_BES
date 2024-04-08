@@ -840,8 +840,8 @@
           <Property Name="ServiceContact" Type="int" />
           <Property Name="CopiesContact" Type="int" />
           <Property Name="DeliveryDelegation" Type="int" />
-          <Property Name="EquipmentID" Type="int" />
-          <Property Name="AccessoryID" Type="int" />
+          <Property Name="EquipmentID" Type="varchar" MaxLength="50" />
+          <Property Name="AccessoryID" Type="varchar" MaxLength="50" />
           <Property Name="AccountType" Type="varchar" MaxLength="50" />
           <Property Name="ContractNumber" Type="int" />
         </EntityType>
@@ -3151,8 +3151,8 @@
           <Property Name="ServiceContact" Type="Int32" />
           <Property Name="CopiesContact" Type="Int32" />
           <Property Name="DeliveryDelegation" Type="Int32" />
-          <Property Name="EquipmentID" Type="Int32" />
-          <Property Name="AccessoryID" Type="Int32" />
+          <Property Name="EquipmentID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AccessoryID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ContractNumber" Type="Int32" />
         </EntityType>
