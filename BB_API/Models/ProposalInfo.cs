@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApplication1.Controllers;
 using WebApplication1.Models.ViewModels;
 
 namespace WebApplication1.Models
@@ -379,6 +380,7 @@ namespace WebApplication1.Models
     public class DeliveryLocationsBes
     {
         public List<BB_Proposal_DeliveryLocation> deliveryLocationsShipToBillTo { get; set; }
+        public List<AssignedItems> AssignedItemsList { get; set; }
     }
 
     public class Financing

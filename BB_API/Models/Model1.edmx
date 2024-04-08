@@ -843,6 +843,7 @@
           <Property Name="EquipmentID" Type="int" />
           <Property Name="AccessoryID" Type="int" />
           <Property Name="AccountType" Type="varchar" MaxLength="50" />
+          <Property Name="ContractNumber" Type="int" />
         </EntityType>
         <EntityType Name="BB_Proposal_DL_ClientContacts">
           <Key>
@@ -3153,6 +3154,7 @@
           <Property Name="EquipmentID" Type="Int32" />
           <Property Name="AccessoryID" Type="Int32" />
           <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ContractNumber" Type="Int32" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -4564,6 +4566,7 @@
           <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
               <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
+                <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
                 <ScalarProperty Name="AccountType" ColumnName="AccountType" />
                 <ScalarProperty Name="AccessoryID" ColumnName="AccessoryID" />
                 <ScalarProperty Name="EquipmentID" ColumnName="EquipmentID" />

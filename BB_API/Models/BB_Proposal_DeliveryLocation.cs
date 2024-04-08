@@ -41,5 +41,6 @@ namespace WebApplication1.Models
         public Nullable<int> EquipmentID { get; set; }
         public Nullable<int> AccessoryID { get; set; }
         public string AccountType { get; set; }
+        public Nullable<int> ContractNumber { get; set; }
     }
 }

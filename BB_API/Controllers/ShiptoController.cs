@@ -365,4 +365,38 @@ namespace WebApplication1.Controllers
 
         public List<BB_Proposal_DeliveryLocation> lst_BB_Proposal_DeliveryLocation { get; set; }
     }
+
+    public class AssignedItems
+    {
+        public double? ClickPriceBW { get; set; }
+        public double? ClickPriceC { get; set; }
+        public string CodeRef { get; set; }
+        public int DeliveryLocationAssociated { get; set; }
+        public string Description { get; set; }
+        public double DiscountPercentage { get; set; }
+        public string Family { get; set; }
+        public double GPPercentage { get; set; }
+        public double GPTotal { get; set; }
+        public int Group { get; set; }
+        public bool? IsFinanced { get; set; }
+        public bool? IsInClient { get; set; }
+        public bool? IsMarginBEU { get; set; }
+        public bool? IsUsed { get; set; }
+        public bool? Locked { get; set; }
+        public double Margin { get; set; }
+        public string Name { get; set; }
+        public double PVP { get; set; }
+        public int Qty { get; set; }
+        public double? TCP { get; set; }
+        public double TotalCost { get; set; }
+        public double TotalNetsale { get; set; }
+        public double TotalPVP { get; set; }
+        public double UnitDiscountPrice { get; set; }
+        public double UnitPriceCost { get; set; }
+        public int? addValues { get; set; }
+        public List<Counter> counters { get; set; }
+        public int? parentIndex { get; set; }
+        public PsConfig psConfig { get; set; }
+
+    }
 }
