@@ -63,7 +63,7 @@ namespace WebApplication1.Controllers
                             IMapper iMapperDelivery = configDelivery.CreateMapper();
 
                             AssignedItems assignItem = iMapperDelivery.Map<BB_Proposal_ItemDoBasket, AssignedItems>(itemX);
-
+                            assignItem.DeliveryLocationAssociated = item.IDX;
                             dl.AssignedItems.Add(assignItem);
                         }
                     }
