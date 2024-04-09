@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -37,14 +38,34 @@ namespace WebApplication1.Controllers
                     dl.lst_BB_Proposal_DeliveryLocation = new List<BB_Proposal_DeliveryLocation>();
                     dl.lst_BB_Proposal_DeliveryLocation = lst_DeliverLocations;
 
-
-
-
                     if (parentAccountNr != "")
                     {
                         //nunca enviar ambos os parametros != null
                         lst_Locais = GetDeliveryLocationsFromSP(null, parentAccountNr);
                         dl.lst_LocaisEnvio = lst_Locais;
+                    }
+
+                    // #############################################################################################
+
+                    dl.AssignedItems = new List<AssignedItems>();
+
+                    foreach (var item in dl.lst_BB_Proposal_DeliveryLocation)
+                    {
+                        List<BB_Proposal_ItemDoBasket> itemsDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == item.IDX).ToList();
+
+                        foreach (var itemX in itemsDoBasket)
+                        {
+                            var configDelivery = new MapperConfiguration(cfg =>
+                            {
+                                cfg.CreateMap<BB_Proposal_ItemDoBasket, AssignedItems>();
+                            });
+
+                            IMapper iMapperDelivery = configDelivery.CreateMapper();
+
+                            AssignedItems assignItem = iMapperDelivery.Map<BB_Proposal_ItemDoBasket, AssignedItems>(itemX);
+
+                            dl.AssignedItems.Add(assignItem);
+                        }
                     }
                 }
 
@@ -357,6 +378,8 @@ namespace WebApplication1.Controllers
         public List<BB_LocaisEnvio> lst_LocaisEnvio { get; set; }
 
         public List<BB_Proposal_DeliveryLocation> lst_BB_Proposal_DeliveryLocation { get; set; }
+
+        public List<AssignedItems> AssignedItems { get; set; }
     }
 
     public class AssignedItems

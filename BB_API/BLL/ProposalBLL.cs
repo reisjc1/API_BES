@@ -926,56 +926,56 @@ namespace WebApplication1.BLL
                     }
 
 
-                    if (p.Draft.deliveryLocations != null)
-                    {
+                    //if (p.Draft.deliveryLocations != null)
+                    //{
 
-                        foreach (var item in p.Draft.deliveryLocations)
-                        {
+                    //    foreach (var item in p.Draft.deliveryLocations)
+                    //    {
 
-                            var configpDelivery = new MapperConfiguration(cfg =>
-                            {
-                                cfg.CreateMap<DeliveryLocation, BB_Proposal_DeliveryLocation>();
-                            });
+                    //        var configpDelivery = new MapperConfiguration(cfg =>
+                    //        {
+                    //            cfg.CreateMap<DeliveryLocation, BB_Proposal_DeliveryLocation>();
+                    //        });
 
-                            IMapper iMapperDelivery = configpDelivery.CreateMapper();
+                    //        IMapper iMapperDelivery = configpDelivery.CreateMapper();
 
-                            BB_Proposal_DeliveryLocation bb_Proposal_DeliveryLocation = iMapperDelivery.Map<DeliveryLocation, BB_Proposal_DeliveryLocation>(item);
-                            bb_Proposal_DeliveryLocation.ProposalID = ProposalID;
-                            db.BB_Proposal_DeliveryLocation.Add(bb_Proposal_DeliveryLocation);
+                    //        BB_Proposal_DeliveryLocation bb_Proposal_DeliveryLocation = iMapperDelivery.Map<DeliveryLocation, BB_Proposal_DeliveryLocation>(item);
+                    //        bb_Proposal_DeliveryLocation.ProposalID = ProposalID;
+                    //        db.BB_Proposal_DeliveryLocation.Add(bb_Proposal_DeliveryLocation);
 
-                            try
-                            {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
+                    //        try
+                    //        {
+                    //            db.SaveChanges();
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+                    //            ex.Message.ToString();
+                    //        }
 
-                            foreach (var item1 in item.items)
-                            {
-                                var configpItemns = new MapperConfiguration(cfg =>
-                                {
-                                    cfg.CreateMap<ItemDoBasket, BB_Proposal_ItemDoBasket>();
-                                });
+                    //        foreach (var item1 in item.items)
+                    //        {
+                    //            var configpItemns = new MapperConfiguration(cfg =>
+                    //            {
+                    //                cfg.CreateMap<ItemDoBasket, BB_Proposal_ItemDoBasket>();
+                    //            });
 
-                                IMapper iMapperItems = configpItemns.CreateMapper();
+                    //            IMapper iMapperItems = configpItemns.CreateMapper();
 
-                                BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<ItemDoBasket, BB_Proposal_ItemDoBasket>(item1);
-                                bb_Proposal_ItemDoBasket.DeliveryLocationID = bb_Proposal_DeliveryLocation.IDX;
-                                db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
-                                try
-                                {
-                                    db.SaveChanges();
-                                }
-                                catch (Exception ex)
-                                {
-                                    ex.Message.ToString();
-                                }
-                            }
+                    //            BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<ItemDoBasket, BB_Proposal_ItemDoBasket>(item1);
+                    //            bb_Proposal_ItemDoBasket.DeliveryLocationID = bb_Proposal_DeliveryLocation.IDX;
+                    //            db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
+                    //            try
+                    //            {
+                    //                db.SaveChanges();
+                    //            }
+                    //            catch (Exception ex)
+                    //            {
+                    //                ex.Message.ToString();
+                    //            }
+                    //        }
 
-                        }
-                    }
+                    //    }
+                    //}
 
                     // ################# WORKING ON IT #######################
 
@@ -1075,9 +1075,7 @@ namespace WebApplication1.BLL
                                     {
                                         ex.Message.ToString();
                                     }
-                                    
                                 }
-
                         }
                     }
 
@@ -1112,7 +1110,6 @@ namespace WebApplication1.BLL
                     {
                         err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
                     }
-
 
                     try
                     {
