@@ -705,6 +705,7 @@
           <Property Name="SobreValorizacao" Type="float" />
           <Property Name="ValueComission" Type="float" />
           <Property Name="SapVersion" Type="int" />
+          <Property Name="IsMultipleContract" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_Aprovacao_Quote">
           <Key>
@@ -1596,7 +1597,6 @@
           <EntitySet Name="BB_Proposal_FinancingMonthly" EntityType="BB_DB_DEVModel.BB_Proposal_FinancingMonthly" />
           <EntitySet Name="BB_Proposal_FinancingTrimestral" EntityType="BB_DB_DEVModel.BB_Proposal_FinancingTrimestral" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
-          <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel.BB_Proposal" />
           <EntitySet Name="BB_Proposal_Overvaluation" EntityType="BB_DB_DEVModel.BB_Proposal_Overvaluation" />
           <EntitySet Name="BB_Clientes" EntityType="BB_DB_DEVModel.BB_Clientes" />
           <EntitySet Name="BB_Proposal_Observations" EntityType="BB_DB_DEVModel.BB_Proposal_Observations" />
@@ -1668,20 +1668,12 @@
           </AssociationSet>
           <EntitySet Name="BB_Proposal_PrazoDiferenciado_History" EntityType="BB_DB_DEVModel.BB_Proposal_PrazoDiferenciado_History" />
           <EntitySet Name="BB_Proposal_OPSManage" EntityType="BB_DB_DEVModel.BB_Proposal_OPSManage" />
-          <AssociationSet Name="FK_BB_Proposal_OPSManage_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal">
-            <End Role="BB_Proposal" EntitySet="BB_Proposal" />
-            <End Role="BB_Proposal_OPSManage" EntitySet="BB_Proposal_OPSManage" />
-          </AssociationSet>
           <EntitySet Name="BB_Proposal_PrazoDiferenciado" EntityType="BB_DB_DEVModel.BB_Proposal_PrazoDiferenciado" />
           <EntitySet Name="BB_Maquinas_Usadas" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas" />
           <EntitySet Name="BB_Maquinas_Usadas_Pedidos" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Pedidos" />
           <EntitySet Name="BB_Maquinas_Usadas_Gestor" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Gestor" />
           <EntitySet Name="BB_Maquinas_Usadas_Tecnico" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Tecnico" />
           <EntitySet Name="BB_Proposal_OPSImplement" EntityType="BB_DB_DEVModel.BB_Proposal_OPSImplement" />
-          <AssociationSet Name="FK_BB_Proposal_OPSImplement_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal">
-            <End Role="BB_Proposal" EntitySet="BB_Proposal" />
-            <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
-          </AssociationSet>
           <EntitySet Name="BB_Maquinas_Usadas_Logistica" EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Logistica" />
           <EntitySet Name="BB_Permissions" EntityType="BB_DB_DEVModel.BB_Permissions" />
           <EntitySet Name="BB_Permissions_History" EntityType="BB_DB_DEVModel.BB_Permissions_History" />
@@ -1697,6 +1689,15 @@
           <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
           <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
           <EntitySet Name="BB_Proposal_ItemDoBasket" EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" />
+          <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel.BB_Proposal" />
+          <AssociationSet Name="FK_BB_Proposal_OPSImplement_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal">
+            <End Role="BB_Proposal" EntitySet="BB_Proposal" />
+            <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BB_Proposal_OPSManage_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal">
+            <End Role="BB_Proposal" EntitySet="BB_Proposal" />
+            <End Role="BB_Proposal_OPSManage" EntitySet="BB_Proposal_OPSManage" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -1990,37 +1991,6 @@
           <Property Name="DateApproval" Type="DateTime" Precision="3" />
           <Property Name="DateExpired" Type="DateTime" Precision="3" />
         </EntityType>
-        <EntityType Name="BB_Proposal">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
-          <Property Name="CRM_QUOTE_ID" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="Name" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="StatusID" Type="Int32" />
-          <Property Name="ValueComission" Type="Double" />
-          <Property Name="ValueTotal" Type="Double" />
-          <Property Name="CreatedBy" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="ModifiedBy" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="CreatedTime" Precision="3" Type="DateTime" />
-          <Property Name="ModifiedTime" Precision="3" Type="DateTime" />
-          <Property Name="ParentID" Type="Int32" />
-          <Property Name="Locked" Type="Boolean" />
-          <Property Name="ClientID" Type="Int32" />
-          <Property Name="ClientAccountNumber" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="StatusCRM" Type="Int32" />
-          <Property Name="AccountManager" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="ToDelete" Type="Boolean" />
-          <Property Name="CampaignID" Type="Int32" />
-          <Property Name="StatusCRM1" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="SobreValorizacao" Type="Double" />
-          <Property Name="TaxaCopiaTotal" Type="Double" />
-          <Property Name="SubTotal" Type="Double" />
-          <NavigationProperty Name="BB_Proposal_OPSManage" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSManage" />
-          <Property Name="SapVersion" Type="Int32" />
-          <NavigationProperty Name="BB_Proposal_OPSImplement" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSImplement" />
-          </EntityType>
         <EntityType Name="BB_Proposal_Overvaluation">
           <Key>
             <PropertyRef Name="ID" />
@@ -2729,18 +2699,6 @@
           <Property Name="IsValidated" Type="Boolean" />
           <NavigationProperty Name="BB_Proposal" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" FromRole="BB_Proposal_OPSManage" ToRole="BB_Proposal" />
         </EntityType>
-        <Association Name="FK_BB_Proposal_OPSManage_BB_Proposal">
-          <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
-          <End Type="BB_DB_DEVModel.BB_Proposal_OPSManage" Role="BB_Proposal_OPSManage" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BB_Proposal">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BB_Proposal_OPSManage">
-              <PropertyRef Name="ProposalID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="BB_Proposal_PrazoDiferenciado">
           <Key>
             <PropertyRef Name="ID" />
@@ -2880,18 +2838,6 @@
           <Property Name="IsValidated" Type="Boolean" />
           <NavigationProperty Name="BB_Proposal" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal_OPSImplement" ToRole="BB_Proposal" />
         </EntityType>
-        <Association Name="FK_BB_Proposal_OPSImplement_BB_Proposal">
-          <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
-          <End Type="BB_DB_DEVModel.BB_Proposal_OPSImplement" Role="BB_Proposal_OPSImplement" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BB_Proposal">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BB_Proposal_OPSImplement">
-              <PropertyRef Name="ProposalID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="BB_Maquinas_Usadas_Logistica">
           <Key>
             <PropertyRef Name="ID" />
@@ -3152,6 +3098,62 @@
           <Property Name="Group" Type="Int32" />
           <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
         </EntityType>
+        <EntityType Name="BB_Proposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CRM_QUOTE_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="ValueTotal" Type="Double" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="ClientAccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountManager" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ToDelete" Type="Boolean" />
+          <Property Name="CampaignID" Type="Int32" />
+          <Property Name="StatusCRM1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SubTotal" Type="Double" />
+          <Property Name="ClientID" Type="Int32" />
+          <Property Name="Locked" Type="Boolean" />
+          <Property Name="ParentID" Type="Int32" />
+          <Property Name="StatusCRM" Type="Int32" />
+          <Property Name="TaxaCopiaTotal" Type="Double" />
+          <Property Name="SobreValorizacao" Type="Double" />
+          <Property Name="ValueComission" Type="Double" />
+          <Property Name="SapVersion" Type="Int32" />
+          <Property Name="IsMultipleContract" Type="Boolean" />
+          <NavigationProperty Name="BB_Proposal_OPSImplement" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSImplement" />
+          <NavigationProperty Name="BB_Proposal_OPSManage" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSManage" />
+        </EntityType>
+        <Association Name="FK_BB_Proposal_OPSImplement_BB_Proposal">
+          <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
+          <End Type="BB_DB_DEVModel.BB_Proposal_OPSImplement" Role="BB_Proposal_OPSImplement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BB_Proposal">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BB_Proposal_OPSImplement">
+              <PropertyRef Name="ProposalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BB_Proposal_OPSManage_BB_Proposal">
+          <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
+          <End Type="BB_DB_DEVModel.BB_Proposal_OPSManage" Role="BB_Proposal_OPSManage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BB_Proposal">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BB_Proposal_OPSManage">
+              <PropertyRef Name="ProposalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3468,36 +3470,6 @@
                 <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
                 <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
                 <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal">
-              <MappingFragment StoreEntitySet="BB_Proposal">
-                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
-                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
-                <ScalarProperty Name="TaxaCopiaTotal" ColumnName="TaxaCopiaTotal" />
-                <ScalarProperty Name="SobreValorizacao" ColumnName="SobreValorizacao" />
-                <ScalarProperty Name="StatusCRM1" ColumnName="StatusCRM1" />
-                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
-                <ScalarProperty Name="ToDelete" ColumnName="ToDelete" />
-                <ScalarProperty Name="AccountManager" ColumnName="AccountManager" />
-                <ScalarProperty Name="StatusCRM" ColumnName="StatusCRM" />
-                <ScalarProperty Name="ClientAccountNumber" ColumnName="ClientAccountNumber" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="Locked" ColumnName="Locked" />
-                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
-                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="ValueTotal" ColumnName="ValueTotal" />
-                <ScalarProperty Name="ValueComission" ColumnName="ValueComission" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="CRM_QUOTE_ID" ColumnName="CRM_QUOTE_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -4587,6 +4559,37 @@
                 <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="Family" ColumnName="Family" />
                 <ScalarProperty Name="parentIndex" ColumnName="parentIndex" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal">
+              <MappingFragment StoreEntitySet="BB_Proposal">
+                <ScalarProperty Name="IsMultipleContract" ColumnName="IsMultipleContract" />
+                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
+                <ScalarProperty Name="ValueComission" ColumnName="ValueComission" />
+                <ScalarProperty Name="SobreValorizacao" ColumnName="SobreValorizacao" />
+                <ScalarProperty Name="TaxaCopiaTotal" ColumnName="TaxaCopiaTotal" />
+                <ScalarProperty Name="StatusCRM" ColumnName="StatusCRM" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="StatusCRM1" ColumnName="StatusCRM1" />
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+                <ScalarProperty Name="ToDelete" ColumnName="ToDelete" />
+                <ScalarProperty Name="AccountManager" ColumnName="AccountManager" />
+                <ScalarProperty Name="ClientAccountNumber" ColumnName="ClientAccountNumber" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ValueTotal" ColumnName="ValueTotal" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CRM_QUOTE_ID" ColumnName="CRM_QUOTE_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

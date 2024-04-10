@@ -47,7 +47,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_FinancingMonthly> BB_Proposal_FinancingMonthly { get; set; }
         public virtual DbSet<BB_Proposal_FinancingTrimestral> BB_Proposal_FinancingTrimestral { get; set; }
         public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
-        public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
         public virtual DbSet<BB_Proposal_Overvaluation> BB_Proposal_Overvaluation { get; set; }
         public virtual DbSet<BB_Clientes> BB_Clientes { get; set; }
         public virtual DbSet<BB_Proposal_Observations> BB_Proposal_Observations { get; set; }
@@ -116,5 +115,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_DL_ClientContacts> BB_Proposal_DL_ClientContacts { get; set; }
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
+        public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
     }
 }

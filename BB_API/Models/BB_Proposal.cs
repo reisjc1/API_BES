@@ -17,8 +17,8 @@ namespace WebApplication1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public BB_Proposal()
         {
-            this.BB_Proposal_OPSManage = new HashSet<BB_Proposal_OPSManage>();
             this.BB_Proposal_OPSImplement = new HashSet<BB_Proposal_OPSImplement>();
+            this.BB_Proposal_OPSManage = new HashSet<BB_Proposal_OPSManage>();
         }
     
         public int ID { get; set; }
@@ -26,29 +26,30 @@ namespace WebApplication1.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public Nullable<int> StatusID { get; set; }
-        public Nullable<double> ValueComission { get; set; }
         public Nullable<double> ValueTotal { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> CreatedTime { get; set; }
         public Nullable<System.DateTime> ModifiedTime { get; set; }
-        public Nullable<int> ParentID { get; set; }
-        public Nullable<bool> Locked { get; set; }
-        public Nullable<int> ClientID { get; set; }
         public string ClientAccountNumber { get; set; }
-        public Nullable<int> StatusCRM { get; set; }
         public string AccountManager { get; set; }
         public Nullable<bool> ToDelete { get; set; }
         public Nullable<int> CampaignID { get; set; }
         public string StatusCRM1 { get; set; }
-        public Nullable<double> SobreValorizacao { get; set; }
-        public Nullable<double> TaxaCopiaTotal { get; set; }
         public Nullable<double> SubTotal { get; set; }
+        public Nullable<int> ClientID { get; set; }
+        public Nullable<bool> Locked { get; set; }
+        public Nullable<int> ParentID { get; set; }
+        public Nullable<int> StatusCRM { get; set; }
+        public Nullable<double> TaxaCopiaTotal { get; set; }
+        public Nullable<double> SobreValorizacao { get; set; }
+        public Nullable<double> ValueComission { get; set; }
         public Nullable<int> SapVersion { get; set; }
+        public Nullable<bool> IsMultipleContract { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BB_Proposal_OPSManage> BB_Proposal_OPSManage { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BB_Proposal_OPSManage> BB_Proposal_OPSManage { get; set; }
     }
 }

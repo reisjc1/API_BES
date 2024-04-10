@@ -38,6 +38,9 @@ namespace WebApplication1.BLL
                     proposal.SubTotal = p.Summary.subTotal;
                     proposal.ValueTotal = p.Summary.businessTotal;
 
+                    proposal.IsMultipleContract = p.Draft.details.IsMultipleContract ?? false;
+
+
                     List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposal.ID).ToList();
                     db.BB_Proposal_Quote.RemoveRange(quotes);
 
@@ -986,6 +989,32 @@ namespace WebApplication1.BLL
 
                         List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
 
+                        // "Updating" BB_Proposal_ItemDoBasket
+
+                        List<int> lst_IDX = dl_lst_toDelete.Select(x => x.IDX).ToList();
+
+                        List<BB_Proposal_ItemDoBasket> basketItems_lst_toDelete = new List<BB_Proposal_ItemDoBasket>();
+
+                        foreach (int IDX in lst_IDX)
+                        {
+                            List<BB_Proposal_ItemDoBasket> IDX_items = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == IDX).ToList();
+                            basketItems_lst_toDelete.AddRange(IDX_items);
+                        } 
+
+                        if (basketItems_lst_toDelete.Count() > 0)
+                        {
+                            db.BB_Proposal_ItemDoBasket.RemoveRange(basketItems_lst_toDelete);
+                            try
+                            {
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                ex.Message.ToString();
+                            }
+                        }
+
+                        // "Updating" BB_Proposal_DeliveryLocation
                         if (dl_lst_toDelete.Count() > 0)
                         {
                             db.BB_Proposal_DeliveryLocation.RemoveRange(dl_lst_toDelete);
@@ -1162,6 +1191,9 @@ namespace WebApplication1.BLL
                 err.ProposalObj.Draft.details.Status.Phase = statusProp.Phase;
                 err.ProposalObj.Draft.details.AccountManager = proposal.AccountManager;
                 err.ProposalObj.Draft.details.CampaignID = proposal.CampaignID;
+
+                err.ProposalObj.Draft.details.IsMultipleContract = proposal.IsMultipleContract ?? false;
+
 
                 err.ProposalObj.Draft.baskets = new Baskets();
 
@@ -1677,6 +1709,10 @@ namespace WebApplication1.BLL
             int ProposalID = 0;
             try
             {
+                bool? IsMultipleContract = null;
+
+                IsMultipleContract = p.Draft.details.IsMultipleContract ?? false;
+
                 BB_Proposal bb_proposal = new BB_Proposal()
                 {
                     AccountManager = p.Draft.details.AccountManager,
@@ -1691,8 +1727,10 @@ namespace WebApplication1.BLL
                     Name = p.Draft.details.Name,
                     StatusID = 1,
                     ToDelete = false,
-                    ValueTotal = p.Summary.businessTotal
+                    ValueTotal = p.Summary.businessTotal,
+                    IsMultipleContract = IsMultipleContract
                 };
+
 
                 db.BB_Proposal.Add(bb_proposal);
                 try

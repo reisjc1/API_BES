@@ -27,7 +27,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_FinancingMonthly" Width="1.875" PointX="15" PointY="3.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_FinancingTrimestral" Width="1.5" PointX="15.375" PointY="6.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Financing" Width="1.875" PointX="15.375" PointY="9.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal" PointX="9.375" PointY="30.75" Width="1.5" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Overvaluation" Width="1.75" PointX="15.375" PointY="13.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Clientes" Width="1.5" PointX="3.375" PointY="14.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Observations" Width="1.875" PointX="11.625" PointY="16.75" />
@@ -81,14 +80,12 @@
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_PrazoDiferenciado_History" Width="2" PointX="10.75" PointY="19.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_OPSManage" Width="1.5" PointX="11.625" PointY="34" />
-        <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_PrazoDiferenciado" Width="1.5" PointX="3.375" PointY="26.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas" Width="1.5" PointX="0.75" PointY="10.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Pedidos" Width="1.5" PointX="7.375" PointY="17.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Gestor" Width="1.5" PointX="26.375" PointY="4.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Tecnico" Width="1.5" PointX="26.375" PointY="9.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_OPSImplement" Width="1.5" PointX="11.625" PointY="28.625" />
-        <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Logistica" Width="1.5" PointX="23.375" PointY="27.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Permissions" Width="1.5" PointX="19.375" PointY="13.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Permissions_History" Width="1.5" PointX="27.375" PointY="0.75" />
@@ -104,7 +101,10 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" Width="1.5" PointX="16.375" PointY="29.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" Width="1.5" PointX="0.75" PointY="26.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" Width="1.5" PointX="18.75" PointY="29.75" />
-      </Diagram>
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal" Width="1.5" PointX="9.375" PointY="30.375" />
+        <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" />
+        <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
