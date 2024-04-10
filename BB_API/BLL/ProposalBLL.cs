@@ -1090,19 +1090,23 @@ namespace WebApplication1.BLL
 
                                 foreach (var item in p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo)
                                 {
-                                // é equipamento
-                                    DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID && x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
+
+                                    if (assignItem.DeliveryLocationAssociated == item.IDX)
+                                    {
+                                            // é equipamento
+                                            DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID && x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
                                     
-                                    BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
-                                    bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
-                                    db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
-                                    try
-                                    {
-                                        db.SaveChanges();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ex.Message.ToString();
+                                            BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
+                                            bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
+                                            db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
+                                            try
+                                            {
+                                                db.SaveChanges();
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                ex.Message.ToString();
+                                            }
                                     }
                                 }
                         }
