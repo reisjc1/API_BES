@@ -335,7 +335,7 @@ namespace WebApplication1.Controllers
                         }
                     }
                 }
-                return Ok();
+                return Ok(p.Draft.deliveryLocationsBES);
             }
             catch(Exception ex)
             {
