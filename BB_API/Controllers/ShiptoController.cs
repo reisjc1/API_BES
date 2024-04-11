@@ -13,6 +13,7 @@ namespace WebApplication1.Controllers
 {
     public class ShiptoController : ApiController
     {
+        public BB_DB_DEVEntities2 dbX = new BB_DB_DEVEntities2();
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetAllDeliveryLocations")]
@@ -200,6 +201,149 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
         }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("SaveDeliveryLocation")]
+        public IHttpActionResult SaveDeliveryLocation(ProposalRootObject p)
+        {
+            try
+            {
+                if (p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
+                {
+
+                    List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
+
+                    // "Updating" BB_Proposal_ItemDoBasket
+
+                    List<int> lst_IDX = dl_lst_toDelete.Select(x => x.IDX).ToList();
+
+                    List<BB_Proposal_ItemDoBasket> basketItems_lst_toDelete = new List<BB_Proposal_ItemDoBasket>();
+
+                    foreach (int IDX in lst_IDX)
+                    {
+                        List<BB_Proposal_ItemDoBasket> IDX_items = dbX.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == IDX).ToList();
+                        basketItems_lst_toDelete.AddRange(IDX_items);
+                    }
+
+                    if (basketItems_lst_toDelete.Count() > 0)
+                    {
+                        dbX.BB_Proposal_ItemDoBasket.RemoveRange(basketItems_lst_toDelete);
+                        try
+                        {
+                            dbX.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
+                    }
+
+                    // "Updating" BB_Proposal_DeliveryLocation
+                    if (dl_lst_toDelete.Count() > 0)
+                    {
+                        dbX.BB_Proposal_DeliveryLocation.RemoveRange(dl_lst_toDelete);
+                        try
+                        {
+                            dbX.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
+                    }
+
+
+                    List<BB_Proposal_DeliveryLocation> dl_lst_toSave = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo
+                                                                    .Select(dl => new BB_Proposal_DeliveryLocation
+                                                                    {
+                                                                        ProposalID = dl.ProposalID,
+                                                                        ID = dl.ID,
+                                                                        Adress1 = dl.Adress1,
+                                                                        Adress2 = dl.Adress2,
+                                                                        PostalCode = dl.PostalCode,
+                                                                        City = dl.City,
+                                                                        County = dl.County,
+                                                                        Contacto = dl.Contacto,
+                                                                        Email = dl.Email,
+                                                                        Phone = dl.Phone,
+                                                                        DeliveryDate = dl.DeliveryDate,
+                                                                        Department = dl.Department,
+                                                                        Floor = dl.Floor,
+                                                                        Building = dl.Building,
+                                                                        Room = dl.Room,
+                                                                        Schedule = dl.Schedule,
+                                                                        Payer = dl.Payer,
+                                                                        BillReceiver = dl.BillReceiver,
+                                                                        DeliveryContact = dl.DeliveryContact,
+                                                                        ITContact = dl.ITContact,
+                                                                        ServiceContact = dl.ServiceContact,
+                                                                        CopiesContact = dl.CopiesContact,
+                                                                        DeliveryDelegation = dl.DeliveryDelegation,
+                                                                        AccountType = dl.AccountType
+                                                                    })
+                                                                    .ToList();
+
+                    dbX.BB_Proposal_DeliveryLocation.AddRange(dl_lst_toSave);
+                }
+
+                try
+                {
+                    dbX.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    ex.Message.ToString();
+                }
+
+
+
+                if (p.Draft.deliveryLocationsBES.AssignedItems.Count() > 0)
+                {
+
+                    foreach (var assignItem in p.Draft.deliveryLocationsBES.AssignedItems)
+                    {
+
+                        var configpItemns = new MapperConfiguration(cfg =>
+                        {
+                            cfg.CreateMap<AssignedItems, BB_Proposal_ItemDoBasket>();
+                        });
+
+                        IMapper iMapperItems = configpItemns.CreateMapper();
+
+                        int DL_IDX = 0;
+
+                        foreach (var item in p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo)
+                        {
+
+                            if (assignItem.DeliveryLocationAssociated == item.IDX)
+                            {
+                                // é equipamento
+                                DL_IDX = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID && x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
+
+                                BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
+                                bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
+                                dbX.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
+                                try
+                                {
+                                    dbX.SaveChanges();
+                                }
+                                catch (Exception ex)
+                                {
+                                    ex.Message.ToString();
+                                }
+                            }
+                        }
+                    }
+                }
+                return Ok(p.Draft.deliveryLocationsBES);
+            }
+            catch(Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
+
 
         // ----------------------------- HELPERS -----------------------------
 
