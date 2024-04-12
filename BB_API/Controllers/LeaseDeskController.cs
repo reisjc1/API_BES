@@ -3560,7 +3560,10 @@ namespace WebApplication1.Controllers
                         {
                             BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == contractProposal).FirstOrDefault();
                             proposal.IsMultipleContract = isMultipleContract;
-                            proposal.ClientAccountNumber= soldTo;
+                            if(soldTo != null)
+                            {
+                                proposal.ClientAccountNumber= soldTo;
+                            }
 
                             db.Entry(proposal).State = EntityState.Modified;
                             db.SaveChanges();
