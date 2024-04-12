@@ -4,12 +4,12 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Alias="Self" Namespace="BB_DB_DEVModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
+    <Schema Namespace="BB_DB_DEVModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="BB_Clientes">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="accountnumber" Type="nvarchar(max)" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="Owner" Type="nvarchar(max)" />
@@ -20,7 +20,7 @@
           <Property Name="Blocked" Type="bit" />
           <Property Name="Holding" Type="nvarchar(max)" />
           <Property Name="GMA" Type="nvarchar(max)" />
-          <Property Name="GMA_Identifier" MaxLength="10" Type="nvarchar" />
+          <Property Name="GMA_Identifier" Type="nvarchar" MaxLength="10" />
           <Property Name="Industry" Type="nvarchar(max)" />
           <Property Name="Segment" Type="nvarchar(max)" />
           <Property Name="CreatedBy" Type="nvarchar(max)" />
@@ -40,14 +40,14 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BB_Proposal">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CRM_QUOTE_ID" Type="nvarchar(max)" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="Description" Type="nvarchar(max)" />
@@ -71,12 +71,13 @@
           <Property Name="SobreValorizacao" Type="float" />
           <Property Name="ValueComission" Type="float" />
           <Property Name="SapVersion" Type="int" />
+          <Property Name="IsMultipleContract" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_Contacts_Documentation">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="Email" Type="nvarchar(max)" />
           <Property Name="Telefone" Type="nvarchar(max)" />
@@ -86,7 +87,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="Email" Type="nvarchar(max)" />
           <Property Name="Telefone" Type="nvarchar(max)" />
@@ -96,7 +97,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="FinancingID" Type="int" />
           <Property Name="Createby" Type="nvarchar(max)" />
@@ -111,14 +112,14 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="System" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="LD_Contrato">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="QuoteNumber" Type="nvarchar(max)" />
           <Property Name="PathContracto" Type="nvarchar(max)" />
@@ -149,7 +150,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="LDID" Type="int" />
           <Property Name="NUS" Type="nvarchar(max)" />
           <Property Name="ModifiedBy" Type="nvarchar(max)" />
@@ -160,7 +161,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="QuoteNumber" Type="nvarchar(max)" />
           <Property Name="PathContracto" Type="nvarchar(max)" />
@@ -188,14 +189,14 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Motivo" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="LD_DocSign_Control">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="LeasedeskID" Type="int" />
           <Property Name="CreatedBy" Type="nvarchar(max)" />
@@ -207,12 +208,13 @@
           <Property Name="NrPageSign" Type="int" />
           <Property Name="DocPath" Type="nvarchar(max)" />
           <Property Name="DocSignEnvelopeID" Type="nvarchar(max)" />
+          <Property Name="Message" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="LD_DocSign_Control_Files">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="FilePath" Type="nvarchar(max)" />
           <Property Name="NrPageSign" Type="int" />
@@ -225,7 +227,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="LeasedeskID" Type="int" />
           <Property Name="CreatedBy" Type="nvarchar(max)" />
@@ -242,7 +244,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Classification" Type="nvarchar(max)" />
           <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
@@ -250,7 +252,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ContratoID" Type="int" />
           <Property Name="QuoteNumber" Type="nvarchar(max)" />
           <Property Name="Name" Type="nvarchar(max)" />
@@ -273,7 +275,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ContractID" Type="int" />
           <Property Name="QuoteNumber" Type="nvarchar(max)" />
           <Property Name="NrClient" Type="nvarchar(max)" />
@@ -289,7 +291,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="contratoID" Type="int" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="TypeID" Type="nvarchar(max)" />
@@ -302,14 +304,14 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Type" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="LD_Observacoes_Motivos">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Motive" Type="nvarchar(max)" />
           <Property Name="OrderMotive" Type="int" />
         </EntityType>
@@ -317,7 +319,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ContractID" Type="int" />
           <Property Name="PA5DocumentID" Type="int" />
           <Property Name="IsValid" Type="bit" />
@@ -327,7 +329,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="IsRequired" Type="bit" />
           <Property Name="IsSolicted" Type="bit" />
@@ -337,7 +339,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ContractID" Type="int" />
           <Property Name="Nr_Reminder" Type="int" />
           <Property Name="IsStarted" Type="bit" />
@@ -356,22 +358,22 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Status" Type="nvarchar(max)" />
-          <Property Name="Description" MaxLength="10" Type="nchar" />
+          <Property Name="Description" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="LD_System">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="System" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="LD_TipoContrato">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TipoContrato" Type="nvarchar(max)" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="Enable" Type="bit" />
@@ -418,7 +420,6 @@
           <EntitySet Name="LD_Logs" EntityType="BB_DB_DEVModel1.LD_Logs" />
           <EntitySet Name="LD_Logs_Type" EntityType="BB_DB_DEVModel1.LD_Logs_Type" />
           <EntitySet Name="BB_Clientes" EntityType="BB_DB_DEVModel1.BB_Clientes" />
-          <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel1.BB_Proposal" />
           <EntitySet Name="LD_TipoContrato" EntityType="BB_DB_DEVModel1.LD_TipoContrato" />
           <EntitySet Name="LD_Contrato_History" EntityType="BB_DB_DEVModel1.LD_Contrato_History" />
           <EntitySet Name="LD_Observacoes_Motivos" EntityType="BB_DB_DEVModel1.LD_Observacoes_Motivos" />
@@ -435,6 +436,7 @@
           <EntitySet Name="LD_DocSign_Control" EntityType="BB_DB_DEVModel1.LD_DocSign_Control" />
           <EntitySet Name="LD_DocSign_Control_Files" EntityType="BB_DB_DEVModel1.LD_DocSign_Control_Files" />
           <EntitySet Name="LD_DocSign_Control_History" EntityType="BB_DB_DEVModel1.LD_DocSign_Control_History" />
+          <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel1.BB_Proposal" />
         </EntityContainer>
         <EntityType Name="LD_DocumentClassification">
           <Key>
@@ -554,35 +556,6 @@
           <Property Name="numberofemployees" Type="Int32" />
           <Property Name="new_totalequipments" Type="Int32" />
           <Property Name="new_totalequipmentskm" Type="Int32" />
-        </EntityType>
-        <EntityType Name="BB_Proposal">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CRM_QUOTE_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="StatusID" Type="Int32" />
-          <Property Name="ValueComission" Type="Double" />
-          <Property Name="ValueTotal" Type="Double" />
-          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
-          <Property Name="ParentID" Type="Int32" />
-          <Property Name="Locked" Type="Boolean" />
-          <Property Name="ClientID" Type="Int32" />
-          <Property Name="ClientAccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="StatusCRM" Type="Int32" />
-          <Property Name="AccountManager" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ToDelete" Type="Boolean" />
-          <Property Name="CampaignID" Type="Int32" />
-          <Property Name="StatusCRM1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SobreValorizacao" Type="Double" />
-          <Property Name="TaxaCopiaTotal" Type="Double" />
-          <Property Name="SubTotal" Type="Double" />
-          <Property Name="SapVersion" Type="Int32" />
         </EntityType>
         <EntityType Name="LD_TipoContrato">
           <Key>
@@ -776,6 +749,7 @@
           <Property Name="NrPageSign" Type="Int32" />
           <Property Name="DocPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DocSignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="LD_DocSign_Control_Files">
           <Key>
@@ -806,6 +780,36 @@
           <Property Name="NrPageSign" Type="Int32" />
           <Property Name="DocPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DocSignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BB_Proposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CRM_QUOTE_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="ValueTotal" Type="Double" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="ClientAccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountManager" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ToDelete" Type="Boolean" />
+          <Property Name="CampaignID" Type="Int32" />
+          <Property Name="StatusCRM1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SubTotal" Type="Double" />
+          <Property Name="ClientID" Type="Int32" />
+          <Property Name="Locked" Type="Boolean" />
+          <Property Name="ParentID" Type="Int32" />
+          <Property Name="StatusCRM" Type="Int32" />
+          <Property Name="TaxaCopiaTotal" Type="Double" />
+          <Property Name="SobreValorizacao" Type="Double" />
+          <Property Name="ValueComission" Type="Double" />
+          <Property Name="SapVersion" Type="Int32" />
+          <Property Name="IsMultipleContract" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -937,36 +941,6 @@
                 <ScalarProperty Name="Owner" ColumnName="Owner" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="accountnumber" ColumnName="accountnumber" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal">
-              <MappingFragment StoreEntitySet="BB_Proposal">
-                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
-                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
-                <ScalarProperty Name="TaxaCopiaTotal" ColumnName="TaxaCopiaTotal" />
-                <ScalarProperty Name="SobreValorizacao" ColumnName="SobreValorizacao" />
-                <ScalarProperty Name="StatusCRM1" ColumnName="StatusCRM1" />
-                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
-                <ScalarProperty Name="ToDelete" ColumnName="ToDelete" />
-                <ScalarProperty Name="AccountManager" ColumnName="AccountManager" />
-                <ScalarProperty Name="StatusCRM" ColumnName="StatusCRM" />
-                <ScalarProperty Name="ClientAccountNumber" ColumnName="ClientAccountNumber" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="Locked" ColumnName="Locked" />
-                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
-                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="ValueTotal" ColumnName="ValueTotal" />
-                <ScalarProperty Name="ValueComission" ColumnName="ValueComission" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="CRM_QUOTE_ID" ColumnName="CRM_QUOTE_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1163,6 +1137,7 @@
           <EntitySetMapping Name="LD_DocSign_Control">
             <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_DocSign_Control">
               <MappingFragment StoreEntitySet="LD_DocSign_Control">
+                <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="DocSignEnvelopeID" ColumnName="DocSignEnvelopeID" />
                 <ScalarProperty Name="DocPath" ColumnName="DocPath" />
                 <ScalarProperty Name="NrPageSign" ColumnName="NrPageSign" />
@@ -1206,6 +1181,37 @@
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="LeasedeskID" ColumnName="LeasedeskID" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal">
+              <MappingFragment StoreEntitySet="BB_Proposal">
+                <ScalarProperty Name="IsMultipleContract" ColumnName="IsMultipleContract" />
+                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
+                <ScalarProperty Name="ValueComission" ColumnName="ValueComission" />
+                <ScalarProperty Name="SobreValorizacao" ColumnName="SobreValorizacao" />
+                <ScalarProperty Name="TaxaCopiaTotal" ColumnName="TaxaCopiaTotal" />
+                <ScalarProperty Name="StatusCRM" ColumnName="StatusCRM" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="StatusCRM1" ColumnName="StatusCRM1" />
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+                <ScalarProperty Name="ToDelete" ColumnName="ToDelete" />
+                <ScalarProperty Name="AccountManager" ColumnName="AccountManager" />
+                <ScalarProperty Name="ClientAccountNumber" ColumnName="ClientAccountNumber" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ValueTotal" ColumnName="ValueTotal" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CRM_QUOTE_ID" ColumnName="CRM_QUOTE_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

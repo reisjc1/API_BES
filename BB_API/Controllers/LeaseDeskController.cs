@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.Office.Interop.Word;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -3507,6 +3511,79 @@ namespace WebApplication1.Controllers
             EmailService a = new EmailService();
             a.SendEmailayncTeste();
             return Ok(true);
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetIsMultipleContract")]
+        public IHttpActionResult GetIsMultipleContract(int? contractID)
+        {
+            bool? isMultiplecontracts = null;
+            MultiData data = new MultiData();
+            try
+            {
+                if(contractID != null)
+                {
+                    using (var db = new BB_DB_DEV_LeaseDesk())
+                    {
+
+                        int? contractProposal = db.LD_Contrato.Where(x => x.ID == contractID).Select(x => x.ProposalID).FirstOrDefault();
+
+                        if(contractProposal != null)
+                        {
+                            BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == contractProposal).FirstOrDefault();
+                            data.isMultipleContracts = proposal.IsMultipleContract;
+                            data.ClientAccountNumber = proposal.ClientAccountNumber;
+                        }
+                    }
+                }
+
+            return Ok(data);
+
+            }catch(Exception ex)
+            {
+                string errorMessage = ex.Message;
+                return Ok(data);
+            }
+        }
+        public class MultiData
+        {
+            public bool? isMultipleContracts { get; set; }
+            public string ClientAccountNumber { get; set; }
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("SaveMultiContractInfo")]
+        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract)
+        {
+            try
+            {
+                if (contractID != null)
+                {
+                    using (var db = new BB_DB_DEV_LeaseDesk())
+                    {
+                        int? contractProposal = db.LD_Contrato.Where(x => x.ID == contractID).Select(x => x.ProposalID).FirstOrDefault();
+
+                        if (contractProposal != null)
+                        {
+                            BB_Proposal bb_proposal = db.BB_Proposal.Where(x => x.ID == contractProposal).FirstOrDefault();
+                            bb_proposal.IsMultipleContract = isMultipleContract;
+                            if(soldTo != null)
+                            {
+                                bb_proposal.ClientAccountNumber= soldTo;
+                            }
+
+                            db.Entry(bb_proposal).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = ex.Message;
+                return null;
+            }
         }
 
     }

@@ -14,7 +14,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Logs" Width="1.5" PointX="8.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Logs_Type" Width="1.5" PointX="2.5" PointY="8.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Clientes" Width="1.5" PointX="8.375" PointY="4.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Proposal" Width="1.5" PointX="0.75" PointY="9.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_TipoContrato" Width="1.5" PointX="10.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Contrato_History" Width="1.5" PointX="10.375" PointY="3.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Observacoes_Motivos" Width="1.5" PointX="5.375" PointY="10.75" />
@@ -31,6 +30,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_DocSign_Control" Width="1.5" PointX="13.375" PointY="12.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_DocSign_Control_Files" Width="1.5" PointX="14.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_DocSign_Control_History" Width="1.5" PointX="14.375" PointY="4.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Proposal" Width="1.5" PointX="0.75" PointY="11.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

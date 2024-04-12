@@ -34,7 +34,6 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_Logs> LD_Logs { get; set; }
         public virtual DbSet<LD_Logs_Type> LD_Logs_Type { get; set; }
         public virtual DbSet<BB_Clientes> BB_Clientes { get; set; }
-        public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
         public virtual DbSet<LD_TipoContrato> LD_TipoContrato { get; set; }
         public virtual DbSet<LD_Contrato_History> LD_Contrato_History { get; set; }
         public virtual DbSet<LD_Observacoes_Motivos> LD_Observacoes_Motivos { get; set; }
@@ -51,5 +50,6 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_DocSign_Control> LD_DocSign_Control { get; set; }
         public virtual DbSet<LD_DocSign_Control_Files> LD_DocSign_Control_Files { get; set; }
         public virtual DbSet<LD_DocSign_Control_History> LD_DocSign_Control_History { get; set; }
+        public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
     }
 }
