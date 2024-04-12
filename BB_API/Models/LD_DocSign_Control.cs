@@ -26,5 +26,6 @@ namespace WebApplication1.Models
         public Nullable<int> NrPageSign { get; set; }
         public string DocPath { get; set; }
         public string DocSignEnvelopeID { get; set; }
+        public string Message { get; set; }
     }
 }

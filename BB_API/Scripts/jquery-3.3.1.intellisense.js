@@ -14,7 +14,7 @@ intellisense.annotate(jQuery, {
   },
   'ajaxPrefilter': function() {
     /// <signature>
-    ///   <summary>Handle custom Ajax options or modify existing options before each request is sent and before they are processed by $.ajax().</summary>
+    ///   <summary>Handle custom Ajax options or  existing options before each request is sent and before they are processed by $.ajax().</summary>
     ///   <param name="dataTypes" type="String">An optional string containing one or more space-separated dataTypes</param>
     ///   <param name="handler(options, originalOptions, jqXHR)" type="Function">A handler to set default values for future Ajax requests.</param>
     /// </signature>
