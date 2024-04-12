@@ -3562,7 +3562,7 @@ namespace WebApplication1.Controllers
                             proposal.IsMultipleContract = isMultipleContract;
                             proposal.ClientAccountNumber= soldTo;
                             
-                            //db.SaveChanges();
+                            db.SaveChanges();
                         }
 
                     }
