@@ -99,7 +99,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Maquinas_Usadas_Pedidos> BB_Maquinas_Usadas_Pedidos { get; set; }
         public virtual DbSet<BB_Maquinas_Usadas_Gestor> BB_Maquinas_Usadas_Gestor { get; set; }
         public virtual DbSet<BB_Maquinas_Usadas_Tecnico> BB_Maquinas_Usadas_Tecnico { get; set; }
-        public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
         public virtual DbSet<BB_Maquinas_Usadas_Logistica> BB_Maquinas_Usadas_Logistica { get; set; }
         public virtual DbSet<BB_Permissions> BB_Permissions { get; set; }
         public virtual DbSet<BB_Permissions_History> BB_Permissions_History { get; set; }
@@ -116,5 +115,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
         public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
+        public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
     }
 }

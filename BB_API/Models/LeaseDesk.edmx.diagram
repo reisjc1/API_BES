@@ -31,6 +31,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_DocSign_Control_Files" Width="1.5" PointX="14.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_DocSign_Control_History" Width="1.5" PointX="14.375" PointY="4.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Proposal" Width="1.5" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Proposal_Client" Width="1.5" PointX="15.375" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

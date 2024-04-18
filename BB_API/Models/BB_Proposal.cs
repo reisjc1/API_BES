@@ -17,8 +17,8 @@ namespace WebApplication1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public BB_Proposal()
         {
-            this.BB_Proposal_OPSImplement = new HashSet<BB_Proposal_OPSImplement>();
             this.BB_Proposal_OPSManage = new HashSet<BB_Proposal_OPSManage>();
+            this.BB_Proposal_OPSImplement = new HashSet<BB_Proposal_OPSImplement>();
         }
     
         public int ID { get; set; }
@@ -46,10 +46,15 @@ namespace WebApplication1.Models
         public Nullable<double> ValueComission { get; set; }
         public Nullable<int> SapVersion { get; set; }
         public Nullable<bool> IsMultipleContract { get; set; }
+        public string Plant { get; set; }
+        public string CodArrend { get; set; }
+        public string AccordNumber { get; set; }
+        public string ContractNumberPai { get; set; }
+        public Nullable<System.DateTime> DataFechoContracto { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BB_Proposal_OPSManage> BB_Proposal_OPSManage { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
     }
 }
