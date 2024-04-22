@@ -150,6 +150,16 @@
           <Property Name="IsPrimary" Type="bit" />
           <Property Name="ClientAccountNumberID" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="BB_CRM_Approval_Comments">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="Comment" Type="varchar(max)" />
+          <Property Name="CreatedDate" Type="date" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="BB_CRM_Quotes">
           <Key>
             <PropertyRef Name="ID" />
@@ -202,6 +212,7 @@
           <Property Name="TCP" Type="float" />
           <Property Name="Enable" Type="bit" />
           <Property Name="BEU" Type="float" />
+          <Property Name="BOM" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BB_DeliveryContactsInfo">
           <Key>
@@ -504,6 +515,15 @@
           <Property Name="Comment" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="CreatedDate" Type="date" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BB_Milestone_Status">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="CreatedDate" Type="date" />
+          <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="BB_OPS_Implement_Packs">
           <Key>
@@ -952,6 +972,22 @@
           <Property Name="Qty" Type="int" />
           <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="BB_Proposal_Milestone">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Proposal_ID" Type="int" />
+          <Property Name="Family" Type="nvarchar" MaxLength="50" />
+          <Property Name="CodeRef" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="UnitPriceCost" Type="float" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="TotalCost" Type="float" />
+          <Property Name="UnitDiscountPrice" Type="float" />
+          <Property Name="TotalNetSale" Type="float" />
+          <Property Name="Milestone" Type="int" />
+        </EntityType>
         <EntityType Name="BB_Proposal_Observations">
           <Key>
             <PropertyRef Name="ID" />
@@ -1256,6 +1292,57 @@
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="State" Type="varchar" MaxLength="20" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_RD_WFA_Approvers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User_ID" Type="varchar" MaxLength="256" />
+          <Property Name="Department" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_RD_WFA_BU">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" />
+          <Property Name="Description" Type="varchar" MaxLength="150" />
+          <Property Name="IsEnabled" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_RD_WFA_Condition">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Condition" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_RD_WFA_Condition_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="20" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_RD_WFA_Elements">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="150" />
+          <Property Name="IsEnabled" Type="bit" />
+        </EntityType>
         <EntityType Name="BB_REL_Equipament_Acessorie">
           <Key>
             <PropertyRef Name="ID" />
@@ -1312,6 +1399,41 @@
           <Property Name="RequestedBWExcess" Type="float" />
           <Property Name="RequestedCExcess" Type="float" />
           <Property Name="RequestedRent" Type="float" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_WFA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WFA_Control_ID" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Control' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_WFA_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BU_ID" Type="int" />
+          <Property Name="Elements_ID" Type="int" />
+          <Property Name="Level_ID" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Levels' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_WFA_Levels">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WFA_Control_ID" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="100" />
+          <Property Name="WFA_Approver_ID" Type="int" />
+          <Property Name="Condition_ID" Type="int" />
+          <Property Name="Condition_Value" Type="float" />
+          <Property Name="Type_ID" Type="int" />
         </EntityType>
         <EntityType Name="BB_WorkSheet_Metadata">
           <Key>
@@ -1464,6 +1586,7 @@
           <EntitySet Name="BB_Commission" EntityType="Self.BB_Commission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Consumables" EntityType="Self.BB_Consumables" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Contactos" EntityType="Self.BB_Contactos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_CRM_Approval_Comments" EntityType="Self.BB_CRM_Approval_Comments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_CRM_Quotes" EntityType="Self.BB_CRM_Quotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_CRM_Workflow" EntityType="Self.BB_CRM_Workflow" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Data_Integration" EntityType="Self.BB_Data_Integration" Schema="dbo" store:Type="Tables" />
@@ -1484,6 +1607,7 @@
           <EntitySet Name="BB_Margin" EntityType="Self.BB_Margin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_MIF_Renovations" EntityType="Self.BB_MIF_Renovations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_MIF_Renovations_Comments" EntityType="Self.BB_MIF_Renovations_Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Milestone_Status" EntityType="Self.BB_Milestone_Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_OPS_Implement_Packs" EntityType="Self.BB_OPS_Implement_Packs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_OPS_Manage_Packs" EntityType="Self.BB_OPS_Manage_Packs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Permissions" EntityType="Self.BB_Permissions" Schema="dbo" store:Type="Tables" />
@@ -1515,6 +1639,7 @@
           <EntitySet Name="BB_Proposal_FinancingTrimestral" EntityType="Self.BB_Proposal_FinancingTrimestral" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_ItemDoBasket" EntityType="Self.BB_Proposal_ItemDoBasket" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_LeaseDesk_Detalhe" EntityType="Self.BB_Proposal_LeaseDesk_Detalhe" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Proposal_Milestone" EntityType="Self.BB_Proposal_Milestone" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Observations" EntityType="Self.BB_Proposal_Observations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_OPSImplement" EntityType="Self.BB_Proposal_OPSImplement" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_OPSManage" EntityType="Self.BB_Proposal_OPSManage" Schema="dbo" store:Type="Tables" />
@@ -1544,6 +1669,68 @@
           <EntitySet Name="LD_DocumentClassification" EntityType="Self.LD_DocumentClassification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LD_FinancingDocument" EntityType="Self.LD_FinancingDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RD_AddressAcronyms" EntityType="Self.RD_AddressAcronyms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_RD_WFA_Approvers" EntityType="Self.BB_RD_WFA_Approvers" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_RD_WFA_Approvers].[ID] AS [ID], 
+    [BB_RD_WFA_Approvers].[User_ID] AS [User_ID], 
+    [BB_RD_WFA_Approvers].[Department] AS [Department]
+    FROM [dbo].[BB_RD_WFA_Approvers] AS [BB_RD_WFA_Approvers]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BB_RD_WFA_BU" EntityType="Self.BB_RD_WFA_BU" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_RD_WFA_BU].[ID] AS [ID], 
+    [BB_RD_WFA_BU].[Name] AS [Name], 
+    [BB_RD_WFA_BU].[Description] AS [Description], 
+    [BB_RD_WFA_BU].[IsEnabled] AS [IsEnabled]
+    FROM [dbo].[BB_RD_WFA_BU] AS [BB_RD_WFA_BU]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BB_RD_WFA_Condition" EntityType="Self.BB_RD_WFA_Condition" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_RD_WFA_Condition].[ID] AS [ID], 
+    [BB_RD_WFA_Condition].[Condition] AS [Condition]
+    FROM [dbo].[BB_RD_WFA_Condition] AS [BB_RD_WFA_Condition]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BB_RD_WFA_Condition_Type" EntityType="Self.BB_RD_WFA_Condition_Type" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_RD_WFA_Condition_Type].[ID] AS [ID], 
+    [BB_RD_WFA_Condition_Type].[Type] AS [Type], 
+    [BB_RD_WFA_Condition_Type].[Description] AS [Description]
+    FROM [dbo].[BB_RD_WFA_Condition_Type] AS [BB_RD_WFA_Condition_Type]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BB_RD_WFA_Elements" EntityType="Self.BB_RD_WFA_Elements" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_RD_WFA_Elements].[ID] AS [ID], 
+    [BB_RD_WFA_Elements].[Name] AS [Name], 
+    [BB_RD_WFA_Elements].[Description] AS [Description], 
+    [BB_RD_WFA_Elements].[IsEnabled] AS [IsEnabled]
+    FROM [dbo].[BB_RD_WFA_Elements] AS [BB_RD_WFA_Elements]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BB_WFA" EntityType="Self.BB_WFA" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_WFA].[ID] AS [ID], 
+    [BB_WFA].[WFA_Control_ID] AS [WFA_Control_ID], 
+    [BB_WFA].[Name] AS [Name]
+    FROM [dbo].[BB_WFA] AS [BB_WFA]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BB_WFA_Control" EntityType="Self.BB_WFA_Control" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_WFA_Control].[ID] AS [ID], 
+    [BB_WFA_Control].[BU_ID] AS [BU_ID], 
+    [BB_WFA_Control].[Elements_ID] AS [Elements_ID], 
+    [BB_WFA_Control].[Level_ID] AS [Level_ID]
+    FROM [dbo].[BB_WFA_Control] AS [BB_WFA_Control]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BB_WFA_Levels" EntityType="Self.BB_WFA_Levels" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_WFA_Levels].[ID] AS [ID], 
+    [BB_WFA_Levels].[WFA_Control_ID] AS [WFA_Control_ID], 
+    [BB_WFA_Levels].[Name] AS [Name], 
+    [BB_WFA_Levels].[WFA_Approver_ID] AS [WFA_Approver_ID], 
+    [BB_WFA_Levels].[Condition_ID] AS [Condition_ID], 
+    [BB_WFA_Levels].[Condition_Value] AS [Condition_Value], 
+    [BB_WFA_Levels].[Type_ID] AS [Type_ID]
+    FROM [dbo].[BB_WFA_Levels] AS [BB_WFA_Levels]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="Self.FK_BB_PrintingService_Machines_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
@@ -1705,6 +1892,17 @@
             <End Role="BB_Proposal" EntitySet="BB_Proposal" />
             <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
           </AssociationSet>
+          <EntitySet Name="BB_RD_WFA_Approvers" EntityType="BB_DB_DEVModel.BB_RD_WFA_Approvers" />
+          <EntitySet Name="BB_RD_WFA_BU" EntityType="BB_DB_DEVModel.BB_RD_WFA_BU" />
+          <EntitySet Name="BB_RD_WFA_Condition" EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition" />
+          <EntitySet Name="BB_RD_WFA_Condition_Type" EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition_Type" />
+          <EntitySet Name="BB_RD_WFA_Elements" EntityType="BB_DB_DEVModel.BB_RD_WFA_Elements" />
+          <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
+          <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
+          <EntitySet Name="BB_WFA" EntityType="BB_DB_DEVModel.BB_WFA" />
+          <EntitySet Name="BB_Proposal_Milestone" EntityType="BB_DB_DEVModel.BB_Proposal_Milestone" />
+          <EntitySet Name="BB_CRM_Approval_Comments" EntityType="BB_DB_DEVModel.BB_CRM_Approval_Comments" />
+          <EntitySet Name="BB_Milestone_Status" EntityType="BB_DB_DEVModel.BB_Milestone_Status" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -1766,6 +1964,7 @@
           <Property Name="TCP" Type="Double" />
           <Property Name="Enable" Type="Boolean" />
           <Property Name="BEU" Type="Double" />
+          <Property Name="BOM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BB_Equipamentos">
           <Key>
@@ -3168,6 +3367,111 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="BB_RD_WFA_Approvers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_ID" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="Department" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_RD_WFA_BU">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="IsEnabled" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_RD_WFA_Condition">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Condition" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_RD_WFA_Condition_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_RD_WFA_Elements">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="IsEnabled" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BU_ID" Type="Int32" />
+          <Property Name="Elements_ID" Type="Int32" />
+          <Property Name="Level_ID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Levels">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WFA_Control_ID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="WFA_Approver_ID" Type="Int32" />
+          <Property Name="Condition_ID" Type="Int32" />
+          <Property Name="Condition_Value" Type="Double" />
+          <Property Name="Type_ID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_WFA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WFA_Control_ID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Milestone">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Proposal_ID" Type="Int32" />
+          <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UnitPriceCost" Type="Double" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="TotalCost" Type="Double" />
+          <Property Name="UnitDiscountPrice" Type="Double" />
+          <Property Name="TotalNetSale" Type="Double" />
+          <Property Name="Milestone" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_CRM_Approval_Comments">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_Milestone_Status">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3219,6 +3523,7 @@
           <EntitySetMapping Name="BB_Data_Integration">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Data_Integration">
               <MappingFragment StoreEntitySet="BB_Data_Integration">
+                <ScalarProperty Name="BOM" ColumnName="BOM" />
                 <ScalarProperty Name="BEU" ColumnName="BEU" />
                 <ScalarProperty Name="Enable" ColumnName="Enable" />
                 <ScalarProperty Name="TCP" ColumnName="TCP" />
@@ -4612,6 +4917,122 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_WFA_Approvers">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_WFA_Approvers">
+              <MappingFragment StoreEntitySet="BB_RD_WFA_Approvers">
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_WFA_BU">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_WFA_BU">
+              <MappingFragment StoreEntitySet="BB_RD_WFA_BU">
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_WFA_Condition">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_WFA_Condition">
+              <MappingFragment StoreEntitySet="BB_RD_WFA_Condition">
+                <ScalarProperty Name="Condition" ColumnName="Condition" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_WFA_Condition_Type">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_WFA_Condition_Type">
+              <MappingFragment StoreEntitySet="BB_RD_WFA_Condition_Type">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_WFA_Elements">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_WFA_Elements">
+              <MappingFragment StoreEntitySet="BB_RD_WFA_Elements">
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Control">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Control">
+              <MappingFragment StoreEntitySet="BB_WFA_Control">
+                <ScalarProperty Name="Level_ID" ColumnName="Level_ID" />
+                <ScalarProperty Name="Elements_ID" ColumnName="Elements_ID" />
+                <ScalarProperty Name="BU_ID" ColumnName="BU_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Levels">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Levels">
+              <MappingFragment StoreEntitySet="BB_WFA_Levels">
+                <ScalarProperty Name="Type_ID" ColumnName="Type_ID" />
+                <ScalarProperty Name="Condition_Value" ColumnName="Condition_Value" />
+                <ScalarProperty Name="Condition_ID" ColumnName="Condition_ID" />
+                <ScalarProperty Name="WFA_Approver_ID" ColumnName="WFA_Approver_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA">
+              <MappingFragment StoreEntitySet="BB_WFA">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Milestone">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Milestone">
+              <MappingFragment StoreEntitySet="BB_Proposal_Milestone">
+                <ScalarProperty Name="Milestone" ColumnName="Milestone" />
+                <ScalarProperty Name="TotalNetSale" ColumnName="TotalNetSale" />
+                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="UnitPriceCost" ColumnName="UnitPriceCost" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_CRM_Approval_Comments">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_CRM_Approval_Comments">
+              <MappingFragment StoreEntitySet="BB_CRM_Approval_Comments">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Milestone_Status">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Milestone_Status">
+              <MappingFragment StoreEntitySet="BB_Milestone_Status">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

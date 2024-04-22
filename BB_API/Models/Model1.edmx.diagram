@@ -104,6 +104,17 @@
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_OPSImplement" Width="1.5" PointX="11.625" PointY="28.375" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Approvers" Width="1.5" PointX="13.375" PointY="23.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_BU" Width="1.5" PointX="29.375" PointY="16.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition" Width="1.5" PointX="29.375" PointY="26.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition_Type" Width="1.5" PointX="29.375" PointY="29.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Elements" Width="1.5" PointX="5.375" PointY="30.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Control" Width="1.5" PointX="30.375" PointY="7.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Levels" Width="1.5" PointX="30.375" PointY="10.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA" Width="1.5" PointX="30.375" PointY="19.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Milestone" Width="1.5" PointX="30.375" PointY="22.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_CRM_Approval_Comments" Width="1.5" PointX="25.375" PointY="30.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Milestone_Status" Width="1.5" PointX="31.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

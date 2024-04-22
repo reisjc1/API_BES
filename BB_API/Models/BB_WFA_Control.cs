@@ -12,11 +12,11 @@ namespace WebApplication1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class BB_Milestone_Status
+    public partial class BB_WFA_Control
     {
         public int ID { get; set; }
-        public Nullable<int> ProposalID { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public int Status { get; set; }
+        public Nullable<int> BU_ID { get; set; }
+        public Nullable<int> Elements_ID { get; set; }
+        public Nullable<int> Level_ID { get; set; }
     }
 }
