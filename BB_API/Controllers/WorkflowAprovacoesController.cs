@@ -496,10 +496,88 @@ namespace WebApplication1.Controllers
             }
         }
         */
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetWFATable")]
+        public IHttpActionResult GetWFATable()
+        {
+            try
+            {
+                List<WFA_Listagem> WFA_lst = new List<WFA_Listagem>();
+
+                Level newLvl = new Level()
+                {
+                    Approver = "TestApprover",
+                    Condition = "TestCondition",
+                    Percentage = "TestPercentage",
+                    Type = "TestType"
+                };
+
+                Level newLvl_1 = new Level()
+                {
+                    Approver = "TestApprover_1",
+                    Condition = "TestCondition_1",
+                    Percentage = "TestPercentage_1",
+                    Type = "TestType_1"
+                };
+
+
+                WFA_Listagem wFA_Listagem = new WFA_Listagem()
+                {
+                    Line = 1,
+                    BU = "TestBU",
+                    DealElements = "TestDealElements",
+                    TypeCustomer = "TestTypeCustomer",
+                    lstLevel = new List<Level>()
+                };
+
+                WFA_Listagem wFA_Listagem_1 = new WFA_Listagem()
+                {
+                    Line = 2,
+                    BU = "TestBU_1",
+                    DealElements = "TestDealElements_1",
+                    TypeCustomer = "TestTypeCustomer_1",
+                    lstLevel = new List<Level>()
+                };
+
+                wFA_Listagem.lstLevel.Add(newLvl);
+                wFA_Listagem_1.lstLevel.Add(newLvl_1);
+
+                WFA_lst.Add(wFA_Listagem);
+                WFA_lst.Add(wFA_Listagem_1);
+
+                return Ok(WFA_lst);
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
     }
+
+
+
+    // CLASSES --------------------------------------------------------------------------------------------
     public class Milestone_ProposalPlan
     {
         public List<BB_Proposal_Milestone> Milestones { get; set; }
         public List<BB_CRM_Approval_Comments> MilestoneComments { get; set; }
+    }
+
+    public class WFA_Listagem
+    {
+        public int Line { get; set; }
+        public string BU { get; set; }
+        public string DealElements { get; set; }
+        public string TypeCustomer { get; set; }
+        public List<Level> lstLevel { get; set; }
+
+    }
+    public class Level
+    {
+        public string Approver { get; set; }
+        public string Condition { get; set; }
+        public string Percentage { get; set; }
+        public string Type { get; set; }
     }
 }
