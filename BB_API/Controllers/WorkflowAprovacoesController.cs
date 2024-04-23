@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
 using WebApplication1.Models;
-using WebApplication1.App_Start;
 
 namespace WebApplication1.Controllers
 {
@@ -130,220 +127,6 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_RD_WFA_Elements")]
-        public List<BB_RD_WFA_Elements> Get_BB_RD_WFA_Elements()
-        {
-            try
-            {
-                List<BB_RD_WFA_Elements> lst_BB_RD_WFA_Elements = new List<BB_RD_WFA_Elements>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_RD_WFA_Elements = db.BB_RD_WFA_Elements.ToList();
-                }
-
-                return lst_BB_RD_WFA_Elements;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_RD_WFA_BU")]
-        public List<BB_RD_WFA_BU> Get_BB_RD_WFA_BU()
-        {
-            try
-            {
-                List<BB_RD_WFA_BU> lst_BB_RD_WFA_BU = new List<BB_RD_WFA_BU>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_RD_WFA_BU = db.BB_RD_WFA_BU.ToList();
-                }
-
-                return lst_BB_RD_WFA_BU;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_RD_WFA_Approvers")]
-        public List<UserInfo> Get_BB_RD_WFA_Approvers()
-        {
-            try
-            {
-                List<UserInfo> usersInfo = new List<UserInfo>();
-                List<BB_RD_WFA_Approvers> lst_BB_RD_WFA_Approvers = new List<BB_RD_WFA_Approvers>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_RD_WFA_Approvers = db.BB_RD_WFA_Approvers.ToList();
-                }
-
-                foreach (var user in lst_BB_RD_WFA_Approvers)
-                {
-                    using (var dbX = new masterEntities())
-                    {
-                        usersInfo = dbX.AspNetUsers
-                                        .Where(x => x.Id == user.User_ID)
-                                        .Select(x => new UserInfo
-                                        {
-                                            Email = x.Email,
-                                            DisplayName = x.DisplayName
-                                        })
-                                        .ToList();
-                    }
-                }
-                return usersInfo;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        public class UserInfo
-        {
-            public string Email { get; set; }
-            public string DisplayName { get; set; }
-            public string Department { get; set; }
-        }
-
-
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_RD_WFA_Condition")]
-        public List<BB_RD_WFA_Condition> Get_BB_RD_WFA_Condition()
-        {
-            try
-            {
-                List<BB_RD_WFA_Condition> lst_BB_RD_WFA_Condition = new List<BB_RD_WFA_Condition>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_RD_WFA_Condition = db.BB_RD_WFA_Condition.ToList();
-                }
-
-                return lst_BB_RD_WFA_Condition;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_RD_WFA_Condition_Type")]
-        public List<BB_RD_WFA_Condition_Type> Get_BB_RD_WFA_Condition_Type()
-        {
-            try
-            {
-                List<BB_RD_WFA_Condition_Type> lst_BB_RD_WFA_Condition_Type = new List<BB_RD_WFA_Condition_Type>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_RD_WFA_Condition_Type = db.BB_RD_WFA_Condition_Type.ToList();
-                }
-
-                return lst_BB_RD_WFA_Condition_Type;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_WFA_Levels")]
-        public List<BB_WFA_Levels> Get_BB_WFA_Levels()
-        {
-            try
-            {
-                List<BB_WFA_Levels> lst_BB_WFA_Levels = new List<BB_WFA_Levels>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_WFA_Levels = db.BB_WFA_Levels.ToList();
-                }
-
-                return lst_BB_WFA_Levels;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_WFA_Control")]
-        public List<BB_WFA_Control> Get_BB_WFA_Control()
-        {
-            try
-            {
-                List<BB_WFA_Control> lst_BB_WFA_Control = new List<BB_WFA_Control>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_WFA_Control = db.BB_WFA_Control.ToList();
-                }
-
-                return lst_BB_WFA_Control;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_WFA")]
-        public List<BB_WFA> Get_BB_WFA()
-        {
-            try
-            {
-                List<BB_WFA> lst_BB_WFA = new List<BB_WFA>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_WFA = db.BB_WFA.ToList();
-                }
-
-                return lst_BB_WFA;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
 
         // ######################################################################################
 
@@ -357,7 +140,7 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     lastMilestoneStatus = db.BB_Milestone_Status.Where(x => x.ProposalID == proposalID).FirstOrDefault();
-                    if (lastMilestoneStatus != null)
+                    if(lastMilestoneStatus != null)
                     {
                         lastMilestoneStatus.CreatedDate = DateTime.Now;
 
@@ -385,87 +168,7 @@ namespace WebApplication1.Controllers
         }
 
         // ######################################################################################
-        public IHttpActionResult ADD_BB_WFA_Levels(int? WFA_Control_ID, string Name, int? WFA_Approver_ID, int? Condition_ID, float? Condition_Value, int? Type_ID)
-        {
-            try
-            {
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    db.BB_WFA_Levels.Add(new BB_WFA_Levels()
-                    {
-                        WFA_Control_ID = WFA_Control_ID,
-                        Name = Name,
-                        WFA_Approver_ID = WFA_Approver_ID,
-                        Condition_ID = Condition_ID,
-                        Condition_Value = Condition_Value,
-                        Type_ID = Type_ID
-                    });
 
-                    db.SaveChanges();
-                }
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-        public IHttpActionResult ADD_BB_WFA_Control(int? BU_ID, int? Elements_ID, int? Level_ID)
-        {
-            try
-            {
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    db.BB_WFA_Control.Add(new BB_WFA_Control()
-                    {
-                        BU_ID = BU_ID,
-                        Elements_ID = Elements_ID,
-                        Level_ID = Level_ID
-                    });
-
-                    db.SaveChanges();
-                }
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-        public IHttpActionResult ADD_BB_WFA(int? WFA_Control_ID, string Name)
-        {
-            try
-            {
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    db.BB_WFA.Add(new BB_WFA()
-                    {
-                        WFA_Control_ID = WFA_Control_ID,
-                        Name = Name
-                    });
-
-                    db.SaveChanges();
-                }
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-        /*
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetMilestoneRequests")]
         public IHttpActionResult GetMilestoneRequests(int proposalID)
@@ -495,8 +198,9 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
         }
-        */
+
     }
+
     public class Milestone_ProposalPlan
     {
         public List<BB_Proposal_Milestone> Milestones { get; set; }

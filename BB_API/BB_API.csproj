@@ -264,7 +264,6 @@
     <Compile Include="Controllers\ProposalController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\UsedMachineController.cs" />
-    <Compile Include="Controllers\WorkflowAprovacoesController.cs" />
     <Compile Include="DAL\CRM_ImpersonatedUser.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -303,9 +302,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Contactos.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_CRM_Approval_Comments.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_CRM_Quotes.cs">
@@ -369,9 +365,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_MIF_Renovations_Comments.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_Milestone_Status.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_OPS_Implement_Packs.cs">
@@ -470,9 +463,6 @@
     <Compile Include="Models\BB_Proposal_LeaseDesk_Detalhe.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\BB_Proposal_Milestone.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\BB_Proposal_Observations.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -530,21 +520,6 @@
     <Compile Include="Models\BB_RD_MIF_Renovation_Programs.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\BB_RD_WFA_Approvers.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_RD_WFA_BU.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_RD_WFA_Condition.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_RD_WFA_Condition_Type.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_RD_WFA_Elements.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\BB_REL_Equipament_Acessorie.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -558,15 +533,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_VVA.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_WFA.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_WFA_Control.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_WFA_Levels.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_WorkSheet_Metadata.cs">

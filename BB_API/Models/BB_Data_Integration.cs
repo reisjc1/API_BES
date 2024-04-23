@@ -31,6 +31,5 @@ namespace WebApplication1.Models
         public Nullable<double> TCP { get; set; }
         public Nullable<bool> Enable { get; set; }
         public Nullable<double> BEU { get; set; }
-        public string BOM { get; set; }
     }
 }

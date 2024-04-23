@@ -17,6 +17,6 @@ namespace WebApplication1.Models
         public int ID { get; set; }
         public Nullable<int> ProposalID { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
-        public int Status { get; set; }
+        public Nullable<int> Status { get; set; }
     }
 }
