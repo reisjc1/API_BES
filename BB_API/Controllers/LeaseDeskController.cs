@@ -3514,14 +3514,15 @@ namespace WebApplication1.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
-        [ActionName("GetIsMultipleContract")]
-        public IHttpActionResult GetIsMultipleContract(int? contractID)
+        [ActionName("GetSitesTabContractInfo")]
+        public IHttpActionResult GetSitesTabContractInfo(int? contractID)
         {
-            bool? isMultiplecontracts = null;
             MultiData data = new MultiData();
+            //BB_Proposal proposalObj = new BB_Proposal();
+            int? proposalID = null;
             try
             {
-                if(contractID != null)
+                if (contractID != null)
                 {
                     using (var db = new BB_DB_DEV_LeaseDesk())
                     {
@@ -3530,9 +3531,55 @@ namespace WebApplication1.Controllers
 
                         if(contractProposal != null)
                         {
-                            BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == contractProposal).FirstOrDefault();
-                            data.isMultipleContracts = proposal.IsMultipleContract;
-                            data.ClientAccountNumber = proposal.ClientAccountNumber;
+                            BB_Proposal proposalObj = db.BB_Proposal.Where(x => x.ID == contractProposal).FirstOrDefault();
+                            data.isMultipleContracts = proposalObj.IsMultipleContract;
+                            data.ClientAccountNumber = proposalObj.ClientAccountNumber;
+                            data.Plant = proposalObj.Plant;
+                            data.CodArrend = proposalObj.CodArrend;
+                            data.AccordNumber = proposalObj.AccordNumber;
+                            data.ContractNumberPai = proposalObj.ContractNumberPai;
+                            data.DataFechoContracto = proposalObj.DataFechoContracto;
+
+                            // ###############################################################
+                            // PARA EFEITOS DE TESTE, APAGAR DEPOIS <------ ##################
+                            data.Plant = "TESTE PLANT";                             // #######
+                            data.CodArrend = "TESTE CODARREND";                     // #######
+                            data.AccordNumber = "TESTE ACCORDNUMBER";               // #######
+                            data.ContractNumberPai = "TESTE CONTRACTNUMBERPAI";     // #######
+                            // ###############################################################
+                            // ###############################################################
+
+                            proposalID = proposalObj.ID;
+                        }
+                    }
+                    using (var dbX = new BB_DB_DEVEntities2())
+                    {
+                        if (proposalID != null)
+                        {
+                            List<BB_Proposal_DeliveryLocation> bb_pp_dl_lst = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
+
+                            data.DL_Table_Info_Lst = new List<DL_Table_Info>();
+
+                            foreach(var deliverLocation in bb_pp_dl_lst)
+                            {
+                                DL_Table_Info dl_info = new DL_Table_Info();
+
+                                dl_info.Tipo = deliverLocation.AccountType;
+                                dl_info.DeliveryLocation = deliverLocation.Adress1 + " " + deliverLocation.PostalCode;
+
+                                BB_LocaisEnvio bb_local_envio = dbX.BB_LocaisEnvio.Where(x => x.ID == deliverLocation.IDX).FirstOrDefault();
+                                if(bb_local_envio != null)
+                                {
+                                    dl_info.CIF = bb_local_envio.NIF_CIF;
+                                }
+
+                                // VERIFICAR ##########################################
+                                dl_info.CompanyName = "VERIFICAR";
+                                dl_info.SAP_Nr = "VERIFICAR";
+                                dl_info.SAP_Company = "VERIFICAR";   
+
+                                data.DL_Table_Info_Lst.Add(dl_info);
+                            }
                         }
                     }
                 }
@@ -3549,7 +3596,27 @@ namespace WebApplication1.Controllers
         {
             public bool? isMultipleContracts { get; set; }
             public string ClientAccountNumber { get; set; }
+            public string Plant { get; set; }
+            public string CodArrend { get; set; }
+            public string AccordNumber { get; set; }
+            public string ContractNumberPai { get; set; }
+            public DateTime? DataFechoContracto { get; set; }
+
+            public List<DL_Table_Info> DL_Table_Info_Lst { get; set; }
+
         }
+
+        public class DL_Table_Info
+        {
+            public string Tipo { get; set; }
+            public string CompanyName { get; set; }
+            public string CIF { get; set; }
+            public string DeliveryLocation { get; set; }
+            public string SAP_Nr { get; set; }
+            public string SAP_Company { get; set; }
+
+        }
+
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("SaveMultiContractInfo")]
@@ -3569,7 +3636,11 @@ namespace WebApplication1.Controllers
                             bb_proposal.IsMultipleContract = isMultipleContract;
                             if(soldTo != null)
                             {
+                                BB_Proposal_Client bb_Proposal_Client = db.BB_Proposal_Client.Where(x => x.ProposalID == bb_proposal.ID).FirstOrDefault();
+
+                                bb_Proposal_Client.ClientID = soldTo;
                                 bb_proposal.ClientAccountNumber= soldTo;
+
                             }
 
                             db.Entry(bb_proposal).State = EntityState.Modified;

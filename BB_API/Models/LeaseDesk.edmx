@@ -72,6 +72,22 @@
           <Property Name="ValueComission" Type="float" />
           <Property Name="SapVersion" Type="int" />
           <Property Name="IsMultipleContract" Type="bit" />
+          <Property Name="Plant" Type="varchar" MaxLength="100" />
+          <Property Name="CodArrend" Type="varchar" MaxLength="100" />
+          <Property Name="AccordNumber" Type="varchar" MaxLength="100" />
+          <Property Name="ContractNumberPai" Type="varchar" MaxLength="100" />
+          <Property Name="DataFechoContracto" Type="datetime" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Client">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientID" Type="nvarchar(max)" />
+          <Property Name="IsNewClient" Type="bit" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="IsPublicSector" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_Contacts_Documentation">
           <Key>
@@ -382,6 +398,7 @@
           <EntitySet Name="BB_Clientes" EntityType="Self.BB_Clientes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Documents_Type" EntityType="Self.BB_Documents_Type" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal" EntityType="Self.BB_Proposal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Proposal_Client" EntityType="Self.BB_Proposal_Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="Self.BB_Proposal_Contacts_Documentation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Contacts_Signing" EntityType="Self.BB_Proposal_Contacts_Signing" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_FinancingApproval" EntityType="Self.BB_Proposal_FinancingApproval" Schema="dbo" store:Type="Tables" />
@@ -437,6 +454,7 @@
           <EntitySet Name="LD_DocSign_Control_Files" EntityType="BB_DB_DEVModel1.LD_DocSign_Control_Files" />
           <EntitySet Name="LD_DocSign_Control_History" EntityType="BB_DB_DEVModel1.LD_DocSign_Control_History" />
           <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel1.BB_Proposal" />
+          <EntitySet Name="BB_Proposal_Client" EntityType="BB_DB_DEVModel1.BB_Proposal_Client" />
         </EntityContainer>
         <EntityType Name="LD_DocumentClassification">
           <Key>
@@ -810,6 +828,22 @@
           <Property Name="ValueComission" Type="Double" />
           <Property Name="SapVersion" Type="Int32" />
           <Property Name="IsMultipleContract" Type="Boolean" />
+          <Property Name="Plant" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodArrend" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AccordNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContractNumberPai" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DataFechoContracto" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Client">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsNewClient" Type="Boolean" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsPublicSector" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1188,6 +1222,11 @@
           <EntitySetMapping Name="BB_Proposal">
             <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal">
               <MappingFragment StoreEntitySet="BB_Proposal">
+                <ScalarProperty Name="DataFechoContracto" ColumnName="DataFechoContracto" />
+                <ScalarProperty Name="ContractNumberPai" ColumnName="ContractNumberPai" />
+                <ScalarProperty Name="AccordNumber" ColumnName="AccordNumber" />
+                <ScalarProperty Name="CodArrend" ColumnName="CodArrend" />
+                <ScalarProperty Name="Plant" ColumnName="Plant" />
                 <ScalarProperty Name="IsMultipleContract" ColumnName="IsMultipleContract" />
                 <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
                 <ScalarProperty Name="ValueComission" ColumnName="ValueComission" />
@@ -1212,6 +1251,18 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="CRM_QUOTE_ID" ColumnName="CRM_QUOTE_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Client">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal_Client">
+              <MappingFragment StoreEntitySet="BB_Proposal_Client">
+                <ScalarProperty Name="IsPublicSector" ColumnName="IsPublicSector" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="IsNewClient" ColumnName="IsNewClient" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

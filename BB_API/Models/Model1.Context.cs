@@ -98,7 +98,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Maquinas_Usadas_Pedidos> BB_Maquinas_Usadas_Pedidos { get; set; }
         public virtual DbSet<BB_Maquinas_Usadas_Gestor> BB_Maquinas_Usadas_Gestor { get; set; }
         public virtual DbSet<BB_Maquinas_Usadas_Tecnico> BB_Maquinas_Usadas_Tecnico { get; set; }
-        public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
         public virtual DbSet<BB_Maquinas_Usadas_Logistica> BB_Maquinas_Usadas_Logistica { get; set; }
         public virtual DbSet<BB_Permissions> BB_Permissions { get; set; }
         public virtual DbSet<BB_Permissions_History> BB_Permissions_History { get; set; }
@@ -115,6 +114,18 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
         public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
+        public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
+        public virtual DbSet<BB_RD_WFA_Approvers> BB_RD_WFA_Approvers { get; set; }
+        public virtual DbSet<BB_RD_WFA_BU> BB_RD_WFA_BU { get; set; }
+        public virtual DbSet<BB_RD_WFA_Condition> BB_RD_WFA_Condition { get; set; }
+        public virtual DbSet<BB_RD_WFA_Condition_Type> BB_RD_WFA_Condition_Type { get; set; }
+        public virtual DbSet<BB_RD_WFA_Elements> BB_RD_WFA_Elements { get; set; }
+        public virtual DbSet<BB_WFA_Control> BB_WFA_Control { get; set; }
+        public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
+        public virtual DbSet<BB_WFA> BB_WFA { get; set; }
+        public virtual DbSet<BB_Proposal_Milestone> BB_Proposal_Milestone { get; set; }
+        public virtual DbSet<BB_CRM_Approval_Comments> BB_CRM_Approval_Comments { get; set; }
+        public virtual DbSet<BB_Milestone_Status> BB_Milestone_Status { get; set; }
         public virtual DbSet<BB_Data_Integration> BB_Data_Integration { get; set; }
     }
 }

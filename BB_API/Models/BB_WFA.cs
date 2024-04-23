@@ -14,10 +14,8 @@ namespace WebApplication1.Models
     
     public partial class BB_WFA
     {
-        public string ProposalID { get; set; }
-        public string Quote { get; set; }
-        public string CreatedBy { get; set; }
-        public Nullable<int> ApprovalState { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int ID { get; set; }
+        public Nullable<int> WFA_Control_ID { get; set; }
+        public string Name { get; set; }
     }
 }
