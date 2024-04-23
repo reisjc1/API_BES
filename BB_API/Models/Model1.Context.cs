@@ -114,7 +114,7 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_DL_ClientContacts> BB_Proposal_DL_ClientContacts { get; set; }
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
-        public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
         public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
+        public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
     }
 }
