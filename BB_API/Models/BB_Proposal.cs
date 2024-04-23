@@ -46,6 +46,11 @@ namespace WebApplication1.Models
         public Nullable<double> ValueComission { get; set; }
         public Nullable<int> SapVersion { get; set; }
         public Nullable<bool> IsMultipleContract { get; set; }
+        public string Plant { get; set; }
+        public string CodArrend { get; set; }
+        public string AccordNumber { get; set; }
+        public string ContractNumberPai { get; set; }
+        public Nullable<System.DateTime> DataFechoContracto { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }

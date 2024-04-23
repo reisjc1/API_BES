@@ -202,6 +202,7 @@
           <Property Name="TCP" Type="float" />
           <Property Name="Enable" Type="bit" />
           <Property Name="BEU" Type="float" />
+          <Property Name="BOM" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BB_DeliveryContactsInfo">
           <Key>
@@ -269,6 +270,8 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Type" Type="nvarchar(max)" />
+          <Property Name="Code" Type="int" />
+          <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BB_FinancingType">
           <Key>
@@ -706,6 +709,11 @@
           <Property Name="ValueComission" Type="float" />
           <Property Name="SapVersion" Type="int" />
           <Property Name="IsMultipleContract" Type="bit" />
+          <Property Name="Plant" Type="varchar" MaxLength="100" />
+          <Property Name="CodArrend" Type="varchar" MaxLength="100" />
+          <Property Name="AccordNumber" Type="varchar" MaxLength="100" />
+          <Property Name="ContractNumberPai" Type="varchar" MaxLength="100" />
+          <Property Name="DataFechoContracto" Type="datetime" />
         </EntityType>
         <EntityType Name="BB_Proposal_Aprovacao_Quote">
           <Key>
@@ -1578,7 +1586,6 @@
           <EntitySet Name="BB_Acessories" EntityType="BB_DB_DEVModel.BB_Acessories" />
           <EntitySet Name="BB_Bank_Bnp" EntityType="BB_DB_DEVModel.BB_Bank_Bnp" />
           <EntitySet Name="BB_Consumables" EntityType="BB_DB_DEVModel.BB_Consumables" />
-          <EntitySet Name="BB_Data_Integration" EntityType="BB_DB_DEVModel.BB_Data_Integration" />
           <EntitySet Name="BB_Equipamentos" EntityType="BB_DB_DEVModel.BB_Equipamentos" />
           <EntitySet Name="BB_Margin" EntityType="BB_DB_DEVModel.BB_Margin" />
           <EntitySet Name="BB_REL_Equipament_Acessorie" EntityType="BB_DB_DEVModel.BB_REL_Equipament_Acessorie" />
@@ -1698,6 +1705,7 @@
             <End Role="BB_Proposal" EntitySet="BB_Proposal" />
             <End Role="BB_Proposal_OPSManage" EntitySet="BB_Proposal_OPSManage" />
           </AssociationSet>
+          <EntitySet Name="BB_Data_Integration" EntityType="BB_DB_DEVModel.BB_Data_Integration" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -1737,28 +1745,6 @@
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CompatiblesMachines" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="BB_Data_Integration">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description_English" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description_Portuguese" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PVP" Type="Double" />
-          <Property Name="Category_PT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Category_PT_Processed" Type="Boolean" />
-          <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
-          <Property Name="UpdateDatetime" Type="DateTime" Precision="3" />
-          <Property Name="UpdateBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="BinaryImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="MarginBEU" Type="Double" />
-          <Property Name="IsMarginBEU" Type="Boolean" />
-          <Property Name="TCP" Type="Double" />
-          <Property Name="Enable" Type="Boolean" />
-          <Property Name="BEU" Type="Double" />
         </EntityType>
         <EntityType Name="BB_Equipamentos">
           <Key>
@@ -1934,6 +1920,8 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BB_FinancingType">
           <Key>
@@ -3129,6 +3117,11 @@
           <Property Name="IsMultipleContract" Type="Boolean" />
           <NavigationProperty Name="BB_Proposal_OPSImplement" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSImplement" />
           <NavigationProperty Name="BB_Proposal_OPSManage" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSManage" />
+          <Property Name="Plant" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodArrend" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AccordNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContractNumberPai" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DataFechoContracto" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_BB_Proposal_OPSImplement_BB_Proposal">
           <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
@@ -3154,6 +3147,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="BB_Data_Integration">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description_English" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description_Portuguese" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PVP" Type="Double" />
+          <Property Name="Category_PT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Category_PT_Processed" Type="Boolean" />
+          <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateDatetime" Type="DateTime" Precision="3" />
+          <Property Name="UpdateBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BinaryImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MarginBEU" Type="Double" />
+          <Property Name="IsMarginBEU" Type="Boolean" />
+          <Property Name="TCP" Type="Double" />
+          <Property Name="Enable" Type="Boolean" />
+          <Property Name="BEU" Type="Double" />
+          <Property Name="BOM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3198,29 +3214,6 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Family" ColumnName="Family" />
                 <ScalarProperty Name="CodRef" ColumnName="CodRef" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_Data_Integration">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Data_Integration">
-              <MappingFragment StoreEntitySet="BB_Data_Integration">
-                <ScalarProperty Name="BEU" ColumnName="BEU" />
-                <ScalarProperty Name="Enable" ColumnName="Enable" />
-                <ScalarProperty Name="TCP" ColumnName="TCP" />
-                <ScalarProperty Name="IsMarginBEU" ColumnName="IsMarginBEU" />
-                <ScalarProperty Name="MarginBEU" ColumnName="MarginBEU" />
-                <ScalarProperty Name="BinaryImage" ColumnName="BinaryImage" />
-                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
-                <ScalarProperty Name="UpdateDatetime" ColumnName="UpdateDatetime" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Category_PT_Processed" ColumnName="Category_PT_Processed" />
-                <ScalarProperty Name="Category_PT" ColumnName="Category_PT" />
-                <ScalarProperty Name="PVP" ColumnName="PVP" />
-                <ScalarProperty Name="Description_Portuguese" ColumnName="Description_Portuguese" />
-                <ScalarProperty Name="Description_English" ColumnName="Description_English" />
-                <ScalarProperty Name="Family" ColumnName="Family" />
-                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3408,6 +3401,8 @@
           <EntitySetMapping Name="BB_FinancingPaymentMethod">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_FinancingPaymentMethod">
               <MappingFragment StoreEntitySet="BB_FinancingPaymentMethod">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
@@ -4566,6 +4561,11 @@
           <EntitySetMapping Name="BB_Proposal">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal">
               <MappingFragment StoreEntitySet="BB_Proposal">
+                <ScalarProperty Name="DataFechoContracto" ColumnName="DataFechoContracto" />
+                <ScalarProperty Name="ContractNumberPai" ColumnName="ContractNumberPai" />
+                <ScalarProperty Name="AccordNumber" ColumnName="AccordNumber" />
+                <ScalarProperty Name="CodArrend" ColumnName="CodArrend" />
+                <ScalarProperty Name="Plant" ColumnName="Plant" />
                 <ScalarProperty Name="IsMultipleContract" ColumnName="IsMultipleContract" />
                 <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
                 <ScalarProperty Name="ValueComission" ColumnName="ValueComission" />
@@ -4590,6 +4590,30 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="CRM_QUOTE_ID" ColumnName="CRM_QUOTE_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Data_Integration">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Data_Integration">
+              <MappingFragment StoreEntitySet="BB_Data_Integration">
+                <ScalarProperty Name="BOM" ColumnName="BOM" />
+                <ScalarProperty Name="BEU" ColumnName="BEU" />
+                <ScalarProperty Name="Enable" ColumnName="Enable" />
+                <ScalarProperty Name="TCP" ColumnName="TCP" />
+                <ScalarProperty Name="IsMarginBEU" ColumnName="IsMarginBEU" />
+                <ScalarProperty Name="MarginBEU" ColumnName="MarginBEU" />
+                <ScalarProperty Name="BinaryImage" ColumnName="BinaryImage" />
+                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+                <ScalarProperty Name="UpdateDatetime" ColumnName="UpdateDatetime" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Category_PT_Processed" ColumnName="Category_PT_Processed" />
+                <ScalarProperty Name="Category_PT" ColumnName="Category_PT" />
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="Description_Portuguese" ColumnName="Description_Portuguese" />
+                <ScalarProperty Name="Description_English" ColumnName="Description_English" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

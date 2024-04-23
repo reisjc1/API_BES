@@ -28,7 +28,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Acessories> BB_Acessories { get; set; }
         public virtual DbSet<BB_Bank_Bnp> BB_Bank_Bnp { get; set; }
         public virtual DbSet<BB_Consumables> BB_Consumables { get; set; }
-        public virtual DbSet<BB_Data_Integration> BB_Data_Integration { get; set; }
         public virtual DbSet<BB_Equipamentos> BB_Equipamentos { get; set; }
         public virtual DbSet<BB_Margin> BB_Margin { get; set; }
         public virtual DbSet<BB_REL_Equipament_Acessorie> BB_REL_Equipament_Acessorie { get; set; }
@@ -116,5 +115,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
         public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
+        public virtual DbSet<BB_Data_Integration> BB_Data_Integration { get; set; }
     }
 }
