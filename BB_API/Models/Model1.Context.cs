@@ -121,11 +121,11 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_RD_WFA_Condition> BB_RD_WFA_Condition { get; set; }
         public virtual DbSet<BB_RD_WFA_Condition_Type> BB_RD_WFA_Condition_Type { get; set; }
         public virtual DbSet<BB_RD_WFA_Elements> BB_RD_WFA_Elements { get; set; }
-        public virtual DbSet<BB_WFA_Control> BB_WFA_Control { get; set; }
         public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
         public virtual DbSet<BB_WFA> BB_WFA { get; set; }
         public virtual DbSet<BB_Proposal_Milestone> BB_Proposal_Milestone { get; set; }
         public virtual DbSet<BB_CRM_Approval_Comments> BB_CRM_Approval_Comments { get; set; }
         public virtual DbSet<BB_Milestone_Status> BB_Milestone_Status { get; set; }
+        public virtual DbSet<BB_WFA_Control> BB_WFA_Control { get; set; }
     }
 }

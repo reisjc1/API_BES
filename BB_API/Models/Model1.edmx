@@ -1419,7 +1419,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Control' does not have a
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BU_ID" Type="int" />
           <Property Name="Elements_ID" Type="int" />
-          <Property Name="Level_ID" Type="int" />
+          <Property Name="TypeOfCustomer" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Levels' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1717,7 +1717,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Levels' does not have a 
     [BB_WFA_Control].[ID] AS [ID], 
     [BB_WFA_Control].[BU_ID] AS [BU_ID], 
     [BB_WFA_Control].[Elements_ID] AS [Elements_ID], 
-    [BB_WFA_Control].[Level_ID] AS [Level_ID]
+    [BB_WFA_Control].[TypeOfCustomer] AS [TypeOfCustomer]
     FROM [dbo].[BB_WFA_Control] AS [BB_WFA_Control]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="BB_WFA_Levels" EntityType="Self.BB_WFA_Levels" store:Type="Tables" store:Schema="dbo">
@@ -1897,12 +1897,12 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Levels' does not have a 
           <EntitySet Name="BB_RD_WFA_Condition" EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition" />
           <EntitySet Name="BB_RD_WFA_Condition_Type" EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition_Type" />
           <EntitySet Name="BB_RD_WFA_Elements" EntityType="BB_DB_DEVModel.BB_RD_WFA_Elements" />
-          <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
           <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
           <EntitySet Name="BB_WFA" EntityType="BB_DB_DEVModel.BB_WFA" />
           <EntitySet Name="BB_Proposal_Milestone" EntityType="BB_DB_DEVModel.BB_Proposal_Milestone" />
           <EntitySet Name="BB_CRM_Approval_Comments" EntityType="BB_DB_DEVModel.BB_CRM_Approval_Comments" />
           <EntitySet Name="BB_Milestone_Status" EntityType="BB_DB_DEVModel.BB_Milestone_Status" />
+          <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3408,15 +3408,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Levels' does not have a 
           <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="IsEnabled" Type="Boolean" />
         </EntityType>
-        <EntityType Name="BB_WFA_Control">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BU_ID" Type="Int32" />
-          <Property Name="Elements_ID" Type="Int32" />
-          <Property Name="Level_ID" Type="Int32" />
-        </EntityType>
         <EntityType Name="BB_WFA_Levels">
           <Key>
             <PropertyRef Name="ID" />
@@ -3471,6 +3462,15 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Levels' does not have a 
           <Property Name="ProposalID" Type="Int32" />
           <Property Name="CreatedDate" Type="DateTime" Precision="0" />
           <Property Name="Status" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BU_ID" Type="Int32" />
+          <Property Name="Elements_ID" Type="Int32" />
+          <Property Name="TypeOfCustomer" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -4966,16 +4966,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Levels' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_WFA_Control">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Control">
-              <MappingFragment StoreEntitySet="BB_WFA_Control">
-                <ScalarProperty Name="Level_ID" ColumnName="Level_ID" />
-                <ScalarProperty Name="Elements_ID" ColumnName="Elements_ID" />
-                <ScalarProperty Name="BU_ID" ColumnName="BU_ID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_WFA_Levels">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Levels">
               <MappingFragment StoreEntitySet="BB_WFA_Levels">
@@ -5032,6 +5022,16 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Levels' does not have a 
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Control">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Control">
+              <MappingFragment StoreEntitySet="BB_WFA_Control">
+                <ScalarProperty Name="TypeOfCustomer" ColumnName="TypeOfCustomer" />
+                <ScalarProperty Name="Elements_ID" ColumnName="Elements_ID" />
+                <ScalarProperty Name="BU_ID" ColumnName="BU_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

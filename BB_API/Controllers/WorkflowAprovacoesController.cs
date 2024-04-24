@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using WebApplication1.Models;
 using WebApplication1.App_Start;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace WebApplication1.Controllers
 {
@@ -414,7 +415,7 @@ namespace WebApplication1.Controllers
         }
 
         // ######################################################################################
-        public IHttpActionResult ADD_BB_WFA_Control(int? BU_ID, int? Elements_ID, int? Level_ID)
+        public IHttpActionResult ADD_BB_WFA_Control(int? BU_ID, int? Elements_ID, int? Level_ID, string TypeOfCustomer)
         {
             try
             {
@@ -424,7 +425,7 @@ namespace WebApplication1.Controllers
                     {
                         BU_ID = BU_ID,
                         Elements_ID = Elements_ID,
-                        Level_ID = Level_ID
+                        TypeOfCustomer = TypeOfCustomer
                     });
 
                     db.SaveChanges();
@@ -521,6 +522,22 @@ namespace WebApplication1.Controllers
                 };
 
 
+                Level newLvl_2 = new Level()
+                {
+                    Approver = "TestApprover_2",
+                    Condition = "TestCondition_2",
+                    Percentage = "TestPercentage_2",
+                    Type = "TestType_2"
+                };
+                Level newLvl_3 = new Level()
+                {
+                    Approver = "TestApprover_3",
+                    Condition = "TestCondition_3",
+                    Percentage = "TestPercentage_3",
+                    Type = "TestType_3"
+                };
+
+
                 WFA_Listagem wFA_Listagem = new WFA_Listagem()
                 {
                     Line = 1,
@@ -540,12 +557,55 @@ namespace WebApplication1.Controllers
                 };
 
                 wFA_Listagem.lstLevel.Add(newLvl);
+                wFA_Listagem.lstLevel.Add(newLvl_2);
                 wFA_Listagem_1.lstLevel.Add(newLvl_1);
+                wFA_Listagem_1.lstLevel.Add(newLvl_2);
+                wFA_Listagem_1.lstLevel.Add(newLvl_3);
 
                 WFA_lst.Add(wFA_Listagem);
                 WFA_lst.Add(wFA_Listagem_1);
 
                 return Ok(WFA_lst);
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetCreateDropdowns")]
+        public IHttpActionResult GetCreateDropdowns()
+        {
+            try
+            {
+                WFA_Create wfa_create_obj = new WFA_Create();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    // Popular a lista dos approvers do objeto WFA_Create
+                    var approversList = db.BB_RD_WFA_Approvers.Select(x => x.User_ID).ToList();
+
+                    using (var dbX = new masterEntities())
+                    {
+                        var approvers = (from approver in db.BB_RD_WFA_Approvers
+                                         join user in dbX.AspNetUsers on approver.User_ID equals user.Id
+                                         select user.DisplayName).ToList();
+
+                        wfa_create_obj.Lst_Approver.AddRange(approvers);
+                    }
+
+                    // Popular o resto das dropdowns
+                    wfa_create_obj.Lst_Condition = db.BB_RD_WFA_Condition.Select(x => x.Condition).ToList();
+                    wfa_create_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.Select(x => x.Description).ToList();
+                    wfa_create_obj.Lst_BU = db.BB_RD_WFA_BU.Select(x => x.Name).ToList();
+                    wfa_create_obj.Lst_DealElements = db.BB_RD_WFA_Elements.Select(x => x.Name).ToList();
+                }
+
+                return Ok(wfa_create_obj);
             }
             catch (Exception ex)
             {
@@ -569,7 +629,7 @@ namespace WebApplication1.Controllers
         public int Line { get; set; }
         public string BU { get; set; }
         public string DealElements { get; set; }
-        public string TypeCustomer { get; set; }
+        public string TypeOfCustomer { get; set; }
         public List<Level> lstLevel { get; set; }
 
     }
@@ -579,5 +639,40 @@ namespace WebApplication1.Controllers
         public string Condition { get; set; }
         public string Percentage { get; set; }
         public string Type { get; set; }
+    }
+
+    public class WFA_Create
+    {
+        // dropdowns
+        public List<string> Lst_Approver { get; set; }
+        public List<string> Lst_Condition { get; set; }
+        public List<string> Lst_Type { get; set; }
+        public List<string> Lst_BU { get; set; }
+        public List<string> Lst_DealElements { get; set; }
+
+        public string ID { get; set; }
+        public string BU { get; set; }
+        public string DealElement { get; set; }
+        public string TypeOfCustomer { get; set; }
+        public string Percentage { get; set; }
+
+        public string Level1_Approver { get; set; }
+        public string Level2_Approver { get; set; }
+        public string Level3_Approver { get; set; }
+        public string Level4_Approver { get; set; }
+        public string Level5_Approver { get; set; }
+
+        public string Level1_Condition { get; set; }
+        public string Level2_Condition { get; set; }
+        public string Level3_Condition { get; set; }
+        public string Level4_Condition { get; set; }
+        public string Level5_Condition { get; set; }
+
+        public string Level1_Type { get; set; }
+        public string Level2_Type { get; set; }
+        public string Level3_Type { get; set; }
+        public string Level4_Type { get; set; }
+        public string Level5_Type { get; set; }
+
     }
 }

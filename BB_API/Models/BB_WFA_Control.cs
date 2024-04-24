@@ -17,6 +17,6 @@ namespace WebApplication1.Models
         public int ID { get; set; }
         public Nullable<int> BU_ID { get; set; }
         public Nullable<int> Elements_ID { get; set; }
-        public Nullable<int> Level_ID { get; set; }
+        public string TypeOfCustomer { get; set; }
     }
 }
