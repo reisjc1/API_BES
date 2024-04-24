@@ -598,6 +598,7 @@ namespace WebApplication1.Controllers
                     wfa_create_obj.Lst_DealElements = db.BB_RD_WFA_Elements.Select(x => x.Name).ToList();
                 }
 
+                wfa_create_obj.Lst_Approver = new List<string>();
                 using (var dbX = new masterEntities())
                 {
                     foreach (string user_id in approversList)
