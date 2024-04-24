@@ -543,7 +543,7 @@ namespace WebApplication1.Controllers
                     Line = 1,
                     BU = "TestBU",
                     DealElements = "TestDealElements",
-                    TypeCustomer = "TestTypeCustomer",
+                    TypeOfCustomer = "TestTypeCustomer",
                     lstLevel = new List<Level>()
                 };
 
@@ -552,7 +552,7 @@ namespace WebApplication1.Controllers
                     Line = 2,
                     BU = "TestBU_1",
                     DealElements = "TestDealElements_1",
-                    TypeCustomer = "TestTypeCustomer_1",
+                    TypeOfCustomer = "TestTypeCustomer_1",
                     lstLevel = new List<Level>()
                 };
 
@@ -583,26 +583,30 @@ namespace WebApplication1.Controllers
             try
             {
                 WFA_Create wfa_create_obj = new WFA_Create();
+                List<string> approversList = new List<string>();
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     // Popular a lista dos approvers do objeto WFA_Create
-                    var approversList = db.BB_RD_WFA_Approvers.Select(x => x.User_ID).ToList();
+                    approversList = db.BB_RD_WFA_Approvers.Select(x => x.User_ID).ToList();               
 
-                    using (var dbX = new masterEntities())
-                    {
-                        var approvers = (from approver in db.BB_RD_WFA_Approvers
-                                         join user in dbX.AspNetUsers on approver.User_ID equals user.Id
-                                         select user.DisplayName).ToList();
-
-                        wfa_create_obj.Lst_Approver.AddRange(approvers);
-                    }
 
                     // Popular o resto das dropdowns
                     wfa_create_obj.Lst_Condition = db.BB_RD_WFA_Condition.Select(x => x.Condition).ToList();
                     wfa_create_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.Select(x => x.Description).ToList();
                     wfa_create_obj.Lst_BU = db.BB_RD_WFA_BU.Select(x => x.Name).ToList();
                     wfa_create_obj.Lst_DealElements = db.BB_RD_WFA_Elements.Select(x => x.Name).ToList();
+                }
+
+                using (var dbX = new masterEntities())
+                {
+                    foreach (string user_id in approversList)
+                    {
+                        string userName = dbX.AspNetUsers.Where(x => x.Id == user_id).Select(x => x.DisplayName).FirstOrDefault();
+
+                        // Popular a lista dos approvers do objeto WFA_Create
+                        wfa_create_obj.Lst_Approver.Add(userName);
+                    }
                 }
 
                 return Ok(wfa_create_obj);
