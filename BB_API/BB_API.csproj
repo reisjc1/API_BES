@@ -530,6 +530,9 @@
     <Compile Include="Models\BB_RD_MIF_Renovation_Programs.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_RD_WFA.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_RD_WFA_Approvers.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -558,9 +561,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_VVA.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\BB_WFA.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_WFA_Control.cs">

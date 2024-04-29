@@ -15,8 +15,9 @@ namespace WebApplication1.Models
     public partial class BB_WFA_Control
     {
         public int ID { get; set; }
+        public Nullable<int> WFA_ID { get; set; }
+        public Nullable<int> Line_ID { get; set; }
         public Nullable<int> BU_ID { get; set; }
         public Nullable<int> Elements_ID { get; set; }
-        public string TypeOfCustomer { get; set; }
     }
 }
