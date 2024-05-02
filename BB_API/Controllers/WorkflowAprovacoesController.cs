@@ -850,6 +850,139 @@ namespace WebApplication1.Controllers
             return null;
         }
     }
+
+
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("SaveEditLine")]
+        public IHttpActionResult SaveEditLine(WFA_Create newLine)
+        {
+            try
+            {             
+
+                WFA_Create wfa_create_obj = new WFA_Create();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    // apagar os registos anteriores
+
+                    BB_WFA_Control savedWFA = db.BB_WFA_Control.Where(x => x.ID == newLine.ID).FirstOrDefault();
+
+                    int savedLineNr = (int)savedWFA.Line_ID;
+
+                    List<BB_WFA_Levels> levelsToDelete = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == savedWFA.ID).ToList();
+
+                    db.BB_WFA_Levels.RemoveRange(levelsToDelete);
+                    db.SaveChanges();
+                    db.BB_WFA_Control.Remove(savedWFA);
+                    db.SaveChanges();
+
+
+                    BB_WFA_Control bb_wfa_control = new BB_WFA_Control()
+                    {
+                        WFA_ID = 1,
+                        Line_ID = savedLineNr,
+                        BU_ID = newLine.BU,
+                        Elements_ID = newLine.DealElement,
+                    };
+
+                    if (bb_wfa_control.BU_ID != null && bb_wfa_control.Elements_ID != null)
+                    {
+                        db.BB_WFA_Control.Add(bb_wfa_control);
+                        db.SaveChanges();
+
+                        //ADICIONAR LEVELS.....
+
+                        BB_WFA_Levels bb_wfa_level = new BB_WFA_Levels()
+                        {
+                            WFA_Control_ID = bb_wfa_control.ID,
+                            WFA_Approver_ID = newLine.Level1_Approver,
+                            Condition_ID = newLine.Level1_Condition,
+                            Condition_Value = newLine.Percentage_1,
+                            Type_ID = newLine.Level1_Type,
+                        };
+
+                        BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
+                        {
+                            WFA_Control_ID = bb_wfa_control.ID,
+                            WFA_Approver_ID = newLine.Level2_Approver,
+                            Condition_ID = newLine.Level2_Condition,
+                            Condition_Value = newLine.Percentage_2,
+                            Type_ID = newLine.Level2_Type
+                        };
+
+                        BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
+                        {
+                            WFA_Control_ID = bb_wfa_control.ID,
+                            WFA_Approver_ID = newLine.Level3_Approver,
+                            Condition_ID = newLine.Level3_Condition,
+                            Condition_Value = newLine.Percentage_3,
+                            Type_ID = newLine.Level3_Type
+                        };
+
+                        BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
+                        {
+                            WFA_Control_ID = bb_wfa_control.ID,
+                            WFA_Approver_ID = newLine.Level4_Approver,
+                            Condition_ID = newLine.Level4_Condition,
+                            Condition_Value = newLine.Percentage_4,
+                            Type_ID = newLine.Level4_Type
+                        };
+
+                        BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
+                        {
+                            WFA_Control_ID = bb_wfa_control.ID,
+                            WFA_Approver_ID = newLine.Level5_Approver,
+                            Condition_ID = newLine.Level5_Condition,
+                            Condition_Value = newLine.Percentage_5,
+                            Type_ID = newLine.Level5_Type
+                        };
+
+
+                        // VERIFICAR SE OS LEVELS TÊM TUDO PREENCHIDO...
+
+                        if (bb_wfa_level.WFA_Control_ID != null && bb_wfa_level.WFA_Approver_ID != null && bb_wfa_level.Condition_ID != null &&
+                            bb_wfa_level.Condition_Value != null && bb_wfa_level.Type_ID != null)
+                        {
+                            db.BB_WFA_Levels.Add(bb_wfa_level);
+                        }
+
+                        if (bb_wfa_level_2.WFA_Control_ID != null && bb_wfa_level_2.WFA_Approver_ID != null && bb_wfa_level_2.Condition_ID != null &&
+                            bb_wfa_level_2.Condition_Value != null && bb_wfa_level_2.Type_ID != null)
+                        {
+                            db.BB_WFA_Levels.Add(bb_wfa_level_2);
+                        }
+                        if (bb_wfa_level_3.WFA_Control_ID != null && bb_wfa_level_3.WFA_Approver_ID != null && bb_wfa_level_3.Condition_ID != null &&
+                            bb_wfa_level_3.Condition_Value != null && bb_wfa_level_3.Type_ID != null)
+                        {
+                            db.BB_WFA_Levels.Add(bb_wfa_level_3);
+                        }
+                        if (bb_wfa_level_4.WFA_Control_ID != null && bb_wfa_level_4.WFA_Approver_ID != null && bb_wfa_level_4.Condition_ID != null &&
+                            bb_wfa_level_4.Condition_Value != null && bb_wfa_level_4.Type_ID != null)
+                        {
+                            db.BB_WFA_Levels.Add(bb_wfa_level_4);
+                        }
+                        if (bb_wfa_level_5.WFA_Control_ID != null && bb_wfa_level_5.WFA_Approver_ID != null && bb_wfa_level_5.Condition_ID != null &&
+                            bb_wfa_level_5.Condition_Value != null && bb_wfa_level_5.Type_ID != null)
+                        {
+                            db.BB_WFA_Levels.Add(bb_wfa_level_5);
+                        }
+                    }
+
+                    db.SaveChanges();
+
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
     }
 
 
