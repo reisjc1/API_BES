@@ -548,6 +548,9 @@
     <Compile Include="Models\BB_RD_WFA_Elements.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_RD_WFA_Exception_Action.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_REL_Equipament_Acessorie.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -564,6 +567,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_WFA_Control.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BB_WFA_Exception.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_WFA_Levels.cs">

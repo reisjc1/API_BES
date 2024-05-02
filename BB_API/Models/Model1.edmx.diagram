@@ -113,8 +113,10 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Milestone_Status" Width="1.5" PointX="31.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA" Width="1.5" PointX="30.375" PointY="19.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Approvers" Width="1.5" PointX="13.375" PointY="23.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Exception_Action" Width="1.5" PointX="31.375" PointY="3.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Control" Width="1.5" PointX="30.375" PointY="7.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Levels" Width="1.5" PointX="30.375" PointY="10.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Exception" Width="1.5" PointX="31.375" PointY="14.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

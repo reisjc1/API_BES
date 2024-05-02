@@ -1352,6 +1352,13 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Description" Type="varchar" MaxLength="150" />
           <Property Name="IsEnabled" Type="bit" />
         </EntityType>
+        <EntityType Name="BB_RD_WFA_Exception_Action">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="BB_REL_Equipament_Acessorie">
           <Key>
             <PropertyRef Name="ID" />
@@ -1419,13 +1426,28 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="BU_ID" Type="int" />
           <Property Name="Elements_ID" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Exception' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_WFA_Exception">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WFA_Control_ID" Type="int" />
+          <Property Name="Line_ID" Type="int" />
+          <Property Name="Type_ID" Type="int" />
+          <Property Name="Condition_ID" Type="int" />
+          <Property Name="Condition_Value" Type="float" />
+          <Property Name="Action_ID" Type="int" />
+          <Property Name="Level_ID" Type="int" />
+        </EntityType>
         <EntityType Name="BB_WFA_Levels">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="WFA_Control_ID" Type="int" />
-          <Property Name="Name" Type="varchar" MaxLength="100" />
+          <Property Name="Level" Type="int" />
           <Property Name="WFA_Approver_ID" Type="int" />
           <Property Name="Condition_ID" Type="int" />
           <Property Name="Condition_Value" Type="float" />
@@ -1655,6 +1677,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_RD_MIF_Renovation_Programs" EntityType="Self.BB_RD_MIF_Renovation_Programs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_RD_MIF_Renovations_Program_Cost_Increments" EntityType="Self.BB_RD_MIF_Renovations_Program_Cost_Increments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_RD_MIF_Renovations_State" EntityType="Self.BB_RD_MIF_Renovations_State" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_RD_WFA_Exception_Action" EntityType="Self.BB_RD_WFA_Exception_Action" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_REL_Equipament_Acessorie" EntityType="Self.BB_REL_Equipament_Acessorie" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_REL_Equipament_Consumable" EntityType="Self.BB_REL_Equipament_Consumable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Service_Collab" EntityType="Self.BB_Service_Collab" Schema="dbo" store:Type="Tables" />
@@ -1708,6 +1731,18 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
     [BB_RD_WFA_Elements].[Description] AS [Description], 
     [BB_RD_WFA_Elements].[IsEnabled] AS [IsEnabled]
     FROM [dbo].[BB_RD_WFA_Elements] AS [BB_RD_WFA_Elements]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BB_WFA_Exception" EntityType="Self.BB_WFA_Exception" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_WFA_Exception].[ID] AS [ID], 
+    [BB_WFA_Exception].[WFA_Control_ID] AS [WFA_Control_ID], 
+    [BB_WFA_Exception].[Line_ID] AS [Line_ID], 
+    [BB_WFA_Exception].[Type_ID] AS [Type_ID], 
+    [BB_WFA_Exception].[Condition_ID] AS [Condition_ID], 
+    [BB_WFA_Exception].[Condition_Value] AS [Condition_Value], 
+    [BB_WFA_Exception].[Action_ID] AS [Action_ID], 
+    [BB_WFA_Exception].[Level_ID] AS [Level_ID]
+    FROM [dbo].[BB_WFA_Exception] AS [BB_WFA_Exception]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="Self.FK_BB_PrintingService_Machines_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
@@ -1879,8 +1914,10 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_Milestone_Status" EntityType="BB_DB_DEVModel.BB_Milestone_Status" />
           <EntitySet Name="BB_RD_WFA" EntityType="BB_DB_DEVModel.BB_RD_WFA" />
           <EntitySet Name="BB_RD_WFA_Approvers" EntityType="BB_DB_DEVModel.BB_RD_WFA_Approvers" />
+          <EntitySet Name="BB_RD_WFA_Exception_Action" EntityType="BB_DB_DEVModel.BB_RD_WFA_Exception_Action" />
           <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
           <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
+          <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3428,6 +3465,13 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="User_ID" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="Department" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="BB_RD_WFA_Exception_Action">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="BB_WFA_Control">
           <Key>
             <PropertyRef Name="ID" />
@@ -3444,11 +3488,24 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="WFA_Control_ID" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Level" Type="Int32" />
           <Property Name="WFA_Approver_ID" Type="Int32" />
           <Property Name="Condition_ID" Type="Int32" />
           <Property Name="Condition_Value" Type="Double" />
           <Property Name="Type_ID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Exception">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WFA_Control_ID" Type="Int32" />
+          <Property Name="Line_ID" Type="Int32" />
+          <Property Name="Type_ID" Type="Int32" />
+          <Property Name="Condition_ID" Type="Int32" />
+          <Property Name="Condition_Value" Type="Double" />
+          <Property Name="Action_ID" Type="Int32" />
+          <Property Name="Level_ID" Type="Int32" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -4990,6 +5047,14 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_WFA_Exception_Action">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_WFA_Exception_Action">
+              <MappingFragment StoreEntitySet="BB_RD_WFA_Exception_Action">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BB_WFA_Control">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Control">
               <MappingFragment StoreEntitySet="BB_WFA_Control">
@@ -5008,7 +5073,21 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
                 <ScalarProperty Name="Condition_Value" ColumnName="Condition_Value" />
                 <ScalarProperty Name="Condition_ID" ColumnName="Condition_ID" />
                 <ScalarProperty Name="WFA_Approver_ID" ColumnName="WFA_Approver_ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Exception">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Exception">
+              <MappingFragment StoreEntitySet="BB_WFA_Exception">
+                <ScalarProperty Name="Level_ID" ColumnName="Level_ID" />
+                <ScalarProperty Name="Action_ID" ColumnName="Action_ID" />
+                <ScalarProperty Name="Condition_Value" ColumnName="Condition_Value" />
+                <ScalarProperty Name="Condition_ID" ColumnName="Condition_ID" />
+                <ScalarProperty Name="Type_ID" ColumnName="Type_ID" />
+                <ScalarProperty Name="Line_ID" ColumnName="Line_ID" />
                 <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>

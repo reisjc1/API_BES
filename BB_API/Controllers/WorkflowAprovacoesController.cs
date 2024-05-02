@@ -396,7 +396,6 @@ namespace WebApplication1.Controllers
                     db.BB_WFA_Levels.Add(new BB_WFA_Levels()
                     {
                         WFA_Control_ID = WFA_Control_ID,
-                        Name = Name,
                         WFA_Approver_ID = WFA_Approver_ID,
                         Condition_ID = Condition_ID,
                         Condition_Value = Condition_Value,
@@ -642,6 +641,7 @@ namespace WebApplication1.Controllers
                         BB_WFA_Levels bb_wfa_level = new BB_WFA_Levels()
                         {
                             WFA_Control_ID = bb_wfa_control.ID,
+                            Level = 1,
                             WFA_Approver_ID = newLine.Level1_Approver,
                             Condition_ID = newLine.Level1_Condition,
                             Condition_Value = newLine.Percentage_1,
@@ -651,6 +651,7 @@ namespace WebApplication1.Controllers
                         BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
                         {
                             WFA_Control_ID = bb_wfa_control.ID,
+                            Level = 2,
                             WFA_Approver_ID = newLine.Level2_Approver,
                             Condition_ID = newLine.Level2_Condition,
                             Condition_Value = newLine.Percentage_2,
@@ -660,6 +661,7 @@ namespace WebApplication1.Controllers
                         BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
                         {
                             WFA_Control_ID = bb_wfa_control.ID,
+                            Level = 3,
                             WFA_Approver_ID = newLine.Level3_Approver,
                             Condition_ID = newLine.Level3_Condition,
                             Condition_Value = newLine.Percentage_3,
@@ -669,6 +671,7 @@ namespace WebApplication1.Controllers
                         BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
                         {
                             WFA_Control_ID = bb_wfa_control.ID,
+                            Level = 4,
                             WFA_Approver_ID = newLine.Level4_Approver,
                             Condition_ID = newLine.Level4_Condition,
                             Condition_Value = newLine.Percentage_4,
@@ -678,6 +681,7 @@ namespace WebApplication1.Controllers
                         BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
                         {
                             WFA_Control_ID = bb_wfa_control.ID,
+                            Level = 5,
                             WFA_Approver_ID = newLine.Level5_Approver,
                             Condition_ID = newLine.Level5_Condition,
                             Condition_Value = newLine.Percentage_5,
@@ -983,6 +987,48 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetWFAExceptions")]
+        public IHttpActionResult GetWFAExceptions()
+        {
+            try
+            {
+                List<BB_WFA_Exception> wfa_ex_lst = new List<BB_WFA_Exception>();
+                List<BB_WFA_Exception_Translated> wfa_ex_translated_lst = new List<BB_WFA_Exception_Translated>();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    wfa_ex_lst = db.BB_WFA_Exception.ToList();
+
+                    foreach(var exception in wfa_ex_lst)
+                    {
+                        BB_WFA_Exception_Translated translated_ex = new BB_WFA_Exception_Translated()
+                        {
+                            ID = exception.ID,
+                            WFA_Control_ID = exception.WFA_Control_ID,
+                            Line_ID = exception.Line_ID,
+                            Level_ID = exception.Level_ID,
+                            Condition_Value = exception.Condition_Value,
+                            Action_ID = db.BB_RD_WFA_Exception_Action.Where(x => x.ID == exception.Action_ID).Select(x => x.Name).FirstOrDefault(),
+                            Condition_ID = db.BB_RD_WFA_Condition.Where(x => x.ID == exception.Action_ID).Select(x => x.Condition).FirstOrDefault(),
+                            Type_ID = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == exception.Action_ID).Select(x => x.Description).FirstOrDefault(),
+                        };
+
+                        wfa_ex_translated_lst.Add(translated_ex);
+                    }
+                }
+
+                return Ok(wfa_ex_translated_lst);
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
     }
 
 
@@ -1054,6 +1100,18 @@ namespace WebApplication1.Controllers
         public int ID { get; set; }
         public string User_ID { get; set; }
         public string Name { get; set; }
+    }
+
+    public partial class BB_WFA_Exception_Translated
+    {
+        public int ID { get; set; }
+        public Nullable<int> WFA_Control_ID { get; set; }
+        public Nullable<int> Line_ID { get; set; }
+        public string Type_ID { get; set; }
+        public string Condition_ID { get; set; }
+        public Nullable<double> Condition_Value { get; set; }
+        public string Action_ID { get; set; }
+        public Nullable<int> Level_ID { get; set; }
     }
 
 }

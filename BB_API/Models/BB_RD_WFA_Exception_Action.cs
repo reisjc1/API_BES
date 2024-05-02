@@ -12,14 +12,9 @@ namespace WebApplication1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class BB_WFA_Levels
+    public partial class BB_RD_WFA_Exception_Action
     {
         public int ID { get; set; }
-        public Nullable<int> WFA_Control_ID { get; set; }
-        public Nullable<int> Level { get; set; }
-        public Nullable<int> WFA_Approver_ID { get; set; }
-        public Nullable<int> Condition_ID { get; set; }
-        public Nullable<double> Condition_Value { get; set; }
-        public Nullable<int> Type_ID { get; set; }
+        public string Name { get; set; }
     }
 }

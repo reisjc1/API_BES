@@ -125,7 +125,9 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Milestone_Status> BB_Milestone_Status { get; set; }
         public virtual DbSet<BB_RD_WFA> BB_RD_WFA { get; set; }
         public virtual DbSet<BB_RD_WFA_Approvers> BB_RD_WFA_Approvers { get; set; }
+        public virtual DbSet<BB_RD_WFA_Exception_Action> BB_RD_WFA_Exception_Action { get; set; }
         public virtual DbSet<BB_WFA_Control> BB_WFA_Control { get; set; }
         public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
+        public virtual DbSet<BB_WFA_Exception> BB_WFA_Exception { get; set; }
     }
 }
