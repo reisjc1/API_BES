@@ -1426,8 +1426,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="BU_ID" Type="int" />
           <Property Name="Elements_ID" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Exception' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_WFA_Exception">
           <Key>
             <PropertyRef Name="ID" />
@@ -1684,6 +1682,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Exception' does not have
           <EntitySet Name="BB_SLA_History" EntityType="Self.BB_SLA_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_VVA" EntityType="Self.BB_VVA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Control" EntityType="Self.BB_WFA_Control" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_WFA_Exception" EntityType="Self.BB_WFA_Exception" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Levels" EntityType="Self.BB_WFA_Levels" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WorkSheet_Metadata" EntityType="Self.BB_WorkSheet_Metadata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WorkSheet_PT_Metadata" EntityType="Self.BB_WorkSheet_PT_Metadata" Schema="dbo" store:Type="Tables" />
@@ -1731,18 +1730,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_WFA_Exception' does not have
     [BB_RD_WFA_Elements].[Description] AS [Description], 
     [BB_RD_WFA_Elements].[IsEnabled] AS [IsEnabled]
     FROM [dbo].[BB_RD_WFA_Elements] AS [BB_RD_WFA_Elements]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="BB_WFA_Exception" EntityType="Self.BB_WFA_Exception" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [BB_WFA_Exception].[ID] AS [ID], 
-    [BB_WFA_Exception].[WFA_Control_ID] AS [WFA_Control_ID], 
-    [BB_WFA_Exception].[Line_ID] AS [Line_ID], 
-    [BB_WFA_Exception].[Type_ID] AS [Type_ID], 
-    [BB_WFA_Exception].[Condition_ID] AS [Condition_ID], 
-    [BB_WFA_Exception].[Condition_Value] AS [Condition_Value], 
-    [BB_WFA_Exception].[Action_ID] AS [Action_ID], 
-    [BB_WFA_Exception].[Level_ID] AS [Level_ID]
-    FROM [dbo].[BB_WFA_Exception] AS [BB_WFA_Exception]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="Self.FK_BB_PrintingService_Machines_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />

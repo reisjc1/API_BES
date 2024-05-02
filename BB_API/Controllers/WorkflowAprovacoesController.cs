@@ -805,9 +805,51 @@ namespace WebApplication1.Controllers
             }
         }
 
-    // HELPERS --------------------------------------------------------------------------------------------
+        // #######################################################################################
 
-    public WFA_Create GetWFAWithDropdowns()
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("AddNewWFALineException")]
+        public IHttpActionResult AddNewWFALineException(WFA_CreateException WFA_Create_Exception)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    //criar o objeto da exceção, com base no que é passado por parâmero
+                    BB_WFA_Exception exception = new BB_WFA_Exception()
+                    {
+                        Line_ID = WFA_Create_Exception.LineNr,
+                        Type_ID = WFA_Create_Exception.Type,
+                        Condition_ID = WFA_Create_Exception.Condition,
+                        Condition_Value = WFA_Create_Exception.Condition_Value,
+                        Action_ID = WFA_Create_Exception.Action,
+                        Level_ID = WFA_Create_Exception.LevelNr
+                    };
+
+                    //verificar se está tudo preenchido
+                    if (exception.Line_ID != null && exception.Type_ID != null && exception.Condition_ID != null &&
+                        exception.Condition_Value != null && exception.Action_ID != null && exception.Level_ID != null){
+
+                        //adicionar à BD
+                        db.BB_WFA_Exception.Add(exception);
+                        db.SaveChanges();
+                    }
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
+
+
+        // HELPERS --------------------------------------------------------------------------------------------
+
+        public WFA_Create GetWFAWithDropdowns()
     {
         try
         {
@@ -1029,6 +1071,34 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetCreateWFAExceptionDropdowns")]
+        public IHttpActionResult GetCreateWFAExceptionDropdowns()
+        {
+            try
+            {
+                WFA_CreateException wfa_create_exception_obj = new WFA_CreateException();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    // Popular as dropdowns
+                    wfa_create_exception_obj.Lst_LineNr = db.BB_WFA_Control.Select(x => x.Line_ID).ToList();
+                    wfa_create_exception_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
+                    wfa_create_exception_obj.Lst_Condition = db.BB_RD_WFA_Condition.ToList();
+                    wfa_create_exception_obj.Lst_Action = db.BB_RD_WFA_Exception_Action.ToList();
+
+                    return Ok(wfa_create_exception_obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
     }
 
 
@@ -1112,6 +1182,23 @@ namespace WebApplication1.Controllers
         public Nullable<double> Condition_Value { get; set; }
         public string Action_ID { get; set; }
         public Nullable<int> Level_ID { get; set; }
+    }
+
+    public class WFA_CreateException
+    {
+        // dropdowns
+        public List<int?> Lst_LineNr { get; set; }
+        public List<BB_RD_WFA_Condition_Type> Lst_Type { get; set; }
+        public List<BB_RD_WFA_Condition> Lst_Condition { get; set; }
+        public List<BB_RD_WFA_Exception_Action> Lst_Action { get; set; }
+
+        public int? LineNr { get; set; }
+        public int? Type { get; set; }
+        public int? Condition { get; set; }
+        public Nullable<int> Action { get; set; }
+        public Nullable<double> Condition_Value { get; set; }
+        public Nullable<int> LevelNr { get; set; }
+
     }
 
 }
