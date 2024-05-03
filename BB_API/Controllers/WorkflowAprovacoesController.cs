@@ -815,24 +815,28 @@ namespace WebApplication1.Controllers
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    //criar o objeto da exceção, com base no que é passado por parâmero
-                    BB_WFA_Exception exception = new BB_WFA_Exception()
+                    if(!db.BB_WFA_Exception.Where(x => x.Line_ID == WFA_Create_Exception.LineNr).Any())
                     {
-                        Line_ID = WFA_Create_Exception.LineNr,
-                        Type_ID = WFA_Create_Exception.Type,
-                        Condition_ID = WFA_Create_Exception.Condition,
-                        Condition_Value = WFA_Create_Exception.Condition_Value,
-                        Action_ID = WFA_Create_Exception.Action,
-                        Level_ID = WFA_Create_Exception.LevelNr
-                    };
+                        //criar o objeto da exceção, com base no que é passado por parâmero
+                        BB_WFA_Exception exception = new BB_WFA_Exception()
+                        {
+                            Line_ID = WFA_Create_Exception.LineNr,
+                            Type_ID = WFA_Create_Exception.Type,
+                            Condition_ID = WFA_Create_Exception.Condition,
+                            Condition_Value = WFA_Create_Exception.Condition_Value,
+                            Action_ID = WFA_Create_Exception.Action,
+                            Level_ID = WFA_Create_Exception.LevelNr
+                        };
 
-                    //verificar se está tudo preenchido
-                    if (exception.Line_ID != null && exception.Type_ID != null && exception.Condition_ID != null &&
-                        exception.Condition_Value != null && exception.Action_ID != null && exception.Level_ID != null){
+                        //verificar se está tudo preenchido
+                        if (exception.Line_ID != null && exception.Type_ID != null && exception.Condition_ID != null &&
+                            exception.Condition_Value != null && exception.Action_ID != null && exception.Level_ID != null){
 
-                        //adicionar à BD
-                        db.BB_WFA_Exception.Add(exception);
-                        db.SaveChanges();
+                            //adicionar à BD
+                            db.BB_WFA_Exception.Add(exception);
+                            db.SaveChanges();
+                        }
+
                     }
                 }
 
@@ -845,12 +849,44 @@ namespace WebApplication1.Controllers
             }
         }
 
+        //####################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("EditWFAExceptiom")]
+        public IHttpActionResult EditWFAExceptiom(int lineNr)
+        {
+            try
+            {
+                WFA_CreateException wfa_exception_obj = GetWFAExceptionWithDropdowns();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    BB_WFA_Exception bb_wfa_exception = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+
+                    wfa_exception_obj.LevelNr = bb_wfa_exception.Level_ID;
+                    wfa_exception_obj.LineNr = bb_wfa_exception.Line_ID;
+                    wfa_exception_obj.Type = bb_wfa_exception.Type_ID;
+                    wfa_exception_obj.Condition = bb_wfa_exception.Condition_ID;
+                    wfa_exception_obj.Condition_Value = bb_wfa_exception.Condition_Value;
+                    wfa_exception_obj.Action = bb_wfa_exception.Action_ID;
+                }
+
+                return Ok(wfa_exception_obj);
+            }
+            
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
 
 
         // HELPERS --------------------------------------------------------------------------------------------
 
         public WFA_Create GetWFAWithDropdowns()
-    {
+        {
         try
         {
             WFA_Create wfa_obj = new WFA_Create();
@@ -1091,6 +1127,66 @@ namespace WebApplication1.Controllers
 
                     return Ok(wfa_create_exception_obj);
                 }
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
+        // #######################################################################################
+        public WFA_CreateException GetWFAExceptionWithDropdowns()
+        {
+            try
+            {
+                WFA_CreateException wfa_exception_obj = new WFA_CreateException();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+
+                    // Popular o resto das dropdowns
+                    wfa_exception_obj.Lst_LineNr = db.BB_WFA_Exception.Select(x => x.Line_ID).ToList();
+                    wfa_exception_obj.Lst_Action = db.BB_RD_WFA_Exception_Action.ToList();
+                    wfa_exception_obj.Lst_Condition = db.BB_RD_WFA_Condition.ToList();
+                    wfa_exception_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
+
+                    return wfa_exception_obj;
+                }
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetWFAExceptionTranslated")]
+        public IHttpActionResult GetWFAExceptionTranslated(int lineNr)
+        {
+            try
+            {
+                BB_WFA_Exception wfa_ex_lst = new BB_WFA_Exception();
+                BB_WFA_Exception_Translated wfa_ex_translated_lst = new BB_WFA_Exception_Translated();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    wfa_ex_lst = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+
+                    wfa_ex_translated_lst.ID = wfa_ex_lst.ID;
+                    wfa_ex_translated_lst.WFA_Control_ID = wfa_ex_lst.WFA_Control_ID;
+                    wfa_ex_translated_lst.Line_ID = wfa_ex_lst.Line_ID;
+                    wfa_ex_translated_lst.Level_ID = wfa_ex_lst.Level_ID;
+                    wfa_ex_translated_lst.Condition_Value = wfa_ex_lst.Condition_Value;
+                    wfa_ex_translated_lst.Action_ID = db.BB_RD_WFA_Exception_Action.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Name).FirstOrDefault();
+                    wfa_ex_translated_lst.Condition_ID = db.BB_RD_WFA_Condition.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Condition).FirstOrDefault();
+                    wfa_ex_translated_lst.Type_ID = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Description).FirstOrDefault();             
+                }
+
+                return Ok(wfa_ex_translated_lst);
             }
             catch (Exception ex)
             {
