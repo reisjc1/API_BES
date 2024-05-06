@@ -866,15 +866,42 @@ namespace WebApplication1.Controllers
                     wfa_exception_obj.ID = bb_wfa_exception.ID;
                     wfa_exception_obj.LevelNr = bb_wfa_exception.Level_ID;
                     wfa_exception_obj.LineNr = bb_wfa_exception.Line_ID;
-                    wfa_exception_obj.Type = bb_wfa_exception.Type_ID;
-                    wfa_exception_obj.Condition = bb_wfa_exception.Condition_ID;
                     wfa_exception_obj.Condition_Value = bb_wfa_exception.Condition_Value;
-                    wfa_exception_obj.Action = bb_wfa_exception.Action_ID;
+
+                    wfa_exception_obj.Type = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == bb_wfa_exception.Type_ID).Select(x => x.ID).FirstOrDefault();
+                    wfa_exception_obj.Condition = db.BB_RD_WFA_Condition.Where(x => x.ID == bb_wfa_exception.Condition_ID).Select(x => x.ID).FirstOrDefault();
+                    wfa_exception_obj.Action = db.BB_RD_WFA_Exception_Action.Where(x => x.ID == bb_wfa_exception.Action_ID).Select(x => x.ID).FirstOrDefault();
                 }
 
                 return Ok(wfa_exception_obj);
             }
             
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
+        //####################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DeleteWFAExceptiom")]
+        public IHttpActionResult DeleteWFAExceptiom(int lineNr)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    BB_WFA_Exception bb_wfa_exception = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+
+                    db.BB_WFA_Exception.Remove(bb_wfa_exception);
+                    db.SaveChanges();
+                }
+
+                return Ok();
+            }
+
             catch (Exception ex)
             {
                 string message = ex.Message;
@@ -1091,8 +1118,8 @@ namespace WebApplication1.Controllers
                             Level_ID = exception.Level_ID,
                             Condition_Value = exception.Condition_Value,
                             Action_ID = db.BB_RD_WFA_Exception_Action.Where(x => x.ID == exception.Action_ID).Select(x => x.Name).FirstOrDefault(),
-                            Condition_ID = db.BB_RD_WFA_Condition.Where(x => x.ID == exception.Action_ID).Select(x => x.Condition).FirstOrDefault(),
-                            Type_ID = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == exception.Action_ID).Select(x => x.Description).FirstOrDefault(),
+                            Condition_ID = db.BB_RD_WFA_Condition.Where(x => x.ID == exception.Condition_ID).Select(x => x.Condition).FirstOrDefault(),
+                            Type_ID = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == exception.Type_ID).Select(x => x.Description).FirstOrDefault(),
                         };
 
                         wfa_ex_translated_lst.Add(translated_ex);
