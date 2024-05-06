@@ -525,7 +525,9 @@ namespace WebApplication1.Controllers
                         {
                             using (var dbX = new masterEntities())
                             {
-                                int? approverID = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == item.ID).Select(x => x.WFA_Approver_ID).FirstOrDefault();
+                                int? approverID = db.BB_WFA_Levels
+                                                    .Where(x => x.WFA_Control_ID == item.ID && x.Level == level.Level)
+                                                    .Select(x => x.WFA_Approver_ID).FirstOrDefault();
 
                                 string userID = db.BB_RD_WFA_Approvers.Where(x => x.ID == approverID).Select(x => x.User_ID).FirstOrDefault();
 
@@ -619,7 +621,11 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    var aux = db.BB_WFA_Control.OrderByDescending(x => x.ID).Select(x => x.Line_ID).ToList();
+                    //HARCODED 1 NO WFA_ID, DEVERÁ SER RECEBIDO POR PARAMETRO
+                    var aux = db.BB_WFA_Control.Where(w => w.WFA_ID == 1)
+                                               .OrderByDescending(x => x.Line_ID)
+                                               .Select(x => x.Line_ID)
+                                               .ToList();
 
 
                     int? lastLine = db.BB_WFA_Control.Any() ? aux.FirstOrDefault() : 0;
@@ -949,6 +955,15 @@ namespace WebApplication1.Controllers
                     return BadRequest(message);
                 }
 
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return null;
+            }
+        }
+
+
         //####################################################################
 
         [AcceptVerbs("GET", "POST")]
@@ -971,15 +986,6 @@ namespace WebApplication1.Controllers
             catch (Exception ex)
             {
                 string message = ex.Message;
-                return null;
-            }
-        }
-
-
-            }
-            catch (Exception ex)
-            {
-                message = ex.Message;
                 return null;
             }
         }
@@ -1250,7 +1256,7 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     // Popular as dropdowns
-                    wfa_create_exception_obj.Lst_LineNr = db.BB_WFA_Control.Select(x => x.Line_ID).ToList();
+                    wfa_create_exception_obj.Lst_LineNr = db.BB_WFA_Control.OrderBy(l=> l.Line_ID).Select(x => x.Line_ID).ToList();
                     wfa_create_exception_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
                     wfa_create_exception_obj.Lst_Condition = db.BB_RD_WFA_Condition.ToList();
                     wfa_create_exception_obj.Lst_Action = db.BB_RD_WFA_Exception_Action.ToList();
