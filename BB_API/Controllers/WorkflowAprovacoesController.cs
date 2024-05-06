@@ -863,6 +863,7 @@ namespace WebApplication1.Controllers
                 {
                     BB_WFA_Exception bb_wfa_exception = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).FirstOrDefault();
 
+                    wfa_exception_obj.ID = bb_wfa_exception.ID;
                     wfa_exception_obj.LevelNr = bb_wfa_exception.Level_ID;
                     wfa_exception_obj.LineNr = bb_wfa_exception.Line_ID;
                     wfa_exception_obj.Type = bb_wfa_exception.Type_ID;
@@ -1195,6 +1196,48 @@ namespace WebApplication1.Controllers
             }
         }
 
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("SaveEditException")]
+        public IHttpActionResult SaveEditException(WFA_CreateException exceptionToEdit)
+        {
+            try
+            {
+                WFA_Create wfa_create_obj = new WFA_Create();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    // apagar os registos anteriores
+
+                    BB_WFA_Exception savedException = db.BB_WFA_Exception.Where(x => x.Line_ID == exceptionToEdit.LineNr).FirstOrDefault();
+
+                    db.BB_WFA_Exception.Remove(savedException);
+                    db.SaveChanges();
+
+                    BB_WFA_Exception newException = new BB_WFA_Exception()
+                    {
+                        Line_ID= exceptionToEdit.LineNr,
+                        Type_ID= exceptionToEdit.Type,
+                        Condition_ID = exceptionToEdit.Condition,
+                        Condition_Value = exceptionToEdit.Condition_Value,
+                        Action_ID = exceptionToEdit.Action,
+                        Level_ID = exceptionToEdit.LevelNr
+                    };
+
+                    db.BB_WFA_Exception.Add(newException);
+                    db.SaveChanges();
+
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
     }
 
 
@@ -1288,12 +1331,13 @@ namespace WebApplication1.Controllers
         public List<BB_RD_WFA_Condition> Lst_Condition { get; set; }
         public List<BB_RD_WFA_Exception_Action> Lst_Action { get; set; }
 
+        public int ID { get; set; }
         public int? LineNr { get; set; }
         public int? Type { get; set; }
         public int? Condition { get; set; }
-        public Nullable<int> Action { get; set; }
-        public Nullable<double> Condition_Value { get; set; }
-        public Nullable<int> LevelNr { get; set; }
+        public int? Action { get; set; }
+        public double? Condition_Value { get; set; }
+        public int? LevelNr { get; set; }
 
     }
 
