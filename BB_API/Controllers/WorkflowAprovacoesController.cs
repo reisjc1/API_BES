@@ -1331,6 +1331,7 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // #######################################################################################
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("SaveEditException")]
@@ -1373,10 +1374,112 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetWFAAndExceptions")]
+        public IHttpActionResult GetWFAAndExceptions()
+        {
+            WFA_And_Exceptions wfa_and_exceptions = new WFA_And_Exceptions();
+            List<WFA_Listagem> WFA_lst = new List<WFA_Listagem>();
+            try
+            {
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    List<BB_WFA_Control> WFA_Control_lst = db.BB_WFA_Control.ToList();
+
+                    foreach (var item in WFA_Control_lst)
+                    {
+                        List<BB_WFA_Levels> wfa_levels_lst = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == item.ID).ToList();
+
+
+                        WFA_Listagem wfa = new WFA_Listagem()
+                        {
+                            Line = item.Line_ID,
+                            BU = db.BB_RD_WFA_BU.Where(x => x.ID == item.BU_ID).Select(x => x.Description).FirstOrDefault(),
+                            DealElements = db.BB_RD_WFA_Elements.Where(x => x.ID == item.Elements_ID).Select(x => x.Description).FirstOrDefault(),
+                            lstLevel = new List<Level>()
+                        };
+
+                        foreach (BB_WFA_Levels level in wfa_levels_lst)
+                        {
+                            using (var dbX = new masterEntities())
+                            {
+                                int? approverID = db.BB_WFA_Levels
+                                                    .Where(x => x.WFA_Control_ID == item.ID && x.Level == level.Level)
+                                                    .Select(x => x.WFA_Approver_ID).FirstOrDefault();
+
+                                string userID = db.BB_RD_WFA_Approvers.Where(x => x.ID == approverID).Select(x => x.User_ID).FirstOrDefault();
+
+                                string userName = dbX.AspNetUsers.Where(x => x.Id == userID).Select(x => x.DisplayName).FirstOrDefault();
+
+                                Level levelX = new Level()
+                                {
+                                    Approver = userName,
+                                    Condition = db.BB_RD_WFA_Condition.Where(x => x.ID == level.Condition_ID).Select(x => x.Condition).FirstOrDefault() + " " + level.Condition_Value,
+                                    Type = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == level.Type_ID).Select(x => x.Description).FirstOrDefault()
+                                };
+
+                                wfa.lstLevel.Add(levelX);
+                            }
+
+                        }
+                        WFA_lst.Add(wfa);
+                    }
+                }
+                wfa_and_exceptions.Lst_WFA = WFA_lst;
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+
+
+            // EXCEÇÕES
+            try
+            {
+                List<BB_WFA_Exception> wfa_ex_lst = new List<BB_WFA_Exception>();
+                List<BB_WFA_Exception_Translated> wfa_ex_translated_lst = new List<BB_WFA_Exception_Translated>();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    wfa_ex_lst = db.BB_WFA_Exception.ToList();
+
+                    foreach (var exception in wfa_ex_lst)
+                    {
+                        BB_WFA_Exception_Translated translated_ex = new BB_WFA_Exception_Translated()
+                        {
+                            ID = exception.ID,
+                            WFA_Control_ID = exception.WFA_Control_ID,
+                            Line_ID = exception.Line_ID,
+                            Level_ID = exception.Level_ID,
+                            Condition_Value = exception.Condition_Value,
+                            Action_ID = db.BB_RD_WFA_Exception_Action.Where(x => x.ID == exception.Action_ID).Select(x => x.Name).FirstOrDefault(),
+                            Condition_ID = db.BB_RD_WFA_Condition.Where(x => x.ID == exception.Condition_ID).Select(x => x.Condition).FirstOrDefault(),
+                            Type_ID = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == exception.Type_ID).Select(x => x.Description).FirstOrDefault(),
+                        };
+
+                        wfa_ex_translated_lst.Add(translated_ex);
+                    }
+                }
+                wfa_and_exceptions.Lst_Exception = wfa_ex_translated_lst;
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+
+            return Ok(wfa_and_exceptions);
+        }
+
     }
 
-
+    // ----------------------------------------------------------------------------------------------------
     // CLASSES --------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------
     public class Milestone_ProposalPlan
     {
         public List<BB_Proposal_Milestone> Milestones { get; set; }
@@ -1474,6 +1577,13 @@ namespace WebApplication1.Controllers
         public double? Condition_Value { get; set; }
         public int? LevelNr { get; set; }
 
+    }
+
+    //Objeto com as linhas WFA e Exceções (tudo strings)
+    public class WFA_And_Exceptions
+    {
+        public List<WFA_Listagem> Lst_WFA { get; set; }
+        public List<BB_WFA_Exception_Translated> Lst_Exception { get; set; }
     }
 
 }
