@@ -1416,6 +1416,18 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="RequestedCExcess" Type="float" />
           <Property Name="RequestedRent" Type="float" />
         </EntityType>
+        <EntityType Name="BB_WFA_Approvers_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WFA_Workflow_Proposal_ID" Type="int" />
+          <Property Name="WFA_Control_ID" Type="int" />
+          <Property Name="WFA_Level_ID" Type="int" />
+          <Property Name="Approver_ID" Type="int" />
+          <Property Name="IsApproved" Type="bit" />
+          <Property Name="IsComplete" Type="bit" />
+        </EntityType>
         <EntityType Name="BB_WFA_Control">
           <Key>
             <PropertyRef Name="ID" />
@@ -1450,6 +1462,19 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Condition_ID" Type="int" />
           <Property Name="Condition_Value" Type="float" />
           <Property Name="Type_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Workflow_Proposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Proposal_ID" Type="int" />
+          <Property Name="Created_Date" Type="datetime" />
+          <Property Name="Finished_Date" Type="datetime" />
+          <Property Name="Started" Type="bit" />
+          <Property Name="Finished" Type="bit" />
+          <Property Name="IsApproved" Type="bit" />
+          <Property Name="IsCompleted" Type="bit" />
         </EntityType>
         <EntityType Name="BB_WorkSheet_Metadata">
           <Key>
@@ -1681,9 +1706,11 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_Service_Collab" EntityType="Self.BB_Service_Collab" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_SLA_History" EntityType="Self.BB_SLA_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_VVA" EntityType="Self.BB_VVA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_WFA_Approvers_Control" EntityType="Self.BB_WFA_Approvers_Control" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Control" EntityType="Self.BB_WFA_Control" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Exception" EntityType="Self.BB_WFA_Exception" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Levels" EntityType="Self.BB_WFA_Levels" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="Self.BB_WFA_Workflow_Proposal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WorkSheet_Metadata" EntityType="Self.BB_WorkSheet_Metadata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WorkSheet_PT_Metadata" EntityType="Self.BB_WorkSheet_PT_Metadata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LD_DocumentClassification" EntityType="Self.LD_DocumentClassification" Schema="dbo" store:Type="Tables" />
@@ -1905,6 +1932,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
           <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
           <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
+          <EntitySet Name="BB_WFA_Approvers_Control" EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" />
+          <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="BB_DB_DEVModel.BB_WFA_Workflow_Proposal" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3494,6 +3523,31 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Action_ID" Type="Int32" />
           <Property Name="Level_ID" Type="Int32" />
         </EntityType>
+        <EntityType Name="BB_WFA_Approvers_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WFA_Workflow_Proposal_ID" Type="Int32" />
+          <Property Name="WFA_Control_ID" Type="Int32" />
+          <Property Name="WFA_Level_ID" Type="Int32" />
+          <Property Name="Approver_ID" Type="Int32" />
+          <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="IsComplete" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Workflow_Proposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Proposal_ID" Type="Int32" />
+          <Property Name="Created_Date" Type="DateTime" Precision="3" />
+          <Property Name="Finished_Date" Type="DateTime" Precision="3" />
+          <Property Name="Started" Type="Boolean" />
+          <Property Name="Finished" Type="Boolean" />
+          <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="IsCompleted" Type="Boolean" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5076,6 +5130,33 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
                 <ScalarProperty Name="Type_ID" ColumnName="Type_ID" />
                 <ScalarProperty Name="Line_ID" ColumnName="Line_ID" />
                 <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Approvers_Control">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Approvers_Control">
+              <MappingFragment StoreEntitySet="BB_WFA_Approvers_Control">
+                <ScalarProperty Name="IsComplete" ColumnName="IsComplete" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="Approver_ID" ColumnName="Approver_ID" />
+                <ScalarProperty Name="WFA_Level_ID" ColumnName="WFA_Level_ID" />
+                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
+                <ScalarProperty Name="WFA_Workflow_Proposal_ID" ColumnName="WFA_Workflow_Proposal_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Workflow_Proposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Workflow_Proposal">
+              <MappingFragment StoreEntitySet="BB_WFA_Workflow_Proposal">
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="Finished" ColumnName="Finished" />
+                <ScalarProperty Name="Started" ColumnName="Started" />
+                <ScalarProperty Name="Finished_Date" ColumnName="Finished_Date" />
+                <ScalarProperty Name="Created_Date" ColumnName="Created_Date" />
+                <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
