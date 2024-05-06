@@ -10,6 +10,7 @@ using WebApplication1.Models;
 using WebApplication1.App_Start;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using static WebApplication1.Controllers.WorkflowAprovacoesController;
 
 namespace WebApplication1.Controllers
 {
@@ -886,6 +887,71 @@ namespace WebApplication1.Controllers
         //####################################################################
 
         [AcceptVerbs("GET", "POST")]
+        [ActionName("InitiateWFAProcess")]
+
+        public IHttpActionResult InitiateWFAProcess(int ProposalID)
+        {
+            string message = "";
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    List<BB_WFA_Workflow_Proposal> checkExistent = db.BB_WFA_Workflow_Proposal
+                                                          .Where(w=>w.Proposal_ID == ProposalID && w.Finished == false)
+                                                          .ToList();
+                    
+                    //Verifica se já existe um pedido iniciado mas não terminado.
+                    //Termina o método retornando uma mensagem para o user
+                    if(checkExistent.Find(x => x.Started == true) != null)
+                    {
+                        message = "Já existe um processo iniciado a decorrer. Deverá aguardar resposta desse processo.";
+                        return BadRequest(message);
+                    } 
+                    //Verifica se existe um pedido criado mas não iniciado.
+                    //Salta para a chamada da SP
+                    else if(checkExistent.Find(x => x.Started == false) != null){
+                        if (CallWFASP(ProposalID, 1))
+                        {
+                            message = "Processo criado e iniciado com sucesso";
+                            return Ok(message);
+                        }
+                        else
+                        {
+                            message = "Processo foi criado, no entanto houve um problema ao iniciar o mesmo." +
+                                      "Por favor faça o pedido novamente. Se o erro persistir contacte o departamento do Business Builder.";
+                            return BadRequest(message);
+                        }
+                    }
+
+                    //Criação do objeto e inserção na BD
+                    BB_WFA_Workflow_Proposal toInsert = new BB_WFA_Workflow_Proposal()
+                    {
+                        Proposal_ID = ProposalID,
+                        Created_Date = DateTime.Now,
+                        Started = false,
+                        Finished = false,
+                        IsApproved = false,
+                        IsCompleted = false
+                    };
+
+                    db.BB_WFA_Workflow_Proposal.Add(toInsert);
+                    db.SaveChanges();
+                }
+
+                if (CallWFASP(ProposalID,1))
+                {
+                    message = "Processo criado e iniciado com sucesso";
+                    return Ok(message);
+                } else
+                {
+                    message = "Processo foi criado, no entanto houve um problema ao iniciar o mesmo." +
+                              "Por favor faça o pedido novamente.";
+                    return BadRequest(message);
+                }
+
+        //####################################################################
+
+        [AcceptVerbs("GET", "POST")]
         [ActionName("DeleteWFAExceptiom")]
         public IHttpActionResult DeleteWFAExceptiom(int lineNr)
         {
@@ -910,6 +976,13 @@ namespace WebApplication1.Controllers
         }
 
 
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return null;
+            }
+        }
 
         // HELPERS --------------------------------------------------------------------------------------------
 
@@ -961,7 +1034,36 @@ namespace WebApplication1.Controllers
         }
     }
 
+        private bool CallWFASP(int ProposalID, int WFA_ID)
+        {
+            try
+            {
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
 
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SP_WFA_Proposal_Control", conn);
+                    cmd.CommandTimeout = 180;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Proposal_ID", ProposalID);
+                    cmd.Parameters.AddWithValue("@WFA_ID", WFA_ID);
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+                    bool result = rdr.Read();
+                    rdr.Close();
+                    return result;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return false;
+            }
+        }
         // #######################################################################################
 
         [AcceptVerbs("GET", "POST")]

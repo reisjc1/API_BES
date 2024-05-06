@@ -566,6 +566,9 @@
     <Compile Include="Models\BB_VVA.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_WFA_Approvers_Control.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_WFA_Control.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -573,6 +576,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_WFA_Levels.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BB_WFA_Workflow_Proposal.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_WorkSheet_Metadata.cs">
