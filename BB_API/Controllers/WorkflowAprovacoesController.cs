@@ -11,6 +11,8 @@ using WebApplication1.App_Start;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using static WebApplication1.Controllers.WorkflowAprovacoesController;
+using AutoMapper;
+using WebApplication1.Models.SLAs;
 
 namespace WebApplication1.Controllers
 {
@@ -505,10 +507,10 @@ namespace WebApplication1.Controllers
                 List<WFA_Listagem> WFA_lst = new List<WFA_Listagem>();
 
                 using (var db = new BB_DB_DEVEntities2())
-                { 
+                {
                     List<BB_WFA_Control> WFA_Control_lst = db.BB_WFA_Control.ToList();
 
-                    foreach(var item in WFA_Control_lst)
+                    foreach (var item in WFA_Control_lst)
                     {
                         List<BB_WFA_Levels> wfa_levels_lst = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == item.ID).ToList();
 
@@ -521,7 +523,7 @@ namespace WebApplication1.Controllers
                             lstLevel = new List<Level>()
                         };
 
-                        foreach(BB_WFA_Levels level in wfa_levels_lst)
+                        foreach (BB_WFA_Levels level in wfa_levels_lst)
                         {
                             using (var dbX = new masterEntities())
                             {
@@ -533,22 +535,22 @@ namespace WebApplication1.Controllers
 
                                 string userName = dbX.AspNetUsers.Where(x => x.Id == userID).Select(x => x.DisplayName).FirstOrDefault();
 
-                            Level levelX = new Level()
-                            {
-                                Approver = userName,
-                                Condition = db.BB_RD_WFA_Condition.Where(x => x.ID == level.Condition_ID).Select(x => x.Condition).FirstOrDefault() + " " + level.Condition_Value,
-                                Type = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == level.Type_ID).Select(x => x.Description).FirstOrDefault()
-                            };
+                                Level levelX = new Level()
+                                {
+                                    Approver = userName,
+                                    Condition = db.BB_RD_WFA_Condition.Where(x => x.ID == level.Condition_ID).Select(x => x.Condition).FirstOrDefault() + " " + level.Condition_Value,
+                                    Type = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == level.Type_ID).Select(x => x.Description).FirstOrDefault()
+                                };
 
-                            wfa.lstLevel.Add(levelX);
+                                wfa.lstLevel.Add(levelX);
                             }
-                            
+
                         }
                         WFA_lst.Add(wfa);
                     }
                 }
 
-                    return Ok(WFA_lst);
+                return Ok(WFA_lst);
             }
             catch (Exception ex)
             {
@@ -633,12 +635,12 @@ namespace WebApplication1.Controllers
                     BB_WFA_Control bb_wfa_control = new BB_WFA_Control()
                     {
                         WFA_ID = 1,
-                        Line_ID = lastLine +1,
+                        Line_ID = lastLine + 1,
                         BU_ID = newLine.BU,
                         Elements_ID = newLine.DealElement,
                     };
 
-                    if(bb_wfa_control.BU_ID != null && bb_wfa_control.Elements_ID != null)
+                    if (bb_wfa_control.BU_ID != null && bb_wfa_control.Elements_ID != null)
                     {
                         db.BB_WFA_Control.Add(bb_wfa_control);
                         db.SaveChanges();
@@ -822,7 +824,7 @@ namespace WebApplication1.Controllers
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    if(!db.BB_WFA_Exception.Where(x => x.Line_ID == WFA_Create_Exception.LineNr).Any())
+                    if (!db.BB_WFA_Exception.Where(x => x.Line_ID == WFA_Create_Exception.LineNr).Any())
                     {
                         //criar o objeto da exceção, com base no que é passado por parâmero
                         BB_WFA_Exception exception = new BB_WFA_Exception()
@@ -837,7 +839,8 @@ namespace WebApplication1.Controllers
 
                         //verificar se está tudo preenchido
                         if (exception.Line_ID != null && exception.Type_ID != null && exception.Condition_ID != null &&
-                            exception.Condition_Value != null && exception.Action_ID != null && exception.Level_ID != null){
+                            exception.Condition_Value != null && exception.Action_ID != null && exception.Level_ID != null)
+                        {
 
                             //adicionar à BD
                             db.BB_WFA_Exception.Add(exception);
@@ -882,7 +885,7 @@ namespace WebApplication1.Controllers
 
                 return Ok(wfa_exception_obj);
             }
-            
+
             catch (Exception ex)
             {
                 string message = ex.Message;
@@ -903,19 +906,20 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     List<BB_WFA_Workflow_Proposal> checkExistent = db.BB_WFA_Workflow_Proposal
-                                                          .Where(w=>w.Proposal_ID == ProposalID && w.Finished == false)
+                                                          .Where(w => w.Proposal_ID == ProposalID && w.Finished == false)
                                                           .ToList();
-                    
+
                     //Verifica se já existe um pedido iniciado mas não terminado.
                     //Termina o método retornando uma mensagem para o user
-                    if(checkExistent.Find(x => x.Started == true) != null)
+                    if (checkExistent.Find(x => x.Started == true) != null)
                     {
                         message = "Já existe um processo iniciado a decorrer. Deverá aguardar resposta desse processo.";
                         return BadRequest(message);
-                    } 
+                    }
                     //Verifica se existe um pedido criado mas não iniciado.
                     //Salta para a chamada da SP
-                    else if(checkExistent.Find(x => x.Started == false) != null){
+                    else if (checkExistent.Find(x => x.Started == false) != null)
+                    {
                         if (CallWFASP(ProposalID, 1))
                         {
                             message = "Processo criado e iniciado com sucesso";
@@ -944,11 +948,12 @@ namespace WebApplication1.Controllers
                     db.SaveChanges();
                 }
 
-                if (CallWFASP(ProposalID,1))
+                if (CallWFASP(ProposalID, 1))
                 {
                     message = "Processo criado e iniciado com sucesso";
                     return Ok(message);
-                } else
+                }
+                else
                 {
                     message = "Processo foi criado, no entanto houve um problema ao iniciar o mesmo." +
                               "Por favor faça o pedido novamente.";
@@ -994,51 +999,51 @@ namespace WebApplication1.Controllers
 
         public WFA_Create GetWFAWithDropdowns()
         {
-        try
-        {
-            WFA_Create wfa_obj = new WFA_Create();
-            List<BB_RD_WFA_Approvers> approversList = new List<BB_RD_WFA_Approvers>();
-
-            using (var db = new BB_DB_DEVEntities2())
+            try
             {
-                // Popular a lista dos approvers do objeto WFA_Create
-                approversList = db.BB_RD_WFA_Approvers.ToList();
+                WFA_Create wfa_obj = new WFA_Create();
+                List<BB_RD_WFA_Approvers> approversList = new List<BB_RD_WFA_Approvers>();
 
-
-                // Popular o resto das dropdowns
-                wfa_obj.Lst_Condition = db.BB_RD_WFA_Condition.ToList();
-                wfa_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
-                wfa_obj.Lst_BU = db.BB_RD_WFA_BU.ToList();
-                wfa_obj.Lst_DealElements = db.BB_RD_WFA_Elements.ToList();
-
-
-                wfa_obj.Lst_Approver = new List<WFA_Approvers>();
-                using (var dbX = new masterEntities())
+                using (var db = new BB_DB_DEVEntities2())
                 {
-                    foreach (var approver in approversList)
+                    // Popular a lista dos approvers do objeto WFA_Create
+                    approversList = db.BB_RD_WFA_Approvers.ToList();
+
+
+                    // Popular o resto das dropdowns
+                    wfa_obj.Lst_Condition = db.BB_RD_WFA_Condition.ToList();
+                    wfa_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
+                    wfa_obj.Lst_BU = db.BB_RD_WFA_BU.ToList();
+                    wfa_obj.Lst_DealElements = db.BB_RD_WFA_Elements.ToList();
+
+
+                    wfa_obj.Lst_Approver = new List<WFA_Approvers>();
+                    using (var dbX = new masterEntities())
                     {
-                        string userName = dbX.AspNetUsers.Where(x => x.Id == approver.User_ID).Select(x => x.DisplayName).FirstOrDefault();
-
-                        WFA_Approvers approverX = new WFA_Approvers()
+                        foreach (var approver in approversList)
                         {
-                            ID = approver.ID,
-                            User_ID = approver.User_ID,
-                            Name = userName
-                        };
-                        // Popular a lista dos approvers do objeto WFA_Create
-                        wfa_obj.Lst_Approver.Add(approverX);
-                    }
-                }
+                            string userName = dbX.AspNetUsers.Where(x => x.Id == approver.User_ID).Select(x => x.DisplayName).FirstOrDefault();
 
-                return wfa_obj;
+                            WFA_Approvers approverX = new WFA_Approvers()
+                            {
+                                ID = approver.ID,
+                                User_ID = approver.User_ID,
+                                Name = userName
+                            };
+                            // Popular a lista dos approvers do objeto WFA_Create
+                            wfa_obj.Lst_Approver.Add(approverX);
+                        }
+                    }
+
+                    return wfa_obj;
+                }
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
             }
         }
-        catch (Exception ex)
-        {
-            string message = ex.Message;
-            return null;
-        }
-    }
 
         private bool CallWFASP(int ProposalID, int WFA_ID)
         {
@@ -1077,7 +1082,7 @@ namespace WebApplication1.Controllers
         public IHttpActionResult SaveEditLine(WFA_Create newLine)
         {
             try
-            {             
+            {
 
                 WFA_Create wfa_create_obj = new WFA_Create();
 
@@ -1216,7 +1221,7 @@ namespace WebApplication1.Controllers
                 {
                     wfa_ex_lst = db.BB_WFA_Exception.ToList();
 
-                    foreach(var exception in wfa_ex_lst)
+                    foreach (var exception in wfa_ex_lst)
                     {
                         BB_WFA_Exception_Translated translated_ex = new BB_WFA_Exception_Translated()
                         {
@@ -1256,7 +1261,7 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     // Popular as dropdowns
-                    wfa_create_exception_obj.Lst_LineNr = db.BB_WFA_Control.OrderBy(l=> l.Line_ID).Select(x => x.Line_ID).ToList();
+                    wfa_create_exception_obj.Lst_LineNr = db.BB_WFA_Control.OrderBy(l => l.Line_ID).Select(x => x.Line_ID).ToList();
                     wfa_create_exception_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
                     wfa_create_exception_obj.Lst_Condition = db.BB_RD_WFA_Condition.ToList();
                     wfa_create_exception_obj.Lst_Action = db.BB_RD_WFA_Exception_Action.ToList();
@@ -1319,7 +1324,7 @@ namespace WebApplication1.Controllers
                     wfa_ex_translated_lst.Condition_Value = wfa_ex_lst.Condition_Value;
                     wfa_ex_translated_lst.Action_ID = db.BB_RD_WFA_Exception_Action.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Name).FirstOrDefault();
                     wfa_ex_translated_lst.Condition_ID = db.BB_RD_WFA_Condition.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Condition).FirstOrDefault();
-                    wfa_ex_translated_lst.Type_ID = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Description).FirstOrDefault();             
+                    wfa_ex_translated_lst.Type_ID = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Description).FirstOrDefault();
                 }
 
                 return Ok(wfa_ex_translated_lst);
@@ -1352,8 +1357,8 @@ namespace WebApplication1.Controllers
 
                     BB_WFA_Exception newException = new BB_WFA_Exception()
                     {
-                        Line_ID= exceptionToEdit.LineNr,
-                        Type_ID= exceptionToEdit.Type,
+                        Line_ID = exceptionToEdit.LineNr,
+                        Type_ID = exceptionToEdit.Type,
                         Condition_ID = exceptionToEdit.Condition,
                         Condition_Value = exceptionToEdit.Condition_Value,
                         Action_ID = exceptionToEdit.Action,
@@ -1475,33 +1480,161 @@ namespace WebApplication1.Controllers
             return Ok(wfa_and_exceptions);
         }
 
-    }
+        // #######################################################################################
 
-    // ----------------------------------------------------------------------------------------------------
-    // CLASSES --------------------------------------------------------------------------------------------
-    // ----------------------------------------------------------------------------------------------------
-    public class Milestone_ProposalPlan
-    {
-        public List<BB_Proposal_Milestone> Milestones { get; set; }
-        public List<BB_CRM_Approval_Comments> MilestoneComments { get; set; }
-    }
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("ValidateWFARules")]
+        public IHttpActionResult ValidateWFARules(int proposalID)
+        {
+            WFAValidations_OneShot wrp = new WFAValidations_OneShot();
+            wrp.Lst_BBP_Quote = new List<BB_Proposal_Quote_WFA>();
+            wrp.Lst_BBP_RS_Quote = new List<BB_Proposal_Quote_RS_WFA>();
 
-    public class WFA_Listagem
-    {
-        public int? Line { get; set; }
-        public string BU { get; set; }
-        public string DealElements { get; set; }
-        public string TypeOfCustomer { get; set; }
-        public List<Level> lstLevel { get; set; }
+            try { 
 
-    }
-    public class Level
-    {
-        public string Approver { get; set; }
-        public string Condition { get; set; }
-        public double? Percentage { get; set; }
-        public string Type { get; set; }
-    }
+                // LISTA BB_PROPOSAL_QUOTE ---------------------------------------------------------------------
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
+
+                    conn.Open();
+
+                        SqlCommand cmd = new SqlCommand("SP_Workflow_Aprovacoes_OneShot_Validation", conn);
+                        cmd.CommandTimeout = 180;
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Proposal_ID", proposalID);
+                        cmd.Parameters.AddWithValue("@WFA_ID", 1);
+                        cmd.Parameters.AddWithValue("@is_RS", 0);
+                        SqlDataReader rdr = cmd.ExecuteReader();
+
+
+                        while (rdr.Read())
+                        {
+                            BB_Proposal_Quote_WFA bbp_quote = new BB_Proposal_Quote_WFA
+                            {
+                                ID = (int)rdr["ID"],
+                                Proposal_ID = rdr["Proposal_ID"] != DBNull.Value ? (int?)rdr["Proposal_ID"] : null,
+                                CreatedBy = rdr["CreatedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CreatedBy")) : "",
+                                ModifiedBy = rdr["ModifiedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ModifiedBy")) : "",
+                                CreatedTime = rdr["CreatedTime"] != DBNull.Value ? (DateTime?)rdr["CreatedTime"] : null,
+                                ModifiedTime = rdr["ModifiedTime"] != DBNull.Value ? (DateTime?)rdr["ModifiedTime"] : null,
+                                Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
+                                Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
+                                CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
+                                Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
+                                UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
+                                Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
+                                TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
+                                Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
+                                PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
+                                TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
+                                DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
+                                UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
+                                GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
+                                GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
+                                TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
+                                IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
+                                TCP = rdr["TCP"] != DBNull.Value ? (double?)rdr["TCP"] : null,
+                                Name = rdr["Name"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Name")) : "",
+                                ClickPriceC = rdr["ClickPriceC"] != DBNull.Value ? (double?)rdr["ClickPriceC"] : null,
+                                ClickPriceBW = rdr["ClickPriceBW"] != DBNull.Value ? (double?)rdr["ClickPriceBW"] : null,
+                                IsMarginBEU = rdr["IsMarginBEU"] != DBNull.Value ? (bool?)rdr["IsMarginBEU"] : null,
+                                IsUsed = rdr["IsUsed"] != DBNull.Value ? (bool?)rdr["IsUsed"] : null,
+                                IsInClient = rdr["IsInClient"] != DBNull.Value ? (bool?)rdr["IsInClient"] : null,
+                                TotalCost_ = rdr["TotalCost_"] != DBNull.Value ? (double?)rdr["TotalCost_"] : null,
+                                passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
+                                alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
+                            };
+
+                        wrp.Lst_BBP_Quote.Add(bbp_quote);
+                    }
+                        rdr.Close();
+                }
+
+                // LISTA BB_PROPOSAL_RS_QUOTE ---------------------------------------------------------------------
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
+
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SP_Workflow_Aprovacoes_OneShot_Validation", conn);
+                    cmd.CommandTimeout = 180;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Proposal_ID", proposalID);
+                    cmd.Parameters.AddWithValue("@WFA_ID", 1);
+                    cmd.Parameters.AddWithValue("@is_RS", 1);
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+
+                    while (rdr.Read())
+                    {
+                        BB_Proposal_Quote_RS_WFA bbp_rs_quote = new BB_Proposal_Quote_RS_WFA
+                        {
+                            ID = (int)rdr["ID"],
+                            CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
+                            Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
+                            DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
+                            Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
+                            GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
+                            GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
+                            Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
+                            Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
+                            MonthlyFee = rdr["MonthlyFee"] != DBNull.Value ? (double?)rdr["MonthlyFee"] : null,
+                            MonthlyGP = rdr["MonthlyGP"] != DBNull.Value ? (double?)rdr["MonthlyGP"] : null,
+                            PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
+                            Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
+                            TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
+                            MonthlyFeeCost = rdr["MonthlyFeeCost"] != DBNull.Value ? (double?)rdr["MonthlyFeeCost"] : null,
+                            TotalMonths = rdr["TotalMonths"] != DBNull.Value ? (int?)rdr["TotalMonths"] : null,
+                            TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
+                            TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
+                            UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
+                            UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
+                            ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
+                            IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
+                            passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
+                            alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
+                        };
+
+                        wrp.Lst_BBP_RS_Quote.Add(bbp_rs_quote);
+                    }
+                    rdr.Close();
+                }
+            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }          
+            return Ok(wrp);
+        }
+
+
+
+        // ----------------------------------------------------------------------------------------------------
+        // CLASSES --------------------------------------------------------------------------------------------
+        // ----------------------------------------------------------------------------------------------------
+        public class Milestone_ProposalPlan
+        {
+            public List<BB_Proposal_Milestone> Milestones { get; set; }
+            public List<BB_CRM_Approval_Comments> MilestoneComments { get; set; }
+        }
+
+        public class WFA_Listagem
+        {
+            public int? Line { get; set; }
+            public string BU { get; set; }
+            public string DealElements { get; set; }
+            public string TypeOfCustomer { get; set; }
+            public List<Level> lstLevel { get; set; }
+
+        }
+        public class Level
+        {
+            public string Approver { get; set; }
+            public string Condition { get; set; }
+            public double? Percentage { get; set; }
+            public string Type { get; set; }
+        }
 
         public class WFA_Create
         {
@@ -1540,50 +1673,123 @@ namespace WebApplication1.Controllers
             public int? Level3_Type { get; set; }
             public int? Level4_Type { get; set; }
             public int? Level5_Type { get; set; }
+        }
+
+        public partial class WFA_Approvers
+        {
+            public int ID { get; set; }
+            public string User_ID { get; set; }
+            public string Name { get; set; }
+        }
+
+        public partial class BB_WFA_Exception_Translated
+        {
+            public int ID { get; set; }
+            public Nullable<int> WFA_Control_ID { get; set; }
+            public Nullable<int> Line_ID { get; set; }
+            public string Type_ID { get; set; }
+            public string Condition_ID { get; set; }
+            public Nullable<double> Condition_Value { get; set; }
+            public string Action_ID { get; set; }
+            public Nullable<int> Level_ID { get; set; }
+        }
+
+        public class WFA_CreateException
+        {
+            // dropdowns
+            public List<int?> Lst_LineNr { get; set; }
+            public List<BB_RD_WFA_Condition_Type> Lst_Type { get; set; }
+            public List<BB_RD_WFA_Condition> Lst_Condition { get; set; }
+            public List<BB_RD_WFA_Exception_Action> Lst_Action { get; set; }
+
+            public int ID { get; set; }
+            public int? LineNr { get; set; }
+            public int? Type { get; set; }
+            public int? Condition { get; set; }
+            public int? Action { get; set; }
+            public double? Condition_Value { get; set; }
+            public int? LevelNr { get; set; }
+
+        }
+
+        //Objeto com as linhas WFA e Exceções (tudo strings)
+        public class WFA_And_Exceptions
+        {
+            public List<WFA_Listagem> Lst_WFA { get; set; }
+            public List<BB_WFA_Exception_Translated> Lst_Exception { get; set; }
+        }
+
+
+        public class WFAValidations_OneShot
+        {
+            public List<BB_Proposal_Quote_WFA> Lst_BBP_Quote { get; set; }
+            public List<BB_Proposal_Quote_RS_WFA> Lst_BBP_RS_Quote { get; set; }
+        }
+
+
+        public partial class BB_Proposal_Quote_WFA
+        {
+            public int ID { get; set; }
+            public Nullable<int> Proposal_ID { get; set; }
+            public string CreatedBy { get; set; }
+            public string ModifiedBy { get; set; }
+            public Nullable<System.DateTime> CreatedTime { get; set; }
+            public Nullable<System.DateTime> ModifiedTime { get; set; }
+            public Nullable<bool> Locked { get; set; }
+            public string Family { get; set; }
+            public string CodeRef { get; set; }
+            public string Description { get; set; }
+            public Nullable<double> UnitPriceCost { get; set; }
+            public Nullable<int> Qty { get; set; }
+            public Nullable<double> TotalCost { get; set; }
+            public Nullable<double> Margin { get; set; }
+            public Nullable<double> PVP { get; set; }
+            public Nullable<double> TotalPVP { get; set; }
+            public Nullable<double> DiscountPercentage { get; set; }
+            public Nullable<double> UnitDiscountPrice { get; set; }
+            public Nullable<double> GPTotal { get; set; }
+            public Nullable<double> GPPercentage { get; set; }
+            public Nullable<double> TotalNetsale { get; set; }
+            public Nullable<bool> IsFinanced { get; set; }
+            public Nullable<double> TCP { get; set; }
+            public string Name { get; set; }
+            public Nullable<double> ClickPriceC { get; set; }
+            public Nullable<double> ClickPriceBW { get; set; }
+            public Nullable<bool> IsMarginBEU { get; set; }
+            public Nullable<bool> IsUsed { get; set; }
+            public Nullable<bool> IsInClient { get; set; }
+            public Nullable<double> UnitPriceCost_ { get; set; }
+            public Nullable<double> TotalCost_ { get; set; }
+            public Nullable<bool> passedValidation { get; set; }
+            public string alertMessage { get; set; }
+        }
+
+        public partial class BB_Proposal_Quote_RS_WFA
+        {
+            public int ID { get; set; }
+            public string CodeRef { get; set; }
+            public string Description { get; set; }
+            public Nullable<double> DiscountPercentage { get; set; }
+            public string Family { get; set; }
+            public Nullable<double> GPPercentage { get; set; }
+            public Nullable<double> GPTotal { get; set; }
+            public Nullable<bool> Locked { get; set; }
+            public Nullable<double> Margin { get; set; }
+            public Nullable<double> MonthlyFee { get; set; }
+            public Nullable<double> MonthlyGP { get; set; }
+            public Nullable<double> PVP { get; set; }
+            public Nullable<int> Qty { get; set; }
+            public Nullable<double> TotalCost { get; set; }
+            public Nullable<double> MonthlyFeeCost { get; set; }
+            public Nullable<int> TotalMonths { get; set; }
+            public Nullable<double> TotalNetsale { get; set; }
+            public Nullable<double> TotalPVP { get; set; }
+            public Nullable<double> UnitDiscountPrice { get; set; }
+            public Nullable<double> UnitPriceCost { get; set; }
+            public Nullable<int> ProposalID { get; set; }
+            public Nullable<bool> IsFinanced { get; set; }
+            public Nullable<bool> passedValidation { get; set; }
+            public string alertMessage { get; set; }
+        }
     }
-
-    public partial class WFA_Approvers
-    {
-        public int ID { get; set; }
-        public string User_ID { get; set; }
-        public string Name { get; set; }
-    }
-
-    public partial class BB_WFA_Exception_Translated
-    {
-        public int ID { get; set; }
-        public Nullable<int> WFA_Control_ID { get; set; }
-        public Nullable<int> Line_ID { get; set; }
-        public string Type_ID { get; set; }
-        public string Condition_ID { get; set; }
-        public Nullable<double> Condition_Value { get; set; }
-        public string Action_ID { get; set; }
-        public Nullable<int> Level_ID { get; set; }
-    }
-
-    public class WFA_CreateException
-    {
-        // dropdowns
-        public List<int?> Lst_LineNr { get; set; }
-        public List<BB_RD_WFA_Condition_Type> Lst_Type { get; set; }
-        public List<BB_RD_WFA_Condition> Lst_Condition { get; set; }
-        public List<BB_RD_WFA_Exception_Action> Lst_Action { get; set; }
-
-        public int ID { get; set; }
-        public int? LineNr { get; set; }
-        public int? Type { get; set; }
-        public int? Condition { get; set; }
-        public int? Action { get; set; }
-        public double? Condition_Value { get; set; }
-        public int? LevelNr { get; set; }
-
-    }
-
-    //Objeto com as linhas WFA e Exceções (tudo strings)
-    public class WFA_And_Exceptions
-    {
-        public List<WFA_Listagem> Lst_WFA { get; set; }
-        public List<BB_WFA_Exception_Translated> Lst_Exception { get; set; }
-    }
-
 }

@@ -1400,7 +1400,10 @@ if (typeof jQuery === 'undefined') {
     var createdDocument = document.implementation.createHTMLDocument('sanitization')
     createdDocument.body.innerHTML = unsafeHtml
 
-    var whitelistKeys = $.map(whiteList, function (el, i) { return i })
+    var whitelistKeys = $.
+
+
+(whiteList, function (el, i) { return i })
     var elements = $(createdDocument.body).find('*')
 
     for (var i = 0, len = elements.length; i < len; i++) {
