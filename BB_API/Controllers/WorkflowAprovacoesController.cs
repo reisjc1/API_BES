@@ -913,7 +913,7 @@ namespace WebApplication1.Controllers
                     //Termina o método retornando uma mensagem para o user
                     if (checkExistent.Find(x => x.Started == true) != null)
                     {
-                        message = "Já existe um processo iniciado a decorrer. Deverá aguardar resposta desse processo.";
+                        message = "Ya hay un proceso en marcha. Tendrá que esperar una respuesta.";
                         return BadRequest(message);
                     }
                     //Verifica se existe um pedido criado mas não iniciado.
@@ -922,13 +922,13 @@ namespace WebApplication1.Controllers
                     {
                         if (CallWFASP(ProposalID, 1))
                         {
-                            message = "Processo criado e iniciado com sucesso";
+                            message = "Proceso creado e iniciado con éxito.";
                             return Ok(message);
                         }
                         else
                         {
-                            message = "Processo foi criado, no entanto houve um problema ao iniciar o mesmo." +
-                                      "Por favor faça o pedido novamente. Se o erro persistir contacte o departamento do Business Builder.";
+                            message = "El proceso se creó, pero hubo un problema al iniciarlo." +
+                                      "Vuelva a realizar el pedido. Si el error persiste, póngase en contacto con el departamento de Business Builder.";
                             return BadRequest(message);
                         }
                     }
@@ -950,13 +950,13 @@ namespace WebApplication1.Controllers
 
                 if (CallWFASP(ProposalID, 1))
                 {
-                    message = "Processo criado e iniciado com sucesso";
+                    message = "Proceso creado e iniciado con éxito.";
                     return Ok(message);
                 }
                 else
                 {
-                    message = "Processo foi criado, no entanto houve um problema ao iniciar o mesmo." +
-                              "Por favor faça o pedido novamente.";
+                    message = "El proceso se creó, pero hubo un problema al iniciarlo." +
+                              "Vuelva a realizar el pedido. Si el error persiste, póngase en contacto con el departamento de Business Builder.";
                     return BadRequest(message);
                 }
 
