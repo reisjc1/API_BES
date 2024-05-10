@@ -14,6 +14,8 @@ using static WebApplication1.Controllers.WorkflowAprovacoesController;
 using AutoMapper;
 using WebApplication1.Models.SLAs;
 using DocumentFormat.OpenXml.Math;
+using System.Data.Entity;
+using System.Windows.Interop;
 
 namespace WebApplication1.Controllers
 {
@@ -1684,6 +1686,47 @@ namespace WebApplication1.Controllers
             }
         }
 
+
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("WFAProcessValidation")]
+        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, string user_ID)
+        {
+            try
+            {
+                 // TODO possiveis ineer join
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    BB_RD_WFA_Approvers user = db.BB_RD_WFA_Approvers.Where(x => x.User_ID == user_ID).FirstOrDefault();
+
+                    BB_WFA_Workflow_Proposal wf_p = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID && x.Finished == false).FirstOrDefault();
+
+                    BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control.Where(x => x.Approver_ID == user.ID && x.WFA_Workflow_Proposal_ID == wf_p.ID).FirstOrDefault();
+
+
+                    if(approver_control != null)
+                    {
+                        approver_control.IsApproved = isApproved;
+
+                    }
+
+                    db.Entry(approver_control).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    string msg = isApproved ? "El proceso ha sido aprobado." : "El proceso ha sido rechazado.";
+
+
+                    return Ok(msg);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
+            }
+        }
 
 
         // ---------------------------------------------------------------------------------------------------------------------
