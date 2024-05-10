@@ -1643,6 +1643,7 @@ namespace WebApplication1.Controllers
                             ApprovedRequestDate = rdr["ApprovedRequestDate"] != DBNull.Value ? (DateTime?)rdr["ApprovedRequestDate"] : null,
                             Status = rdr["Status"] != DBNull.Value ? (bool?)rdr["Status"] : null,
                             ProposalName = rdr["ProposalName"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ProposalName")) : "",
+                            ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
                         };
 
                         lst_approver_proposal.Add(wfa_approver_proposal);
@@ -1850,7 +1851,7 @@ namespace WebApplication1.Controllers
             public DateTime? ApprovedRequestDate { get; set; }
             public bool? Status { get; set; }
             public string ProposalName  { get; set; }
-
+            public int? ProposalID { get; set; }
         }
     }
 }
