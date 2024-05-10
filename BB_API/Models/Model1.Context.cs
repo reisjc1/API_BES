@@ -131,5 +131,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_Exception> BB_WFA_Exception { get; set; }
         public virtual DbSet<BB_WFA_Approvers_Control> BB_WFA_Approvers_Control { get; set; }
         public virtual DbSet<BB_WFA_Workflow_Proposal> BB_WFA_Workflow_Proposal { get; set; }
+        public virtual DbSet<BB_WFA_Comments_Business> BB_WFA_Comments_Business { get; set; }
     }
 }

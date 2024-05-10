@@ -213,6 +213,9 @@
           <Property Name="Enable" Type="bit" />
           <Property Name="BEU" Type="float" />
           <Property Name="BOM" Type="nvarchar(max)" />
+          <Property Name="ARTICLE_TYPE" Type="nvarchar(max)" />
+          <Property Name="COND_TYPE_RENTAL" Type="nchar" MaxLength="10" />
+          <Property Name="COND_TYPE_AL" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="BB_DeliveryContactsInfo">
           <Key>
@@ -1428,6 +1431,16 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="IsApproved" Type="bit" />
           <Property Name="IsComplete" Type="bit" />
         </EntityType>
+        <EntityType Name="BB_WFA_Comments_Business">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="BB_WFA_Control">
           <Key>
             <PropertyRef Name="ID" />
@@ -1707,6 +1720,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_SLA_History" EntityType="Self.BB_SLA_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_VVA" EntityType="Self.BB_VVA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Approvers_Control" EntityType="Self.BB_WFA_Approvers_Control" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_WFA_Comments_Business" EntityType="Self.BB_WFA_Comments_Business" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Control" EntityType="Self.BB_WFA_Control" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Exception" EntityType="Self.BB_WFA_Exception" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Levels" EntityType="Self.BB_WFA_Levels" Schema="dbo" store:Type="Tables" />
@@ -1934,6 +1948,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
           <EntitySet Name="BB_WFA_Approvers_Control" EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" />
           <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="BB_DB_DEVModel.BB_WFA_Workflow_Proposal" />
+          <EntitySet Name="BB_WFA_Comments_Business" EntityType="BB_DB_DEVModel.BB_WFA_Comments_Business" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -1996,6 +2011,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Enable" Type="Boolean" />
           <Property Name="BEU" Type="Double" />
           <Property Name="BOM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ARTICLE_TYPE" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="COND_TYPE_RENTAL" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="COND_TYPE_AL" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="BB_Equipamentos">
           <Key>
@@ -3548,6 +3566,16 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="IsApproved" Type="Boolean" />
           <Property Name="IsCompleted" Type="Boolean" />
         </EntityType>
+        <EntityType Name="BB_WFA_Comments_Business">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3599,6 +3627,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySetMapping Name="BB_Data_Integration">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Data_Integration">
               <MappingFragment StoreEntitySet="BB_Data_Integration">
+                <ScalarProperty Name="COND_TYPE_AL" ColumnName="COND_TYPE_AL" />
+                <ScalarProperty Name="COND_TYPE_RENTAL" ColumnName="COND_TYPE_RENTAL" />
+                <ScalarProperty Name="ARTICLE_TYPE" ColumnName="ARTICLE_TYPE" />
                 <ScalarProperty Name="BOM" ColumnName="BOM" />
                 <ScalarProperty Name="BEU" ColumnName="BEU" />
                 <ScalarProperty Name="Enable" ColumnName="Enable" />
@@ -5157,6 +5188,17 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
                 <ScalarProperty Name="Finished_Date" ColumnName="Finished_Date" />
                 <ScalarProperty Name="Created_Date" ColumnName="Created_Date" />
                 <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Comments_Business">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Comments_Business">
+              <MappingFragment StoreEntitySet="BB_WFA_Comments_Business">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

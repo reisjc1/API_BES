@@ -32,5 +32,8 @@ namespace WebApplication1.Models
         public Nullable<bool> Enable { get; set; }
         public Nullable<double> BEU { get; set; }
         public string BOM { get; set; }
+        public string ARTICLE_TYPE { get; set; }
+        public string COND_TYPE_RENTAL { get; set; }
+        public string COND_TYPE_AL { get; set; }
     }
 }

@@ -223,13 +223,6 @@ namespace WebApplication1.Controllers
             }
         }
 
-        public class UserInfo
-        {
-            public string Email { get; set; }
-            public string DisplayName { get; set; }
-            public string Department { get; set; }
-        }
-
 
         // ######################################################################################
 
@@ -1658,11 +1651,44 @@ namespace WebApplication1.Controllers
             return Ok(lst_approver_proposal);
         }
 
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("AddWFACommentBusiness")]
+        public IHttpActionResult AddWFACommentBusiness(int proposalID, string userLogged, string comment)
+        {
+            try
+            {
+                List<BB_WFA_Comments_Business> lstComentarios = new List<BB_WFA_Comments_Business>();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    db.BB_WFA_Comments_Business.Add(new BB_WFA_Comments_Business()
+                    {
+                        ProposalID = proposalID,
+                        CreatedDate = DateTime.Now,
+                        CreatedBy = userLogged,
+                        Comment = comment
+                    });
+
+                    db.SaveChanges();
+
+                    lstComentarios = db.BB_WFA_Comments_Business.Where(q => q.ProposalID == proposalID).ToList();
+                }
+
+                return Ok(lstComentarios);
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
 
 
-        // ----------------------------------------------------------------------------------------------------
-        // CLASSES --------------------------------------------------------------------------------------------
-        // ----------------------------------------------------------------------------------------------------
+
+        // ---------------------------------------------------------------------------------------------------------------------
+        // CLASSES -------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------
         public class Milestone_ProposalPlan
         {
             public List<BB_Proposal_Milestone> Milestones { get; set; }
@@ -1844,7 +1870,6 @@ namespace WebApplication1.Controllers
 
         public class WFA_Approver_Proposal
         {
-
             public string QuoteNr { get; set; }
             public string Client { get; set; }
             public string CreatedBy { get; set; }
@@ -1852,6 +1877,13 @@ namespace WebApplication1.Controllers
             public bool? Status { get; set; }
             public string ProposalName  { get; set; }
             public int? ProposalID { get; set; }
+        }
+
+        public class UserInfo
+        {
+            public string Email { get; set; }
+            public string DisplayName { get; set; }
+            public string Department { get; set; }
         }
     }
 }

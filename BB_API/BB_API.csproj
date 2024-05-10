@@ -569,6 +569,9 @@
     <Compile Include="Models\BB_WFA_Approvers_Control.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_WFA_Comments_Business.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_WFA_Control.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
