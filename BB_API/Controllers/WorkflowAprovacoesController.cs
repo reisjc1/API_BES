@@ -13,6 +13,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using static WebApplication1.Controllers.WorkflowAprovacoesController;
 using AutoMapper;
 using WebApplication1.Models.SLAs;
+using DocumentFormat.OpenXml.Math;
 
 namespace WebApplication1.Controllers
 {
@@ -1608,6 +1609,54 @@ namespace WebApplication1.Controllers
             return Ok(wrp);
         }
 
+        // #######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("getWFAApproverProposals")]
+        public IHttpActionResult getWFAApproverProposals(string user_ID)
+        {
+            List<WFA_Approver_Proposal> lst_approver_proposal = new List<WFA_Approver_Proposal>();
+
+            try
+            {
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
+                    conn.Open();
+
+                    string sql = "SELECT * FROM " + "ft_get_WFA_Approver_Proposals"+ "(@User_ID)";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.CommandTimeout = 180;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@User_ID", user_ID);
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+
+                    while (rdr.Read())
+                    {
+                        WFA_Approver_Proposal wfa_approver_proposal = new WFA_Approver_Proposal
+                        {
+                            QuoteNr = rdr["QuoteNr"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("QuoteNr")) : "",
+                            Client = rdr["Client"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Client")) : "",
+                            CreatedBy = rdr["CreatedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CreatedBy")) : "",
+                            ApprovedRequestDate = rdr["ApprovedRequestDate"] != DBNull.Value ? (DateTime?)rdr["ApprovedRequestDate"] : null,
+                            Status = rdr["Status"] != DBNull.Value ? (bool?)rdr["Status"] : null,
+                            ProposalName = rdr["ProposalName"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ProposalName")) : "",
+                        };
+
+                        lst_approver_proposal.Add(wfa_approver_proposal);
+                    }
+                    rdr.Close();              
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return Ok(lst_approver_proposal);
+        }
+
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -1790,6 +1839,18 @@ namespace WebApplication1.Controllers
             public Nullable<bool> IsFinanced { get; set; }
             public Nullable<bool> passedValidation { get; set; }
             public string alertMessage { get; set; }
+        }
+
+        public class WFA_Approver_Proposal
+        {
+
+            public string QuoteNr { get; set; }
+            public string Client { get; set; }
+            public string CreatedBy { get; set; }
+            public DateTime? ApprovedRequestDate { get; set; }
+            public bool? Status { get; set; }
+            public string ProposalName  { get; set; }
+
         }
     }
 }
