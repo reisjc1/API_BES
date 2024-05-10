@@ -1242,7 +1242,6 @@ namespace WebApplication1.BLL
                     err.ProposalObj.Draft.baskets.os_basket.Add(basket);
                 }
 
-
                 //Serviços recorrenctes
                 err.ProposalObj.Draft.baskets.rs_basket = new List<RsBasket>();
                 List<BB_Proposal_Quote_RS> proposal_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == i.ProposalId).ToList();
@@ -1259,6 +1258,11 @@ namespace WebApplication1.BLL
 
                     err.ProposalObj.Draft.baskets.rs_basket.Add(basket);
                 }
+
+
+                // lista de comentários do negócio
+                err.ProposalObj.Draft.baskets.lst_wfa_comments_business = db.BB_WFA_Comments_Business.Where(q => q.ProposalID == err.ProposalObj.Draft.details.ID).ToList();
+
 
                 err.ProposalObj.Draft.opsPacks = new OPSPacks();
                 List<BB_Proposal_OPSImplement> bb_Proposal_OPSImplements = db.BB_Proposal_OPSImplement.Where(x => x.ProposalID == i.ProposalId).OrderBy(x => x.Position).ToList();

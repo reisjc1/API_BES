@@ -377,6 +377,7 @@ namespace WebApplication1.Models
     {
         public List<OsBasket> os_basket { get; set; }
         public List<RsBasket> rs_basket { get; set; }
+        public List<BB_WFA_Comments_Business> lst_wfa_comments_business { get; set; }
     }
 
     public class DeliveryLocationsBes
