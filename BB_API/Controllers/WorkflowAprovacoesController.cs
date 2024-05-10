@@ -914,7 +914,7 @@ namespace WebApplication1.Controllers
                     if (checkExistent.Find(x => x.Started == true) != null)
                     {
                         message = "Ya hay un proceso en marcha. Tendrá que esperar una respuesta.";
-                        return BadRequest(message);
+                        return Ok(message);
                     }
                     //Verifica se existe um pedido criado mas não iniciado.
                     //Salta para a chamada da SP
@@ -929,7 +929,7 @@ namespace WebApplication1.Controllers
                         {
                             message = "El proceso se creó, pero hubo un problema al iniciarlo." +
                                       "Vuelva a realizar el pedido. Si el error persiste, póngase en contacto con el departamento de Business Builder.";
-                            return BadRequest(message);
+                            return Ok(message);
                         }
                     }
 
@@ -957,7 +957,7 @@ namespace WebApplication1.Controllers
                 {
                     message = "El proceso se creó, pero hubo un problema al iniciarlo." +
                               "Vuelva a realizar el pedido. Si el error persiste, póngase en contacto con el departamento de Business Builder.";
-                    return BadRequest(message);
+                    return Ok(message);
                 }
 
             }
