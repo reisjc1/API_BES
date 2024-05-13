@@ -1136,6 +1136,7 @@ namespace WebApplication1.Controllers
                             Condition_ID = newLine.Level1_Condition,
                             Condition_Value = newLine.Percentage_1,
                             Type_ID = newLine.Level1_Type,
+                            Level = 1
                         };
 
                         BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
@@ -1144,7 +1145,8 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level2_Approver,
                             Condition_ID = newLine.Level2_Condition,
                             Condition_Value = newLine.Percentage_2,
-                            Type_ID = newLine.Level2_Type
+                            Type_ID = newLine.Level2_Type,
+                            Level = 2
                         };
 
                         BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
@@ -1153,7 +1155,8 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level3_Approver,
                             Condition_ID = newLine.Level3_Condition,
                             Condition_Value = newLine.Percentage_3,
-                            Type_ID = newLine.Level3_Type
+                            Type_ID = newLine.Level3_Type,
+                            Level = 3
                         };
 
                         BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
@@ -1162,7 +1165,8 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level4_Approver,
                             Condition_ID = newLine.Level4_Condition,
                             Condition_Value = newLine.Percentage_4,
-                            Type_ID = newLine.Level4_Type
+                            Type_ID = newLine.Level4_Type,
+                            Level = 4
                         };
 
                         BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
@@ -1171,7 +1175,8 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level5_Approver,
                             Condition_ID = newLine.Level5_Condition,
                             Condition_Value = newLine.Percentage_5,
-                            Type_ID = newLine.Level5_Type
+                            Type_ID = newLine.Level5_Type,
+                            Level = 5
                         };
 
 
