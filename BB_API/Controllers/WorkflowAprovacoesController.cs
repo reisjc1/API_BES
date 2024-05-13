@@ -905,9 +905,11 @@ namespace WebApplication1.Controllers
                                                           .Where(w => w.Proposal_ID == ProposalID && w.Finished == false)
                                                           .ToList();
 
+                    bool existsProcess = WFAVerifyExistentProcess(ProposalID, 1);
+
                     //Verifica se já existe um pedido iniciado mas não terminado.
                     //Termina o método retornando uma mensagem para o user
-                    if (checkExistent.Find(x => x.Started == true) != null)
+                    if (existsProcess)
                     {
                         message = "Ya hay un proceso en marcha. Tendrá que esperar una respuesta.";
                         return Ok(message);
@@ -1045,7 +1047,7 @@ namespace WebApplication1.Controllers
                 return null;
             }
         }
-
+        // #######################################################################################
         private bool CallWFASP(int ProposalID, int WFA_ID)
         {
             try
@@ -1736,6 +1738,38 @@ namespace WebApplication1.Controllers
             {
                 string message = ex.Message;
                 return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
+            }
+        }
+
+        // #######################################################################################
+        private bool WFAVerifyExistentProcess(int ProposalID, int WFA_ID)
+        {
+            try
+            {
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
+
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SP_WFA_Verify_Existent_Process", conn);
+                    cmd.CommandTimeout = 180;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Proposal_ID", ProposalID);
+                    cmd.Parameters.AddWithValue("@WFA_ID", WFA_ID);
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+                    bool result = rdr.Read();
+                    rdr.Close();
+                    return result;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return false;
             }
         }
 
