@@ -121,7 +121,7 @@ namespace WebApplication1.BLL
 
                         quote.Proposal_ID = ProposalID;
                         quote.CreatedBy = p.Draft.details.CreatedBy;
-                        quote.CreatedTime = DateTime.Now;
+                        quote.CreatedTime = p.Draft.details.CreatedTime;
                         quote.ModifiedBy = p.Draft.details.CreatedBy;
                         quote.ModifiedTime = DateTime.Now;
 
@@ -1785,7 +1785,7 @@ namespace WebApplication1.BLL
 
                         quote.Proposal_ID = ProposalID;
                         quote.CreatedBy = p.Draft.details.CreatedBy;
-                        quote.CreatedTime = DateTime.Now;
+                        quote.CreatedTime = p.Draft.details.CreatedTime;
                         quote.ModifiedBy = p.Draft.details.CreatedBy;
                         quote.ModifiedTime = DateTime.Now;
 
