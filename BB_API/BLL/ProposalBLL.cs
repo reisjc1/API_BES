@@ -120,6 +120,10 @@ namespace WebApplication1.BLL
                         BB_Proposal_Quote quote = iMapper1.Map<OsBasket, BB_Proposal_Quote>(_Quote);
 
                         quote.Proposal_ID = ProposalID;
+                        quote.CreatedBy = p.Draft.details.CreatedBy;
+                        quote.CreatedTime = DateTime.Now;
+                        quote.ModifiedBy = p.Draft.details.CreatedBy;
+                        quote.ModifiedTime = DateTime.Now;
 
                         db.BB_Proposal_Quote.Add(quote);
                         try
@@ -1780,6 +1784,10 @@ namespace WebApplication1.BLL
                         BB_Proposal_Quote quote = iMapper1.Map<OsBasket, BB_Proposal_Quote>(_Quote);
 
                         quote.Proposal_ID = ProposalID;
+                        quote.CreatedBy = p.Draft.details.CreatedBy;
+                        quote.CreatedTime = DateTime.Now;
+                        quote.ModifiedBy = p.Draft.details.CreatedBy;
+                        quote.ModifiedTime = DateTime.Now;
 
                         db.BB_Proposal_Quote.Add(quote);
                         try
