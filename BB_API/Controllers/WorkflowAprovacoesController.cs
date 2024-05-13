@@ -1655,6 +1655,7 @@ namespace WebApplication1.Controllers
                             Status = rdr["Status"] != DBNull.Value ? (bool?)rdr["Status"] : null,
                             ProposalName = rdr["ProposalName"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ProposalName")) : "",
                             ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
+                            ControlID = rdr["ControlID"] != DBNull.Value ? (int?)rdr["ControlID"] : null,
                         };
 
                         lst_approver_proposal.Add(wfa_approver_proposal);
@@ -1707,7 +1708,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("WFAProcessValidation")]
-        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, string user_ID)
+        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, string user_ID, int control_ID)
         {
             try
             {
@@ -1723,17 +1724,19 @@ namespace WebApplication1.Controllers
                         return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
                     }
 
-                    BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control.Where(x => x.Approver_ID == user.ID && x.WFA_Workflow_Proposal_ID == wf_p.ID).FirstOrDefault();
+                    BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control
+                                                                .Where(x => x.Approver_ID == user.ID && x.WFA_Workflow_Proposal_ID == wf_p.ID && x.WFA_Control_ID == control_ID)
+                                                                    .FirstOrDefault();
 
 
                     if(approver_control != null)
                     {
                         approver_control.IsApproved = isApproved;
 
+                        db.Entry(approver_control).State = EntityState.Modified;
+                        db.SaveChanges();
                     }
 
-                    db.Entry(approver_control).State = EntityState.Modified;
-                    db.SaveChanges();
 
                     string msg = isApproved ? "El proceso ha sido aprobado." : "El proceso ha sido rechazado.";
 
@@ -1942,6 +1945,7 @@ namespace WebApplication1.Controllers
             public bool? Status { get; set; }
             public string ProposalName  { get; set; }
             public int? ProposalID { get; set; }
+            public int? ControlID { get; set; }
         }
 
         public class UserInfo
