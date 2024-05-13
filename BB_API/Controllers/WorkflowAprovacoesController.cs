@@ -914,7 +914,7 @@ namespace WebApplication1.Controllers
                                                     .Where(q=>q.Proposal_ID == ProposalID)
                                                     .FirstOrDefault();
 
-                        if(quote.ModifiedTime < DateTime.Now.AddMinutes(-1))
+                        if(quote.ModifiedTime >= DateTime.Now.AddMinutes(-1))
                         {
                             message = "Ya hay un proceso en marcha. " +
                                 "Tendrá que esperar una respuesta. " +
