@@ -1723,7 +1723,8 @@ namespace WebApplication1.Controllers
                         return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
                     }
 
-                    BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control.Where(x => x.Approver_ID == user.ID && x.WFA_Workflow_Proposal_ID == wf_p.ID).FirstOrDefault();
+                    BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control
+                            .Where(x => x.Approver_ID == user.ID && x.WFA_Workflow_Proposal_ID == wf_p.ID).FirstOrDefault();
 
 
                     if(approver_control != null)
