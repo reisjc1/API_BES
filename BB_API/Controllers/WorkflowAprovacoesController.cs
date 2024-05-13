@@ -905,15 +905,24 @@ namespace WebApplication1.Controllers
                                                           .Where(w => w.Proposal_ID == ProposalID && w.Finished == false)
                                                           .ToList();
 
-                    bool existsProcess = WFAVerifyExistentProcess(ProposalID, 1);
 
-                    //Verifica se já existe um pedido iniciado mas não terminado.
+                    //Verifica se já existe um pedido iniciado recentemente
                     //Termina o método retornando uma mensagem para o user
-                    if (existsProcess)
+                    if (checkExistent.Find(x=> x.Started==true) != null)
                     {
-                        message = "Ya hay un proceso en marcha. Tendrá que esperar una respuesta.";
-                        return Ok(message);
+                        BB_Proposal_Quote quote = db.BB_Proposal_Quote
+                                                    .Where(q=>q.Proposal_ID == ProposalID)
+                                                    .FirstOrDefault();
+
+                        if(quote.ModifiedTime < DateTime.Now.AddMinutes(-1))
+                        {
+                            message = "Ya hay un proceso en marcha. " +
+                                "Tendrá que esperar una respuesta. " +
+                                "Si se han realizado cambios, debe esperar 1 minuto antes de realizar una nueva solicitud de aprobación.";
+                            return Ok(message);
+                        }
                     }
+
                     //Verifica se existe um pedido criado mas não iniciado.
                     //Salta para a chamada da SP
                     else if (checkExistent.Find(x => x.Started == false) != null)
@@ -1738,38 +1747,6 @@ namespace WebApplication1.Controllers
             {
                 string message = ex.Message;
                 return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
-            }
-        }
-
-        // #######################################################################################
-        private bool WFAVerifyExistentProcess(int ProposalID, int WFA_ID)
-        {
-            try
-            {
-                string bdConnect = @AppSettingsGet.BasedadosConnect;
-                using (SqlConnection conn = new SqlConnection(bdConnect))
-                {
-
-                    conn.Open();
-
-                    SqlCommand cmd = new SqlCommand("SP_WFA_Verify_Existent_Process", conn);
-                    cmd.CommandTimeout = 180;
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@Proposal_ID", ProposalID);
-                    cmd.Parameters.AddWithValue("@WFA_ID", WFA_ID);
-                    SqlDataReader rdr = cmd.ExecuteReader();
-
-                    bool result = rdr.Read();
-                    rdr.Close();
-                    return result;
-
-                }
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return false;
             }
         }
 
