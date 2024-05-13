@@ -947,7 +947,7 @@ namespace WebApplication1.Controllers
                         Created_Date = DateTime.Now,
                         Started = false,
                         Finished = false,
-                        IsApproved = false,
+                        IsApproved = null,
                         IsCompleted = false
                     };
 
