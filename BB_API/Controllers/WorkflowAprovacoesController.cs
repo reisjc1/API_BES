@@ -956,6 +956,11 @@ namespace WebApplication1.Controllers
                     return Ok(message);
                 }
 
+                // VERIFICAR PARA MANDAR EMAILS
+
+                // fazer foreach sobre a EmailMessage, verificar a coluna "isSentEmail"
+                // para cada campo bla bla enviar email
+
             }
             catch (Exception ex)
             {
@@ -1695,12 +1700,17 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                 // TODO possiveis ineer join
+                 // TODO possiveis inner joins
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     BB_RD_WFA_Approvers user = db.BB_RD_WFA_Approvers.Where(x => x.User_ID == user_ID).FirstOrDefault();
 
                     BB_WFA_Workflow_Proposal wf_p = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID && x.Finished == false).FirstOrDefault();
+
+                    if(wf_p == null)
+                    {
+                        return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
+                    }
 
                     BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control.Where(x => x.Approver_ID == user.ID && x.WFA_Workflow_Proposal_ID == wf_p.ID).FirstOrDefault();
 
@@ -1716,9 +1726,10 @@ namespace WebApplication1.Controllers
 
                     string msg = isApproved ? "El proceso ha sido aprobado." : "El proceso ha sido rechazado.";
 
-
                     return Ok(msg);
 
+
+                    // VERIFICAR COM OS TRIGGERS PARA MANDAR EMAILS
                 }
             }
             catch (Exception ex)
