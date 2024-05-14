@@ -1737,6 +1737,7 @@ namespace WebApplication1.Controllers
                             ProposalName = rdr["ProposalName"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ProposalName")) : "",
                             ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
                             ControlID = rdr["ControlID"] != DBNull.Value ? (int?)rdr["ControlID"] : null,
+                            LevelID = rdr["LevelID"] != DBNull.Value ? (int?)rdr["LevelID"] : null,
                         };
 
                         lst_approver_proposal.Add(wfa_approver_proposal);
@@ -1784,12 +1785,11 @@ namespace WebApplication1.Controllers
             }
         }
 
-
         // #######################################################################################
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("WFAProcessValidation")]
-        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, string user_ID, int control_ID)
+        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, string user_ID, int control_ID, int level_ID)
         {
             try
             {
@@ -1806,7 +1806,10 @@ namespace WebApplication1.Controllers
                     }
 
                     BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control
-                                                                .Where(x => x.Approver_ID == user.ID && x.WFA_Workflow_Proposal_ID == wf_p.ID && x.WFA_Control_ID == control_ID)
+                                                                .Where(x => x.Approver_ID == user.ID 
+                                                                    && x.WFA_Workflow_Proposal_ID == wf_p.ID 
+                                                                    && x.WFA_Control_ID == control_ID 
+                                                                    && x.WFA_Level_ID == level_ID)
                                                                     .FirstOrDefault();
 
 
@@ -2039,6 +2042,7 @@ namespace WebApplication1.Controllers
             public string ProposalName  { get; set; }
             public int? ProposalID { get; set; }
             public int? ControlID { get; set; }
+            public int? LevelID { get; set; }
         }
 
         public class UserInfo
