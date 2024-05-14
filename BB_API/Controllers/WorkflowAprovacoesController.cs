@@ -1026,14 +1026,12 @@ namespace WebApplication1.Controllers
 
                     var userIds = result.Select(r => r.User_ID).ToList();
 
-                    // Use o segundo contexto para obter os dados de usuário
                     using (var master = new masterEntities())
                     {
                         var users = master.AspNetUsers
                                           .Where(u => userIds.Contains(u.Id))
                                           .ToList();
 
-                        // Combine os resultados
                         var approvers = (from r in result
                                          join u in users on r.User_ID equals u.Id
                                          select new { u.Email, r.CreatedBy })
