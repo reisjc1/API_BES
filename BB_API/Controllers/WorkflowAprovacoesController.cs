@@ -931,6 +931,7 @@ namespace WebApplication1.Controllers
                         if (CallWFASP(ProposalID, 1))
                         {
                             message = "Proceso creado e iniciado con éxito.";
+                            WFA_SendEmails(ProposalID, true, null);
                             return Ok(message);
                         }
                         else
@@ -959,6 +960,7 @@ namespace WebApplication1.Controllers
                 if (CallWFASP(ProposalID, 1))
                 {
                     message = "Proceso creado e iniciado con éxito.";
+                    WFA_SendEmails(ProposalID, true, null);
                     return Ok(message);
                 }
                 else
@@ -967,9 +969,6 @@ namespace WebApplication1.Controllers
                               "Vuelva a realizar el pedido. Si el error persiste, póngase en contacto con el departamento de Business Builder.";
                     return Ok(message);
                 }
-
-                // VERIFICAR PARA MANDAR EMAILS
-                WFA_SendEmails(ProposalID, true, null);
 
             }
             catch (Exception ex)
