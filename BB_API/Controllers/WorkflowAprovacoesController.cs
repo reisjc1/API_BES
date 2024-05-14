@@ -1009,47 +1009,70 @@ namespace WebApplication1.Controllers
 
         private bool WFA_SendEmails(int ProposalID, bool IsNewProcess, bool? IsApproved)
         {
-
-            using (var db = new BB_DB_DEVEntities2()) {
+            try {
                 EmailService emailService = new EmailService();
-                masterEntities master = new masterEntities();
 
-                var approvers = (from AC in db.BB_WFA_Approvers_Control
-                                                     join WP in db.BB_WFA_Workflow_Proposal on AC.WFA_Workflow_Proposal_ID equals WP.ID
-                                                     join P in db.BB_Proposal on WP.Proposal_ID equals P.ID
-                                                     join A in db.BB_RD_WFA_Approvers on AC.Approver_ID equals A.ID
-                                                     join U in master.AspNetUsers on A.User_ID equals U.Id
-                                                     where WP.Proposal_ID == ProposalID
-                                                     select new { U.Email, P.CreatedBy }).ToList();
-
-
-                string subject = IsNewProcess ? "Worflow Aprovações - Pedido para Analisar" : "Workflow Aprovações - Análise Terminada";
-                string body = IsNewProcess ? $"Bom dia,{Environment.NewLine}{Environment.NewLine}" +
-                    $"Tem um novo pedido de Workflow para analisar. " +
-                    $"Poderá aceder ao mesmo através do menu Área Comercial > Oportunidades na apicação Business Builder. {Environment.NewLine}{Environment.NewLine} " +
-                    $"Muito Obrigado,{Environment.NewLine}Bom trabalho" 
-                    :
-                    string.Format("Bom dia, {0}{0}Informamos que o pedido de aprovação já foi terminado. " +
-                    "O pedido foi {1}.{0}" +
-                    "Poderá verificar o mesmo no menu Área Comercial > Oportunidades. {0} " +
-                    "Muito Obrigado,{0}Bom trabalho",Environment.NewLine,(bool)IsApproved ? "aprovado" : "rejeitado");
-
-                approvers.ForEach(a =>
+                using (var db = new BB_DB_DEVEntities2())
                 {
-                    EmailMesage email = new EmailMesage() { 
-                        Body = body,
-                        Subject = subject,
-                        //Destination = IsNewProcess ? a.Email : a.CreatedBy
-                        Destination = "antonio.simoes@konicaminolta.pt", //TESTES
-                        CC = "tiago.simoes@konicaminolta.pt" //TESTES
-                    };
-                    emailService.SendEmailaync(email);
-                });
+                    // Obtenha os dados necessários do primeiro contexto
+                    var query = from wp in db.BB_WFA_Workflow_Proposal
+                                join ac in db.BB_WFA_Approvers_Control on wp.ID equals ac.WFA_Workflow_Proposal_ID
+                                join a in db.BB_RD_WFA_Approvers on ac.Approver_ID equals a.ID
+                                join p in db.BB_Proposal on wp.Proposal_ID equals p.ID
+                                where wp.Proposal_ID == ProposalID
+                                select new { a.User_ID, p.CreatedBy };
+
+                    var result = query.ToList();
+
+                    var userIds = result.Select(r => r.User_ID).ToList();
+
+                    // Use o segundo contexto para obter os dados de usuário
+                    using (var master = new masterEntities())
+                    {
+                        var users = master.AspNetUsers
+                                          .Where(u => userIds.Contains(u.Id))
+                                          .ToList();
+
+                        // Combine os resultados
+                        var approvers = (from r in result
+                                         join u in users on r.User_ID equals u.Id
+                                         select new { u.Email, r.CreatedBy })
+                                         .ToList();
+                    
+
+
+                    string subject = IsNewProcess ? "Worflow Aprovações - Pedido para Analisar" : "Workflow Aprovações - Análise Terminada";
+                    string body = IsNewProcess ? $"Bom dia,{Environment.NewLine}{Environment.NewLine}" +
+                        $"Tem um novo pedido de Workflow para analisar. " +
+                        $"Poderá aceder ao mesmo através do menu Área Comercial > Oportunidades na apicação Business Builder. {Environment.NewLine}{Environment.NewLine} " +
+                        $"Muito Obrigado,{Environment.NewLine}Bom trabalho"
+                        :
+                        string.Format("Bom dia, {0}{0}Informamos que o pedido de aprovação já foi terminado. " +
+                        "O pedido foi {1}.{0}" +
+                        "Poderá verificar o mesmo no menu Área Comercial > Oportunidades. {0} " +
+                        "Muito Obrigado,{0}Bom trabalho", Environment.NewLine, (bool)IsApproved ? "aprovado" : "rejeitado");
+
+                    approvers.ForEach(a =>
+                    {
+                        EmailMesage email = new EmailMesage() {
+                            Body = body,
+                            Subject = subject,
+                            //Destination = IsNewProcess ? a.Email : a.CreatedBy
+                            Destination = "antonio.simoes@konicaminolta.pt", //TESTES
+                            CC = "tiago.simoes@konicaminolta.pt" //TESTES
+                        };
+                        emailService.SendEmailaync(email);
+                    });
+                }
+
+                }
                 
-
-
+                return false;
             }
-            return false;
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
 
         public WFA_Create GetWFAWithDropdowns()
