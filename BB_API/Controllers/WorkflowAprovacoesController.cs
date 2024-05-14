@@ -922,6 +922,18 @@ namespace WebApplication1.Controllers
                                 "Si se han realizado cambios, debe esperar 1 minuto antes de realizar una nueva solicitud de aprobación.";
                             return Ok(message);
                         }
+                        else
+                        {
+                            var approversControlToDelete = db.BB_WFA_Approvers_Control.ToList();
+                            var matchedApprovers = approversControlToDelete
+                                .Where(ac => checkExistent.Any(ce => ce.ID == ac.WFA_Workflow_Proposal_ID))
+                                .ToList();
+
+                            db.BB_WFA_Approvers_Control.RemoveRange(matchedApprovers);
+                            db.BB_WFA_Workflow_Proposal.RemoveRange(checkExistent);
+                            db.SaveChanges();
+
+                        }
                     }
 
                     //Verifica se existe um pedido criado mas não iniciado.
@@ -1014,7 +1026,7 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    // Obtenha os dados necessários do primeiro contexto
+
                     var query = from wp in db.BB_WFA_Workflow_Proposal
                                 join ac in db.BB_WFA_Approvers_Control on wp.ID equals ac.WFA_Workflow_Proposal_ID
                                 join a in db.BB_RD_WFA_Approvers on ac.Approver_ID equals a.ID
