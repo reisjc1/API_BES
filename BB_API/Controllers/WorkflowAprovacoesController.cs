@@ -16,6 +16,7 @@ using WebApplication1.Models.SLAs;
 using DocumentFormat.OpenXml.Math;
 using System.Data.Entity;
 using System.Windows.Interop;
+using WebApplication1.BLL;
 
 namespace WebApplication1.Controllers
 {
@@ -930,6 +931,7 @@ namespace WebApplication1.Controllers
                         if (CallWFASP(ProposalID, 1))
                         {
                             message = "Proceso creado e iniciado con éxito.";
+                            WFA_SendEmails(ProposalID, true, null);
                             return Ok(message);
                         }
                         else
@@ -958,6 +960,7 @@ namespace WebApplication1.Controllers
                 if (CallWFASP(ProposalID, 1))
                 {
                     message = "Proceso creado e iniciado con éxito.";
+                    WFA_SendEmails(ProposalID, true, null);
                     return Ok(message);
                 }
                 else
@@ -966,11 +969,6 @@ namespace WebApplication1.Controllers
                               "Vuelva a realizar el pedido. Si el error persiste, póngase en contacto con el departamento de Business Builder.";
                     return Ok(message);
                 }
-
-                // VERIFICAR PARA MANDAR EMAILS
-
-                // fazer foreach sobre a EmailMessage, verificar a coluna "isSentEmail"
-                // para cada campo bla bla enviar email
 
             }
             catch (Exception ex)
@@ -1008,6 +1006,72 @@ namespace WebApplication1.Controllers
         }
 
         // HELPERS --------------------------------------------------------------------------------------------
+
+        private bool WFA_SendEmails(int ProposalID, bool IsNewProcess, bool? IsApproved)
+        {
+            try {
+                EmailService emailService = new EmailService();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    // Obtenha os dados necessários do primeiro contexto
+                    var query = from wp in db.BB_WFA_Workflow_Proposal
+                                join ac in db.BB_WFA_Approvers_Control on wp.ID equals ac.WFA_Workflow_Proposal_ID
+                                join a in db.BB_RD_WFA_Approvers on ac.Approver_ID equals a.ID
+                                join p in db.BB_Proposal on wp.Proposal_ID equals p.ID
+                                where wp.Proposal_ID == ProposalID
+                                select new { a.User_ID, p.CreatedBy };
+
+                    var result = query.ToList();
+
+                    var userIds = result.Select(r => r.User_ID).ToList();
+
+                    using (var master = new masterEntities())
+                    {
+                        var users = master.AspNetUsers
+                                          .Where(u => userIds.Contains(u.Id))
+                                          .ToList();
+
+                        var approvers = (from r in result
+                                         join u in users on r.User_ID equals u.Id
+                                         select new { u.Email, r.CreatedBy })
+                                         .ToList();
+                    
+
+
+                    string subject = IsNewProcess ? "Worflow Aprovações - Pedido para Analisar" : "Workflow Aprovações - Análise Terminada";
+                    string body = IsNewProcess ? $"Bom dia,{Environment.NewLine}{Environment.NewLine}" +
+                        $"Tem um novo pedido de Workflow para analisar. " +
+                        $"Poderá aceder ao mesmo através do menu Área Comercial > Oportunidades na apicação Business Builder. {Environment.NewLine}{Environment.NewLine} " +
+                        $"Muito Obrigado,{Environment.NewLine}Bom trabalho"
+                        :
+                        string.Format("Bom dia, {0}{0}Informamos que o pedido de aprovação já foi terminado. " +
+                        "O pedido foi {1}.{0}" +
+                        "Poderá verificar o mesmo no menu Área Comercial > Oportunidades. {0} " +
+                        "Muito Obrigado,{0}Bom trabalho", Environment.NewLine, (bool)IsApproved ? "aprovado" : "rejeitado");
+
+                    approvers.ForEach(a =>
+                    {
+                        EmailMesage email = new EmailMesage() {
+                            Body = body,
+                            Subject = subject,
+                            //Destination = IsNewProcess ? a.Email : a.CreatedBy
+                            Destination = "antonio.simoes@konicaminolta.pt", //TESTES
+                            CC = "tiago.simoes@konicaminolta.pt" //TESTES
+                        };
+                        emailService.SendEmailaync(email);
+                    });
+                }
+
+                }
+                
+                return false;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
 
         public WFA_Create GetWFAWithDropdowns()
         {
@@ -1136,6 +1200,7 @@ namespace WebApplication1.Controllers
                             Condition_ID = newLine.Level1_Condition,
                             Condition_Value = newLine.Percentage_1,
                             Type_ID = newLine.Level1_Type,
+                            Level = 1
                         };
 
                         BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
@@ -1144,7 +1209,8 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level2_Approver,
                             Condition_ID = newLine.Level2_Condition,
                             Condition_Value = newLine.Percentage_2,
-                            Type_ID = newLine.Level2_Type
+                            Type_ID = newLine.Level2_Type,
+                            Level = 2
                         };
 
                         BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
@@ -1153,7 +1219,8 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level3_Approver,
                             Condition_ID = newLine.Level3_Condition,
                             Condition_Value = newLine.Percentage_3,
-                            Type_ID = newLine.Level3_Type
+                            Type_ID = newLine.Level3_Type,
+                            Level = 3
                         };
 
                         BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
@@ -1162,7 +1229,8 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level4_Approver,
                             Condition_ID = newLine.Level4_Condition,
                             Condition_Value = newLine.Percentage_4,
-                            Type_ID = newLine.Level4_Type
+                            Type_ID = newLine.Level4_Type,
+                            Level = 4
                         };
 
                         BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
@@ -1171,7 +1239,8 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level5_Approver,
                             Condition_ID = newLine.Level5_Condition,
                             Condition_Value = newLine.Percentage_5,
-                            Type_ID = newLine.Level5_Type
+                            Type_ID = newLine.Level5_Type,
+                            Level = 5
                         };
 
 
@@ -1739,6 +1808,18 @@ namespace WebApplication1.Controllers
 
 
                     string msg = isApproved ? "El proceso ha sido aprobado." : "El proceso ha sido rechazado.";
+
+
+
+                    bool? approved = (from W in db.BB_WFA_Workflow_Proposal
+                                    where W.Proposal_ID == proposalID && W.Finished == true
+                                    orderby W.Started descending
+                                    select W.IsApproved).FirstOrDefault();
+
+                    if(approved != null)
+                    {
+                        WFA_SendEmails(proposalID, false, approved);
+                    }
 
                     return Ok(msg);
 
