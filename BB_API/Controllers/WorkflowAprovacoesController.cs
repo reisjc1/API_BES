@@ -17,6 +17,7 @@ using DocumentFormat.OpenXml.Math;
 using System.Data.Entity;
 using System.Windows.Interop;
 using WebApplication1.BLL;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace WebApplication1.Controllers
 {
@@ -179,45 +180,6 @@ namespace WebApplication1.Controllers
                 }
 
                 return lst_BB_RD_WFA_BU;
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-                return null;
-            }
-        }
-
-        // ######################################################################################
-
-        [AcceptVerbs("GET", "POST")]
-        [ActionName("Get_BB_RD_WFA_Approvers")]
-        public List<UserInfo> Get_BB_RD_WFA_Approvers()
-        {
-            try
-            {
-                List<UserInfo> usersInfo = new List<UserInfo>();
-                List<BB_RD_WFA_Approvers> lst_BB_RD_WFA_Approvers = new List<BB_RD_WFA_Approvers>();
-
-                using (var db = new BB_DB_DEVEntities2())
-                {
-                    lst_BB_RD_WFA_Approvers = db.BB_RD_WFA_Approvers.ToList();
-                }
-
-                foreach (var user in lst_BB_RD_WFA_Approvers)
-                {
-                    using (var dbX = new masterEntities())
-                    {
-                        usersInfo = dbX.AspNetUsers
-                                        .Where(x => x.Id == user.User_ID)
-                                        .Select(x => new UserInfo
-                                        {
-                                            Email = x.Email,
-                                            DisplayName = x.DisplayName
-                                        })
-                                        .ToList();
-                    }
-                }
-                return usersInfo;
             }
             catch (Exception ex)
             {
@@ -585,15 +547,17 @@ namespace WebApplication1.Controllers
                     wfa_create_obj.Lst_Approver = new List<WFA_Approvers>();
                     using (var dbX = new masterEntities())
                     {
-                        foreach (var approver in approversList)
-                        {
-                            string userName = dbX.AspNetUsers.Where(x => x.Id == approver.User_ID).Select(x => x.DisplayName).FirstOrDefault();
+                        List<AspNetUsers> approverLst = dbX.AspNetUsers
+                                .Where(a=> a.IsEnabled == true && a.Country == "BES")
+                                .OrderBy(a=>a.DisplayName)
+                                .ToList();
 
+                        foreach(var approver in approverLst)
+                        {
                             WFA_Approvers approverX = new WFA_Approvers()
                             {
-                                ID = approver.ID,
-                                User_ID = approver.User_ID,
-                                Name = userName
+                                ID = approver.Id,
+                                Name = approver.DisplayName
                             };
                             // Popular a lista dos approvers do objeto WFA_Create
                             wfa_create_obj.Lst_Approver.Add(approverX);
@@ -1120,7 +1084,14 @@ namespace WebApplication1.Controllers
                 return false;
             }
         }
+        // #######################################################################################
 
+        public bool IsApprover(string UserID)
+        {
+            return false;
+        }
+
+        // #######################################################################################
         public WFA_Create GetWFAWithDropdowns()
         {
             try
@@ -1145,15 +1116,17 @@ namespace WebApplication1.Controllers
                     wfa_obj.Lst_Approver = new List<WFA_Approvers>();
                     using (var dbX = new masterEntities())
                     {
-                        foreach (var approver in approversList)
-                        {
-                            string userName = dbX.AspNetUsers.Where(x => x.Id == approver.User_ID).Select(x => x.DisplayName).FirstOrDefault();
+                        List<AspNetUsers> approverLst = dbX.AspNetUsers
+                            .Where(a => a.IsEnabled == true && a.Country == "BES")
+                            .OrderBy(a=>a.DisplayName)
+                            .ToList();
 
+                        foreach (var approver in approverLst)
+                        {
                             WFA_Approvers approverX = new WFA_Approvers()
                             {
-                                ID = approver.ID,
-                                User_ID = approver.User_ID,
-                                Name = userName
+                                ID = approver.Id,
+                                Name = approver.UserName
                             };
                             // Popular a lista dos approvers do objeto WFA_Create
                             wfa_obj.Lst_Approver.Add(approverX);
@@ -1956,8 +1929,7 @@ namespace WebApplication1.Controllers
 
         public partial class WFA_Approvers
         {
-            public int ID { get; set; }
-            public string User_ID { get; set; }
+            public string ID { get; set; }
             public string Name { get; set; }
         }
 
