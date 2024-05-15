@@ -545,6 +545,9 @@
     <Compile Include="Models\BB_RD_WFA_Condition_Type.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_RD_WFA_Customer_Type.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_RD_WFA_Elements.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

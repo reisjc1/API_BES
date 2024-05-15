@@ -517,6 +517,7 @@ namespace WebApplication1.Controllers
                             Line = item.Line_ID,
                             BU = db.BB_RD_WFA_BU.Where(x => x.ID == item.BU_ID).Select(x => x.Description).FirstOrDefault(),
                             DealElements = db.BB_RD_WFA_Elements.Where(x => x.ID == item.Elements_ID).Select(x => x.Description).FirstOrDefault(),
+                            TypeOfCustomer = db.BB_RD_WFA_Customer_Type.Where(x => x.ID == item.Customer_ID).Select(x => x.Customer).FirstOrDefault(),
                             lstLevel = new List<Level>()
                         };
 
@@ -578,6 +579,7 @@ namespace WebApplication1.Controllers
                     wfa_create_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
                     wfa_create_obj.Lst_BU = db.BB_RD_WFA_BU.ToList();
                     wfa_create_obj.Lst_DealElements = db.BB_RD_WFA_Elements.ToList();
+                    wfa_create_obj.Lst_TypeOfCustomer = db.BB_RD_WFA_Customer_Type.ToList();
 
 
                     wfa_create_obj.Lst_Approver = new List<WFA_Approvers>();
@@ -635,6 +637,7 @@ namespace WebApplication1.Controllers
                         Line_ID = lastLine + 1,
                         BU_ID = newLine.BU,
                         Elements_ID = newLine.DealElement,
+                        Customer_ID = newLine.TypeOfCustomer
                     };
 
                     if (bb_wfa_control.BU_ID != null && bb_wfa_control.Elements_ID != null)
@@ -756,6 +759,7 @@ namespace WebApplication1.Controllers
                     wfa_obj.ID = bb_wfa_control.ID;
                     wfa_obj.BU = bb_wfa_control.BU_ID;
                     wfa_obj.DealElement = bb_wfa_control.Elements_ID;
+                    wfa_obj.TypeOfCustomer = bb_wfa_control.Customer_ID;
 
                     List<BB_WFA_Levels> bb_wfa_levels = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == bb_wfa_control.ID).ToList();
 
@@ -1017,6 +1021,38 @@ namespace WebApplication1.Controllers
             }
         }
 
+        //####################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DeleteWFALine")]
+        public IHttpActionResult DeleteWFALine(int lineNr)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    BB_WFA_Control bb_wfa = db.BB_WFA_Control.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+
+                    List<BB_WFA_Exception> aggregatedExceptions = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).ToList();
+
+                    List<BB_WFA_Levels> wfa_levels = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == bb_wfa.ID).ToList();
+
+                    db.BB_WFA_Levels.RemoveRange(wfa_levels);
+                    db.BB_WFA_Exception.RemoveRange(aggregatedExceptions);
+                    db.BB_WFA_Control.Remove(bb_wfa);
+                    db.SaveChanges();
+                }
+
+                return Ok();
+            }
+
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+                return null;
+            }
+        }
+
         // HELPERS --------------------------------------------------------------------------------------------
 
         private bool WFA_SendEmails(int ProposalID, bool IsNewProcess, bool? IsApproved)
@@ -1103,6 +1139,7 @@ namespace WebApplication1.Controllers
                     wfa_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
                     wfa_obj.Lst_BU = db.BB_RD_WFA_BU.ToList();
                     wfa_obj.Lst_DealElements = db.BB_RD_WFA_Elements.ToList();
+                    wfa_obj.Lst_TypeOfCustomer = db.BB_RD_WFA_Customer_Type.ToList();
 
 
                     wfa_obj.Lst_Approver = new List<WFA_Approvers>();
@@ -1196,6 +1233,7 @@ namespace WebApplication1.Controllers
                         Line_ID = savedLineNr,
                         BU_ID = newLine.BU,
                         Elements_ID = newLine.DealElement,
+                        Customer_ID = newLine.TypeOfCustomer
                     };
 
                     if (bb_wfa_control.BU_ID != null && bb_wfa_control.Elements_ID != null)
@@ -1884,11 +1922,12 @@ namespace WebApplication1.Controllers
             public List<BB_RD_WFA_Condition_Type> Lst_Type { get; set; }
             public List<BB_RD_WFA_BU> Lst_BU { get; set; }
             public List<BB_RD_WFA_Elements> Lst_DealElements { get; set; }
+            public List<BB_RD_WFA_Customer_Type> Lst_TypeOfCustomer { get; set; }
 
             public int ID { get; set; }
             public int? BU { get; set; }
             public int? DealElement { get; set; }
-            public string TypeOfCustomer { get; set; }
+            public int? TypeOfCustomer { get; set; }
 
             public int? Level1_Approver { get; set; }
             public int? Level2_Approver { get; set; }

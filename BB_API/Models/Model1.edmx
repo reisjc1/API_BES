@@ -1345,6 +1345,15 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition_Type' does 
           <Property Name="Description" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_RD_WFA_Customer_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Customer" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Elements">
           <Key>
@@ -1448,6 +1457,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="WFA_ID" Type="int" />
           <Property Name="Line_ID" Type="int" />
+          <Property Name="Customer_ID" Type="int" />
           <Property Name="BU_ID" Type="int" />
           <Property Name="Elements_ID" Type="int" />
         </EntityType>
@@ -1764,6 +1774,12 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
     [BB_RD_WFA_Condition_Type].[Description] AS [Description]
     FROM [dbo].[BB_RD_WFA_Condition_Type] AS [BB_RD_WFA_Condition_Type]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="BB_RD_WFA_Customer_Type" EntityType="Self.BB_RD_WFA_Customer_Type" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_RD_WFA_Customer_Type].[ID] AS [ID], 
+    [BB_RD_WFA_Customer_Type].[Customer] AS [Customer]
+    FROM [dbo].[BB_RD_WFA_Customer_Type] AS [BB_RD_WFA_Customer_Type]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="BB_RD_WFA_Elements" EntityType="Self.BB_RD_WFA_Elements" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [BB_RD_WFA_Elements].[ID] AS [ID], 
@@ -1943,12 +1959,13 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_RD_WFA" EntityType="BB_DB_DEVModel.BB_RD_WFA" />
           <EntitySet Name="BB_RD_WFA_Approvers" EntityType="BB_DB_DEVModel.BB_RD_WFA_Approvers" />
           <EntitySet Name="BB_RD_WFA_Exception_Action" EntityType="BB_DB_DEVModel.BB_RD_WFA_Exception_Action" />
-          <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
           <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
           <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
           <EntitySet Name="BB_WFA_Approvers_Control" EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" />
           <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="BB_DB_DEVModel.BB_WFA_Workflow_Proposal" />
           <EntitySet Name="BB_WFA_Comments_Business" EntityType="BB_DB_DEVModel.BB_WFA_Comments_Business" />
+          <EntitySet Name="BB_RD_WFA_Customer_Type" EntityType="BB_DB_DEVModel.BB_RD_WFA_Customer_Type" />
+          <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3506,16 +3523,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="BB_WFA_Control">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="WFA_ID" Type="Int32" />
-          <Property Name="Line_ID" Type="Int32" />
-          <Property Name="BU_ID" Type="Int32" />
-          <Property Name="Elements_ID" Type="Int32" />
-        </EntityType>
         <EntityType Name="BB_WFA_Levels">
           <Key>
             <PropertyRef Name="ID" />
@@ -3575,6 +3582,24 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BB_RD_WFA_Customer_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Customer" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WFA_ID" Type="Int32" />
+          <Property Name="Line_ID" Type="Int32" />
+          <Property Name="Customer_ID" Type="Int32" />
+          <Property Name="BU_ID" Type="Int32" />
+          <Property Name="Elements_ID" Type="Int32" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5127,17 +5152,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_WFA_Control">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Control">
-              <MappingFragment StoreEntitySet="BB_WFA_Control">
-                <ScalarProperty Name="Elements_ID" ColumnName="Elements_ID" />
-                <ScalarProperty Name="BU_ID" ColumnName="BU_ID" />
-                <ScalarProperty Name="Line_ID" ColumnName="Line_ID" />
-                <ScalarProperty Name="WFA_ID" ColumnName="WFA_ID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_WFA_Levels">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Levels">
               <MappingFragment StoreEntitySet="BB_WFA_Levels">
@@ -5199,6 +5213,26 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_WFA_Customer_Type">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_WFA_Customer_Type">
+              <MappingFragment StoreEntitySet="BB_RD_WFA_Customer_Type">
+                <ScalarProperty Name="Customer" ColumnName="Customer" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Control">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Control">
+              <MappingFragment StoreEntitySet="BB_WFA_Control">
+                <ScalarProperty Name="Elements_ID" ColumnName="Elements_ID" />
+                <ScalarProperty Name="BU_ID" ColumnName="BU_ID" />
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+                <ScalarProperty Name="Line_ID" ColumnName="Line_ID" />
+                <ScalarProperty Name="WFA_ID" ColumnName="WFA_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

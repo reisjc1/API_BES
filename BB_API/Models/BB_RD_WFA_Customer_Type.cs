@@ -12,13 +12,9 @@ namespace WebApplication1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class BB_WFA_Control
+    public partial class BB_RD_WFA_Customer_Type
     {
         public int ID { get; set; }
-        public Nullable<int> WFA_ID { get; set; }
-        public Nullable<int> Line_ID { get; set; }
-        public Nullable<int> Customer_ID { get; set; }
-        public Nullable<int> BU_ID { get; set; }
-        public Nullable<int> Elements_ID { get; set; }
+        public string Customer { get; set; }
     }
 }
