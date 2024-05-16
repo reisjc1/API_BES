@@ -18,7 +18,7 @@ namespace WebApplication1.Models
         public Nullable<int> WFA_Workflow_Proposal_ID { get; set; }
         public Nullable<int> WFA_Control_ID { get; set; }
         public Nullable<int> WFA_Level_ID { get; set; }
-        public Nullable<int> Approver_ID { get; set; }
+        public string Approver_ID { get; set; }
         public Nullable<bool> IsApproved { get; set; }
         public Nullable<bool> IsComplete { get; set; }
     }

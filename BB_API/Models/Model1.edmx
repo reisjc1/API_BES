@@ -1436,7 +1436,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="WFA_Workflow_Proposal_ID" Type="int" />
           <Property Name="WFA_Control_ID" Type="int" />
           <Property Name="WFA_Level_ID" Type="int" />
-          <Property Name="Approver_ID" Type="int" />
+          <Property Name="Approver_ID" Type="nvarchar" MaxLength="128" />
           <Property Name="IsApproved" Type="bit" />
           <Property Name="IsComplete" Type="bit" />
         </EntityType>
@@ -1961,11 +1961,11 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_RD_WFA_Exception_Action" EntityType="BB_DB_DEVModel.BB_RD_WFA_Exception_Action" />
           <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
           <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
-          <EntitySet Name="BB_WFA_Approvers_Control" EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" />
           <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="BB_DB_DEVModel.BB_WFA_Workflow_Proposal" />
           <EntitySet Name="BB_WFA_Comments_Business" EntityType="BB_DB_DEVModel.BB_WFA_Comments_Business" />
           <EntitySet Name="BB_RD_WFA_Customer_Type" EntityType="BB_DB_DEVModel.BB_RD_WFA_Customer_Type" />
           <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
+          <EntitySet Name="BB_WFA_Approvers_Control" EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3548,18 +3548,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Action_ID" Type="Int32" />
           <Property Name="Level_ID" Type="Int32" />
         </EntityType>
-        <EntityType Name="BB_WFA_Approvers_Control">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="WFA_Workflow_Proposal_ID" Type="Int32" />
-          <Property Name="WFA_Control_ID" Type="Int32" />
-          <Property Name="WFA_Level_ID" Type="Int32" />
-          <Property Name="Approver_ID" Type="Int32" />
-          <Property Name="IsApproved" Type="Boolean" />
-          <Property Name="IsComplete" Type="Boolean" />
-        </EntityType>
         <EntityType Name="BB_WFA_Workflow_Proposal">
           <Key>
             <PropertyRef Name="ID" />
@@ -3600,6 +3588,18 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Customer_ID" Type="Int32" />
           <Property Name="BU_ID" Type="Int32" />
           <Property Name="Elements_ID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Approvers_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WFA_Workflow_Proposal_ID" Type="Int32" />
+          <Property Name="WFA_Control_ID" Type="Int32" />
+          <Property Name="WFA_Level_ID" Type="Int32" />
+          <Property Name="Approver_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="IsComplete" Type="Boolean" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5179,19 +5179,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_WFA_Approvers_Control">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Approvers_Control">
-              <MappingFragment StoreEntitySet="BB_WFA_Approvers_Control">
-                <ScalarProperty Name="IsComplete" ColumnName="IsComplete" />
-                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-                <ScalarProperty Name="Approver_ID" ColumnName="Approver_ID" />
-                <ScalarProperty Name="WFA_Level_ID" ColumnName="WFA_Level_ID" />
-                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
-                <ScalarProperty Name="WFA_Workflow_Proposal_ID" ColumnName="WFA_Workflow_Proposal_ID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_WFA_Workflow_Proposal">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Workflow_Proposal">
               <MappingFragment StoreEntitySet="BB_WFA_Workflow_Proposal">
@@ -5233,6 +5220,19 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
                 <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
                 <ScalarProperty Name="Line_ID" ColumnName="Line_ID" />
                 <ScalarProperty Name="WFA_ID" ColumnName="WFA_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Approvers_Control">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Approvers_Control">
+              <MappingFragment StoreEntitySet="BB_WFA_Approvers_Control">
+                <ScalarProperty Name="IsComplete" ColumnName="IsComplete" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="Approver_ID" ColumnName="Approver_ID" />
+                <ScalarProperty Name="WFA_Level_ID" ColumnName="WFA_Level_ID" />
+                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
+                <ScalarProperty Name="WFA_Workflow_Proposal_ID" ColumnName="WFA_Workflow_Proposal_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

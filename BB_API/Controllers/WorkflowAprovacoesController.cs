@@ -1086,8 +1086,19 @@ namespace WebApplication1.Controllers
         }
         // #######################################################################################
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("IsApprover")]
         public bool IsApprover(string UserID)
         {
+            using (var db = new BB_DB_DEVEntities2())
+            {
+                BB_WFA_Approvers_Control approver = db.BB_WFA_Approvers_Control.Where(ac=> ac.Approver_ID == UserID).FirstOrDefault();
+                if (approver != null)
+                {
+                    return true;
+                }
+            }
+            
             return false;
         }
 
