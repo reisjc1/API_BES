@@ -1090,7 +1090,7 @@ namespace WebApplication1.Controllers
         {
             using (var db = new BB_DB_DEVEntities2())
             {
-                BB_WFA_Approvers_Control approver = db.BB_WFA_Approvers_Control.Where(ac=> ac.Approver_ID == UserID).FirstOrDefault();
+                BB_WFA_Levels approver = db.BB_WFA_Levels.Where(l=> l.WFA_Approver_ID == UserID).FirstOrDefault();
                 if (approver != null)
                 {
                     return true;
