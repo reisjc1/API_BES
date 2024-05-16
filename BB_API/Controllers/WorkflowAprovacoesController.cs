@@ -1029,14 +1029,13 @@ namespace WebApplication1.Controllers
 
                     var query = from wp in db.BB_WFA_Workflow_Proposal
                                 join ac in db.BB_WFA_Approvers_Control on wp.ID equals ac.WFA_Workflow_Proposal_ID
-                                join a in db.BB_RD_WFA_Approvers on ac.Approver_ID equals a.ID
                                 join p in db.BB_Proposal on wp.Proposal_ID equals p.ID
                                 where wp.Proposal_ID == ProposalID
-                                select new { a.User_ID, p.CreatedBy };
+                                select new { ac.Approver_ID, p.CreatedBy };
 
                     var result = query.ToList();
 
-                    var userIds = result.Select(r => r.User_ID).ToList();
+                    var userIds = result.Select(r => r.Approver_ID).ToList();
 
                     using (var master = new masterEntities())
                     {
@@ -1045,7 +1044,7 @@ namespace WebApplication1.Controllers
                                           .ToList();
 
                         var approvers = (from r in result
-                                         join u in users on r.User_ID equals u.Id
+                                         join u in users on r.Approver_ID equals u.Id
                                          select new { u.Email, r.CreatedBy })
                                          .ToList();
                     
@@ -1818,7 +1817,6 @@ namespace WebApplication1.Controllers
                  // TODO possiveis inner joins
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    BB_RD_WFA_Approvers user = db.BB_RD_WFA_Approvers.Where(x => x.User_ID == user_ID).FirstOrDefault();
 
                     BB_WFA_Workflow_Proposal wf_p = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID && x.Finished == false).FirstOrDefault();
 
@@ -1828,7 +1826,7 @@ namespace WebApplication1.Controllers
                     }
 
                     BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control
-                                                                .Where(x => x.Approver_ID == user.ID 
+                                                                .Where(x => x.Approver_ID == user_ID 
                                                                     && x.WFA_Workflow_Proposal_ID == wf_p.ID 
                                                                     && x.WFA_Control_ID == control_ID 
                                                                     && x.WFA_Level_ID == level_ID)
