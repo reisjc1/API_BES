@@ -114,13 +114,13 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA" Width="1.5" PointX="30.375" PointY="19.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Approvers" Width="1.5" PointX="13.375" PointY="23.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Exception_Action" Width="1.5" PointX="31.375" PointY="3.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Levels" Width="1.5" PointX="30.375" PointY="10.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Exception" Width="1.5" PointX="31.375" PointY="14.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Workflow_Proposal" Width="1.5" PointX="31.375" PointY="30.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Comments_Business" Width="1.5" PointX="32.375" PointY="6.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Customer_Type" Width="1.5" PointX="32.375" PointY="9.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Control" Width="1.5" PointX="32.375" PointY="18.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" Width="1.5" PointX="31.375" PointY="26.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Levels" Width="1.5" PointX="32.375" PointY="21.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

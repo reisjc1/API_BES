@@ -349,7 +349,7 @@ namespace WebApplication1.Controllers
         }
 
         // ######################################################################################
-        public IHttpActionResult ADD_BB_WFA_Levels(int? WFA_Control_ID, string Name, int? WFA_Approver_ID, int? Condition_ID, float? Condition_Value, int? Type_ID)
+        public IHttpActionResult ADD_BB_WFA_Levels(int? WFA_Control_ID, string Name, string WFA_Approver_ID, int? Condition_ID, float? Condition_Value, int? Type_ID)
         {
             try
             {
@@ -487,13 +487,12 @@ namespace WebApplication1.Controllers
                         {
                             using (var dbX = new masterEntities())
                             {
-                                int? approverID = db.BB_WFA_Levels
+                                string approverID = db.BB_WFA_Levels
                                                     .Where(x => x.WFA_Control_ID == item.ID && x.Level == level.Level)
                                                     .Select(x => x.WFA_Approver_ID).FirstOrDefault();
 
-                                string userID = db.BB_RD_WFA_Approvers.Where(x => x.ID == approverID).Select(x => x.User_ID).FirstOrDefault();
-
-                                string userName = dbX.AspNetUsers.Where(x => x.Id == userID).Select(x => x.DisplayName).FirstOrDefault();
+                                
+                                string userName = dbX.AspNetUsers.Where(x => x.Id == approverID).Select(x => x.DisplayName).FirstOrDefault();
 
                                 Level levelX = new Level()
                                 {
@@ -1525,13 +1524,12 @@ namespace WebApplication1.Controllers
                         {
                             using (var dbX = new masterEntities())
                             {
-                                int? approverID = db.BB_WFA_Levels
+                                string approverID = db.BB_WFA_Levels
                                                     .Where(x => x.WFA_Control_ID == item.ID && x.Level == level.Level)
                                                     .Select(x => x.WFA_Approver_ID).FirstOrDefault();
 
-                                string userID = db.BB_RD_WFA_Approvers.Where(x => x.ID == approverID).Select(x => x.User_ID).FirstOrDefault();
 
-                                string userName = dbX.AspNetUsers.Where(x => x.Id == userID).Select(x => x.DisplayName).FirstOrDefault();
+                                string userName = dbX.AspNetUsers.Where(x => x.Id == approverID).Select(x => x.DisplayName).FirstOrDefault();
 
                                 Level levelX = new Level()
                                 {
@@ -1911,11 +1909,11 @@ namespace WebApplication1.Controllers
             public int? DealElement { get; set; }
             public int? TypeOfCustomer { get; set; }
 
-            public int? Level1_Approver { get; set; }
-            public int? Level2_Approver { get; set; }
-            public int? Level3_Approver { get; set; }
-            public int? Level4_Approver { get; set; }
-            public int? Level5_Approver { get; set; }
+            public string Level1_Approver { get; set; }
+            public string Level2_Approver { get; set; }
+            public string Level3_Approver { get; set; }
+            public string Level4_Approver { get; set; }
+            public string Level5_Approver { get; set; }
 
             public int? Level1_Condition { get; set; }
             public int? Level2_Condition { get; set; }
