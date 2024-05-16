@@ -799,7 +799,8 @@ namespace WebApplication1.Controllers
                             Condition_ID = WFA_Create_Exception.Condition,
                             Condition_Value = WFA_Create_Exception.Condition_Value,
                             Action_ID = WFA_Create_Exception.Action,
-                            Level_ID = WFA_Create_Exception.LevelNr
+                            Level_ID = WFA_Create_Exception.LevelNr,
+                            WFA_Control_ID = db.BB_WFA_Control.Where(c => c.Line_ID == WFA_Create_Exception.LineNr).Select(c => c.ID).FirstOrDefault()
                         };
 
                         //verificar se está tudo preenchido
@@ -882,26 +883,16 @@ namespace WebApplication1.Controllers
                         BB_Proposal_Quote quote = db.BB_Proposal_Quote
                                                     .Where(q=>q.Proposal_ID == ProposalID)
                                                     .FirstOrDefault();
+                        
+                        var approversControlToDelete = db.BB_WFA_Approvers_Control.ToList();
+                        var matchedApprovers = approversControlToDelete
+                            .Where(ac => checkExistent.Any(ce => ce.ID == ac.WFA_Workflow_Proposal_ID))
+                            .ToList();
 
-                        if(quote.ModifiedTime >= DateTime.Now.AddMinutes(-1))
-                        {
-                            message = "Ya hay un proceso en marcha. " +
-                                "Tendrá que esperar una respuesta. " +
-                                "Si se han realizado cambios, debe esperar 1 minuto antes de realizar una nueva solicitud de aprobación.";
-                            return Ok(message);
-                        }
-                        else
-                        {
-                            var approversControlToDelete = db.BB_WFA_Approvers_Control.ToList();
-                            var matchedApprovers = approversControlToDelete
-                                .Where(ac => checkExistent.Any(ce => ce.ID == ac.WFA_Workflow_Proposal_ID))
-                                .ToList();
+                        db.BB_WFA_Approvers_Control.RemoveRange(matchedApprovers);
+                        db.BB_WFA_Workflow_Proposal.RemoveRange(checkExistent);
+                        db.SaveChanges();
 
-                            db.BB_WFA_Approvers_Control.RemoveRange(matchedApprovers);
-                            db.BB_WFA_Workflow_Proposal.RemoveRange(checkExistent);
-                            db.SaveChanges();
-
-                        }
                     }
 
                     //Verifica se existe um pedido criado mas não iniciado.
@@ -1502,7 +1493,6 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     // apagar os registos anteriores
-
                     BB_WFA_Exception savedException = db.BB_WFA_Exception.Where(x => x.Line_ID == exceptionToEdit.LineNr).FirstOrDefault();
 
                     db.BB_WFA_Exception.Remove(savedException);
@@ -1515,7 +1505,8 @@ namespace WebApplication1.Controllers
                         Condition_ID = exceptionToEdit.Condition,
                         Condition_Value = exceptionToEdit.Condition_Value,
                         Action_ID = exceptionToEdit.Action,
-                        Level_ID = exceptionToEdit.LevelNr
+                        Level_ID = exceptionToEdit.LevelNr,
+                        WFA_Control_ID = db.BB_WFA_Control.Where(c => c.Line_ID == exceptionToEdit.LineNr).Select(c => c.ID).FirstOrDefault()
                     };
 
                     db.BB_WFA_Exception.Add(newException);
@@ -2010,7 +2001,6 @@ namespace WebApplication1.Controllers
             public int? Action { get; set; }
             public double? Condition_Value { get; set; }
             public int? LevelNr { get; set; }
-
         }
 
         //Objeto com as linhas WFA e Exceções (tudo strings)
