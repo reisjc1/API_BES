@@ -18,6 +18,7 @@ using System.Data.Entity;
 using System.Windows.Interop;
 using WebApplication1.BLL;
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
 namespace WebApplication1.Controllers
 {
@@ -1018,6 +1019,45 @@ namespace WebApplication1.Controllers
 
         // HELPERS --------------------------------------------------------------------------------------------
 
+        private void deleteIfPassedValidation(WFAValidations_OneShot validations)
+        {
+            bool passedValidation = true;
+            foreach(var wrp in validations.Lst_BBP_Quote)
+            {
+                if(wrp.passedValidation == false)
+                    passedValidation = false;
+            }
+
+            foreach (var wrp in validations.Lst_BBP_RS_Quote)
+            {
+                if (wrp.passedValidation == false)
+                    passedValidation = false;
+            }
+
+            if (passedValidation)
+            {
+                try
+                {
+                    using (var db = new BB_DB_DEVEntities2())
+                    {
+                        var proposal = db.BB_WFA_Workflow_Proposal.Where(wp => wp.IsCompleted == false).FirstOrDefault();
+                        if(proposal != null)
+                        {
+                            BB_WFA_Approvers_Control control = db.BB_WFA_Approvers_Control.Where(ac => ac.WFA_Workflow_Proposal_ID == proposal.ID).FirstOrDefault();
+                            
+                            db.BB_WFA_Workflow_Proposal.Remove(proposal);
+                            db.BB_WFA_Approvers_Control.Remove(control);
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+
+                }
+            }
+
+        }
+
         private bool WFA_SendEmails(int ProposalID, bool IsNewProcess, bool? IsApproved)
         {
             try {
@@ -1713,10 +1753,13 @@ namespace WebApplication1.Controllers
                     rdr.Close();
                 }
             }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }          
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            deleteIfPassedValidation(wrp);
+
             return Ok(wrp);
         }
 
