@@ -34,7 +34,10 @@ namespace WebApplication1.Controllers
             //List<BB_Data_Integration> lst_BBDI = db.BB_Data_Integration.ToList();
             //return db.BB_Data_Integration.Take(10).Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
             //return lst_BBDI.Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
-            return db.BB_Data_Integration.Select(x => new DIItem { ID = x.ID, CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
+            return db.BB_Data_Integration.Select(x => new DIItem { ID = x.ID, CodeRef = x.CodeRef, 
+                   Family = x.Family, Name = x.Description_English,Description = x.Description_Portuguese, 
+                   PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU,
+                   BOM = x.BOM}).ToList();
         }
 
         public BB_Data_Integration Get(int id)
@@ -1355,6 +1358,8 @@ namespace WebApplication1.Controllers
         public bool? IsMarginBEU { get; set; }
 
         public double? MarginBEU { get; set; }
+
+        public string BOM { get; set; }
     }
     public class DI_Families
     {
