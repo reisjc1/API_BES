@@ -459,7 +459,7 @@ namespace WebApplication1.Controllers
         */
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetWFATable")]
-        public IHttpActionResult GetWFATable()
+        public IHttpActionResult GetWFATable(int WFA_ID)
         {
             try
             {
@@ -467,7 +467,7 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    List<BB_WFA_Control> WFA_Control_lst = db.BB_WFA_Control.ToList();
+                    List<BB_WFA_Control> WFA_Control_lst = db.BB_WFA_Control.Where(x => x.WFA_ID == WFA_ID).ToList();
 
                     foreach (var item in WFA_Control_lst)
                     {
@@ -1323,7 +1323,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetWFAExceptions")]
-        public IHttpActionResult GetWFAExceptions()
+        public IHttpActionResult GetWFAExceptions(int WFA_ID)
         {
             try
             {
@@ -1332,7 +1332,12 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    wfa_ex_lst = db.BB_WFA_Exception.ToList();
+                    // todas s excessoes com o WFA_ID passado por parametro
+                    wfa_ex_lst = (from exception in db.BB_WFA_Exception
+                                  join control in db.BB_WFA_Control on exception.WFA_Control_ID equals control.ID
+                                  where control.WFA_ID == WFA_ID
+                                  select exception).ToList();
+
 
                     foreach (var exception in wfa_ex_lst)
                     {
