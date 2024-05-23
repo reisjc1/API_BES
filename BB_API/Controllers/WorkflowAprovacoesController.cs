@@ -459,8 +459,8 @@ namespace WebApplication1.Controllers
         }
         */
         [AcceptVerbs("GET", "POST")]
-        [ActionName("GetWFATable")]
-        public IHttpActionResult GetWFATable(int WFA_ID)
+        [ActionName("GetWFAs")]
+        public IHttpActionResult GetWFAs(int WFA_ID)
         {
             try
             {
@@ -477,7 +477,7 @@ namespace WebApplication1.Controllers
 
                         WFA_Listagem wfa = new WFA_Listagem()
                         {
-                            Line = item.Line_ID,
+                            Line = item.Line_ID ?? 1,
                             BU = db.BB_RD_WFA_BU.Where(x => x.ID == item.BU_ID).Select(x => x.Description).FirstOrDefault(),
                             DealElements = db.BB_RD_WFA_Elements.Where(x => x.ID == item.Elements_ID).Select(x => x.Description).FirstOrDefault(),
                             TypeOfCustomer = db.BB_RD_WFA_Customer_Type.Where(x => x.ID == item.Customer_ID).Select(x => x.Customer).FirstOrDefault(),
@@ -586,26 +586,22 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    //HARCODED 1 NO WFA_ID, DEVERÁ SER RECEBIDO POR PARAMETRO
-                    var aux = db.BB_WFA_Control.Where(w => w.WFA_ID == 1)
+                    var aux = db.BB_WFA_Control.Where(w => w.WFA_ID == newLine.WFA_ID)
                                                .OrderByDescending(x => x.Line_ID)
                                                .Select(x => x.Line_ID)
                                                .ToList();
 
-
-                    int? lastLine = db.BB_WFA_Control.Any() ? aux.FirstOrDefault() : 0;
+                    int lastLine = aux.Count > 0 ? aux.FirstOrDefault() ?? 0 : 0;
 
                     BB_WFA_Control bb_wfa_control = new BB_WFA_Control()
                     {
-                        WFA_ID = 1,
+                        WFA_ID = newLine.WFA_ID,
                         Line_ID = lastLine + 1,
                         BU_ID = newLine.BU,
                         Elements_ID = newLine.DealElement,
                         Customer_ID = newLine.TypeOfCustomer
                     };
 
-                    if (bb_wfa_control.BU_ID != null && bb_wfa_control.Elements_ID != null)
-                    {
                         db.BB_WFA_Control.Add(bb_wfa_control);
                         db.SaveChanges();
 
@@ -689,8 +685,7 @@ namespace WebApplication1.Controllers
                             bb_wfa_level_5.Condition_Value != null && bb_wfa_level_5.Type_ID != null)
                         {
                             db.BB_WFA_Levels.Add(bb_wfa_level_5);
-                        }
-                    }
+                        }                   
 
                     db.SaveChanges();
 
@@ -709,7 +704,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("EditWFALine")]
-        public IHttpActionResult EditWFALine(int lineNr)
+        public IHttpActionResult EditWFALine(int lineNr, int WFA_ID)
         {
             try
             {
@@ -717,59 +712,61 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    BB_WFA_Control bb_wfa_control = db.BB_WFA_Control.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+                    BB_WFA_Control bb_wfa_control = db.BB_WFA_Control.Where(x => x.Line_ID == lineNr && x.WFA_ID == WFA_ID).FirstOrDefault();
 
-                    // procurar toda a info sobre o objeto
-                    wfa_obj.ID = bb_wfa_control.ID;
-                    wfa_obj.BU = bb_wfa_control.BU_ID;
-                    wfa_obj.DealElement = bb_wfa_control.Elements_ID;
-                    wfa_obj.TypeOfCustomer = bb_wfa_control.Customer_ID;
-
-                    List<BB_WFA_Levels> bb_wfa_levels = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == bb_wfa_control.ID).ToList();
-
-                    for (int i = 0; i < bb_wfa_levels.Count(); i++)
+                    if(bb_wfa_control != null)
                     {
-                        if (bb_wfa_levels[i].WFA_Control_ID != null)
+                        // procurar toda a info sobre o objeto
+                        wfa_obj.ID = bb_wfa_control.ID;
+                        wfa_obj.BU = bb_wfa_control.BU_ID;
+                        wfa_obj.DealElement = bb_wfa_control.Elements_ID;
+                        wfa_obj.TypeOfCustomer = bb_wfa_control.Customer_ID;
+                        wfa_obj.WFA_ID = WFA_ID;
+
+                        List<BB_WFA_Levels> bb_wfa_levels = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == bb_wfa_control.ID).ToList();
+
+                        for (int i = 0; i < bb_wfa_levels.Count(); i++)
                         {
-                            switch (i)
+                            if (bb_wfa_levels[i].WFA_Control_ID != null)
                             {
-                                case 0:
-                                    wfa_obj.Level1_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                    wfa_obj.Level1_Condition = bb_wfa_levels[i].Condition_ID;
-                                    wfa_obj.Level1_Type = bb_wfa_levels[i].Type_ID;
-                                    wfa_obj.Percentage_1 = (int?)bb_wfa_levels[i].Condition_Value;
-                                    break;
-                                case 1:
-                                    wfa_obj.Level2_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                    wfa_obj.Level2_Condition = bb_wfa_levels[i].Condition_ID;
-                                    wfa_obj.Level2_Type = bb_wfa_levels[i].Type_ID;
-                                    wfa_obj.Percentage_2 = (int?)bb_wfa_levels[i].Condition_Value;
-                                    break;
-                                case 2:
-                                    wfa_obj.Level3_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                    wfa_obj.Level3_Condition = bb_wfa_levels[i].Condition_ID;
-                                    wfa_obj.Level3_Type = bb_wfa_levels[i].Type_ID;
-                                    wfa_obj.Percentage_3 = (int?)bb_wfa_levels[i].Condition_Value;
-                                    break;
-                                case 3:
-                                    wfa_obj.Level4_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                    wfa_obj.Level4_Condition = bb_wfa_levels[i].Condition_ID;
-                                    wfa_obj.Level4_Type = bb_wfa_levels[i].Type_ID;
-                                    wfa_obj.Percentage_4 = (int?)bb_wfa_levels[i].Condition_Value;
-                                    break;
-                                case 4:
-                                    wfa_obj.Level5_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                    wfa_obj.Level5_Condition = bb_wfa_levels[i].Condition_ID;
-                                    wfa_obj.Level5_Type = bb_wfa_levels[i].Type_ID;
-                                    wfa_obj.Percentage_5 = (int?)bb_wfa_levels[i].Condition_Value;
-                                    break;
+                                switch (i)
+                                {
+                                    case 0:
+                                        wfa_obj.Level1_Approver = bb_wfa_levels[i].WFA_Approver_ID;
+                                        wfa_obj.Level1_Condition = bb_wfa_levels[i].Condition_ID;
+                                        wfa_obj.Level1_Type = bb_wfa_levels[i].Type_ID;
+                                        wfa_obj.Percentage_1 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        break;
+                                    case 1:
+                                        wfa_obj.Level2_Approver = bb_wfa_levels[i].WFA_Approver_ID;
+                                        wfa_obj.Level2_Condition = bb_wfa_levels[i].Condition_ID;
+                                        wfa_obj.Level2_Type = bb_wfa_levels[i].Type_ID;
+                                        wfa_obj.Percentage_2 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        break;
+                                    case 2:
+                                        wfa_obj.Level3_Approver = bb_wfa_levels[i].WFA_Approver_ID;
+                                        wfa_obj.Level3_Condition = bb_wfa_levels[i].Condition_ID;
+                                        wfa_obj.Level3_Type = bb_wfa_levels[i].Type_ID;
+                                        wfa_obj.Percentage_3 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        break;
+                                    case 3:
+                                        wfa_obj.Level4_Approver = bb_wfa_levels[i].WFA_Approver_ID;
+                                        wfa_obj.Level4_Condition = bb_wfa_levels[i].Condition_ID;
+                                        wfa_obj.Level4_Type = bb_wfa_levels[i].Type_ID;
+                                        wfa_obj.Percentage_4 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        break;
+                                    case 4:
+                                        wfa_obj.Level5_Approver = bb_wfa_levels[i].WFA_Approver_ID;
+                                        wfa_obj.Level5_Condition = bb_wfa_levels[i].Condition_ID;
+                                        wfa_obj.Level5_Type = bb_wfa_levels[i].Type_ID;
+                                        wfa_obj.Percentage_5 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        break;
+                                }
                             }
                         }
+
                     }
-
-
                 }
-
                 return Ok(wfa_obj);
             }
             catch (Exception ex)
@@ -1228,7 +1225,7 @@ namespace WebApplication1.Controllers
                 {
                     // apagar os registos anteriores
 
-                    BB_WFA_Control savedWFA = db.BB_WFA_Control.Where(x => x.ID == newLine.ID).FirstOrDefault();
+                    BB_WFA_Control savedWFA = db.BB_WFA_Control.Where(x => x.ID == newLine.ID && x.WFA_ID == newLine.WFA_ID).FirstOrDefault();
 
                     int savedLineNr = (int)savedWFA.Line_ID;
 
@@ -1242,15 +1239,13 @@ namespace WebApplication1.Controllers
 
                     BB_WFA_Control bb_wfa_control = new BB_WFA_Control()
                     {
-                        WFA_ID = 1,
+                        WFA_ID = newLine.WFA_ID,
                         Line_ID = savedLineNr,
                         BU_ID = newLine.BU,
                         Elements_ID = newLine.DealElement,
                         Customer_ID = newLine.TypeOfCustomer
                     };
 
-                    if (bb_wfa_control.BU_ID != null && bb_wfa_control.Elements_ID != null)
-                    {
                         db.BB_WFA_Control.Add(bb_wfa_control);
                         db.SaveChanges();
 
@@ -1334,8 +1329,7 @@ namespace WebApplication1.Controllers
                             bb_wfa_level_5.Condition_Value != null && bb_wfa_level_5.Type_ID != null)
                         {
                             db.BB_WFA_Levels.Add(bb_wfa_level_5);
-                        }
-                    }
+                        }                  
 
                     db.SaveChanges();
 
@@ -1947,6 +1941,7 @@ namespace WebApplication1.Controllers
             public int? BU { get; set; }
             public int? DealElement { get; set; }
             public int? TypeOfCustomer { get; set; }
+            public int? WFA_ID { get; set; }
 
             public string Level1_Approver { get; set; }
             public string Level2_Approver { get; set; }
