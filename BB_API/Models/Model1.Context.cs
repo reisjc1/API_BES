@@ -126,12 +126,12 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_RD_WFA> BB_RD_WFA { get; set; }
         public virtual DbSet<BB_RD_WFA_Approvers> BB_RD_WFA_Approvers { get; set; }
         public virtual DbSet<BB_RD_WFA_Exception_Action> BB_RD_WFA_Exception_Action { get; set; }
-        public virtual DbSet<BB_WFA_Exception> BB_WFA_Exception { get; set; }
         public virtual DbSet<BB_WFA_Workflow_Proposal> BB_WFA_Workflow_Proposal { get; set; }
         public virtual DbSet<BB_WFA_Comments_Business> BB_WFA_Comments_Business { get; set; }
         public virtual DbSet<BB_RD_WFA_Customer_Type> BB_RD_WFA_Customer_Type { get; set; }
         public virtual DbSet<BB_WFA_Control> BB_WFA_Control { get; set; }
         public virtual DbSet<BB_WFA_Approvers_Control> BB_WFA_Approvers_Control { get; set; }
         public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
+        public virtual DbSet<BB_WFA_Exception> BB_WFA_Exception { get; set; }
     }
 }

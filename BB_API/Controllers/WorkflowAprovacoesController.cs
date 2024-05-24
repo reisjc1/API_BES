@@ -786,7 +786,7 @@ namespace WebApplication1.Controllers
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    if (!db.BB_WFA_Exception.Where(x => x.Line_ID == WFA_Create_Exception.LineNr).Any())
+                    if (!db.BB_WFA_Exception.Where(x => x.Line_ID == WFA_Create_Exception.LineNr && x.WFA_ID == WFA_Create_Exception.WFA_ID).Any())
                     {
                         //criar o objeto da exceção, com base no que é passado por parâmero
                         BB_WFA_Exception exception = new BB_WFA_Exception()
@@ -797,7 +797,8 @@ namespace WebApplication1.Controllers
                             Condition_Value = WFA_Create_Exception.Condition_Value,
                             Action_ID = WFA_Create_Exception.Action,
                             Level_ID = WFA_Create_Exception.LevelNr,
-                            WFA_Control_ID = db.BB_WFA_Control.Where(c => c.Line_ID == WFA_Create_Exception.LineNr).Select(c => c.ID).FirstOrDefault()
+                            WFA_ID = WFA_Create_Exception.WFA_ID,
+                            WFA_Control_ID = db.BB_WFA_Control.Where(c => c.Line_ID == WFA_Create_Exception.LineNr && c.WFA_ID == WFA_Create_Exception.WFA_ID).Select(c => c.ID).FirstOrDefault()
                         };
 
                         //verificar se está tudo preenchido
@@ -826,7 +827,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("EditWFAExceptiom")]
-        public IHttpActionResult EditWFAExceptiom(int lineNr)
+        public IHttpActionResult EditWFAExceptiom(int lineNr, int WFA_ID)
         {
             try
             {
@@ -834,12 +835,13 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    BB_WFA_Exception bb_wfa_exception = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+                    BB_WFA_Exception bb_wfa_exception = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr && x.WFA_ID == WFA_ID).FirstOrDefault();
 
                     wfa_exception_obj.ID = bb_wfa_exception.ID;
                     wfa_exception_obj.LevelNr = bb_wfa_exception.Level_ID;
                     wfa_exception_obj.LineNr = bb_wfa_exception.Line_ID;
                     wfa_exception_obj.Condition_Value = bb_wfa_exception.Condition_Value;
+                    wfa_exception_obj.WFA_ID = WFA_ID;
 
                     wfa_exception_obj.Type = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == bb_wfa_exception.Type_ID).Select(x => x.ID).FirstOrDefault();
                     wfa_exception_obj.Condition = db.BB_RD_WFA_Condition.Where(x => x.ID == bb_wfa_exception.Condition_ID).Select(x => x.ID).FirstOrDefault();
@@ -950,14 +952,14 @@ namespace WebApplication1.Controllers
         //####################################################################
 
         [AcceptVerbs("GET", "POST")]
-        [ActionName("DeleteWFAExceptiom")]
-        public IHttpActionResult DeleteWFAExceptiom(int lineNr)
+        [ActionName("DeleteWFAException")]
+        public IHttpActionResult DeleteWFAException(int lineNr, int WFA_ID)
         {
             try
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    BB_WFA_Exception bb_wfa_exception = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+                    BB_WFA_Exception bb_wfa_exception = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr && x.WFA_ID == WFA_ID).FirstOrDefault();
 
                     db.BB_WFA_Exception.Remove(bb_wfa_exception);
                     db.SaveChanges();
@@ -977,15 +979,15 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("DeleteWFALine")]
-        public IHttpActionResult DeleteWFALine(int lineNr)
+        public IHttpActionResult DeleteWFALine(int lineNr, int WFA_ID)
         {
             try
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    BB_WFA_Control bb_wfa = db.BB_WFA_Control.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+                    BB_WFA_Control bb_wfa = db.BB_WFA_Control.Where(x => x.Line_ID == lineNr && x.WFA_ID == WFA_ID).FirstOrDefault();
 
-                    List<BB_WFA_Exception> aggregatedExceptions = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).ToList();
+                    List<BB_WFA_Exception> aggregatedExceptions = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr && x.WFA_ID == WFA_ID).ToList();
 
                     List<BB_WFA_Levels> wfa_levels = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == bb_wfa.ID).ToList();
 
@@ -1357,11 +1359,13 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    // todas s excessoes com o WFA_ID passado por parametro
-                    wfa_ex_lst = (from exception in db.BB_WFA_Exception
-                                  join control in db.BB_WFA_Control on exception.WFA_Control_ID equals control.ID
-                                  where control.WFA_ID == WFA_ID
-                                  select exception).ToList();
+                    // todas as excessoes com o WFA_ID passado por parametro
+                    //wfa_ex_lst = (from exception in db.BB_WFA_Exception
+                    //              join control in db.BB_WFA_Control on exception.WFA_Control_ID equals control.ID
+                    //              where control.WFA_ID == WFA_ID
+                    //              select exception).ToList();
+
+                    wfa_ex_lst = db.BB_WFA_Exception.Where(x => x.WFA_ID == WFA_ID).ToList();
 
 
                     foreach (var exception in wfa_ex_lst)
@@ -1395,7 +1399,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetCreateWFAExceptionDropdowns")]
-        public IHttpActionResult GetCreateWFAExceptionDropdowns()
+        public IHttpActionResult GetCreateWFAExceptionDropdowns(int WFA_ID)
         {
             try
             {
@@ -1404,7 +1408,7 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     // Popular as dropdowns
-                    wfa_create_exception_obj.Lst_LineNr = db.BB_WFA_Control.OrderBy(l => l.Line_ID).Select(x => x.Line_ID).ToList();
+                    wfa_create_exception_obj.Lst_LineNr = db.BB_WFA_Control.Where(x => x.WFA_ID == WFA_ID).OrderBy(l => l.Line_ID).Select(x => x.Line_ID).ToList();
                     wfa_create_exception_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
                     wfa_create_exception_obj.Lst_Condition = db.BB_RD_WFA_Condition.ToList();
                     wfa_create_exception_obj.Lst_Action = db.BB_RD_WFA_Exception_Action.ToList();
@@ -1449,7 +1453,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetWFAExceptionTranslated")]
-        public IHttpActionResult GetWFAExceptionTranslated(int lineNr)
+        public IHttpActionResult GetWFAExceptionTranslated(int lineNr, int WFA_ID)
         {
             try
             {
@@ -1458,13 +1462,14 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    wfa_ex_lst = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr).FirstOrDefault();
+                    wfa_ex_lst = db.BB_WFA_Exception.Where(x => x.Line_ID == lineNr && x.WFA_ID == WFA_ID).FirstOrDefault();
 
                     wfa_ex_translated_lst.ID = wfa_ex_lst.ID;
                     wfa_ex_translated_lst.WFA_Control_ID = wfa_ex_lst.WFA_Control_ID;
                     wfa_ex_translated_lst.Line_ID = wfa_ex_lst.Line_ID;
                     wfa_ex_translated_lst.Level_ID = wfa_ex_lst.Level_ID;
                     wfa_ex_translated_lst.Condition_Value = wfa_ex_lst.Condition_Value;
+                    wfa_ex_translated_lst.WFA_ID = wfa_ex_lst.WFA_ID;
                     wfa_ex_translated_lst.Action_ID = db.BB_RD_WFA_Exception_Action.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Name).FirstOrDefault();
                     wfa_ex_translated_lst.Condition_ID = db.BB_RD_WFA_Condition.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Condition).FirstOrDefault();
                     wfa_ex_translated_lst.Type_ID = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == wfa_ex_lst.Action_ID).Select(x => x.Description).FirstOrDefault();
@@ -1505,6 +1510,7 @@ namespace WebApplication1.Controllers
                         Condition_Value = exceptionToEdit.Condition_Value,
                         Action_ID = exceptionToEdit.Action,
                         Level_ID = exceptionToEdit.LevelNr,
+                        WFA_ID = exceptionToEdit.WFA_ID,
                         WFA_Control_ID = db.BB_WFA_Control.Where(c => c.Line_ID == exceptionToEdit.LineNr).Select(c => c.ID).FirstOrDefault()
                     };
 
@@ -1984,6 +1990,7 @@ namespace WebApplication1.Controllers
             public Nullable<double> Condition_Value { get; set; }
             public string Action_ID { get; set; }
             public Nullable<int> Level_ID { get; set; }
+            public Nullable<int> WFA_ID { get; set; }
         }
 
         public class WFA_CreateException
@@ -2001,6 +2008,7 @@ namespace WebApplication1.Controllers
             public int? Action { get; set; }
             public double? Condition_Value { get; set; }
             public int? LevelNr { get; set; }
+            public int? WFA_ID { get; set; }
         }
 
         //Objeto com as linhas WFA e Exceções (tudo strings)

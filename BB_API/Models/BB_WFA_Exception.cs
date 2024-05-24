@@ -15,6 +15,7 @@ namespace WebApplication1.Models
     public partial class BB_WFA_Exception
     {
         public int ID { get; set; }
+        public Nullable<int> WFA_ID { get; set; }
         public Nullable<int> WFA_Control_ID { get; set; }
         public Nullable<int> Line_ID { get; set; }
         public Nullable<int> Type_ID { get; set; }
