@@ -50,6 +50,8 @@ namespace WebApplication1.Models
 
         public Comission Comission { get; set; }
 
+        public ClientApproval ClientApproval { get; set; }
+
         //public List<BB_Equipamentos> Equipamentos { get; set; }
     }
 
@@ -836,5 +838,14 @@ namespace WebApplication1.Models
 
         public double vvaT { get; set; }
         public double totalT { get; set; }
+    }
+
+    public class ClientApproval
+    {
+        public List<LD_DocumentClassification> DocumentTypes { get; set; }
+        public List<LD_DocumentProposal> Documents { get; set; }
+        public List<BB_Proposal_Contacts_Documentation> DocumentationContacts { get; set; }
+        public List<BB_Proposal_Contacts_Signing> SigningContacts { get; set; }
+
     }
 }

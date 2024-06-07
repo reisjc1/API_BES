@@ -627,7 +627,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LD_DocumentProposal.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LD_Email_Log.cs">
       <DependentUpon>LeaseDesk.tt</DependentUpon>
