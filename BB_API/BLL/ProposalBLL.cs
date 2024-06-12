@@ -1718,7 +1718,7 @@ namespace WebApplication1.BLL
                 bool? IsMultipleContract = null;
 
                 IsMultipleContract = p.Draft.details.IsMultipleContract ?? false;
-
+                DateTime? createDatetime = p.Draft.details.CreatedTime <= DateTime.Parse("01/01/2000") ? DateTime.Now : p.Draft.details.CreatedTime;
                 BB_Proposal bb_proposal = new BB_Proposal()
                 {
                     AccountManager = p.Draft.details.AccountManager,
@@ -1727,7 +1727,7 @@ namespace WebApplication1.BLL
                     CRM_QUOTE_ID = p.Draft.details.CRM_QUOTE_ID,
                     Description = p.Draft.details.Description,
                     CreatedBy = p.Draft.details.CreatedBy,
-                    CreatedTime = DateTime.Now,
+                    CreatedTime = createDatetime,
                     ModifiedBy = p.Draft.details.CreatedBy,
                     ModifiedTime = DateTime.Now,
                     Name = p.Draft.details.Name,
