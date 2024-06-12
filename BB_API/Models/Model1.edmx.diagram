@@ -121,6 +121,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" Width="1.5" PointX="31.375" PointY="26.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Levels" Width="1.5" PointX="32.375" PointY="21.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Exception" Width="1.5" PointX="30.375" PointY="12.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentProposal" Width="1.5" PointX="32.375" PointY="12.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

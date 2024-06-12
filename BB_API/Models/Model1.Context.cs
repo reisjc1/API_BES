@@ -133,5 +133,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_Approvers_Control> BB_WFA_Approvers_Control { get; set; }
         public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
         public virtual DbSet<BB_WFA_Exception> BB_WFA_Exception { get; set; }
+        public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
     }
 }

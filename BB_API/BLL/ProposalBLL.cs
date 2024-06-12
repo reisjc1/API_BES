@@ -1151,6 +1151,9 @@ namespace WebApplication1.BLL
                         ex.Message.ToString();
                     }
 
+                    //Contacts_Documentation
+                    CreateContactsDocumentation(p, ProposalID);
+
                     err.ProposalObj = new ProposalRootObject();
                     err.ProposalObj.Draft = p.Draft;
                     return err;
@@ -1609,6 +1612,25 @@ namespace WebApplication1.BLL
                     term.Alocadora = bb_Proposal_PrazoDiferenciado.Alocadora;
                     term.IsComplete = bb_Proposal_PrazoDiferenciado.IsComplete;
                     err.ProposalObj.Draft.financing.diffTerm = term;
+                }
+
+                // Client Approval
+                err.ProposalObj.ClientApproval = new ClientApproval();
+                List<BB_Proposal_Contacts_Signing> signingContacts =
+                    db.BB_Proposal_Contacts_Signing.Where(sc => sc.ProposalID == i.ProposalId).ToList();
+                List<BB_Proposal_Contacts_Documentation> documentationContacts =
+                    db.BB_Proposal_Contacts_Documentation.Where(cd => cd.ProposalID == i.ProposalId).ToList();
+
+                if (signingContacts.Count == 0) signingContacts.Add(new BB_Proposal_Contacts_Signing());
+                if (documentationContacts.Count == 0) documentationContacts.Add(new BB_Proposal_Contacts_Documentation());
+
+                err.ProposalObj.ClientApproval.SigningContacts = signingContacts;
+                err.ProposalObj.ClientApproval.DocumentationContacts = documentationContacts;
+
+                if (proposal.CRM_QUOTE_ID != null)
+                {
+                    err.ProposalObj.ClientApproval.Documents = db.LD_DocumentProposal.Where(dp => dp.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                    err.ProposalObj.ClientApproval.DocumentTypes = db.LD_DocumentClassification.ToList();
                 }
 
                 err.ProposalObj.Draft.deliveryLocations = new List<DeliveryLocation>();
@@ -2412,6 +2434,45 @@ namespace WebApplication1.BLL
             err.ProposalObj = new ProposalRootObject();
             err.ProposalObj.Draft = p.Draft;
             return err;
+        }
+
+        private void CreateContactsDocumentation(ProposalRootObject p, int ProposalID)
+        {
+            if (p.ClientApproval == null) return;
+            try
+            {
+                bool encontrouSigin = db.BB_Proposal_Contacts_Documentation.Any(x => x.ProposalID == ProposalID);
+                if (encontrouSigin)
+                {
+                    List<BB_Proposal_Contacts_Documentation> toRemove = db.BB_Proposal_Contacts_Documentation.Where(x => x.ProposalID == ProposalID).ToList();
+                    db.BB_Proposal_Contacts_Documentation.RemoveRange(toRemove);
+                    db.SaveChanges();
+
+                }
+
+                List<BB_Proposal_Contacts_Documentation> lstContactsDoc = p.ClientApproval.DocumentationContacts;
+                if (lstContactsDoc.Count > 0 && lstContactsDoc[0].Email != "" && lstContactsDoc[0].Name != "" && lstContactsDoc[0].Telefone != "")
+                {
+                    foreach (var ContactSign in lstContactsDoc)
+                    {
+                        BB_Proposal_Contacts_Documentation ca = new BB_Proposal_Contacts_Documentation();
+
+                        ca.Email = ContactSign.Email;
+                        ca.Name = ContactSign.Name;
+                        ca.Telefone = ContactSign.Telefone;
+                        ca.ProposalID = ProposalID;
+                        db.BB_Proposal_Contacts_Documentation.Add(ca);
+                    }
+
+                    db.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw ex;
+            }
         }
     }
 }
