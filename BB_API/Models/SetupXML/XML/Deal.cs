@@ -228,7 +228,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             PRRDAT = formattedDtDeal,
                             BNL_RLIST = "X", //Falar com a BEU
                             SALESP = "50004700"   //   user != null && !string.IsNullOrEmpty(user.ErpNumber) ? user.ErpNumber : "",             //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
-                                                  //Z1ZVOE_COMMISSION_BF = collectionComissionBF, //Falar com a BEU
+                         
 
 
                         },
