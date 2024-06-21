@@ -111,7 +111,8 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
 
-                    BB_Proposal d = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault();
+                    LD_Contrato c = db.LD_Contrato.Where(x => x.ID == proposalId).FirstOrDefault();
+                    BB_Proposal d = db.BB_Proposal.Where(x => x.ID == c.ProposalID).FirstOrDefault();
                     //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal_PrazoDiferenciado pd = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID != proposalId).FirstOrDefault();
                     BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
@@ -173,7 +174,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     var sDocOrder = new OrdersPartnersList();
                     var collectionOrders = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS>();
 
-                    sDocOrder = ordersConfig.ConfigOrders(proposalId, randomLetterNumber, financingType);
+                    sDocOrder = ordersConfig.ConfigOrders(d.ID, randomLetterNumber, financingType);
                     foreach (var sDocPartner in sDocOrder.SdDocOrderPartner)
                     {
                         sD_DocOrdersPartners.Add(sDocPartner);
@@ -186,7 +187,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     //PARTERNS //Addresses //AddressesAdd
                     Partners partnersConfig = new Partners();
-                    var collectionPartners = partnersConfig.ConfigPartners(proposalId, sD_DocOrdersPartners, randomLetterNumber);
+                    var collectionPartners = partnersConfig.ConfigPartners(d.ID, sD_DocOrdersPartners, randomLetterNumber);
 
 
                     //CONDITIONS
@@ -256,42 +257,6 @@ namespace WebApplication1.Models.SetupXML.XML
 
         }
 
-        public void WritteToCsv(Z1ZVOE_DEAL_1 myObject, int proposalId)
-        {
-            try
-            {
-                int numberOfContracts = myObject.IDOC.Z1ZVOE_CONTRACTS.Count();
-                int numberOfOrders = myObject.IDOC.Z1ZVOE_ORDERS.Count();
-                int numberOfPartners = myObject.IDOC.Z1ZVOE_PARTNERS.Count();
-                int numberOfAddresses = myObject.IDOC.Z1ZVOE_ADDRESSES.Count();
-                int numberOfAddressesAdd = myObject.IDOC.Z1ZVOE_ADDRESSES_ADD.Count();
-
-                DateTime today = DateTime.Now;
-                string formattedDate = today.ToString("dd/MM/yyyy");
-
-                string[][] newData =
-                {
-                    new string[] {proposalId.ToString(), myObject.IDOC.EDI_DC40.ARCKEY, numberOfContracts.ToString(), numberOfOrders.ToString(), numberOfPartners.ToString(),
-                                                                            numberOfAddresses.ToString(), numberOfAddressesAdd.ToString(), formattedDate,"" }
-                };
-                string filePath = "C:\\Users\\EXT0022\\OneDrive - KME\\Documents\\BB_XML_Tests.csv";
-
-                using (StreamWriter sw = new StreamWriter(filePath, true, Encoding.UTF8))
-                {
-                    // Loop through each row of data
-                    foreach (var row in newData)
-                    {
-                        // Write each field separated by a comma
-                        sw.WriteLine(string.Join(",", row));
-                    }
-                }
-                Console.WriteLine("CSV file updated successfully.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-
-        }
+      
     }
 }

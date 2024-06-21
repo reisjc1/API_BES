@@ -26,25 +26,18 @@ namespace WebApplication1.Models.SetupXML.XML
                 {
                     List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
 
+                    LD_Contrato c = db.LD_Contrato.Where(x => x.ID == proposalId).FirstOrDefault();
                     BB_Proposal d = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault();
                     //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                    BB_Proposal_PrazoDiferenciado pd = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID != proposalId).FirstOrDefault();
-                    BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    BB_Proposal_PrazoDiferenciado pd = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID != d.ID).FirstOrDefault();
+                    BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == d.ID).FirstOrDefault();
                     BB_FinancingContractType ct = db.BB_FinancingContractType.Where(x => x.ID == pf.ContractTypeId).FirstOrDefault();
                     BB_Campanha ca = db.BB_Campanha.Where(x => x.ID == d.CampaignID).FirstOrDefault();
 
 
 
-                    List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId).ToList();
-                    //try
-                    //{
-                    //    contractDoc = $"C_D{c.ID}_1_{randomLetterNunber}";
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    Console.WriteLine(ex.ToString());
-                    //}
-
+                    List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == d.ID).ToList();
+                   
 
                     Random random = new Random();
                     int randomNumberOrderDoc = random.Next(1000000, 10000000);
@@ -61,7 +54,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         int? groupNumber = null;
                         List<BB_Proposal_ItemDoBasket> groups = new List<BB_Proposal_ItemDoBasket>();
                         List<BB_Proposal_ItemDoBasket> itemsDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliveryLocation.IDX).OrderBy(x => x.Group).ToList();
-                        //List<BB_Proposal_ItemDoBasket> groups = db.BB_Proposal_ItemDoBasket.W
+                     
                         foreach (var itemdoBsket in itemsDoBasket)
                         {
                             if (itemdoBsket.Group != groupNumber)
@@ -129,7 +122,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliveryLocation.DeliveryContact).FirstOrDefault();
 
-                            collectionOrderCLickPrices = ClickPrices(proposalId, orderDoc, order.CodeRef);
+                            collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.CodeRef);
 
                             //List<Accessories> accessories = GetAcesseries("A63R021");
                             if (dLClient != null)
