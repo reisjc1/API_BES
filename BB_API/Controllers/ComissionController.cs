@@ -803,12 +803,12 @@ namespace WebApplication1.Controllers
 
                     var profitDictionary = new Dictionary<string, GrossProfit>
                     {
-                        { "HW", new GrossProfit() },
-                        { "IMS", new GrossProfit() },
-                        { "VSS", new GrossProfit() },
-                        { "PRS", new GrossProfit() },
-                        { "MCS_BPS", new GrossProfit() },
-                        //{ "SSRR", new GrossProfit() }
+                        { "HW", new GrossProfit(){ GPTotal = 0,} },
+                        { "IMS", new GrossProfit(){ GPTotal = 0,} },
+                        { "VSS", new GrossProfit(){ GPTotal = 0,} },
+                        { "PRS", new GrossProfit(){ GPTotal = 0,} },
+                        { "MCS_BPS", new GrossProfit(){ GPTotal = 0,} },
+                        //{ "SSRR", new GrossProfit(){ GPTotal = 0,} }
                     };
 
 
@@ -865,11 +865,7 @@ namespace WebApplication1.Controllers
 
                     BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
 
-                    var clientID = proposal.ClientID;
-
-                    BB_Clientes bb_client = db.BB_Clientes.Where(x => x.ID == clientID).FirstOrDefault();
-
-                    bool isNewClient = bb_client.accountnumber.StartsWith("P");
+                    bool isNewClient = proposal.ClientAccountNumber.StartsWith("P");
 
                     if (isNewClient)
                     {
@@ -931,7 +927,7 @@ namespace WebApplication1.Controllers
 
                     foreach (var quote in oneShot)
                     {
-                        var equipamentos = db.BB_Equipamentos.Where(e => e.CodeRef == quote.CodeRef && e.Description == quote.Description).ToList();
+                        var equipamentos = db.BB_Equipamentos.Where(e => e.CodeRef == quote.CodeRef).ToList();
 
                         foreach (var equipamento in equipamentos)
                         {
@@ -947,12 +943,12 @@ namespace WebApplication1.Controllers
                             if (equipamento.PHC4 == "BW")
                             {
                                 pvpClick = equipamento.ClickPriceBW;
-                                vendaClick = ps_noVol.GlobalClickBW;
+                                if(ps_noVol != null) vendaClick = ps_noVol.GlobalClickBW;
                             }
                             else
                             {
                                 pvpClick = equipamento.ClickPriceC;
-                                vendaClick = ps_noVol.GlobalClickC;
+                                if (ps_noVol != null) vendaClick = ps_noVol.GlobalClickC;
                             }
                             Machine machine = new Machine
                             {
