@@ -781,6 +781,7 @@ namespace WebApplication1.Controllers
 
         }
 
+        [AcceptVerbs("GET", "POST")]
         public void Commissions(int proposalID)
         {
             try
