@@ -10,6 +10,7 @@ using WebApplication1.App_Start;
 using WebApplication1.BLL;
 using WebApplication1.Models;
 using WebApplication1.Models.ViewModels;
+using WebGrease.Css.Ast;
 
 namespace WebApplication1.Controllers
 {
@@ -778,6 +779,260 @@ namespace WebApplication1.Controllers
 
             return hw;
 
+        }
+
+        public void Commissions(int proposalID)
+        {
+            try
+            {
+                // --------------- PONTO 1 -------------->
+
+                List<BB_Proposal_Quote> oneShot = new List<BB_Proposal_Quote>();
+                List<BB_Proposal_Quote_RS> servicosRecorrentes = new List<BB_Proposal_Quote_RS>();
+
+                // Possibilidade de calcular posteriormente -------------------------------------->
+                // List<BB_Proposal_OPSManage> OPSImplement = new List<BB_Proposal_OPSManage>();
+                // List<BB_Proposal_OPSImplement> OPSManage = new List<BB_Proposal_OPSImplement>();
+                // ------------------------------------------------------------------------------->
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    oneShot = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+                    servicosRecorrentes = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+
+                    var profitDictionary = new Dictionary<string, GrossProfit>
+                    {
+                        { "HW", new GrossProfit() },
+                        { "IMS", new GrossProfit() },
+                        { "VSS", new GrossProfit() },
+                        { "PRS", new GrossProfit() },
+                        { "MCS_BPS", new GrossProfit() },
+                        //{ "SSRR", new GrossProfit() }
+                    };
+
+
+                    // --------------- PONTO 2 -------------->
+
+                    // função interna a ser chamada para fazer o somatório do GPTotal para cada família
+                    void AddProfit(string family, double? amount)
+                    {
+                        if (family.EndsWith("HW"))
+                        {
+                            profitDictionary["HW"].GPTotal += amount ?? 0;
+                        }
+                        else if (family.StartsWith("IMS"))
+                        {
+                            profitDictionary["IMS"].GPTotal += amount ?? 0;
+                        }
+                        else if (family.StartsWith("VSS"))
+                        {
+                            profitDictionary["VSS"].GPTotal += amount ?? 0;
+                        }
+                        else if (family.StartsWith("PRS"))
+                        {
+                            profitDictionary["PRS"].GPTotal += amount ?? 0;
+                        }
+                        else if (family.StartsWith("MCS") || family.StartsWith("BPS"))
+                        {
+                            profitDictionary["MCS_BPS"].GPTotal += amount ?? 0;
+                        }
+                        //else if (family.StartsWith("SSRR"))
+                        //{
+                        //    profitDictionary["SSRR"].GPTotal += amount ?? 0;
+                        //}
+                    }
+
+                    foreach (var oneShot_Item in oneShot)
+                    {
+                        AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal);
+                    }
+
+                    foreach (var servRecor_Item in servicosRecorrentes)
+                    {
+                        AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal);
+                    }
+
+                    var profit_Hard = profitDictionary["HW"];
+                    var profit_IMS = profitDictionary["IMS"];
+                    var profit_VSS = profitDictionary["VSS"];
+                    var profit_PRS = profitDictionary["PRS"];
+                    var profit_MCS_BPS = profitDictionary["MCS_BPS"];
+                    //var profit_SSRR = profitDictionary["SSRR"];
+
+
+                    // --------------- PONTO 3 -------------->
+
+                    BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
+
+                    var clientID = proposal.ClientID;
+
+                    BB_Clientes bb_client = db.BB_Clientes.Where(x => x.ID == clientID).FirstOrDefault();
+
+                    bool isNewClient = bb_client.accountnumber.StartsWith("P");
+
+                    if (isNewClient)
+                    {
+                        profit_Hard.ComissionPercentage = "0.9%";
+                        profit_Hard.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+
+                        profit_IMS.ComissionPercentage = "0.9%";
+                        profit_IMS.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+
+                        profit_VSS.ComissionPercentage = "0.9%";
+                        profit_VSS.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+
+                        profit_PRS.ComissionPercentage = "0.9%";
+                        profit_PRS.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+
+                        profit_MCS_BPS.ComissionPercentage = "0.9%";
+                        profit_MCS_BPS.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+                    }
+                    else
+                    {
+                        profit_Hard.ComissionPercentage = "15.5%";
+                        profit_Hard.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+
+                        profit_IMS.ComissionPercentage = "15.5%";
+                        profit_IMS.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+
+                        profit_VSS.ComissionPercentage = "15.5%";
+                        profit_VSS.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+
+                        profit_PRS.ComissionPercentage = "15.5%";
+                        profit_PRS.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+
+                        profit_MCS_BPS.ComissionPercentage = "15.5%";
+                        profit_MCS_BPS.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+                    }
+                    //else if ("Nova Linha")
+                    //{
+                    //profit_Hard.ComissionPercentage = "12.5%";
+                    //profit_Hard.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+
+                    //profit_IMS.ComissionPercentage = "12.5%";
+                    //profit_IMS.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+
+                    //profit_VSS.ComissionPercentage = "12.5%";
+                    //profit_VSS.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+
+                    //profit_PRS.ComissionPercentage = "12.5%";
+                    //profit_PRS.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+
+                    //profit_MCS_BPS.ComissionPercentage = "12.5%";
+                    //profit_MCS_BPS.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+                    //}
+                    //
+
+
+                    // --------------- PONTO 4 -------------->
+
+                    List<Machine> machines = new List<Machine>();
+
+                    foreach (var quote in oneShot)
+                    {
+                        var equipamentos = db.BB_Equipamentos.Where(e => e.CodeRef == quote.CodeRef && e.Description == quote.Description).ToList();
+
+                        foreach (var equipamento in equipamentos)
+                        {
+                            double? pvpClick;
+                            double? vendaClick;
+
+                            BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == quote.Proposal_ID).FirstOrDefault();
+
+                            BB_PrintingServices ps = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == ps2.ID).FirstOrDefault();
+
+                            BB_PrintingServices_NoVolume ps_noVol = db.BB_PrintingServices_NoVolume.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
+
+                            if (equipamento.PHC4 == "BW")
+                            {
+                                pvpClick = equipamento.ClickPriceBW;
+                                vendaClick = ps_noVol.GlobalClickBW;
+                            }
+                            else
+                            {
+                                pvpClick = equipamento.ClickPriceC;
+                                vendaClick = ps_noVol.GlobalClickC;
+                            }
+                            Machine machine = new Machine
+                            {
+                                CodeRef = quote.CodeRef,
+                                Description = quote.Description,
+                                Qty = quote.Qty,
+                                DescPerClick = 100 - ((100* vendaClick) / pvpClick),
+                                PHC1 = equipamento.PHC1,
+                                PHC4 = equipamento.PHC2
+                            };
+
+                            machines.Add(machine);
+                        }
+                    };
+
+
+                    var protocolDictionary = new Dictionary<string, CommissionDictionary>()
+                    {
+                        { "Printing A3_Colour", new CommissionDictionary(){ Commission = 20, Adjustment = 5} },
+                        { "Printing A3_BW", new CommissionDictionary(){ Commission = 8, Adjustment = 5} },
+                        { "Printing A4_Colour", new CommissionDictionary(){ Commission = 9, Adjustment = 5} },
+                        { "Printing A4_BW", new CommissionDictionary(){ Commission = 4, Adjustment = 5} },
+                    };
+
+                    foreach (var M in machines)
+                    {
+                        string key = $"{M.PHC1}_{M.PHC4}";
+
+                        if (!protocolDictionary.ContainsKey(key))
+                        {
+                            CommissionDictionary equipment = new CommissionDictionary();
+
+                            protocolDictionary.Add(key, equipment);
+                        }
+                        else
+                        {
+                            M.AppliedCommission = (protocolDictionary[key].Commission * M.Qty) -
+                                (protocolDictionary[key].Adjustment * M.DescPerClick);
+
+                            protocolDictionary[key].Machines.Add(M);
+                        };
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+        }
+
+        // ---------------------------------------------------------------------------------------------------------------------
+        // CLASSES -------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------
+
+        public class GrossProfit
+        {
+            public double? GPTotal { get; set; }
+            public string ComissionPercentage { get; set; }
+            public double? CalculatedCommission { get; set; }
+
+        }
+
+        public class CommissionDictionary
+        {
+            public int? Commission { get; set; }
+            //(penalizacao/bonificacao)
+            public int? Adjustment { get; set; }
+            public double? CalculatedCommission { get; set; }
+            public List<Machine> Machines { get; set; }
+        }
+
+        public class Machine
+        {
+            public string CodeRef { get; set; }
+            public string Description { get; set; }
+            public int? Qty { get; set; }
+            public double? DescPerClick { get; set; }
+            public string PHC1 { get; set; }
+            public string PHC4 { get; set;}
+            public double? AppliedCommission { get; set;}
         }
     }
 }
