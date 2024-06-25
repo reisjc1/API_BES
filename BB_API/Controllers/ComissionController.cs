@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -923,7 +924,15 @@ namespace WebApplication1.Controllers
 
                     // --------------- PONTO 4 -------------->
 
+                    ProposalBLL p1 = new ProposalBLL();
+                    LoadProposalInfo i = new LoadProposalInfo();
+                    i.ProposalId = proposalID;
+                    ActionResponse ar = p1.LoadProposal(i);
+
                     List<Machine> machines = new List<Machine>();
+
+                    double? pvpClick;
+                    double? vendaClick;
 
                     foreach (var quote in oneShot)
                     {
@@ -931,25 +940,65 @@ namespace WebApplication1.Controllers
 
                         foreach (var equipamento in equipamentos)
                         {
-                            double? pvpClick;
-                            double? vendaClick;
-
                             BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == quote.Proposal_ID).FirstOrDefault();
 
                             BB_PrintingServices ps = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == ps2.ID).FirstOrDefault();
 
-                            BB_PrintingServices_NoVolume ps_noVol = db.BB_PrintingServices_NoVolume.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
+                            ApprovedPrintingService activePS = null;
+                            if (ar.ProposalObj.Draft.printingServices2.ActivePrintingService != null)
+                            {
+                                
+                                activePS = ar.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[ar.ProposalObj.Draft.printingServices2.ActivePrintingService.Value - 1];
+                                
+                                // VVA
+                                if (activePS != null && activePS.GlobalClickVVA != null)
+                                {
+                                    BB_VVA vva = db.BB_VVA.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
 
-                            if (equipamento.PHC4 == "BW")
-                            {
-                                pvpClick = equipamento.ClickPriceBW;
-                                if(ps_noVol != null) vendaClick = ps_noVol.GlobalClickBW;
-                            }
-                            else
-                            {
-                                pvpClick = equipamento.ClickPriceC;
-                                if (ps_noVol != null) vendaClick = ps_noVol.GlobalClickC;
-                            }
+                                    if (equipamento.PHC4 == "BW")
+                                    {
+                                        pvpClick = equipamento.ClickPriceBW;
+                                        vendaClick = vva.PVP / ps.BWVolume;
+                                    }
+                                    else
+                                    {
+                                        pvpClick = equipamento.ClickPriceC;
+                                        vendaClick = vva.PVP / ps.CVolume;
+                                    }
+                                }
+                                // Sem Volume
+                                else if (activePS != null && activePS.GlobalClickNoVolume != null)
+                                {
+                                    BB_PrintingServices_NoVolume ps_noVol = db.BB_PrintingServices_NoVolume.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
+
+                                    if (equipamento.PHC4 == "BW")
+                                    {
+                                        pvpClick = equipamento.ClickPriceBW;
+                                        vendaClick = ps_noVol.GlobalClickBW;
+                                    }
+                                    else
+                                    {
+                                        pvpClick = equipamento.ClickPriceC;
+                                        vendaClick = ps_noVol.GlobalClickC;
+                                    }
+                                }
+                                // Por Modelo
+                                else
+                                {
+                                    BB_PrintingService_Machines ps_m = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
+
+                                    if (equipamento.PHC4 == "BW")
+                                    {
+                                        pvpClick = equipamento.ClickPriceBW;
+                                        vendaClick = ps_m.ApprovedBW;
+                                    }
+                                    else
+                                    {
+                                        pvpClick = equipamento.ClickPriceC;
+                                        vendaClick = ps_m.ApprovedC;
+                                    }
+                                }
+
                             Machine machine = new Machine
                             {
                                 CodeRef = quote.CodeRef,
@@ -961,6 +1010,8 @@ namespace WebApplication1.Controllers
                             };
 
                             machines.Add(machine);
+
+                            }
                         }
                     };
 
