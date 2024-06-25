@@ -818,7 +818,7 @@ namespace WebApplication1.Controllers
                     // função interna a ser chamada para fazer o somatório do GPTotal para cada família
                     void AddProfit(string family, double? amount)
                     {
-                        if (family.EndsWith("HW"))
+                        if (family.EndsWith("HW") || family.EndsWith("CS"))
                         {
                             profitDictionary["HW"].GPTotal += amount ?? 0;
                         }
