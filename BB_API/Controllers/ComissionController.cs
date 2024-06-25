@@ -874,16 +874,16 @@ namespace WebApplication1.Controllers
                         profit_Hard.CalculatedCommission = profit_Hard.GPTotal * 1.155;
 
                         profit_IMS.ComissionPercentage = "0.9%";
-                        profit_IMS.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+                        profit_IMS.CalculatedCommission = profit_IMS.GPTotal * 1.155;
 
                         profit_VSS.ComissionPercentage = "0.9%";
-                        profit_VSS.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+                        profit_VSS.CalculatedCommission = profit_VSS.GPTotal * 1.155;
 
                         profit_PRS.ComissionPercentage = "0.9%";
-                        profit_PRS.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+                        profit_PRS.CalculatedCommission = profit_PRS.GPTotal * 1.155;
 
                         profit_MCS_BPS.ComissionPercentage = "0.9%";
-                        profit_MCS_BPS.CalculatedCommission = profit_Hard.GPTotal * 1.155;
+                        profit_MCS_BPS.CalculatedCommission = profit_MCS_BPS.GPTotal * 1.155;
                     }
                     else
                     {
@@ -891,16 +891,16 @@ namespace WebApplication1.Controllers
                         profit_Hard.CalculatedCommission = profit_Hard.GPTotal * 1.09;
 
                         profit_IMS.ComissionPercentage = "15.5%";
-                        profit_IMS.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+                        profit_IMS.CalculatedCommission = profit_IMS.GPTotal * 1.09;
 
                         profit_VSS.ComissionPercentage = "15.5%";
-                        profit_VSS.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+                        profit_VSS.CalculatedCommission = profit_VSS.GPTotal * 1.09;
 
                         profit_PRS.ComissionPercentage = "15.5%";
-                        profit_PRS.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+                        profit_PRS.CalculatedCommission = profit_PRS.GPTotal * 1.09;
 
                         profit_MCS_BPS.ComissionPercentage = "15.5%";
-                        profit_MCS_BPS.CalculatedCommission = profit_Hard.GPTotal * 1.09;
+                        profit_MCS_BPS.CalculatedCommission = profit_MCS_BPS.GPTotal * 1.09;
                     }
                     //else if ("Nova Linha")
                     //{
@@ -908,16 +908,16 @@ namespace WebApplication1.Controllers
                     //profit_Hard.CalculatedCommission = profit_Hard.GPTotal * 1.125;
 
                     //profit_IMS.ComissionPercentage = "12.5%";
-                    //profit_IMS.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+                    //profit_IMS.CalculatedCommission = profit_IMS.GPTotal * 1.125;
 
                     //profit_VSS.ComissionPercentage = "12.5%";
-                    //profit_VSS.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+                    //profit_VSS.CalculatedCommission = profit_VSS.GPTotal * 1.125;
 
                     //profit_PRS.ComissionPercentage = "12.5%";
-                    //profit_PRS.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+                    //profit_PRS.CalculatedCommission = profit_PRS.GPTotal * 1.125;
 
                     //profit_MCS_BPS.ComissionPercentage = "12.5%";
-                    //profit_MCS_BPS.CalculatedCommission = profit_Hard.GPTotal * 1.125;
+                    //profit_MCS_BPS.CalculatedCommission = profit_MCS_BPS.GPTotal * 1.125;
                     //}
                     //
 
