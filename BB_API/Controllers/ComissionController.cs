@@ -942,15 +942,17 @@ namespace WebApplication1.Controllers
                                 {
                                     BB_VVA vva = db.BB_VVA.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
 
+                                    double? volTotal = ps.BWVolume + ps.CVolume;
+
                                     if (equipamento.PHC4 == "BW")
                                     {
                                         pvpClick = equipamento.ClickPriceBW;
-                                        vendaClick = vva.PVP / ps.BWVolume;
+                                        vendaClick = ((ps.BWVolume * vva.PVP) / volTotal) / ps.BWVolume;
                                     }
                                     else
                                     {
                                         pvpClick = equipamento.ClickPriceC;
-                                        vendaClick = vva.PVP / ps.CVolume;
+                                        vendaClick = ((ps.CVolume * vva.PVP) / volTotal) / ps.CVolume;
                                     }
                                 }
                                 // Sem Volume
@@ -1019,12 +1021,21 @@ namespace WebApplication1.Controllers
                         {
                             CommissionDictionary equipment = new CommissionDictionary();
 
-                            protocolDictionary.Add(key, equipment);
+                            //protocolDictionary.Add(key, equipment);
                         }
                         else
                         {
-                            M.AppliedCommission = (protocolDictionary[key].Commission * M.Qty) -
-                                (protocolDictionary[key].Adjustment * M.DescPerClick);
+                            // ha penalizacao
+                            if(M.DescPerClick >= 0)
+                            {
+                                M.AppliedCommission = (protocolDictionary[key].Commission * M.Qty) -
+                                    (protocolDictionary[key].Adjustment * M.DescPerClick);
+                            }
+                            // ha bonificacao
+                            else
+                            {
+                                M.AppliedCommission = (protocolDictionary[key].Commission * M.Qty) - (2 * M.DescPerClick);
+                            }
 
                             protocolDictionary[key].Machines.Add(M);
                         };
