@@ -868,7 +868,7 @@ namespace WebApplication1.Controllers
 
                     bool isNewClient = proposal.ClientAccountNumber.StartsWith("P");
 
-                    if (isNewClient)
+                    if (!isNewClient)
                     {
                         profit_Hard.ComissionPercentage = "0.9%";
                         profit_Hard.CalculatedCommission = profit_Hard.GPTotal * 1.155;
