@@ -1080,5 +1080,75 @@ namespace WebApplication1.Controllers
             public string PHC4 { get; set;}
             public double? AppliedCommission { get; set;}
         }
+
+        public class GeneralCommissions
+        {
+            public string Agency { get; set; }
+            public string Agency_Code { get; set; }
+            public string Sales_Group { get; set; }
+            public int Seller_Number { get; set; }
+            public string Seller { get; set; }
+            public string Manager_Number { get; set; }
+            public string Manager { get; set; }
+            public int CN_Year_Month { get; set; }
+            public int Requested_Period { get; set; }
+            public string HR_Comment { get; set; }
+            public bool Invoice_List { get; set; }
+            public string BB_Number { get; set; }
+            public string BB_Full_Number { get; set; }
+            public int SAP_Number { get; set; }
+            public int Client_Number { get; set; }
+            public string Client { get; set; }
+            public string Billing { get; set; }
+            public double Turnover { get; set; }
+            public double Total_Margin { get; set; }
+            public double Total_Margin_New { get; set; }
+            public double Commission_On_Margin { get; set; }
+            public double Maintenance_Commission { get; set; }
+            public double Commissions { get; set; }
+            public double Margin { get; set; }
+            public double HW_CN { get; set; }
+            public double HW_Margin { get; set; }
+            public double HW_Margin_New { get; set; }
+            public double HW_CN_Office { get; set; }
+            public double HW_Margin_Office { get; set; }
+            public double HW_CN_PP { get; set; }
+            public double HW_Margin_PP { get; set; }
+            public double HW_CN_IP { get; set; }
+            public double HW_Margin_IP { get; set; }
+            public double ITS_CN { get; set; }
+            public double ITS_Margin { get; set; }
+            public double PRS_CN { get; set; }
+            public double PRS_Margin { get; set; }
+            public double MCS_CN { get; set; }
+            public double MCS_Margin { get; set; }
+            public double BPS_CN { get; set; }
+            public double BPS_Margin { get; set; }
+            public double IMS_CN { get; set; }
+            public double IMS_Margin { get; set; }
+            public double WPH_CN { get; set; }
+            public double WPH_Margin { get; set; }
+            public double Mobotix_CN { get; set; }
+            public double Mobotix_Margin { get; set; }
+            public string Logs { get; set; }
+            public bool Is_Paid { get; set; }
+            public bool Is_Controlled { get; set; }
+            public bool Is_Commissioned { get; set; }
+            public bool Is_Incident { get; set; }
+            public bool Is_Excluded { get; set; }
+            public bool Is_Second_Hand { get; set; }
+            public bool Is_Doc_Share { get; set; }
+            public bool Is_GMA { get; set; }
+            public bool Is_Invoice_List { get; set; }
+            public bool Support_BEU { get; set; }
+            public bool CBB { get; set; }
+            public int SAP_Client_Number { get; set; }
+            public bool Is_Prospect { get; set; }
+            public string Operation_Type { get; set; }
+            public string Financing_Type { get; set; }
+            public string Payment_Method { get; set; }
+            public string Maintenance_Method{ get; set; }
+
+        }
     }
 }
