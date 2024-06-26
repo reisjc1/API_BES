@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace WebApplication1.Controllers
 {
     public class ProposalController : ApiController
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
         public masterEntities dbUsers = new masterEntities();
 
@@ -46,11 +48,20 @@ namespace WebApplication1.Controllers
                     ac = pBLL.ProposalDraftSave(p);
                     ac.Message = "Propuesta guardada éxito!";
                 }
+                //log4net.ThreadContext.Properties["proposal_id"] = ac.ProposalObj.Draft.details.ID;
+                //var json = Newtonsoft.Json.JsonConvert.SerializeObject(ac.ProposalObj, Formatting.Indented);
+                //Exception exception = new Exception("Test Exception");
+                //log.Info(json, exception);
+                //log.Error(json, exception);
+
                 return Request.CreateResponse(HttpStatusCode.OK, ac);
+        
             }
             catch (Exception ex)
 
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 throw new ActionFailResponse("No gravou")
                 {
                     StatusCode = 501
@@ -72,6 +83,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 throw new ActionFailResponse("Nao gravou")
                 {
                     StatusCode = 501
@@ -120,6 +133,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 throw new ActionFailResponse("No grabó")
                 {
                     StatusCode = 501
@@ -142,6 +157,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 err.Message = ex.Message.ToString();
                 err.InnerException = ex.InnerException.ToString();
             }
@@ -181,6 +198,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 ex.Message.ToString();
             }
 
@@ -248,6 +267,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 ex.Message.ToString();
             }
 
@@ -322,7 +343,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
             }
             return response;
         }
@@ -355,7 +377,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
             }
             return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
         }
@@ -378,7 +401,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
             }
             return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
         }
@@ -552,6 +576,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 ex.Message.ToString();
                 err.Message = "No ha sido posible realizar el pedido, por favor, póngase en contacto con el equipo de BB.";
             }
@@ -753,6 +779,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 ex.Message.ToString();
             }
 
@@ -1110,6 +1138,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 ex.Message.ToString();
             }
         }
@@ -1426,6 +1456,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 return strErro;
             }
 
@@ -1496,6 +1528,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 return strErro;
             }
 
@@ -1585,6 +1619,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 ex.Message.ToString();
             }
 
@@ -1681,6 +1717,8 @@ namespace WebApplication1.Controllers
                         }
                         catch (Exception ex)
                         {
+                            log4net.ThreadContext.Properties["proposal_id"] = 0;
+                            log.Error(ex.Message.ToString(), ex);
                             return NotFound();
                         }
                     }
@@ -1690,6 +1728,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 return NotFound();
             }
 
@@ -1755,6 +1795,8 @@ namespace WebApplication1.Controllers
                         }
                         catch (Exception ex)
                         {
+                            log4net.ThreadContext.Properties["proposal_id"] = 0;
+                            log.Error(ex.Message.ToString(), ex);
                             ex.Message.ToString();
                         }
                     }
@@ -1765,6 +1807,8 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 ex.Message.ToString();
             }
 
@@ -2054,8 +2098,10 @@ namespace WebApplication1.Controllers
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                log4net.ThreadContext.Properties["proposal_id"] = 0;
+                log.Error(ex.Message.ToString(), ex);
                 NotFound();
             }
 

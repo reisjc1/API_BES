@@ -19,6 +19,8 @@ namespace BB_API
             HttpConfiguration config = new HttpConfiguration();
 
             // Web API routes
+
+            log4net.Config.XmlConfigurator.Configure();
             config.MapHttpAttributeRoutes();
 
             //ConfigureOAuth(app);
