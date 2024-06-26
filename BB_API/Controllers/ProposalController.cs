@@ -48,11 +48,11 @@ namespace WebApplication1.Controllers
                     ac = pBLL.ProposalDraftSave(p);
                     ac.Message = "Propuesta guardada éxito!";
                 }
-                //log4net.ThreadContext.Properties["proposal_id"] = ac.ProposalObj.Draft.details.ID;
-                //var json = Newtonsoft.Json.JsonConvert.SerializeObject(ac.ProposalObj, Formatting.Indented);
-                //Exception exception = new Exception("Test Exception");
-                //log.Info(json, exception);
-                //log.Error(json, exception);
+
+                if(ac.ProposalObj == null)
+                {
+                    throw new Exception("ac.ProposalObj = null");
+                }
 
                 return Request.CreateResponse(HttpStatusCode.OK, ac);
         
