@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -14,6 +15,7 @@ namespace WebApplication1.BLL
 {
     public class ProposalBLL
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
         public ActionResponse ProposalDraftSave(ProposalRootObject p)
         {
@@ -92,7 +94,18 @@ namespace WebApplication1.BLL
                     //db.BB_Proposal_DeliveryLocation.RemoveRange(lstd);
                     db.Entry(proposal).State = proposal.ID == 0 ? EntityState.Added : EntityState.Modified;
                     db.SaveChanges();
+
+                    if(proposal != null)
+                    {
+                        log4net.ThreadContext.Properties["proposal_id"] = proposal.ID;
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(proposal);
+                        Exception message = new Exception("Proposta gravada com sucesso");
+                        log.Info(json, message);
+                    }
+
                 }
+
+                
 
                 using (var context = new BB_DB_DEVEntities2())
                 {
@@ -1759,6 +1772,14 @@ namespace WebApplication1.BLL
                     IsMultipleContract = IsMultipleContract
                 };
 
+                if(bb_proposal != null)
+                {
+                    log4net.ThreadContext.Properties["proposal_id"] = bb_proposal.ID;
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(bb_proposal);
+                    Exception message = new Exception("Nova Proposta");
+                    log.Info(json, message);
+                }
+                
 
                 db.BB_Proposal.Add(bb_proposal);
                 try
