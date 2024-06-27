@@ -97,6 +97,14 @@ namespace WebApplication1.BLL
 
                     if(proposal != null)
                     {
+                        foreach(var opsManage in proposal.BB_Proposal_OPSManage)
+                        {
+                            opsManage.BB_Proposal = null;
+                        }
+                        foreach (var opsImplement in proposal.BB_Proposal_OPSImplement)
+                        {
+                            opsImplement.BB_Proposal = null;
+                        }
                         log4net.ThreadContext.Properties["proposal_id"] = proposal.ID;
                         string json = Newtonsoft.Json.JsonConvert.SerializeObject(proposal);
                         Exception message = new Exception("Proposta gravada com sucesso");
