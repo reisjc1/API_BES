@@ -135,5 +135,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_Exception> BB_WFA_Exception { get; set; }
         public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
+        public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
     }
 }
