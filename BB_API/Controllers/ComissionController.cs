@@ -1214,7 +1214,11 @@ namespace WebApplication1.Controllers
                     // Familias IMS com o exclude dos mobotix
                     foreach(var b in basket)
                     {
-                        bb_commission_general.CN_IMS += basket.Where(x => x.Family.Contains("IMS") && !mobotixCodRefs.Contains(b.CodeRef)).Select(x => x.TotalNetsale).FirstOrDefault();
+                        if(b.Family.Contains("IMS") && !mobotixCodRefs.Contains(b.CodeRef))
+                        {
+                            bb_commission_general.CN_IMS += b.TotalNetsale;
+                        }
+                        //bb_commission_general.CN_IMS += basket.Where(x => x.Family.Contains("IMS") && !mobotixCodRefs.Contains(b.CodeRef)).Select(x => x.TotalNetsale).FirstOrDefault();
                     }
 
                     bb_commission_general.Margen_IMS = profit_IMS.GPTotal;
