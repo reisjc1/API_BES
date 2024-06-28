@@ -15,71 +15,71 @@ namespace WebApplication1.Models
     public partial class BB_Commission_General
     {
         public int ID { get; set; }
-        public string Agency { get; set; }
-        public string Agency_Code { get; set; }
+        public string Agencia { get; set; }
+        public string Codigo_Agencia { get; set; }
         public string Sales_Group { get; set; }
-        public string Seller_Number { get; set; }
-        public string Seller { get; set; }
-        public string Manager_Number { get; set; }
+        public string Numero_Vendedor { get; set; }
+        public string Vendedor { get; set; }
+        public string Numero_Manager { get; set; }
         public string Manager { get; set; }
-        public Nullable<int> CN_Year_Month { get; set; }
-        public Nullable<int> Requested_Period { get; set; }
-        public string HR_Comment { get; set; }
+        public Nullable<int> Ano_Mes_CN { get; set; }
+        public Nullable<int> Periodo_Solicitado { get; set; }
+        public string HR_Comentario { get; set; }
         public Nullable<bool> Invoice_List { get; set; }
-        public string BB_Number { get; set; }
-        public string BB_Full_Number { get; set; }
-        public Nullable<int> SAP_Number { get; set; }
-        public string Client_Number { get; set; }
-        public string Client { get; set; }
-        public string Billing { get; set; }
-        public Nullable<double> Turnover { get; set; }
-        public Nullable<double> Total_Margin { get; set; }
-        public Nullable<double> Total_Margin_New { get; set; }
-        public Nullable<double> Commission_On_Margin { get; set; }
-        public Nullable<double> Maintenance_Commission { get; set; }
-        public Nullable<double> Commissions { get; set; }
-        public Nullable<double> Margin { get; set; }
-        public Nullable<double> HW_CN { get; set; }
-        public Nullable<double> HW_Margin { get; set; }
-        public Nullable<double> HW_Margin_New { get; set; }
-        public Nullable<double> HW_CN_Office { get; set; }
-        public Nullable<double> HW_Margin_Office { get; set; }
-        public Nullable<double> HW_CN_PP { get; set; }
-        public Nullable<double> HW_Margin_PP { get; set; }
-        public Nullable<double> HW_CN_IP { get; set; }
-        public Nullable<double> HW_Margin_IP { get; set; }
-        public Nullable<double> ITS_CN { get; set; }
-        public Nullable<double> ITS_Margin { get; set; }
-        public Nullable<double> PRS_CN { get; set; }
-        public Nullable<double> PRS_Margin { get; set; }
-        public Nullable<double> MCS_CN { get; set; }
-        public Nullable<double> MCS_Margin { get; set; }
-        public Nullable<double> BPS_CN { get; set; }
-        public Nullable<double> BPS_Margin { get; set; }
-        public Nullable<double> IMS_CN { get; set; }
-        public Nullable<double> IMS_Margin { get; set; }
-        public Nullable<double> WPH_CN { get; set; }
-        public Nullable<double> WPH_Margin { get; set; }
-        public Nullable<double> Mobotix_CN { get; set; }
-        public Nullable<double> Mobotix_Margin { get; set; }
+        public string BB_Numero { get; set; }
+        public string BB_Numero_Entero { get; set; }
+        public Nullable<int> SAP_Numero { get; set; }
+        public string Numero_Cliente { get; set; }
+        public string Cliente { get; set; }
+        public string Facturación { get; set; }
+        public Nullable<double> Cifra_Negocio { get; set; }
+        public Nullable<double> Margen_Total { get; set; }
+        public Nullable<double> Margen_Total_Nueva { get; set; }
+        public Nullable<double> Comision_Sobre_Margen { get; set; }
+        public Nullable<double> Comision_Mantenimiento { get; set; }
+        public Nullable<double> Comisiones { get; set; }
+        public Nullable<double> Margen { get; set; }
+        public Nullable<double> CN_HW { get; set; }
+        public Nullable<double> Margen_HW { get; set; }
+        public Nullable<double> Margen_HW_Nuevo { get; set; }
+        public Nullable<double> CN_Office_HW { get; set; }
+        public Nullable<double> Margen_Office_HW { get; set; }
+        public Nullable<double> CN_PP_HW { get; set; }
+        public Nullable<double> Margen_PP_HW { get; set; }
+        public Nullable<double> CN_IP_HW { get; set; }
+        public Nullable<double> Margen_IP_HW { get; set; }
+        public Nullable<double> CN_ITS { get; set; }
+        public Nullable<double> Margen_ITS { get; set; }
+        public Nullable<double> CN_PRS { get; set; }
+        public Nullable<double> Margen_PRS { get; set; }
+        public Nullable<double> CN_MCS { get; set; }
+        public Nullable<double> Margen_MCS { get; set; }
+        public Nullable<double> CN_BPS { get; set; }
+        public Nullable<double> Margen_BPS { get; set; }
+        public Nullable<double> CN_IMS { get; set; }
+        public Nullable<double> Margen_IMS { get; set; }
+        public Nullable<double> CN_WPH { get; set; }
+        public Nullable<double> Margen_WPH { get; set; }
+        public Nullable<double> CN_Mobotix { get; set; }
+        public Nullable<double> Margen_Mobotix { get; set; }
         public string Logs { get; set; }
-        public Nullable<bool> Is_Paid { get; set; }
-        public Nullable<bool> Is_Controlled { get; set; }
-        public Nullable<bool> Is_Commissioned { get; set; }
-        public Nullable<bool> Is_Incident { get; set; }
-        public Nullable<bool> Is_Excluded { get; set; }
-        public Nullable<bool> Is_Second_Hand { get; set; }
-        public Nullable<bool> Is_Doc_Share { get; set; }
-        public Nullable<bool> Is_GMA { get; set; }
-        public Nullable<bool> Is_Invoice_List { get; set; }
+        public Nullable<bool> Pagado { get; set; }
+        public Nullable<bool> Controlado { get; set; }
+        public Nullable<bool> Comisionado { get; set; }
+        public Nullable<bool> Incidencia { get; set; }
+        public Nullable<bool> Excluido { get; set; }
+        public Nullable<bool> Es_Segunda_Mano { get; set; }
+        public Nullable<bool> Es_Doc_Share { get; set; }
+        public Nullable<bool> Es_GMA { get; set; }
+        public Nullable<bool> Es_Invoice_List { get; set; }
         public Nullable<bool> Support_BEU { get; set; }
         public Nullable<bool> CBB { get; set; }
-        public string SAP_Client_Number { get; set; }
-        public Nullable<bool> Is_Prospect { get; set; }
-        public string Operation_Type { get; set; }
-        public string Financing_Type { get; set; }
-        public string Payment_Method { get; set; }
-        public string Maintenance_Method { get; set; }
+        public string Numero_Cliente_SAP { get; set; }
+        public Nullable<bool> Es_Prospecto { get; set; }
+        public string Tipo_Operacion { get; set; }
+        public string Tipo_Financiacion { get; set; }
+        public string Metodo_Pago_Productos { get; set; }
+        public string Metodo_Pago_Mantenimiento { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
