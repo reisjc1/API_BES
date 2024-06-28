@@ -1460,6 +1460,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Comment" Type="nvarchar(max)" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="255" />
+          <Property Name="CommentType" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="BB_WFA_Control">
           <Key>
@@ -3600,6 +3601,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CommentType" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BB_RD_WFA_Customer_Type">
           <Key>
@@ -5289,6 +5291,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySetMapping Name="BB_WFA_Comments_Business">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Comments_Business">
               <MappingFragment StoreEntitySet="BB_WFA_Comments_Business">
+                <ScalarProperty Name="CommentType" ColumnName="CommentType" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />

@@ -1180,11 +1180,17 @@ namespace WebApplication1.BLL
 
                     //TYPE OF CLIENT
                     BB_TypeOfClient typeOfClient = db.BB_TypeOfClient.Where(x => x.ProposalID == p.Draft.details.ID).FirstOrDefault();
+                    if (typeOfClient is null)
+                    {
+                        typeOfClient = new BB_TypeOfClient();
+                    }
+
                     typeOfClient.ProposalID = p.Draft.details.ID;
                     typeOfClient.Prospect = p.Draft.baskets.prospect;
-                    typeOfClient.NewBusinessLine= p.Draft.baskets.newBusinessLine;
+                    typeOfClient.NewBusinessLine = p.Draft.baskets.newBusinessLine;
                     typeOfClient.GMA = p.Draft.baskets.GMA;
                     typeOfClient.BEUSupport = p.Draft.baskets.BEUSupport;
+                    
 
                     try
                     {
@@ -2493,6 +2499,10 @@ namespace WebApplication1.BLL
 
                 //TYPE OF CLIENT
                 BB_TypeOfClient typeOfClient = db.BB_TypeOfClient.Where(x => x.ProposalID == p.Draft.details.ID).FirstOrDefault();
+                if(typeOfClient is null)
+                {
+                    typeOfClient = new BB_TypeOfClient();
+                }
                 typeOfClient.ProposalID = p.Draft.details.ID;
                 typeOfClient.Prospect = p.Draft.baskets.prospect;
                 typeOfClient.NewBusinessLine = p.Draft.baskets.newBusinessLine;

@@ -1813,7 +1813,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("AddWFACommentBusiness")]
-        public IHttpActionResult AddWFACommentBusiness(int proposalID, string userLogged, string comment)
+        public IHttpActionResult AddWFACommentBusiness(int proposalID, string userLogged, string comment, string commentType)
         {
             try
             {
@@ -1825,7 +1825,8 @@ namespace WebApplication1.Controllers
                         ProposalID = proposalID,
                         CreatedDate = DateTime.Now,
                         CreatedBy = userLogged,
-                        Comment = comment
+                        Comment = comment,
+                        CommentType = commentType
                     });
 
                     db.SaveChanges();

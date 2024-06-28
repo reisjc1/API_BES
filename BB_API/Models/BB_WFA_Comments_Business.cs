@@ -19,5 +19,6 @@ namespace WebApplication1.Models
         public string Comment { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public string CreatedBy { get; set; }
+        public string CommentType { get; set; }
     }
 }
