@@ -582,6 +582,9 @@
     <Compile Include="Models\BB_SLA_History.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_TypeOfClient.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_VVA.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

@@ -3,6 +3,7 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -1175,9 +1176,33 @@ namespace WebApplication1.BLL
                     //Contacts_Documentation
                     CreateContactsDocumentation(p, ProposalID);
 
+
+
+                    //TYPE OF CLIENT
+                    BB_TypeOfClient typeOfClient = db.BB_TypeOfClient.Where(x => x.ProposalID == p.Draft.details.ID).FirstOrDefault();
+                    typeOfClient.ProposalID = p.Draft.details.ID;
+                    typeOfClient.Prospect = p.Draft.baskets.prospect;
+                    typeOfClient.NewBusinessLine= p.Draft.baskets.newBusinessLine;
+                    typeOfClient.GMA = p.Draft.baskets.GMA;
+                    typeOfClient.BEUSupport = p.Draft.baskets.BEUSupport;
+
+                    try
+                    {
+                        db.BB_TypeOfClient.AddOrUpdate(typeOfClient);
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+
+
                     err.ProposalObj = new ProposalRootObject();
                     err.ProposalObj.Draft = p.Draft;
                     return err;
+
+
                 }
             }
             catch (Exception ex)
@@ -1738,6 +1763,16 @@ namespace WebApplication1.BLL
                 {
                     err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
                 }
+
+                BB_TypeOfClient typeOfClient = db.BB_TypeOfClient.Where(x => x.ProposalID == proposal.ID).FirstOrDefault();
+                if (typeOfClient != null)
+                {
+                    err.ProposalObj.Draft.baskets.prospect = typeOfClient.Prospect;
+                    err.ProposalObj.Draft.baskets.newBusinessLine = typeOfClient.NewBusinessLine;
+                    err.ProposalObj.Draft.baskets.GMA = typeOfClient.GMA;
+                    err.ProposalObj.Draft.baskets.BEUSupport = typeOfClient.BEUSupport;
+                }
+
             }
             catch (Exception ex)
             {
@@ -2455,6 +2490,25 @@ namespace WebApplication1.BLL
                 {
                     ex.Message.ToString();
                 }
+
+                //TYPE OF CLIENT
+                BB_TypeOfClient typeOfClient = db.BB_TypeOfClient.Where(x => x.ProposalID == p.Draft.details.ID).FirstOrDefault();
+                typeOfClient.ProposalID = p.Draft.details.ID;
+                typeOfClient.Prospect = p.Draft.baskets.prospect;
+                typeOfClient.NewBusinessLine = p.Draft.baskets.newBusinessLine;
+                typeOfClient.GMA = p.Draft.baskets.GMA;
+                typeOfClient.BEUSupport = p.Draft.baskets.BEUSupport;
+
+                try
+                {
+                    db.BB_TypeOfClient.AddOrUpdate(typeOfClient);
+                    db.SaveChanges();
+                } catch(Exception ex)
+                {
+                    throw ex;
+                }
+
+
             }
             catch (Exception e)
             {

@@ -135,5 +135,6 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
         public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
+        public virtual DbSet<BB_TypeOfClient> BB_TypeOfClient { get; set; }
     }
 }

@@ -380,6 +380,10 @@ namespace WebApplication1.Models
         public List<OsBasket> os_basket { get; set; }
         public List<RsBasket> rs_basket { get; set; }
         public List<BB_WFA_Comments_Business> lst_wfa_comments_business { get; set; }
+        public Boolean? prospect { get; set; }
+        public Boolean? newBusinessLine { get; set; }
+        public Boolean? GMA { get; set; }
+        public Boolean? BEUSupport { get; set; }
     }
 
     public class DeliveryLocationsBes

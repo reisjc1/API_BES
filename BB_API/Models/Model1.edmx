@@ -1413,6 +1413,17 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="CreatedBy" Type="nvarchar(max)" />
           <Property Name="Comentario" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="BB_TypeOfClient">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="Prospect" Type="bit" />
+          <Property Name="NewBusinessLine" Type="bit" />
+          <Property Name="GMA" Type="bit" />
+          <Property Name="BEUSupport" Type="bit" />
+        </EntityType>
         <EntityType Name="BB_VVA">
           <Key>
             <PropertyRef Name="PrintingServiceID" />
@@ -1783,6 +1794,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_REL_Equipament_Consumable" EntityType="Self.BB_REL_Equipament_Consumable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Service_Collab" EntityType="Self.BB_Service_Collab" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_SLA_History" EntityType="Self.BB_SLA_History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_TypeOfClient" EntityType="Self.BB_TypeOfClient" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_VVA" EntityType="Self.BB_VVA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Approvers_Control" EntityType="Self.BB_WFA_Approvers_Control" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Comments_Business" EntityType="Self.BB_WFA_Comments_Business" Schema="dbo" store:Type="Tables" />
@@ -2025,6 +2037,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
+          <EntitySet Name="BB_TypeOfClient" EntityType="BB_DB_DEVModel.BB_TypeOfClient" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3715,6 +3728,17 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="DateApproval" Type="DateTime" Precision="3" />
           <Property Name="DateExpired" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="BB_TypeOfClient">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="Prospect" Type="Boolean" />
+          <Property Name="NewBusinessLine" Type="Boolean" />
+          <Property Name="GMA" Type="Boolean" />
+          <Property Name="BEUSupport" Type="Boolean" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5404,6 +5428,18 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
                 <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
                 <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
                 <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_TypeOfClient">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_TypeOfClient">
+              <MappingFragment StoreEntitySet="BB_TypeOfClient">
+                <ScalarProperty Name="BEUSupport" ColumnName="BEUSupport" />
+                <ScalarProperty Name="GMA" ColumnName="GMA" />
+                <ScalarProperty Name="NewBusinessLine" ColumnName="NewBusinessLine" />
+                <ScalarProperty Name="Prospect" ColumnName="Prospect" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
