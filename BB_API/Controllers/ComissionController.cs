@@ -1289,16 +1289,15 @@ namespace WebApplication1.Controllers
 
                     string newLine = "\n \n";
 
-                    var opType = "";
-                    if (campaignID == 6) ?? opType = "<" : ">");
+                    string opType = campaignID == 6 ? "<" : ">";
 
                     string logPhase_2 = string.Format("({0} - GPFull Log Com GP CA: NET SALES ({1}))" +
                         "{2} 0 | CA HARD = {3} AND GP HARD = {4} AND %GP HARD = {5})",
-                    proposalID, // 0
-                    bb_commission_general.Cifra_Negocio, // 1
-                    opType, // 2
-                    bb_commission_general.CN_HW, // 3
-                    bb_commission_general.Margen_HW, // 4
+                    proposalID,                             // 0
+                    bb_commission_general.Cifra_Negocio,    // 1
+                    opType,                                 // 2
+                    bb_commission_general.CN_HW,            // 3
+                    bb_commission_general.Margen_HW,        // 4
                     (bb_commission_general.Margen_HW * 100) / bb_commission_general.CN_HW // 5
                     );
 
