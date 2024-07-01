@@ -1,13 +1,16 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Office2013.Excel;
+using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Web.Http;
@@ -1306,10 +1309,19 @@ namespace WebApplication1.Controllers
                     //string logPhase_3 = string.Format("({0})"
                     //);
 
-
                     bb_commission_general.Logs = logFinal;
 
                 }
+
+                // PARA EFEITOS DE TESTE ---------------------------------------------------------------------
+                string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+                List<BB_Commission_General> commission_general_lst = new List<BB_Commission_General>();
+                commission_general_lst.Add(bb_commission_general);
+
+                ExportToExcelCommissionSheet(downloadsPath, commission_general_lst);
+
+                // -------------------------------------------------------------------------------------------
 
                 // ---------------------------------------------
                 // TESTS MYLENE --------------------------------
@@ -1324,6 +1336,120 @@ namespace WebApplication1.Controllers
             {
                 ex.Message.ToString();
             }
+        }
+
+        private string ExportToExcelCommissionSheet(string path, List<BB_Commission_General> commission_general)
+        {
+            Microsoft.Office.Interop.Excel.Application excelApplication;
+            Microsoft.Office.Interop.Excel.Workbook excelWorkbook;
+            Microsoft.Office.Interop.Excel._Worksheet excelSheet;
+            excelApplication = new Microsoft.Office.Interop.Excel.Application();
+            string erro = "";
+
+            bool exportSuccessful = true;
+            try
+            {
+                // Create new instance of Excel
+                excelApplication = new Microsoft.Office.Interop.Excel.Application();
+
+
+
+                // Make the process invisible to the user
+                excelApplication.ScreenUpdating = false;
+
+                // Make the process silent
+                excelApplication.DisplayAlerts = false;
+
+                // Open the workbook that you wish to export to PDF
+                excelWorkbook = excelApplication.Workbooks.Add();
+
+                excelSheet = excelWorkbook.Sheets.Add();
+
+                try
+                {
+                    Type tipo = commission_general.FirstOrDefault().GetType();
+                    PropertyInfo[] propriedades = tipo.GetProperties();
+
+                    var line = 1;
+                    var column = 1;
+
+                    // Add Header
+
+                    foreach (PropertyInfo propriedade in propriedades)
+                    {
+                        string nomeCampo = propriedade.Name;
+
+                        excelSheet.Cells[line, column] = nomeCampo;
+                        column += 1;
+                    }
+
+                    // Add cells with data
+                    foreach (var commission in commission_general)
+                    {
+                        column = 1;
+                        line += 1;
+
+                        foreach (PropertyInfo propriedade in propriedades)
+                        {
+                            object valorCampo = propriedade.GetValue(commission);
+
+                            excelSheet.Cells[line, column] = valorCampo;
+                            column += 1;
+                        }
+
+                    }
+
+                    excelWorkbook.SaveAs(path + "\\Test.xlsx");
+                    excelWorkbook.Close(true);
+                    //excelWorkbook.SaveAs(outputPath);
+                }
+                catch (System.Exception ex)
+                {
+                    File.Delete(path);
+                    // Mark the export as failed for the return value...
+                    exportSuccessful = false;
+
+                    // Do something with any exceptions here, if you wish...
+                    // MessageBox.Show...        
+                }
+                finally
+                {
+                    // Close the workbook, quit the Excel, and clean up regardless of the results...
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    if(excelSheet != null)
+                    {
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelSheet);
+                    }
+                    if (excelWorkbook != null)
+                    {
+                        excelWorkbook.Close();
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelWorkbook);             
+                    }
+                    if (excelApplication != null)
+                    {
+                        excelApplication.Quit();
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApplication);
+                    }
+
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                erro = ex.InnerException.ToString();
+            }
+            finally
+            {
+                // Close the workbook, quit the Excel, and clean up regardless of the results...
+                Console.WriteLine(erro);
+
+            }
+            Console.WriteLine(erro);
+            return erro;
         }
 
         // ---------------------------------------------------------------------------------------------------------------------
