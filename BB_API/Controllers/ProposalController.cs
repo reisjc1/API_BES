@@ -792,7 +792,7 @@ namespace WebApplication1.Controllers
 
             //err.ProposalObj = a1.ProposalObj;
 
-            err.Message = "Proceso concluido y transferido al BPT_Clientes.";
+            err.Message = "Proceso concluido y transferido al administración.";
 
 
 
