@@ -1353,7 +1353,7 @@ namespace WebApplication1.Controllers
                 {
                     strErro.AppendFormat("En el tipo de firma 'Otro', debe completar el campo de Observaciones.", Environment.NewLine);
                 }
-
+                /*
                 if (ft.FinancingTypeCode != 0 && pz == null)
                 {
                     strErro.AppendFormat("Debe realizar el pedido de Aprobación Financiera.", Environment.NewLine);
@@ -1388,7 +1388,7 @@ namespace WebApplication1.Controllers
                 {
                     strErro.AppendFormat("El tipo de financiamiento es diferente a la solicitud de aprobación financiera.");
                 }
-
+                */
                 string frequencyPrinting = "";
                 ApprovedPrintingService activePS = null;
                 if (a.ProposalObj.Draft.printingServices2.ActivePrintingService != null)

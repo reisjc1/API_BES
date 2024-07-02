@@ -95,7 +95,7 @@ namespace WebApplication1.BLL
                     //db.BB_Proposal_DeliveryLocation.RemoveRange(lstd);
                     db.Entry(proposal).State = proposal.ID == 0 ? EntityState.Added : EntityState.Modified;
                     db.SaveChanges();
-
+                    /*
                     if(proposal != null)
                     {
                         foreach(var opsManage in proposal.BB_Proposal_OPSManage)
@@ -111,7 +111,7 @@ namespace WebApplication1.BLL
                         Exception message = new Exception("Proposta gravada com sucesso");
                         log.Info(json, message);
                     }
-
+                    */
                 }
 
                 
