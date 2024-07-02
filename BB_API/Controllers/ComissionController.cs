@@ -1,14 +1,18 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Office2013.Excel;
+using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Web.Http;
 using WebApplication1.App_Start;
 using WebApplication1.BLL;
@@ -792,6 +796,13 @@ namespace WebApplication1.Controllers
             {
                 BB_Commission_General bb_commission_general = new BB_Commission_General();
 
+                ProposalBLL p1 = new ProposalBLL();
+                LoadProposalInfo i = new LoadProposalInfo();
+                i.ProposalId = proposalID;
+                ActionResponse loadProposal = p1.LoadProposal(i);
+
+
+
                 // --------------- PONTO 1 -------------->
 
                 List<BB_Proposal_Quote> oneShot = new List<BB_Proposal_Quote>();
@@ -887,7 +898,6 @@ namespace WebApplication1.Controllers
                             profitDictionary["MOBOTIX"].GPTotal += amount ?? 0;
                         }
                     }
-
                     
                     // Cálculo do GPTotal para cada familia de cada maquina
 
@@ -921,6 +931,7 @@ namespace WebApplication1.Controllers
                     BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
 
                     bool isNewClient = proposal.ClientAccountNumber.StartsWith("P");
+                    bool isNewBusinessLine = loadProposal.ProposalObj.Draft.baskets.newBusinessLine ?? false;
 
                     // Definicao da percentagem de comissao a aplicar a cada familia
                     if (!isNewClient)
@@ -938,6 +949,21 @@ namespace WebApplication1.Controllers
                         profit_WPH.ComissionPercentage = 9;
                         profit_MOBOTIX.ComissionPercentage = 9;
                     }
+                    else if (isNewBusinessLine)
+                    {
+                        profit_Hard.ComissionPercentage = 12.5;
+                        profit_IMS.ComissionPercentage = 12.5;
+                        profit_PRS.ComissionPercentage = 12.5;
+                        profit_OfficeHW.ComissionPercentage = 12.5;
+                        profit_PPHW.ComissionPercentage = 12.5;
+                        profit_IPHW.ComissionPercentage = 12.5;
+                        profit_ITS_MCS_BPS_IMS.ComissionPercentage = 12.5;
+                        profit_MCS.ComissionPercentage = 12.5;
+                        profit_BPS.ComissionPercentage = 12.5;
+                        profit_IMS_EXCLUDING.ComissionPercentage = 12.5;
+                        profit_WPH.ComissionPercentage = 12.5;
+                        profit_MOBOTIX.ComissionPercentage = 12.5;
+                    }
                     else
                     {
                         profit_Hard.ComissionPercentage = 15.5;
@@ -953,15 +979,6 @@ namespace WebApplication1.Controllers
                         profit_WPH.ComissionPercentage = 15.5;
                         profit_MOBOTIX.ComissionPercentage = 15.5;
                     }
-
-                    //else if ("Nova Linha")
-                    //{
-                    //    profit_Hard.ComissionPercentage = 12.5;
-                    //    profit_IMS.ComissionPercentage = 12.5;
-                    //    profit_VSS.ComissionPercentage = 12.5;
-                    //    profit_PRS.ComissionPercentage = 12.5;
-                    //    profit_MCS_BPS.ComissionPercentage = 12.5;
-                    //}
 
 
                     // Valor do GPTotal acrescido da comissao definida acima
@@ -984,11 +1001,6 @@ namespace WebApplication1.Controllers
                     // --------------- PONTO 4 -------------->
 
                     // Calculo da comissao a aplicar a familias do dicionario protocolDictionary
-
-                    ProposalBLL p1 = new ProposalBLL();
-                    LoadProposalInfo i = new LoadProposalInfo();
-                    i.ProposalId = proposalID;
-                    ActionResponse loadProposal = p1.LoadProposal(i);
 
                     List<Machine> machines = new List<Machine>();
 
@@ -1229,7 +1241,6 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CN_Mobotix = basket.Where(x => x.Family.Contains("Mobotix")).Sum(x => x.TotalNetsale);
                     bb_commission_general.Margen_Mobotix = profit_MOBOTIX.GPTotal;
 
-                    bb_commission_general.Logs = null;
                     bb_commission_general.Pagado = null;
                     bb_commission_general.Controlado = null;
                     bb_commission_general.Comisionado = null;
@@ -1237,12 +1248,12 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Excluido = null;
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
                     bb_commission_general.Es_Doc_Share = null;
-                    bb_commission_general.Es_GMA = null;
+                    bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.baskets.GMA;
                     bb_commission_general.Es_Invoice_List = bb_commission_general.Invoice_List;
-                    bb_commission_general.Support_BEU = null;
-                    bb_commission_general.CBB = null;
+                    bb_commission_general.Support_BEU = loadProposal.ProposalObj.Draft.baskets.BEUSupport;
+                    //bb_commission_general.CBB = loadProposal.ProposalObj.Draft.baskets.CBB;
                     bb_commission_general.Numero_Cliente_SAP = bb_commission_general.Numero_Cliente;
-                    bb_commission_general.Es_Prospecto = null;
+                    bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;
 
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
                     if (campaignID == 0)
@@ -1265,8 +1276,52 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CreatedBy = null;
                     bb_commission_general.ModifiedDate = null;
                     bb_commission_general.ModifiedBy = null;
-                    
+
+
+                    //LOGS Column -------------------------------------------------------------------------------------
+                    string logPhase_1 = string.Format("({0} MG41 - Comision sobre el margen = (Margen Hw({1}) + Margen ITS ({2}) + " +
+                    "Margen IMS ({3})) + Comisión de margen (cliente)({4}%) - ({5}%) = {6})",
+                    proposalID, // 0
+                    bb_commission_general.Margen_HW,  // 1
+                    bb_commission_general.Margen_ITS, // 2
+                    bb_commission_general.Margen_IMS, // 3
+                    profit_Hard.ComissionPercentage,  // 4
+                    0, // 5
+                    bb_commission_general.Comision_Sobre_Margen // 6
+                    );
+
+                    string newLine = "\n \n";
+
+                    string opType = campaignID == 6 ? "<" : ">";
+
+                    string logPhase_2 = string.Format("({0} - GPFull Log Com GP CA: NET SALES ({1}))" +
+                        "{2} 0 | CA HARD = {3} AND GP HARD = {4} AND %GP HARD = {5})",
+                    proposalID,                             // 0
+                    bb_commission_general.Cifra_Negocio,    // 1
+                    opType,                                 // 2
+                    bb_commission_general.CN_HW,            // 3
+                    bb_commission_general.Margen_HW,        // 4
+                    (bb_commission_general.Margen_HW * 100) / bb_commission_general.CN_HW // 5
+                    );
+
+                    string logFinal = logPhase_1 + newLine + logPhase_2 + newLine + "\n";
+
+                    //string logPhase_3 = string.Format("({0})"
+                    //);
+
+                    bb_commission_general.Logs = logFinal;
+
                 }
+
+                // PARA EFEITOS DE TESTE ---------------------------------------------------------------------
+                string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+                List<BB_Commission_General> commission_general_lst = new List<BB_Commission_General>();
+                commission_general_lst.Add(bb_commission_general);
+
+                ExportToExcelCommissionSheet(downloadsPath, commission_general_lst);
+
+                // -------------------------------------------------------------------------------------------
 
                 // ---------------------------------------------
                 // TESTS MYLENE --------------------------------
@@ -1281,6 +1336,120 @@ namespace WebApplication1.Controllers
             {
                 ex.Message.ToString();
             }
+        }
+
+        private string ExportToExcelCommissionSheet(string path, List<BB_Commission_General> commission_general)
+        {
+            Microsoft.Office.Interop.Excel.Application excelApplication;
+            Microsoft.Office.Interop.Excel.Workbook excelWorkbook;
+            Microsoft.Office.Interop.Excel._Worksheet excelSheet;
+            excelApplication = new Microsoft.Office.Interop.Excel.Application();
+            string erro = "";
+
+            bool exportSuccessful = true;
+            try
+            {
+                // Create new instance of Excel
+                excelApplication = new Microsoft.Office.Interop.Excel.Application();
+
+
+
+                // Make the process invisible to the user
+                excelApplication.ScreenUpdating = false;
+
+                // Make the process silent
+                excelApplication.DisplayAlerts = false;
+
+                // Open the workbook that you wish to export to PDF
+                excelWorkbook = excelApplication.Workbooks.Add();
+
+                excelSheet = excelWorkbook.Sheets.Add();
+
+                try
+                {
+                    Type tipo = commission_general.FirstOrDefault().GetType();
+                    PropertyInfo[] propriedades = tipo.GetProperties();
+
+                    var line = 1;
+                    var column = 1;
+
+                    // Add Header
+
+                    foreach (PropertyInfo propriedade in propriedades)
+                    {
+                        string nomeCampo = propriedade.Name;
+
+                        excelSheet.Cells[line, column] = nomeCampo;
+                        column += 1;
+                    }
+
+                    // Add cells with data
+                    foreach (var commission in commission_general)
+                    {
+                        column = 1;
+                        line += 1;
+
+                        foreach (PropertyInfo propriedade in propriedades)
+                        {
+                            object valorCampo = propriedade.GetValue(commission);
+
+                            excelSheet.Cells[line, column] = valorCampo;
+                            column += 1;
+                        }
+
+                    }
+
+                    excelWorkbook.SaveAs(path + "\\Test.xlsx");
+                    excelWorkbook.Close(true);
+                    //excelWorkbook.SaveAs(outputPath);
+                }
+                catch (System.Exception ex)
+                {
+                    File.Delete(path);
+                    // Mark the export as failed for the return value...
+                    exportSuccessful = false;
+
+                    // Do something with any exceptions here, if you wish...
+                    // MessageBox.Show...        
+                }
+                finally
+                {
+                    // Close the workbook, quit the Excel, and clean up regardless of the results...
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    if(excelSheet != null)
+                    {
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelSheet);
+                    }
+                    if (excelWorkbook != null)
+                    {
+                        excelWorkbook.Close();
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelWorkbook);             
+                    }
+                    if (excelApplication != null)
+                    {
+                        excelApplication.Quit();
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApplication);
+                    }
+
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                erro = ex.InnerException.ToString();
+            }
+            finally
+            {
+                // Close the workbook, quit the Excel, and clean up regardless of the results...
+                Console.WriteLine(erro);
+
+            }
+            Console.WriteLine(erro);
+            return erro;
         }
 
         // ---------------------------------------------------------------------------------------------------------------------
