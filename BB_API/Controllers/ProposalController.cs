@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public HttpResponseMessage PostProposalDraft(ProposalRootObject p)
         {
-           
+
             try
             {
                 ActionResponse ac = new ActionResponse();
@@ -51,13 +51,13 @@ namespace WebApplication1.Controllers
                     ac.Message = "Propuesta guardada éxito!";
                 }
 
-                if(ac.ProposalObj == null)
+                if (ac.ProposalObj == null)
                 {
                     throw new Exception("ac.ProposalObj = null");
                 }
 
                 return Request.CreateResponse(HttpStatusCode.OK, ac);
-        
+
             }
             catch (Exception ex)
 
@@ -641,129 +641,128 @@ namespace WebApplication1.Controllers
                     return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
                 }
 
-                if (pz != null || ft.FinancingTypeCode == 0)
+
+                List<LD_FinancingDocument> fd = db.LD_FinancingDocument.Where(x => x.TipoFinanciamentoID == ft.FinancingTypeCode).ToList();
+
+                if (proposal != null)
                 {
-                    List<LD_FinancingDocument> fd = db.LD_FinancingDocument.Where(x => x.TipoFinanciamentoID == ft.FinancingTypeCode).ToList();
+                    Observations = HttpContext.Current.Request.Params["Observations"];
+                    int ContractType = Int32.Parse(HttpContext.Current.Request.Params["ContractType"]);
+                    int ContractoId = 0;
+                    //List<string> contactos = JsonConvert.DeserializeObject<List<string>>(HttpContext.Current.Request.Params["Contacts"]);
+                    //foreach (var str in contactos)
+                    //{
+                    //    BB_Proposal_Contacts ca = new BB_Proposal_Contacts();
+                    //    ca.Name = str;
+                    //    ca.ProposalID = ProposalID;
+                    //    db.BB_Proposal_Contacts.Add(ca);
+                    //}
 
-                    if (proposal != null)
+                    //db.SaveChanges();
+
+
+
+                    LD_Contrato ld = new LD_Contrato();
+                    using (var db = new BB_DB_DEV_LeaseDesk())
                     {
-                        Observations = HttpContext.Current.Request.Params["Observations"];
-                        int ContractType = Int32.Parse(HttpContext.Current.Request.Params["ContractType"]);
-                        int ContractoId = 0;
-                        //List<string> contactos = JsonConvert.DeserializeObject<List<string>>(HttpContext.Current.Request.Params["Contacts"]);
-                        //foreach (var str in contactos)
-                        //{
-                        //    BB_Proposal_Contacts ca = new BB_Proposal_Contacts();
-                        //    ca.Name = str;
-                        //    ca.ProposalID = ProposalID;
-                        //    db.BB_Proposal_Contacts.Add(ca);
-                        //}
-
-                        //db.SaveChanges();
-
-
-
-                        LD_Contrato ld = new LD_Contrato();
-                        using (var db = new BB_DB_DEV_LeaseDesk())
+                        int? assnaturaID = db.LD_Assinatura_System.Where(x => x.System == SigningType).Select(x => x.ID).FirstOrDefault();
+                        ld = db.LD_Contrato.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).FirstOrDefault();
+                        if (ld == null)
                         {
-                            int? assnaturaID = db.LD_Assinatura_System.Where(x => x.System == SigningType).Select(x => x.ID).FirstOrDefault();
-                            ld = db.LD_Contrato.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).FirstOrDefault();
-                            if (ld == null)
-                            {
-                                ld = new LD_Contrato();
-                                ld.ProposalID = proposal.ID;
-                                ld.QuoteNumber = proposal.CRM_QUOTE_ID;
-                                ld.CreatedBy = proposal.CreatedBy;
-                                ld.ModifiedBy = proposal.CreatedBy;
-                                ld.CreatedTime = DateTime.Now;
-                                ld.ModifiedTime = DateTime.Now;
-                                ld.TipoContratoID = ContractType;
-                                ld.SystemAssinaturaID = assnaturaID;
-                                ld.ComentariosGC = Observations;
-                                ld.IsClosed = false;
-                                ld.Retorno = false;
-                                ld.StatusID = 1;
-                                db.LD_Contrato.Add(ld);
-                                db.SaveChanges();
-                                ContractoId = ld.ID;
-                                isFirstTime = true;
-                            }
-                            else
-                            {
-                                ld.ProposalID = proposal.ID;
-                                ld.ModifiedBy = proposal.CreatedBy;
-                                ld.ModifiedTime = DateTime.Now;
-                                ld.TipoContratoID = ContractType;
-                                ld.ComentariosGC += " " + Observations;
-                                ld.IsClosed = false;
-                                ld.Retorno = false;
-                                ld.SystemAssinaturaID = assnaturaID;
-                                ld.StatusID = 1;
-                                ld.DevolucaoMotivoID = 5;
-                                db.Entry(ld).State = EntityState.Modified;
-                                db.SaveChanges();
-                                isRetorno = true;
-                                ContractoId = ld.ID;
-                            }
+                            ld = new LD_Contrato();
+                            ld.ProposalID = proposal.ID;
+                            ld.QuoteNumber = proposal.CRM_QUOTE_ID;
+                            ld.CreatedBy = proposal.CreatedBy;
+                            ld.ModifiedBy = proposal.CreatedBy;
+                            ld.CreatedTime = DateTime.Now;
+                            ld.ModifiedTime = DateTime.Now;
+                            ld.TipoContratoID = ContractType;
+                            ld.SystemAssinaturaID = assnaturaID;
+                            ld.ComentariosGC = Observations;
+                            ld.IsClosed = false;
+                            ld.Retorno = false;
+                            ld.StatusID = 1;
+                            db.LD_Contrato.Add(ld);
+                            db.SaveChanges();
+                            ContractoId = ld.ID;
+                            isFirstTime = true;
                         }
-                        BB_Proposal p = new BB_Proposal();
-                        using (var db = new BB_DB_DEVEntities2())
+                        else
                         {
-                            p = db.BB_Proposal.Where(x => x.ID == ProposalID).FirstOrDefault();
-                            if (p != null)
-                            {
-                                p.StatusID = 11;
-                                db.Entry(p).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
+                            ld.ProposalID = proposal.ID;
+                            ld.ModifiedBy = proposal.CreatedBy;
+                            ld.ModifiedTime = DateTime.Now;
+                            ld.TipoContratoID = ContractType;
+                            ld.ComentariosGC += " " + Observations;
+                            ld.IsClosed = false;
+                            ld.Retorno = false;
+                            ld.SystemAssinaturaID = assnaturaID;
+                            ld.StatusID = 1;
+                            ld.DevolucaoMotivoID = 5;
+                            db.Entry(ld).State = EntityState.Modified;
+                            db.SaveChanges();
+                            isRetorno = true;
+                            ContractoId = ld.ID;
                         }
-
-
-
-
-                        //List<String> contactsArray = JsonConvert.DeserializeObject<List<String>>(HttpContext.Current.Request.Params["Contacts"]);
-                        string root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ContractoId + "\\";
-
-                        if (!Directory.Exists(root))
-                            System.IO.Directory.CreateDirectory(root);
-
-                        var docfiles = new List<string>();
-                        int documentCount = HttpContext.Current.Request.Files.Count;
-                        if (documentCount > 0)
+                    }
+                    BB_Proposal p = new BB_Proposal();
+                    using (var db = new BB_DB_DEVEntities2())
+                    {
+                        p = db.BB_Proposal.Where(x => x.ID == ProposalID).FirstOrDefault();
+                        if (p != null)
                         {
-                            for (int j = 0; j < documentCount; j++)
+                            p.StatusID = 11;
+                            db.Entry(p).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+
+
+
+
+                    //List<String> contactsArray = JsonConvert.DeserializeObject<List<String>>(HttpContext.Current.Request.Params["Contacts"]);
+                    string root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ContractoId + "\\";
+
+                    if (!Directory.Exists(root))
+                        System.IO.Directory.CreateDirectory(root);
+
+                    var docfiles = new List<string>();
+                    int documentCount = HttpContext.Current.Request.Files.Count;
+                    if (documentCount > 0)
+                    {
+                        for (int j = 0; j < documentCount; j++)
+                        {
+
+                            var document = HttpContext.Current.Request.Files["document" + j];
+                            //var documentData = HttpContext.Current.Request.Params["documentData" + j];
+                            DocumentoData documentData = JsonConvert.DeserializeObject<DocumentoData>(HttpContext.Current.Request.Params["documentData" + j]);
+
+                            var postedFile = document;
+                            var filePath = root + postedFile.FileName;
+                            postedFile.SaveAs(filePath);
+                            docfiles.Add(filePath);
+
+                            using (var db = new BB_DB_DEV_LeaseDesk())
                             {
-
-                                var document = HttpContext.Current.Request.Files["document" + j];
-                                //var documentData = HttpContext.Current.Request.Params["documentData" + j];
-                                DocumentoData documentData = JsonConvert.DeserializeObject<DocumentoData>(HttpContext.Current.Request.Params["documentData" + j]);
-
-                                var postedFile = document;
-                                var filePath = root + postedFile.FileName;
-                                postedFile.SaveAs(filePath);
-                                docfiles.Add(filePath);
-
-                                using (var db = new BB_DB_DEV_LeaseDesk())
-                                {
-                                    LD_DocumentProposal documentoSave = new LD_DocumentProposal();
-                                    documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
-                                    documentoSave.CreatedBy = "";
-                                    documentoSave.CreatedTime = DateTime.Now;
-                                    documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
-                                    documentoSave.SystemID = 1;
-                                    documentoSave.FileFullPath = filePath;
-                                    documentoSave.DocumentIsValid = false;
-                                    documentoSave.DocumentIsProcess = false;
-                                    documentoSave.FileName = Path.GetFileName(filePath);
-                                    documentoSave.ContratoID = ContractoId;
-                                    documentoSave.Comments = documentData != null ? documentData.Observations : "";
-                                    db.LD_DocumentProposal.Add(documentoSave);
-                                    db.SaveChanges();
-                                }
+                                LD_DocumentProposal documentoSave = new LD_DocumentProposal();
+                                documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
+                                documentoSave.CreatedBy = "";
+                                documentoSave.CreatedTime = DateTime.Now;
+                                documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
+                                documentoSave.SystemID = 1;
+                                documentoSave.FileFullPath = filePath;
+                                documentoSave.DocumentIsValid = false;
+                                documentoSave.DocumentIsProcess = false;
+                                documentoSave.FileName = Path.GetFileName(filePath);
+                                documentoSave.ContratoID = ContractoId;
+                                documentoSave.Comments = documentData != null ? documentData.Observations : "";
+                                db.LD_DocumentProposal.Add(documentoSave);
+                                db.SaveChanges();
                             }
                         }
                     }
                 }
+
 
 
                 if (isFirstTime)
@@ -1415,9 +1414,9 @@ namespace WebApplication1.Controllers
                 }
 
 
-                if(pz != null && pz.DataExpiracao != null)
+                if (pz != null && pz.DataExpiracao != null)
                 {
-                    if(pz.DataExpiracao <= DateTime.Now)
+                    if (pz.DataExpiracao <= DateTime.Now)
                         strErro.AppendFormat("Se ha superado la fecha de expiración de la aprobación de crédito. ¡Solicite un nuevo Pedido de Financiamiento!");
                 }
 
@@ -1570,7 +1569,7 @@ namespace WebApplication1.Controllers
 
             try
             {
-                
+
                 BB_Proposal_Financing ft = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposal.ID).FirstOrDefault();
                 BB_Proposal_PrazoDiferenciado pz = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposal.ID && x.IsComplete.Value == true).FirstOrDefault();
 
@@ -2101,7 +2100,7 @@ namespace WebApplication1.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log4net.ThreadContext.Properties["proposal_id"] = proposalID;
                 log.Error(ex.Message.ToString(), ex);
