@@ -1120,9 +1120,9 @@ namespace WebApplication1.Controllers
                     };
 
 
-                    // --------------------------------------------------
-                    // Construcao do modelo para o insert
-                    // --------------------------------------------------
+                    // ----------------------------------------------------------------------------------------------------
+                    //                              Construcao do modelo para o insert
+                    // ----------------------------------------------------------------------------------------------------
 
                     using (var dbUsers = new masterEntities())
                         {
@@ -1164,13 +1164,13 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Facturación = null;
                     bb_commission_general.Cifra_Negocio = proposal.SubTotal;
 
-                    // Total_Margin => Soma de todos os GP daquele proposalID (incluindo RS)
+                    // Soma de todos os GP daquele proposalID (incluindo RS)
                     bb_commission_general.Margen_Total = profitDictionary.Where(d => d.Key != "OfficeHW").Sum(x => x.Value.GPTotal);
 
                     // Same as above
                     bb_commission_general.Margen_Total_Nueva = bb_commission_general.Margen_Total;
 
-                    // soma de todas as familias do estilo: profit_Hard.CalculatedCommission + profit_OfficeHW.CalculatedCommission + .....
+                    // Soma da CalculatedCommission todas as familias
                     bb_commission_general.Comision_Sobre_Margen = profit_OfficeHW.CalculatedCommission +
                                                                  profit_IMS.CalculatedCommission +
                                                                  profit_PRS.CalculatedCommission +
@@ -1182,8 +1182,6 @@ namespace WebApplication1.Controllers
                                                                  profit_IMS_EXCLUDING.CalculatedCommission +
                                                                  profit_WPH.CalculatedCommission +
                                                                  profit_MOBOTIX.CalculatedCommission;
-
-                    // ponto 4 A3_COLOR... regras 
 
                     bb_commission_general.Comision_Mantenimiento = protocolDictionary.Values
                         .Where(cd => cd.Machines != null)
@@ -1278,16 +1276,18 @@ namespace WebApplication1.Controllers
                     bb_commission_general.ModifiedBy = null;
 
 
-                    //LOGS Column -------------------------------------------------------------------------------------
+                    // ----------------------------------------------------------------------------------------------------
+                    //                              Construcao da coluna 'Logs'
+                    // ----------------------------------------------------------------------------------------------------
                     string logPhase_1 = string.Format("({0} MG41 - Comision sobre el margen = (Margen Hw({1}) + Margen ITS ({2}) + " +
                     "Margen IMS ({3})) + Comisión de margen (cliente)({4}%) - ({5}%) = {6})",
-                    proposalID, // 0
-                    bb_commission_general.Margen_HW,  // 1
-                    bb_commission_general.Margen_ITS, // 2
-                    bb_commission_general.Margen_IMS, // 3
-                    profit_Hard.ComissionPercentage,  // 4
-                    0, // 5
-                    bb_commission_general.Comision_Sobre_Margen // 6
+                    proposalID,                       // {0}
+                    bb_commission_general.Margen_HW,  // {1}
+                    bb_commission_general.Margen_ITS, // {2}
+                    bb_commission_general.Margen_IMS, // {3}
+                    profit_Hard.ComissionPercentage,  // {4}
+                    0,                                // {5}
+                    bb_commission_general.Comision_Sobre_Margen // {6}
                     );
 
                     string newLine = "\n \n";
@@ -1296,12 +1296,12 @@ namespace WebApplication1.Controllers
 
                     string logPhase_2 = string.Format("({0} - GPFull Log Com GP CA: NET SALES ({1}))" +
                         "{2} 0 | CA HARD = {3} AND GP HARD = {4} AND %GP HARD = {5})",
-                    proposalID,                             // 0
-                    bb_commission_general.Cifra_Negocio,    // 1
-                    opType,                                 // 2
-                    bb_commission_general.CN_HW,            // 3
-                    bb_commission_general.Margen_HW,        // 4
-                    (bb_commission_general.Margen_HW * 100) / bb_commission_general.CN_HW // 5
+                    proposalID,                             // {0}
+                    bb_commission_general.Cifra_Negocio,    // {1}
+                    opType,                                 // {2}
+                    bb_commission_general.CN_HW,            // {3}
+                    bb_commission_general.Margen_HW,        // {4}
+                    (bb_commission_general.Margen_HW * 100) / bb_commission_general.CN_HW // {5}
                     );
 
                     string logFinal = logPhase_1 + newLine + logPhase_2 + newLine + "\n";
@@ -1311,6 +1311,9 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Logs = logFinal;
 
+                    // ----------------------------------------------------------------------------------------------------
+
+                    // Saving General Commission to Data Base
                     db.BB_Commission_General.Add(bb_commission_general);
                     db.SaveChanges();
 
@@ -1454,6 +1457,28 @@ namespace WebApplication1.Controllers
             }
             Console.WriteLine(erro);
             return exportSuccessful;
+        }
+
+        // ######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetAllCommissions")]
+        public IHttpActionResult GetAllCommissions()
+        {          
+            List<BB_Commission_General> commision_general_lst = new List<BB_Commission_General>();
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    commision_general_lst = db.BB_Commission_General.ToList();
+                }
+                return Ok(commision_general_lst);
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+                return Content(HttpStatusCode.BadRequest, "Problem getting commissions.");
+            }
         }
 
         // ---------------------------------------------------------------------------------------------------------------------
