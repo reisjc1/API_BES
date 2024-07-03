@@ -1319,16 +1319,6 @@ namespace WebApplication1.Controllers
 
                 }
 
-                // PARA EFEITOS DE TESTE ---------------------------------------------------------------------
-                string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-
-                List<BB_Commission_General> commission_general_lst = new List<BB_Commission_General>();
-                commission_general_lst.Add(bb_commission_general);
-
-                bool exportSuccessful = ExportToExcelCommissionSheet(downloadsPath, commission_general_lst);
-
-                // -------------------------------------------------------------------------------------------
-
                 // ---------------------------------------------
                 // TESTS MYLENE --------------------------------
                 //                                            --
@@ -1345,8 +1335,15 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private bool ExportToExcelCommissionSheet(string path, List<BB_Commission_General> commission_general)
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("ExportCommissions")]
+        public IHttpActionResult ExportCommissions()
         {
+            string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+            List<BB_Commission_General> commission_lst = new List<BB_Commission_General>();
+
             string erro = "";
 
             bool exportSuccessful = true;
@@ -1355,6 +1352,11 @@ namespace WebApplication1.Controllers
             Worksheet excelSheet = null;
             try
             {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    commission_lst = db.BB_Commission_General.ToList();
+                }
+
                 // Create new instance of Excel
                 excelApplication = new Application();
 
@@ -1368,7 +1370,7 @@ namespace WebApplication1.Controllers
                 excelWorkbook = excelApplication.Workbooks.Add();
                 excelSheet = excelWorkbook.Sheets.Add();
 
-                Type tipo = commission_general.FirstOrDefault().GetType();
+                Type tipo = commission_lst.FirstOrDefault().GetType();
                 PropertyInfo[] propriedades = tipo.GetProperties();
 
                 var line = 1;
@@ -1384,7 +1386,7 @@ namespace WebApplication1.Controllers
                 }
 
                 // Add cells with data
-                foreach (var commission in commission_general)
+                foreach (var commission in commission_lst)
                 {
                     column = 1;
                     line += 1;
@@ -1399,16 +1401,22 @@ namespace WebApplication1.Controllers
 
                 }
 
+                // Define a altura padrão para todas as linhas
+                excelSheet.Rows.RowHeight = excelSheet.StandardHeight;
+
+                // Define a largura padrão para todas as colunas
+                //excelSheet.Columns.ColumnWidth = excelSheet.StandardWidth;
+
                 // Generate a unique file name
                 string baseFileName = "Test";
                 string fileExtension = ".xlsx";
-                string fullFilePath = Path.Combine(path, baseFileName + fileExtension);
+                string fullFilePath = Path.Combine(downloadsPath, baseFileName + fileExtension);
                 int fileIndex = 1;
 
                 while (File.Exists(fullFilePath))
                 {
                     fileIndex++;
-                    fullFilePath = Path.Combine(path, baseFileName + $"({fileIndex})" + fileExtension);
+                    fullFilePath = Path.Combine(downloadsPath, baseFileName + $"({fileIndex})" + fileExtension);
                 }
 
                 excelWorkbook.SaveAs(fullFilePath);
@@ -1416,10 +1424,12 @@ namespace WebApplication1.Controllers
             }
             catch (System.Exception ex)
             {
-                File.Delete(path);
+                File.Delete(downloadsPath);
 
                 exportSuccessful = false;
                 erro = ex.Message;
+
+                return Content(HttpStatusCode.BadRequest, "BadRequest");
             }
             finally
             {
@@ -1448,6 +1458,7 @@ namespace WebApplication1.Controllers
                 catch (Exception ex)
                 {
                     Console.WriteLine("Erro on Releasing dos recursos COM: " + ex.Message);
+                    
                 }
                 finally
                 {
@@ -1456,7 +1467,7 @@ namespace WebApplication1.Controllers
                 }
             }
             Console.WriteLine(erro);
-            return exportSuccessful;
+            return Ok();
         }
 
         // ######################################################################################
@@ -1480,6 +1491,9 @@ namespace WebApplication1.Controllers
                 return Content(HttpStatusCode.BadRequest, "Problem getting commissions.");
             }
         }
+
+        // ######################################################################################
+
 
         // ---------------------------------------------------------------------------------------------------------------------
         // CLASSES -------------------------------------------------------------------------------------------------------------
