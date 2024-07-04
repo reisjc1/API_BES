@@ -529,10 +529,11 @@ namespace WebApplication1.Controllers
 
             BB_CRM_Quotes quoteStatus = db.BB_CRM_Quotes.Where(x => x.quotenumber == quoteCRM).FirstOrDefault();
 
-            err.State = quoteStatus.statecodename;
-            err.Status = quoteStatus.statuscodename;
-
-
+            if (quoteStatus != null)
+            {
+                err.State = quoteStatus.statecodename;
+                err.Status = quoteStatus.statuscodename;
+            }
 
             return Request.CreateResponse<StatusActionResponse>(HttpStatusCode.OK, err);
         }
