@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using WebApplication1.App_Start;
 using WebApplication1.Controllers;
 using WebApplication1.Models;
 using WebApplication1.Models.ViewModels;
@@ -1205,7 +1207,6 @@ namespace WebApplication1.BLL
                     }
 
 
-
                     err.ProposalObj = new ProposalRootObject();
                     err.ProposalObj.Draft = p.Draft;
                     return err;
@@ -1779,6 +1780,15 @@ namespace WebApplication1.BLL
                     err.ProposalObj.Draft.baskets.newBusinessLine = typeOfClient.NewBusinessLine;
                     err.ProposalObj.Draft.baskets.GMA = typeOfClient.GMA;
                     err.ProposalObj.Draft.baskets.BEUSupport = typeOfClient.BEUSupport;
+                }
+
+
+                //LD_DocumentProposal - Contractos
+                err.ProposalObj.Draft.contracts = new BusinessContract();
+                List<LD_DocumentProposal> contractDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                if (contractDocs != null)
+                {
+                    err.ProposalObj.Draft.contracts.contractDocs = contractDocs;
                 }
 
             }
