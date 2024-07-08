@@ -77,7 +77,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
             string financingCode = null;
-            if (financingType == "002")
+            if (financingType == "002" || financingCode == "008")
             {
                 financingCode = "ZVBS";
             }
@@ -98,7 +98,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                 if (dataIntegration != null)
                 {
-                    if ((financingType == "003" || financingType == "002") && !string.IsNullOrWhiteSpace(dataIntegration.COND_TYPE_RENTAL))
+                    if ((financingType == "003") && !string.IsNullOrWhiteSpace(dataIntegration.COND_TYPE_RENTAL))
                     {
                         financingCode = dataIntegration.COND_TYPE_RENTAL;
                     }

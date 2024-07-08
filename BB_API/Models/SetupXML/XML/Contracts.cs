@@ -123,18 +123,19 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
 
 
-                        CONTR_DOC = $"C_D{contract.ID}_{contractIndexString}_{randomLetterNunber}",
+                        //CONTR_DOC = $"C_D{contract.ID}_{contractIndexString}_{randomLetterNunber}",
+                        CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
                         VT_AUART = "ZWV1",
                         VT_BEGDA = formattedDtCont,
                         VT_ABNDA = "",
                         VT_VTART = contractType,
-                        VT_SERWI = "EBB",             //"BES",
+                        VT_SERWI = "BES",             //"BES",
                         VT_ESCAL = "08",
                         VT_AUGRU = "ZCC",             //input de um campo -> ZCC = só 1 contrato   // ZCS
                         VT_LAUFK = vtLaufk,
                         VT_VLAUFZ = pd.PrazoDiferenciado.ToString(),
                         VT_VLAUFE = "3",
-                        VT_ANZPOS = "3",//noOrders.ToString(),
+                        VT_ANZPOS = "1",//noOrders.ToString(),
                         VT_VUNDAT = FirstDayNextMonthString,
                         VT_ZTERM = "453E"
                     });
@@ -182,7 +183,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         VT_LAUFK = vtLaufk,
                         VT_VLAUFZ = pd.PrazoDiferenciado.ToString(),
                         VT_VLAUFE = "3",        //TODO: Para depois do GO LIVE                                                                                                                                                               
-                        VT_ANZPOS = "3",//noOrders.ToString(),
+                        VT_ANZPOS = "1",//noOrders.ToString(),
                         VT_VUNDAT = FirstDayNextMonthString,
                         VT_ZTERM = "453E"       //TODO: FinancingPaymentMethods.
                     });

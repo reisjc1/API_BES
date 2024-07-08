@@ -1120,9 +1120,9 @@ namespace WebApplication1.Controllers
                     };
 
 
-                    // --------------------------------------------------
-                    // Construcao do modelo para o insert
-                    // --------------------------------------------------
+                    // ----------------------------------------------------------------------------------------------------
+                    //                              Construcao do modelo para o insert
+                    // ----------------------------------------------------------------------------------------------------
 
                     using (var dbUsers = new masterEntities())
                         {
@@ -1164,13 +1164,13 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Facturación = null;
                     bb_commission_general.Cifra_Negocio = proposal.SubTotal;
 
-                    // Total_Margin => Soma de todos os GP daquele proposalID (incluindo RS)
+                    // Soma de todos os GP daquele proposalID (incluindo RS)
                     bb_commission_general.Margen_Total = profitDictionary.Where(d => d.Key != "OfficeHW").Sum(x => x.Value.GPTotal);
 
                     // Same as above
                     bb_commission_general.Margen_Total_Nueva = bb_commission_general.Margen_Total;
 
-                    // soma de todas as familias do estilo: profit_Hard.CalculatedCommission + profit_OfficeHW.CalculatedCommission + .....
+                    // Soma da CalculatedCommission todas as familias
                     bb_commission_general.Comision_Sobre_Margen = profit_OfficeHW.CalculatedCommission +
                                                                  profit_IMS.CalculatedCommission +
                                                                  profit_PRS.CalculatedCommission +
@@ -1182,8 +1182,6 @@ namespace WebApplication1.Controllers
                                                                  profit_IMS_EXCLUDING.CalculatedCommission +
                                                                  profit_WPH.CalculatedCommission +
                                                                  profit_MOBOTIX.CalculatedCommission;
-
-                    // ponto 4 A3_COLOR... regras 
 
                     bb_commission_general.Comision_Mantenimiento = protocolDictionary.Values
                         .Where(cd => cd.Machines != null)
@@ -1278,16 +1276,18 @@ namespace WebApplication1.Controllers
                     bb_commission_general.ModifiedBy = null;
 
 
-                    //LOGS Column -------------------------------------------------------------------------------------
+                    // ----------------------------------------------------------------------------------------------------
+                    //                              Construcao da coluna 'Logs'
+                    // ----------------------------------------------------------------------------------------------------
                     string logPhase_1 = string.Format("({0} MG41 - Comision sobre el margen = (Margen Hw({1}) + Margen ITS ({2}) + " +
                     "Margen IMS ({3})) + Comisión de margen (cliente)({4}%) - ({5}%) = {6})",
-                    proposalID, // 0
-                    bb_commission_general.Margen_HW,  // 1
-                    bb_commission_general.Margen_ITS, // 2
-                    bb_commission_general.Margen_IMS, // 3
-                    profit_Hard.ComissionPercentage,  // 4
-                    0, // 5
-                    bb_commission_general.Comision_Sobre_Margen // 6
+                    proposalID,                       // {0}
+                    bb_commission_general.Margen_HW,  // {1}
+                    bb_commission_general.Margen_ITS, // {2}
+                    bb_commission_general.Margen_IMS, // {3}
+                    profit_Hard.ComissionPercentage,  // {4}
+                    0,                                // {5}
+                    bb_commission_general.Comision_Sobre_Margen // {6}
                     );
 
                     string newLine = "\n \n";
@@ -1296,12 +1296,12 @@ namespace WebApplication1.Controllers
 
                     string logPhase_2 = string.Format("({0} - GPFull Log Com GP CA: NET SALES ({1}))" +
                         "{2} 0 | CA HARD = {3} AND GP HARD = {4} AND %GP HARD = {5})",
-                    proposalID,                             // 0
-                    bb_commission_general.Cifra_Negocio,    // 1
-                    opType,                                 // 2
-                    bb_commission_general.CN_HW,            // 3
-                    bb_commission_general.Margen_HW,        // 4
-                    (bb_commission_general.Margen_HW * 100) / bb_commission_general.CN_HW // 5
+                    proposalID,                             // {0}
+                    bb_commission_general.Cifra_Negocio,    // {1}
+                    opType,                                 // {2}
+                    bb_commission_general.CN_HW,            // {3}
+                    bb_commission_general.Margen_HW,        // {4}
+                    (bb_commission_general.Margen_HW * 100) / bb_commission_general.CN_HW // {5}
                     );
 
                     string logFinal = logPhase_1 + newLine + logPhase_2 + newLine + "\n";
@@ -1311,17 +1311,13 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Logs = logFinal;
 
+                    // ----------------------------------------------------------------------------------------------------
+
+                    // Saving General Commission to Data Base
+                    db.BB_Commission_General.Add(bb_commission_general);
+                    db.SaveChanges();
+
                 }
-
-                // PARA EFEITOS DE TESTE ---------------------------------------------------------------------
-                string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-
-                List<BB_Commission_General> commission_general_lst = new List<BB_Commission_General>();
-                commission_general_lst.Add(bb_commission_general);
-
-                ExportToExcelCommissionSheet(downloadsPath, commission_general_lst);
-
-                // -------------------------------------------------------------------------------------------
 
                 // ---------------------------------------------
                 // TESTS MYLENE --------------------------------
@@ -1330,6 +1326,7 @@ namespace WebApplication1.Controllers
                 //                                            --
                 // ---------------------------------------------
                 // ---------------------------------------------
+               
 
             }
             catch (Exception ex)
@@ -1338,21 +1335,30 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private string ExportToExcelCommissionSheet(string path, List<BB_Commission_General> commission_general)
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("ExportCommissions")]
+        public IHttpActionResult ExportCommissions()
         {
-            Microsoft.Office.Interop.Excel.Application excelApplication;
-            Microsoft.Office.Interop.Excel.Workbook excelWorkbook;
-            Microsoft.Office.Interop.Excel._Worksheet excelSheet;
-            excelApplication = new Microsoft.Office.Interop.Excel.Application();
+            string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+            List<BB_Commission_General> commission_lst = new List<BB_Commission_General>();
+
             string erro = "";
 
             bool exportSuccessful = true;
+            Application excelApplication = null;
+            Workbook excelWorkbook = null;
+            Worksheet excelSheet = null;
             try
             {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    commission_lst = db.BB_Commission_General.ToList();
+                }
+
                 // Create new instance of Excel
-                excelApplication = new Microsoft.Office.Interop.Excel.Application();
-
-
+                excelApplication = new Application();
 
                 // Make the process invisible to the user
                 excelApplication.ScreenUpdating = false;
@@ -1362,95 +1368,132 @@ namespace WebApplication1.Controllers
 
                 // Open the workbook that you wish to export to PDF
                 excelWorkbook = excelApplication.Workbooks.Add();
-
                 excelSheet = excelWorkbook.Sheets.Add();
 
-                try
+                Type tipo = commission_lst.FirstOrDefault().GetType();
+                PropertyInfo[] propriedades = tipo.GetProperties();
+
+                var line = 1;
+                var column = 1;
+
+                // Add Header
+                foreach (PropertyInfo propriedade in propriedades)
                 {
-                    Type tipo = commission_general.FirstOrDefault().GetType();
-                    PropertyInfo[] propriedades = tipo.GetProperties();
+                    string nomeCampo = propriedade.Name;
 
-                    var line = 1;
-                    var column = 1;
+                    excelSheet.Cells[line, column] = nomeCampo;
+                    column += 1;
+                }
 
-                    // Add Header
+                // Add cells with data
+                foreach (var commission in commission_lst)
+                {
+                    column = 1;
+                    line += 1;
 
                     foreach (PropertyInfo propriedade in propriedades)
                     {
-                        string nomeCampo = propriedade.Name;
+                        object valorCampo = propriedade.GetValue(commission);
 
-                        excelSheet.Cells[line, column] = nomeCampo;
+                        excelSheet.Cells[line, column] = valorCampo;
                         column += 1;
                     }
 
-                    // Add cells with data
-                    foreach (var commission in commission_general)
-                    {
-                        column = 1;
-                        line += 1;
-
-                        foreach (PropertyInfo propriedade in propriedades)
-                        {
-                            object valorCampo = propriedade.GetValue(commission);
-
-                            excelSheet.Cells[line, column] = valorCampo;
-                            column += 1;
-                        }
-
-                    }
-
-                    excelWorkbook.SaveAs(path + "\\Test.xlsx");
-                    excelWorkbook.Close(true);
-                    //excelWorkbook.SaveAs(outputPath);
                 }
-                catch (System.Exception ex)
+
+                // Define a altura padrão para todas as linhas
+                excelSheet.Rows.RowHeight = excelSheet.StandardHeight;
+
+                // Define a largura padrão para todas as colunas
+                //excelSheet.Columns.ColumnWidth = excelSheet.StandardWidth;
+
+                // Generate a unique file name
+                string baseFileName = "Test";
+                string fileExtension = ".xlsx";
+                string fullFilePath = Path.Combine(downloadsPath, baseFileName + fileExtension);
+                int fileIndex = 1;
+
+                while (File.Exists(fullFilePath))
                 {
-                    File.Delete(path);
-                    // Mark the export as failed for the return value...
-                    exportSuccessful = false;
-
-                    // Do something with any exceptions here, if you wish...
-                    // MessageBox.Show...        
+                    fileIndex++;
+                    fullFilePath = Path.Combine(downloadsPath, baseFileName + $"({fileIndex})" + fileExtension);
                 }
-                finally
-                {
-                    // Close the workbook, quit the Excel, and clean up regardless of the results...
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    if(excelSheet != null)
-                    {
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelSheet);
-                    }
-                    if (excelWorkbook != null)
-                    {
-                        excelWorkbook.Close();
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelWorkbook);             
-                    }
-                    if (excelApplication != null)
-                    {
-                        excelApplication.Quit();
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApplication);
-                    }
 
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
-                }
+                excelWorkbook.SaveAs(fullFilePath);
+                excelWorkbook.Close(true);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
+                File.Delete(downloadsPath);
 
-                erro = ex.InnerException.ToString();
+                exportSuccessful = false;
+                erro = ex.Message;
+
+                return Content(HttpStatusCode.BadRequest, "BadRequest");
             }
             finally
             {
-                // Close the workbook, quit the Excel, and clean up regardless of the results...
-                Console.WriteLine(erro);
+                // Clean up COM objects
+                try
+                {
+                    if (excelSheet != null)
+                    {
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelSheet);
+                        excelSheet = null;
+                    }
 
+                    if (excelWorkbook != null)
+                    {
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelWorkbook);
+                        excelWorkbook = null;
+                    }
+
+                    if (excelApplication != null)
+                    {
+                        excelApplication.Quit(); // Sair da aplicação Excel
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApplication);
+                        excelApplication = null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro on Releasing dos recursos COM: " + ex.Message);
+                    
+                }
+                finally
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                }
             }
             Console.WriteLine(erro);
-            return erro;
+            return Ok();
         }
+
+        // ######################################################################################
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetAllCommissions")]
+        public IHttpActionResult GetAllCommissions()
+        {          
+            List<BB_Commission_General> commision_general_lst = new List<BB_Commission_General>();
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    commision_general_lst = db.BB_Commission_General.ToList();
+                }
+                return Ok(commision_general_lst);
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+                return Content(HttpStatusCode.BadRequest, "Problem getting commissions.");
+            }
+        }
+
+        // ######################################################################################
+
 
         // ---------------------------------------------------------------------------------------------------------------------
         // CLASSES -------------------------------------------------------------------------------------------------------------

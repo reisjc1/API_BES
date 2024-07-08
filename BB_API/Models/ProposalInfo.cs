@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication1.Controllers;
+using WebApplication1.Models.SetupXML.XML;
 using WebApplication1.Models.ViewModels;
 
 namespace WebApplication1.Models
@@ -179,6 +180,7 @@ namespace WebApplication1.Models
 
         public List<Maquinas_Usadas_Gestor> Maquinas_Usadas_Gestor { get; set; }
         public List<BB_Permissions> shareProfileDelegation { get; set; }
+        public BusinessContract contracts { get; set; }
     }
 
     public class OPSPacks
@@ -851,5 +853,10 @@ namespace WebApplication1.Models
         public List<BB_Proposal_Contacts_Documentation> DocumentationContacts { get; set; }
         public List<BB_Proposal_Contacts_Signing> SigningContacts { get; set; }
 
+    }
+
+    public class BusinessContract
+    {
+        public List<LD_DocumentProposal> contractDocs { get; set; }
     }
 }

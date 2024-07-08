@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using WebApplication1.App_Start;
 using WebApplication1.Controllers;
 using WebApplication1.Models;
 using WebApplication1.Models.ViewModels;
@@ -1176,6 +1178,8 @@ namespace WebApplication1.BLL
                     //Contacts_Documentation
                     CreateContactsDocumentation(p, ProposalID);
 
+                    //Add Documents
+                    //CreateDocuments(p, p.Draft.details.CRM_QUOTE_ID);
 
 
                     //TYPE OF CLIENT
@@ -1201,7 +1205,6 @@ namespace WebApplication1.BLL
                     {
                         throw ex;
                     }
-
 
 
                     err.ProposalObj = new ProposalRootObject();
@@ -1777,6 +1780,15 @@ namespace WebApplication1.BLL
                     err.ProposalObj.Draft.baskets.newBusinessLine = typeOfClient.NewBusinessLine;
                     err.ProposalObj.Draft.baskets.GMA = typeOfClient.GMA;
                     err.ProposalObj.Draft.baskets.BEUSupport = typeOfClient.BEUSupport;
+                }
+
+
+                //LD_DocumentProposal - Contractos
+                err.ProposalObj.Draft.contracts = new BusinessContract();
+                List<LD_DocumentProposal> contractDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                if (contractDocs != null)
+                {
+                    err.ProposalObj.Draft.contracts.contractDocs = contractDocs;
                 }
 
             }
@@ -2560,6 +2572,33 @@ namespace WebApplication1.BLL
                     db.SaveChanges();
                 }
 
+
+                encontrouSigin = db.BB_Proposal_Contacts_Signing.Any(x => x.ProposalID == ProposalID);
+                if (encontrouSigin)
+                {
+                    List<BB_Proposal_Contacts_Signing> toRemove = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == ProposalID).ToList();
+                    db.BB_Proposal_Contacts_Signing.RemoveRange(toRemove);
+                    db.SaveChanges();
+
+                }
+
+                List<BB_Proposal_Contacts_Signing> lstSigningContactsDoc = p.ClientApproval.SigningContacts;
+                if (lstSigningContactsDoc.Count > 0 && lstSigningContactsDoc[0].Email != "" 
+                        && lstSigningContactsDoc[0].Name != "" && lstSigningContactsDoc[0].Telefone != ""){
+                    foreach (var ContactSign in lstSigningContactsDoc)
+                    {
+                        BB_Proposal_Contacts_Signing ca = new BB_Proposal_Contacts_Signing();
+
+                        ca.Email = ContactSign.Email;
+                        ca.Name = ContactSign.Name;
+                        ca.Telefone = ContactSign.Telefone;
+                        ca.ProposalID = ProposalID;
+                        db.BB_Proposal_Contacts_Signing.Add(ca);
+                    }
+
+                    db.SaveChanges();
+                }
+
             }
             catch (Exception ex)
             {
@@ -2567,5 +2606,40 @@ namespace WebApplication1.BLL
                 throw ex;
             }
         }
+
+        //private void CreateDocuments(ProposalRootObject p, string quote)
+        //{
+
+        //    if (p == null) return;
+        //    try
+        //    {
+        //        bool existDocs = db.LD_DocumentProposal.Any(x => x.QuoteNumber == quote);
+        //        if (existDocs)
+        //        {
+        //            List<LD_DocumentProposal> toRemove = db.LD_DocumentProposal.Where(x => x.QuoteNumber == quote).ToList();
+        //            db.LD_DocumentProposal.RemoveRange(toRemove);
+        //            db.SaveChanges();
+
+        //        }
+
+        //        List<LD_DocumentProposal> docs = p.ClientApproval.Documents;
+        //        foreach (LD_DocumentProposal doc in docs)
+        //        {
+        //            doc.
+        //            doc.CreatedTime = DateTime.Now;
+        //            doc.SystemID = 1;
+        //            doc.DocumentIsProcess = false;
+        //            doc.DocumentIsValid = false;
+
+        //            db.LD_DocumentProposal.Add(doc);
+        //        }
+                
+        //        db.SaveChanges();
+
+        //    } catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
     }
 }
