@@ -633,7 +633,7 @@ namespace WebApplication1.Controllers
 
                 StringBuilder err1 = ValidarProcessoVenda(lstContactDocumentantion, lstContactSign, proposal, pz, SigningType, SigningTypeObservations, ft, a1);
 
-
+              
 
                 if (err1 != null && err1.Length > 0)
                 {
@@ -760,6 +760,12 @@ namespace WebApplication1.Controllers
                                 db.SaveChanges();
                             }
                         }
+                    }
+
+                    List<LD_DocumentProposal> lstDocumentProposal = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                    foreach (var item in lstDocumentProposal)
+                    {
+                        item.ContratoID = ContractoId;
                     }
                 }
 
