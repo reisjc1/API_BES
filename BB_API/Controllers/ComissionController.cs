@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Office2013.Excel;
-using Microsoft.Office.Interop.Excel;
+﻿using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
 using System.Collections.Generic;
@@ -10,10 +8,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Web;
 using System.Web.Http;
+using System.Web.UI.WebControls;
 using WebApplication1.App_Start;
 using WebApplication1.BLL;
 using WebApplication1.Models;
@@ -1338,18 +1340,15 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("ExportCommissions")]
-        public IHttpActionResult ExportCommissions()
+        public HttpResponseMessage ExportCommissions()
         {
-            string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-
             List<BB_Commission_General> commission_lst = new List<BB_Commission_General>();
 
-            string erro = "";
+            string tempPath = Path.Combine(Path.GetTempPath(), "TempCommissionsFile.xlsx");
+            Application excelApp = null;
+            Workbook workbook = null;
+            Worksheet worksheet = null;
 
-            bool exportSuccessful = true;
-            Application excelApplication = null;
-            Workbook excelWorkbook = null;
-            Worksheet excelSheet = null;
             try
             {
                 using (var db = new BB_DB_DEVEntities2())
@@ -1357,118 +1356,91 @@ namespace WebApplication1.Controllers
                     commission_lst = db.BB_Commission_General.ToList();
                 }
 
-                // Create new instance of Excel
-                excelApplication = new Application();
-
-                // Make the process invisible to the user
-                excelApplication.ScreenUpdating = false;
-
-                // Make the process silent
-                excelApplication.DisplayAlerts = false;
-
-                // Open the workbook that you wish to export to PDF
-                excelWorkbook = excelApplication.Workbooks.Add();
-                excelSheet = excelWorkbook.Sheets.Add();
+                if (!commission_lst.Any())
+                {
+                    throw new Exception("No data found.");
+                }
 
                 Type tipo = commission_lst.FirstOrDefault().GetType();
                 PropertyInfo[] propriedades = tipo.GetProperties();
 
-                var line = 1;
-                var column = 1;
+                excelApp = new Application();
+                workbook = excelApp.Workbooks.Add(XlWBATemplate.xlWBATWorksheet);
+                worksheet = (Worksheet)workbook.Worksheets[1];
 
-                // Add Header
-                foreach (PropertyInfo propriedade in propriedades)
+                int line = 1;
+                int column = 1;
+
+                // Adicionar Cabeçalhos
+                foreach (PropertyInfo prop in propriedades)
                 {
-                    string nomeCampo = propriedade.Name;
-
-                    excelSheet.Cells[line, column] = nomeCampo;
-                    column += 1;
+                    string fieldName = prop.Name;
+                    worksheet.Cells[line, column] = fieldName;
+                    column++;
                 }
 
-                // Add cells with data
+                // Adicionar dados
+                line++;
                 foreach (var commission in commission_lst)
                 {
                     column = 1;
-                    line += 1;
-
-                    foreach (PropertyInfo propriedade in propriedades)
+                    foreach (PropertyInfo prop in propriedades)
                     {
-                        object valorCampo = propriedade.GetValue(commission);
-
-                        excelSheet.Cells[line, column] = valorCampo;
-                        column += 1;
+                        object value = prop.GetValue(commission);
+                        worksheet.Cells[line, column] = value;
+                        column++;
                     }
-
+                    line++;
                 }
 
-                // Define a altura padrão para todas as linhas
-                excelSheet.Rows.RowHeight = excelSheet.StandardHeight;
+                // Definir altura padrão para todas as linhas
+                worksheet.Rows.RowHeight = worksheet.StandardHeight;
 
-                // Define a largura padrão para todas as colunas
-                //excelSheet.Columns.ColumnWidth = excelSheet.StandardWidth;
+                // Salvar um ficheiro temporário para sacar o array de bytes
+                workbook.SaveAs(tempPath, XlFileFormat.xlOpenXMLWorkbook);
 
-                // Generate a unique file name
-                string baseFileName = "Test";
-                string fileExtension = ".xlsx";
-                string fullFilePath = Path.Combine(downloadsPath, baseFileName + fileExtension);
-                int fileIndex = 1;
+                // Fechar o workbook e a app Excel
+                workbook.Close(false, Type.Missing, Type.Missing);
+                excelApp.Quit();
 
-                while (File.Exists(fullFilePath))
+                // Ler bytes do ficheiro e apagar o ficheiro temporário
+                byte[] fileBytes = File.ReadAllBytes(tempPath);
+                File.Delete(tempPath);
+
+                // Criar uma resposta HTTP com os bytes do ficheiro
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new ByteArrayContent(fileBytes);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                 {
-                    fileIndex++;
-                    fullFilePath = Path.Combine(downloadsPath, baseFileName + $"({fileIndex})" + fileExtension);
-                }
+                    FileName = "Export_Deals_BES.xlsx"
+                };
 
-                excelWorkbook.SaveAs(fullFilePath);
-                excelWorkbook.Close(true);
+                return response;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                File.Delete(downloadsPath);
+                // Log do erro
+                Console.WriteLine($"Error: {ex.Message}");
 
-                exportSuccessful = false;
-                erro = ex.Message;
-
-                return Content(HttpStatusCode.BadRequest, "BadRequest");
+                // Retornar resposta HTTP com erro
+                HttpResponseMessage errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                errorResponse.Content = new StringContent("Erro ao exportar comissões para Excel.");
+                return errorResponse;
             }
             finally
             {
-                // Clean up COM objects
-                try
-                {
-                    if (excelSheet != null)
-                    {
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelSheet);
-                        excelSheet = null;
-                    }
-
-                    if (excelWorkbook != null)
-                    {
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelWorkbook);
-                        excelWorkbook = null;
-                    }
-
-                    if (excelApplication != null)
-                    {
-                        excelApplication.Quit(); // Sair da aplicação Excel
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApplication);
-                        excelApplication = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Erro on Releasing dos recursos COM: " + ex.Message);
-                    
-                }
-                finally
-                {
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                }
+                // Release dos objetos COM
+                if (worksheet != null) Marshal.ReleaseComObject(worksheet);
+                if (workbook != null) Marshal.ReleaseComObject(workbook);
+                if (excelApp != null) Marshal.ReleaseComObject(excelApp);
             }
-            Console.WriteLine(erro);
-            return Ok();
         }
+
+
+
+
+
 
         // ######################################################################################
 
