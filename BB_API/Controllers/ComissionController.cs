@@ -1494,6 +1494,31 @@ namespace WebApplication1.Controllers
 
         // ######################################################################################
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetCommission")]
+        public IHttpActionResult GetCommission(int? commissionID)
+        {
+            BB_Commission_General commision = new BB_Commission_General();
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    if(commissionID != null)
+                    {
+                        commision = db.BB_Commission_General.Where(x => x.ID == commissionID).FirstOrDefault();
+                    }
+                }
+                return Ok(commision);
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+                return Content(HttpStatusCode.BadRequest, "Problem getting commissions.");
+            }
+        }
+
+        // ######################################################################################
+
 
         // ---------------------------------------------------------------------------------------------------------------------
         // CLASSES -------------------------------------------------------------------------------------------------------------
