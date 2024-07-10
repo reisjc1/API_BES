@@ -111,7 +111,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
         public virtual DbSet<RD_AddressAcronyms> RD_AddressAcronyms { get; set; }
         public virtual DbSet<BB_Proposal_DL_ClientContacts> BB_Proposal_DL_ClientContacts { get; set; }
-        public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
         public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
         public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
@@ -134,8 +133,9 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_Exception> BB_WFA_Exception { get; set; }
         public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
-        public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
         public virtual DbSet<BB_TypeOfClient> BB_TypeOfClient { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
+        public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
+        public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
     }
 }
