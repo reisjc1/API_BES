@@ -402,7 +402,7 @@ namespace WebApplication1.Models
         public int PaymentAfter { get; set; }
         public bool IncludeServices { get; set; }
         public int Months { get; set; }
-        public int MonthlyIncome { get; set; }
+        public double? MonthlyIncome { get; set; }
         public FinancingFactors FinancingFactors { get; set; }
 
         public DiffTerm diffTerm { get; set; }
