@@ -410,6 +410,7 @@ namespace WebApplication1.Models
         public DateTime? DataExpiracao { get; set; }
         public DateTime? DateApproval { get; set; }
         public DateTime? DateExpired { get; set; }
+        public double? Factor { get; set; }
     }
 
     public class DiffTerm
