@@ -706,6 +706,12 @@ namespace WebApplication1.Controllers
                 message.Body = strBuilder.ToString();
 
                 await emailSend.SendEmailaync(message);
+
+                ComissionController comission = new ComissionController();
+                if(l.ProposalID != null)
+                {
+                    comission.CreateCommission((int)l.ProposalID);
+                }
             }
             catch (Exception ex)
             {

@@ -792,29 +792,35 @@ namespace WebApplication1.Controllers
 
                                 using (var db = new BB_DB_DEV_LeaseDesk())
                                 {
-                                    LD_DocumentProposal contractSave = new LD_DocumentProposal();
-                                    contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 11;
-                                    contractSave.CreatedBy = "";
-                                    contractSave.CreatedTime = DateTime.Now;
-                                    contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
-                                    contractSave.SystemID = 1;
-                                    contractSave.FileFullPath = filePath;
-                                    contractSave.DocumentIsValid = false;
-                                    contractSave.DocumentIsProcess = false;
-                                    contractSave.FileName = Path.GetFileName(filePath);
-                                    contractSave.ContratoID = ContractoId;
-                                    contractSave.Comments = contractData != null ? contractData.Comments : "";
-                                    db.LD_DocumentProposal.Add(contractSave);
-                                    db.SaveChanges();
+                                    LD_DocumentProposal exists = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.FileName == postedFile.FileName).FirstOrDefault();
+
+                                    if(exists != null)
+                                    {
+                                        exists.ContratoID = ContractoId;
+                                        db.Entry(exists).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        LD_DocumentProposal contractSave = new LD_DocumentProposal();
+                                        contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 11;
+                                        contractSave.CreatedBy = proposal.AccountManager;
+                                        contractSave.CreatedTime = DateTime.Now;
+                                        contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
+                                        contractSave.SystemID = 1;
+                                        contractSave.FileFullPath = filePath;
+                                        contractSave.DocumentIsValid = false;
+                                        contractSave.DocumentIsProcess = false;
+                                        contractSave.FileName = Path.GetFileName(filePath);
+                                        contractSave.ContratoID = ContractoId;
+                                        contractSave.Comments = contractData != null ? contractData.Comments : "";
+                                        db.LD_DocumentProposal.Add(contractSave);
+                                        db.SaveChanges();
+                                    }
+
                                 }
                             }
                         }
-                    }
-
-                    List<LD_DocumentProposal> lstDocumentProposal = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
-                    foreach (var item in lstDocumentProposal)
-                    {
-                        item.ContratoID = ContractoId;
                     }
                 }
 
@@ -900,7 +906,7 @@ namespace WebApplication1.Controllers
                             {
                                 LD_DocumentProposal contractSave = new LD_DocumentProposal();
                                 contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 11;
-                                contractSave.CreatedBy = "";
+                                contractSave.CreatedBy = proposal.AccountManager;
                                 contractSave.CreatedTime = DateTime.Now;
                                 contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
                                 contractSave.SystemID = 1;
@@ -960,7 +966,7 @@ namespace WebApplication1.Controllers
                 ex.Message.ToString();
             }
 
-            err.Message = "Proceso concluido y transferido al administración.";
+            err.Message = "Documento añadido con éxito";
             return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
         }
         private async Task SentEmailPPAsync(BB_Proposal proposal)
