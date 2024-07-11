@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using log4net;
 using Newtonsoft.Json;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -2481,7 +2482,36 @@ namespace WebApplication1.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, ac);
         }
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DeleteContractDoc")]
+        public IHttpActionResult DeleteContractDoc(string quoteNumber, string fileName)
+        {
+            try
+            {
+                LD_DocumentProposal dp = new LD_DocumentProposal();
 
+                using (var db = new BB_DB_DEV_LeaseDesk())
+                {
+                    dp = db.LD_DocumentProposal.Where(x => x.QuoteNumber == quoteNumber && x.FileName == fileName).FirstOrDefault();
+
+                    if (dp != null)
+                    {
+                        if (File.Exists(dp.FileFullPath))
+                        {
+                            File.Delete(dp.FileFullPath);
+                            Console.WriteLine("O ficheiro foi apagado com sucesso.");
+                        }
+                        db.LD_DocumentProposal.Remove(dp);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+            return Ok("O ficheiro foi apagado com sucesso.");
+        }
 
     }
     public class cEmail
