@@ -3147,6 +3147,103 @@ namespace WebApplication1.Controllers
 
         }
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("ExportExcel")]
+        public HttpResponseMessage ExportContrato(ProposalRootObject e)
+        {
+            //Create HTTP Response.
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+
+            string path = "";
+            try
+            {
+                BB_Proposal p = new BB_Proposal();
+                AspNetUsers c = new AspNetUsers();
+                //using (var db = new BB_DB_DEVEntities2())
+                //{
+                //    p = db.BB_Proposal.Where(x => x.ID == proposalID).First();
+
+                //}
+                using (var db = new masterEntities())
+                {
+                    c = db.AspNetUsers.Where(x => x.Email == e.Draft.details.CreatedBy).FirstOrDefault();
+
+                }
+
+
+                string strUser = c.DisplayName;
+                string strFolder = "Configurador";
+                string strCliente = c.DisplayName;
+                path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\";
+
+                if (!Directory.Exists(path))
+                    System.IO.Directory.CreateDirectory(path);
+
+
+                using (var stream = File.Open(@AppSettingsGet.ConfiguracaoNegocio, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+
+                    try
+                    {
+                        using (var outputFile = new FileStream(path + "ConfiguracaoNegocio.xlsx", FileMode.Create))
+                        {
+                            stream.CopyTo(outputFile);
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                }
+                WriteExportExcel(@path + "ConfiguracaoNegocio.xlsx", e);
+
+
+                //Create HTTP Response.
+                //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+
+
+                string filePath = @path + "ConfiguracaoNegocio.xlsx";
+
+
+                //Check whether File exists.
+                if (!File.Exists(filePath))
+                {
+                    //Throw 404 (Not Found) exception if File not found.
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.ReasonPhrase = string.Format("File not found: .");
+                    throw new HttpResponseException(response);
+                }
+
+                //Set the Response Content.
+                response.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read));
+
+                //Set the Response Content Length.
+                //response.Content.Headers.ContentLength = bytes.LongLength;
+
+                //Set the Content Disposition Header Value and FileName.
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "ConfiguracaoNegocio.xlsx";
+
+                //Set the File Content Type.
+                //response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Proposal.pdf"));
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/xlsx");
+            }
+            catch (Exception ex)
+
+            {
+                File.Delete(@path + "\\ConfiguracaoNegocio.xlsx");
+            }
+            return response;
+
+
+        }
+
         private void WriteExportExcel(string path, ProposalRootObject p)
         {
             try
