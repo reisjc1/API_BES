@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication1.Controllers;
+using WebApplication1.Models.SetupXML;
 using WebApplication1.Models.SetupXML.XML;
 using WebApplication1.Models.ViewModels;
 
@@ -52,6 +53,7 @@ namespace WebApplication1.Models
         public Comission Comission { get; set; }
 
         public ClientApproval ClientApproval { get; set; }
+        public List<ConditionPVP> ConditionsPvp { get; set; }
 
         //public List<BB_Equipamentos> Equipamentos { get; set; }
     }

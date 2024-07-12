@@ -20,6 +20,7 @@ using System.Web.Http;
 using WebApplication1.App_Start;
 using WebApplication1.BLL;
 using WebApplication1.Models;
+using WebApplication1.Models.SetupXML;
 using WebApplication1.Models.ViewModels;
 
 namespace WebApplication1.Controllers
@@ -2399,7 +2400,11 @@ namespace WebApplication1.Controllers
             vt.retomasTotal = retomas != null && retomas.HasValue && retomas.Value != 0 ? retomas.Value : 0;
             a.ProposalObj.valoretotais = vt;
 
+            LeaseDeskBLL lDBll = new LeaseDeskBLL();
 
+            List<ConditionPVP> condPvp = lDBll.FinancingDetails(proposalID);
+
+            a.ProposalObj.ConditionsPvp = condPvp;
 
 
 
