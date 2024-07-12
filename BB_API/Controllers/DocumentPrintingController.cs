@@ -3148,7 +3148,7 @@ namespace WebApplication1.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
-        [ActionName("ExportExcel")]
+        [ActionName("ExportContrato")]
         public HttpResponseMessage ExportContrato(ProposalRootObject e)
         {
             //Create HTTP Response.
