@@ -1,7 +1,9 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebApplication1.Controllers;
 using static WebApplication1.Models.SetupXML.XSD;
 
 namespace WebApplication1.Models.SetupXML.XML
@@ -77,11 +79,12 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
             string financingCode = null;
-            if (financingType == "002" || financingCode == "008")
+
+            if (financingType == "002" || financingType == "008")
             {
                 financingCode = "ZVBS";
             }
-            //string excelFilePath = "C:\\Users\\EXT0022\\Downloads\\INT26022024 Simply Deal 2.xlsm";
+ 
             if (financingType == "003")
             {
                 financingCode = "ZVBR";
@@ -113,5 +116,140 @@ namespace WebApplication1.Models.SetupXML.XML
 
             return financingCode;
         }
+        public List<ConditionPVP> ConditionsVariables(List<ItemGroups> orders , string financingType, int? contractMonths)
+        {
+            List<ConditionPVP> conditionsPvp = new List<ConditionPVP>();
+            double? pvpItems = 0;
+            foreach (var order in orders)
+            {
+                
+
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    foreach (var items in orders)
+                    {
+                        foreach(var item in items.Items)
+                        {
+                            if(financingType == "002")
+                            {
+                                BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.CodeRef).FirstOrDefault();
+                                ConditionPVP conditionPVP = new ConditionPVP();
+
+                                
+                                if(quote != null)
+                                {
+                                    if (quote.Family.Contains("HW"))
+                                    {
+                                        ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZPD4");
+                                        if (cond == null)
+                                        {
+                                            conditionPVP.ConditionCode = "ZPD4";
+                                            conditionPVP.PVP = quote.TotalPVP;
+                                            conditionsPvp.Add(conditionPVP);
+                                        }
+                                        else
+                                        {
+                                            cond.PVP = cond.PVP + quote.TotalPVP;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
+                                        if (cond == null)
+                                        {
+                                            conditionPVP.ConditionCode = "ZSW4";
+                                            conditionPVP.PVP = quote.TotalPVP;
+                                            conditionsPvp.Add(conditionPVP);
+                                        }
+                                        else
+                                        {
+                                            cond.PVP = cond.PVP + quote.TotalPVP;
+                                        }
+                                    }
+                                }
+                                if(ops != null)
+                                {
+                                    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
+                                    if (cond == null)
+                                    {
+                                        conditionPVP.ConditionCode = "ZSW4";
+                                        conditionPVP.PVP = ops.PVP * ops.Quantity;
+                                        conditionsPvp.Add(conditionPVP);
+                                    }
+                                    else
+                                    {
+                                        cond.PVP = cond.PVP + (ops.PVP * ops.Quantity);
+                                    }
+                                }
+                               
+                            }
+                            else
+                            {
+                                //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                                             
+                                BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.CodeRef).FirstOrDefault();
+                                string financingCode = ConditionMaterial(item.CodeRef, financingType);
+
+                                ConditionPVP conditionPvp = conditionsPvp.Find(x => x.ConditionCode == financingCode);
+                                if(quote != null)
+                                {
+                                    if (conditionPvp != null)
+                                    {
+                                        double contratoMeses = double.Parse(contractMonths.ToString());
+                                        double? totalPvp = (quote.UnitDiscountPrice / contratoMeses) * 1.5;
+                                        conditionPvp.PVP = conditionPvp.PVP + totalPvp;
+                                    }
+                                    else
+                                    {
+                                        ConditionPVP condPvp = new ConditionPVP();
+                                        double contratoMeses = double.Parse(contractMonths.ToString());
+                                        double? totalPvp = (quote.UnitDiscountPrice / contratoMeses) * 1.5;
+
+                                        condPvp.PVP = totalPvp;
+                                        condPvp.ConditionCode = financingCode;
+                                        conditionsPvp.Add(condPvp);
+                                    }
+                                }
+                                if(ops != null)
+                                {
+                                    if (conditionPvp != null)
+                                    {
+                                        double contratoMeses = double.Parse(contractMonths.ToString());
+                                        double? totalPvp = (ops.UnitDiscountPrice / contratoMeses) * 1.5;
+                                        conditionPvp.PVP = conditionPvp.PVP + totalPvp;
+                                    }
+                                    else
+                                    {
+                                        ConditionPVP condPvp = new ConditionPVP();
+                                        double contratoMeses = double.Parse(contractMonths.ToString());
+                                        double? totalPvp = (ops.UnitDiscountPrice / contratoMeses) * 1.5;
+
+                                        condPvp.PVP = totalPvp;
+                                        condPvp.ConditionCode = financingCode;
+                                        conditionsPvp.Add(condPvp);
+                                    }
+                                }
+                             
+                            }
+
+                        }
+                                          
+                        //pvpItems = pvpItems + itemDoBasket.TotalPVP;
+                    }
+
+
+                }
+                
+            }
+            return conditionsPvp;
+        }
+
+
+
+
     }
 }

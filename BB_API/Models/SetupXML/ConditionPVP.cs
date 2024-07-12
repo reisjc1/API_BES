@@ -9,5 +9,6 @@ namespace WebApplication1.Models.SetupXML
     {
         public double? PVP { get; set; }
         public string ConditionCode { get; set; }
+      
     }
 }
