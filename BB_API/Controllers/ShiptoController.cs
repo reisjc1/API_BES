@@ -214,6 +214,8 @@ namespace WebApplication1.Controllers
 
                 List<int> IDX_Included = DLfromDraft.Select(x => x.IDX).ToList();
 
+                List<BB_Proposal_DeliveryLocation> bB_Proposal_DeliveryLocations = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
+
                 if (DLfromDraft.Count() > 0)
                 {
                     List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = dbX.BB_Proposal_DeliveryLocation
@@ -221,7 +223,7 @@ namespace WebApplication1.Controllers
                         .ToList();
 
 
-                    if (dl_lst_toDelete != null)
+                    if (dl_lst_toDelete.Count() > 0)
                     {
                         // "Updating" BB_Proposal_ItemDoBasket
 
@@ -263,75 +265,33 @@ namespace WebApplication1.Controllers
                         }
                     }
 
-
-                    //List<BB_Proposal_DeliveryLocation> dl_lst_toSave = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo
-                    //                                                .Select(dl => new BB_Proposal_DeliveryLocation
-                    //                                                {
-                    //                                                    ProposalID = dl.ProposalID,
-                    //                                                    ID = dl.ID,
-                    //                                                    Adress1 = dl.Adress1,
-                    //                                                    Adress2 = dl.Adress2,
-                    //                                                    PostalCode = dl.PostalCode,
-                    //                                                    City = dl.City,
-                    //                                                    County = dl.County,
-                    //                                                    Contacto = dl.Contacto,
-                    //                                                    Email = dl.Email,
-                    //                                                    Phone = dl.Phone,
-                    //                                                    DeliveryDate = dl.DeliveryDate,
-                    //                                                    Department = dl.Department,
-                    //                                                    Floor = dl.Floor,
-                    //                                                    Building = dl.Building,
-                    //                                                    Room = dl.Room,
-                    //                                                    Schedule = dl.Schedule,
-                    //                                                    Payer = dl.Payer,
-                    //                                                    BillReceiver = dl.BillReceiver,
-                    //                                                    DeliveryContact = dl.DeliveryContact,
-                    //                                                    ITContact = dl.ITContact,
-                    //                                                    ServiceContact = dl.ServiceContact,
-                    //                                                    CopiesContact = dl.CopiesContact,
-                    //                                                    DeliveryDelegation = dl.DeliveryDelegation,
-                    //                                                    AccountType = dl.AccountType
-                    //                                                })
-                    //                                                .ToList();
-
-                    //foreach (var DL_toSave in dl_lst_toSave)
-                    //{
-                    //    // existe algum location com o proposalID e o ID já na BD ?
-                    //    var existentDL = dbX.BB_Proposal_DeliveryLocation
-                    //                    .Where(x => x.ProposalID == DL_toSave.ProposalID && 
-                    //                            x.ID == DL_toSave.ID)
-                    //                    .OrderBy(x => x.IDX)
-                    //                    .FirstOrDefault();
-
-                    //    DL_toSave.DupPosition = (existentDL == null) ? 1 : existentDL.DupPosition + 1;
-
-                    //    dbX.BB_Proposal_DeliveryLocation.Add(DL_toSave);
-
-                    //    // tenho que gravar por cada interacao, pq senao nao consigo fazer a pesquisa inicial da variavel 'existentDL'
-                    //    try
-                    //    {
-                    //        dbX.SaveChanges();
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        ex.Message.ToString();
-                    //    }
-                    //}
-
-                    //dbX.BB_Proposal_DeliveryLocation.AddRange(dl_lst_toSave);
-
-                        try
-                        {
-                            dbX.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
+                    try
+                    {
+                        dbX.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Message.ToString();
+                    }
                     
                 }
 
-
+                foreach(var toDetele in bB_Proposal_DeliveryLocations)
+                {
+                    List<BB_Proposal_ItemDoBasket> itemBasket = dbX.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == toDetele.IDX).ToList();
+                    if(itemBasket != null)
+                    {
+                        dbX.BB_Proposal_ItemDoBasket.RemoveRange(itemBasket);
+                    }
+                }
+                try
+                {
+                    dbX.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    ex.Message.ToString();
+                }
 
 
                 if (p.Draft.deliveryLocationsBES.AssignedItems.Count() > 0)
@@ -357,11 +317,12 @@ namespace WebApplication1.Controllers
                                 // é equipamento
                                 DL_IDX = dbX.BB_Proposal_DeliveryLocation.Where(x =>
                                             x.ProposalID == p.Draft.details.ID &&
-                                            x.ID == dl.ID).Select(x => x.IDX).FirstOrDefault();
+                                            x.ID == dl.ID && x.IDX == assignItem.DeliveryLocationAssociated).Select(x => x.IDX).FirstOrDefault();
 
                                 BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
                                 bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
                                 dbX.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
+                                
                                 try
                                 {
                                     dbX.SaveChanges();
