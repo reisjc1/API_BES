@@ -347,7 +347,7 @@ namespace WebApplication1.Controllers
 
                         IMapper iMapperItems = configpItemns.CreateMapper();
 
-                        //int DL_IDX = 0;
+                        int DL_IDX = 0;
 
                         foreach (var dl in DLfromDraft)
                         {
@@ -355,12 +355,12 @@ namespace WebApplication1.Controllers
                             if (assignItem.DeliveryLocationAssociated == dl.IDX)
                             {
                                 // é equipamento
-                                //DL_IDX = dbX.BB_Proposal_DeliveryLocation.Where(x => 
-                                //            x.ProposalID == p.Draft.details.ID && 
-                                //            x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
+                                DL_IDX = dbX.BB_Proposal_DeliveryLocation.Where(x =>
+                                            x.ProposalID == p.Draft.details.ID &&
+                                            x.ID == dl.ID).Select(x => x.IDX).FirstOrDefault();
 
                                 BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
-                                //bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
+                                bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
                                 dbX.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
                                 try
                                 {
