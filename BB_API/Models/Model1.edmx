@@ -949,6 +949,7 @@
           <Property Name="AccountType" Type="varchar" MaxLength="50" />
           <Property Name="ContractNumber" Type="int" />
           <Property Name="Comments" Type="varchar(max)" />
+          <Property Name="DupPosition" Type="int" />
         </EntityType>
         <EntityType Name="BB_Proposal_DL_ClientContacts">
           <Key>
@@ -2116,8 +2117,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
           <EntitySet Name="BB_TypeOfClient" EntityType="BB_DB_DEVModel.BB_TypeOfClient" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
-          <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
+          <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3847,6 +3848,24 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="GMA" Type="Boolean" />
           <Property Name="BEUSupport" Type="Boolean" />
         </EntityType>
+        <EntityType Name="BB_Proposal_Financing">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContractTypeId" Type="Int32" />
+          <Property Name="FinancingTypeCode1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentMethodId" Type="Int32" />
+          <Property Name="PaymentAfter" Type="Int32" />
+          <Property Name="IncludeServices" Type="Boolean" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="FinancingTypeCode" Type="Int32" />
+          <Property Name="Months" Type="Int32" />
+          <Property Name="MonthlyIncome" Type="Double" />
+          <Property Name="DateApproval" Type="DateTime" Precision="3" />
+          <Property Name="DateExpired" Type="DateTime" Precision="3" />
+          <Property Name="Factor" Type="Double" />
+        </EntityType>
         <EntityType Name="BB_Proposal_DeliveryLocation">
           <Key>
             <PropertyRef Name="IDX" />
@@ -3878,24 +3897,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ContractNumber" Type="Int32" />
           <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="BB_Proposal_Financing">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ContractTypeId" Type="Int32" />
-          <Property Name="FinancingTypeCode1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentMethodId" Type="Int32" />
-          <Property Name="PaymentAfter" Type="Int32" />
-          <Property Name="IncludeServices" Type="Boolean" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="FinancingTypeCode" Type="Int32" />
-          <Property Name="Months" Type="Int32" />
-          <Property Name="MonthlyIncome" Type="Double" />
-          <Property Name="DateApproval" Type="DateTime" Precision="3" />
-          <Property Name="DateExpired" Type="DateTime" Precision="3" />
-          <Property Name="Factor" Type="Double" />
+          <Property Name="DupPosition" Type="Int32" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5629,9 +5631,29 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Financing">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
+              <MappingFragment StoreEntitySet="BB_Proposal_Financing">
+                <ScalarProperty Name="Factor" ColumnName="Factor" />
+                <ScalarProperty Name="DateExpired" ColumnName="DateExpired" />
+                <ScalarProperty Name="DateApproval" ColumnName="DateApproval" />
+                <ScalarProperty Name="MonthlyIncome" ColumnName="MonthlyIncome" />
+                <ScalarProperty Name="Months" ColumnName="Months" />
+                <ScalarProperty Name="FinancingTypeCode" ColumnName="FinancingTypeCode" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="IncludeServices" ColumnName="IncludeServices" />
+                <ScalarProperty Name="PaymentAfter" ColumnName="PaymentAfter" />
+                <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
+                <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
+                <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
               <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
+                <ScalarProperty Name="DupPosition" ColumnName="DupPosition" />
                 <ScalarProperty Name="Comments" ColumnName="Comments" />
                 <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
                 <ScalarProperty Name="AccountType" ColumnName="AccountType" />
@@ -5659,25 +5681,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="IDX" ColumnName="IDX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_Financing">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
-              <MappingFragment StoreEntitySet="BB_Proposal_Financing">
-                <ScalarProperty Name="Factor" ColumnName="Factor" />
-                <ScalarProperty Name="DateExpired" ColumnName="DateExpired" />
-                <ScalarProperty Name="DateApproval" ColumnName="DateApproval" />
-                <ScalarProperty Name="MonthlyIncome" ColumnName="MonthlyIncome" />
-                <ScalarProperty Name="Months" ColumnName="Months" />
-                <ScalarProperty Name="FinancingTypeCode" ColumnName="FinancingTypeCode" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="IncludeServices" ColumnName="IncludeServices" />
-                <ScalarProperty Name="PaymentAfter" ColumnName="PaymentAfter" />
-                <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
-                <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
-                <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

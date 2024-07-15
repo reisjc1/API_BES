@@ -41,5 +41,6 @@ namespace WebApplication1.Models
         public string AccountType { get; set; }
         public Nullable<int> ContractNumber { get; set; }
         public string Comments { get; set; }
+        public Nullable<int> DupPosition { get; set; }
     }
 }
