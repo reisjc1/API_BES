@@ -215,42 +215,45 @@ namespace WebApplication1.Controllers
 
                     List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
 
-                    // "Updating" BB_Proposal_ItemDoBasket
-
-                    List<int> lst_IDX = dl_lst_toDelete.Select(x => x.IDX).ToList();
-
-                    List<BB_Proposal_ItemDoBasket> basketItems_lst_toDelete = new List<BB_Proposal_ItemDoBasket>();
-
-                    foreach (int IDX in lst_IDX)
+                    if(dl_lst_toDelete != null)
                     {
-                        List<BB_Proposal_ItemDoBasket> IDX_items = dbX.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == IDX).ToList();
-                        basketItems_lst_toDelete.AddRange(IDX_items);
-                    }
+                        // "Updating" BB_Proposal_ItemDoBasket
 
-                    if (basketItems_lst_toDelete.Count() > 0)
-                    {
-                        dbX.BB_Proposal_ItemDoBasket.RemoveRange(basketItems_lst_toDelete);
-                        try
-                        {
-                            dbX.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                    }
+                        List<int> lst_IDX = dl_lst_toDelete.Select(x => x.IDX).ToList();
 
-                    // "Updating" BB_Proposal_DeliveryLocation
-                    if (dl_lst_toDelete.Count() > 0)
-                    {
-                        dbX.BB_Proposal_DeliveryLocation.RemoveRange(dl_lst_toDelete);
-                        try
+                        List<BB_Proposal_ItemDoBasket> basketItems_lst_toDelete = new List<BB_Proposal_ItemDoBasket>();
+
+                        foreach (int IDX in lst_IDX)
                         {
-                            dbX.SaveChanges();
+                            List<BB_Proposal_ItemDoBasket> IDX_items = dbX.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == IDX).ToList();
+                            basketItems_lst_toDelete.AddRange(IDX_items);
                         }
-                        catch (Exception ex)
+
+                        if (basketItems_lst_toDelete.Count() > 0)
                         {
-                            ex.Message.ToString();
+                            dbX.BB_Proposal_ItemDoBasket.RemoveRange(basketItems_lst_toDelete);
+                            try
+                            {
+                                dbX.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                ex.Message.ToString();
+                            }
+                        }
+
+                        // "Updating" BB_Proposal_DeliveryLocation
+                        if (dl_lst_toDelete.Count() > 0)
+                        {
+                            dbX.BB_Proposal_DeliveryLocation.RemoveRange(dl_lst_toDelete);
+                            try
+                            {
+                                dbX.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                ex.Message.ToString();
+                            }
                         }
                     }
 
@@ -285,17 +288,43 @@ namespace WebApplication1.Controllers
                                                                     })
                                                                     .ToList();
 
+                    //foreach (var DL_toSave in dl_lst_toSave)
+                    //{
+                    //    // existe algum location com o proposalID e o ID já na BD ?
+                    //    var existentDL = dbX.BB_Proposal_DeliveryLocation
+                    //                    .Where(x => x.ProposalID == DL_toSave.ProposalID && 
+                    //                            x.ID == DL_toSave.ID)
+                    //                    .OrderBy(x => x.IDX)
+                    //                    .FirstOrDefault();
+
+                    //    DL_toSave.DupPosition = (existentDL == null) ? 1 : existentDL.DupPosition + 1;
+
+                    //    dbX.BB_Proposal_DeliveryLocation.Add(DL_toSave);
+
+                    //    // tenho que gravar por cada interacao, pq senao nao consigo fazer a pesquisa inicial da variavel 'existentDL'
+                    //    try
+                    //    {
+                    //        dbX.SaveChanges();
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        ex.Message.ToString();
+                    //    }
+                    //}
+
                     dbX.BB_Proposal_DeliveryLocation.AddRange(dl_lst_toSave);
+
+                        try
+                        {
+                            dbX.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
+                    
                 }
 
-                try
-                {
-                    dbX.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    ex.Message.ToString();
-                }
 
 
 
@@ -320,7 +349,9 @@ namespace WebApplication1.Controllers
                             if (assignItem.DeliveryLocationAssociated == item.IDX)
                             {
                                 // é equipamento
-                                DL_IDX = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID && x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
+                                DL_IDX = dbX.BB_Proposal_DeliveryLocation.Where(x => 
+                                            x.ProposalID == p.Draft.details.ID && 
+                                            x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
 
                                 BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
                                 bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
@@ -498,6 +529,34 @@ namespace WebApplication1.Controllers
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        // ##################################################################################
+        // ##################################################################################
+
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("SaveDeliveryLocationIDX")]
+        public IHttpActionResult SaveDeliveryLocationIDX(BB_Proposal_DeliveryLocation bb_dl)
+        {
+            try
+            {
+                BB_Proposal_DeliveryLocation saved_DL = new BB_Proposal_DeliveryLocation();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    db.BB_Proposal_DeliveryLocation.Add(bb_dl);
+                    db.SaveChanges();
+
+                    saved_DL = bb_dl;
+                }
+
+
+                return Ok(saved_DL);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
             }
         }
 
