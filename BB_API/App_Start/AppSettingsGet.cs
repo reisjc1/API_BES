@@ -60,7 +60,12 @@ namespace WebApplication1.App_Start
         {
             get { return ConfigurationManager.AppSettings["ConfiguracaoNegocio"].ToString(); }
         }
-        
+
+        public static string ConfiguracaoContrato
+        {
+            get { return ConfigurationManager.AppSettings["ConfiguracaoContrato"].ToString(); }
+        }
+
         public static string NUS_Template
         {
             get { return ConfigurationManager.AppSettings["NUS_Template"].ToString(); }
