@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Http;
@@ -512,7 +513,16 @@ namespace WebApplication1.Controllers
                 BB_Proposal_DeliveryLocation saved_DL = new BB_Proposal_DeliveryLocation();
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    db.BB_Proposal_DeliveryLocation.Add(bb_dl);
+                    bool exists = db.BB_Proposal_DeliveryLocation.Any(x => x.IDX == bb_dl.IDX);
+                    // se existe (editar)
+                    if(exists)
+                    {
+                        db.Entry(bb_dl).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.BB_Proposal_DeliveryLocation.Add(bb_dl);
+                    }
                     db.SaveChanges();
 
                     saved_DL = bb_dl;
