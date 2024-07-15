@@ -956,6 +956,30 @@ namespace WebApplication1.BLL
                         }
                     }
 
+                    var dl_BillTo = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Where(x => x.AccountType == "Bill To");
+
+                    if(dl_BillTo != null)
+                    {
+                        foreach(var billTo in dl_BillTo)
+                        {
+                            using (var db = new BB_DB_DEVEntities2())
+                            {
+                                bool exists = db.BB_Proposal_DeliveryLocation.Any(x => x.IDX == billTo.IDX && x.ProposalID == p.Draft.details.ID);
+                                // se existe (editar)
+                                if (exists)
+                                {
+                                    db.Entry(billTo).State = EntityState.Modified;
+                                }
+                                else
+                                {
+                                    db.BB_Proposal_DeliveryLocation.Add(billTo);
+                                }
+                                db.SaveChanges();
+
+                            }
+                        }
+                    }
+
                     //var DLfromDraft = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo;
 
                     //List<int> IDX_Included = DLfromDraft.Select(x => x.IDX).ToList();
