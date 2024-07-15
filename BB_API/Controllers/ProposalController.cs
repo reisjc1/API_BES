@@ -750,7 +750,7 @@ namespace WebApplication1.Controllers
                                 {
                                     LD_DocumentProposal documentoSave = new LD_DocumentProposal();
                                     documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
-                                    documentoSave.CreatedBy = "";
+                                    documentoSave.CreatedBy = proposal.CreatedBy;
                                     documentoSave.CreatedTime = DateTime.Now;
                                     documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
                                     documentoSave.SystemID = 1;
@@ -804,8 +804,8 @@ namespace WebApplication1.Controllers
                                     else
                                     {
                                         LD_DocumentProposal contractSave = new LD_DocumentProposal();
-                                        contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 11;
-                                        contractSave.CreatedBy = proposal.AccountManager;
+                                        contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
+                                        contractSave.CreatedBy = proposal.CreatedBy;
                                         contractSave.CreatedTime = DateTime.Now;
                                         contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
                                         contractSave.SystemID = 1;
@@ -820,6 +820,16 @@ namespace WebApplication1.Controllers
                                     }
 
                                 }
+                            }
+                        }
+                        List<LD_DocumentProposal> lstDocumentProposal = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                        foreach (var item in lstDocumentProposal)
+                        {
+                            item.ContratoID = ContractoId;
+                            using (var db = new BB_DB_DEV_LeaseDesk())
+                            {
+                                db.Entry(item).State = EntityState.Modified;
+                                db.SaveChanges();
                             }
                         }
                     }
@@ -906,8 +916,8 @@ namespace WebApplication1.Controllers
                             using (var db = new BB_DB_DEV_LeaseDesk())
                             {
                                 LD_DocumentProposal contractSave = new LD_DocumentProposal();
-                                contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 11;
-                                contractSave.CreatedBy = proposal.AccountManager;
+                                contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
+                                contractSave.CreatedBy = proposal.CreatedBy;
                                 contractSave.CreatedTime = DateTime.Now;
                                 contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
                                 contractSave.SystemID = 1;
@@ -1429,7 +1439,7 @@ namespace WebApplication1.Controllers
                 bool encontrouSigin = db.BB_Proposal_Contacts_Signing.Any(x => x.ProposalID == proposal.ID);
                 if (encontrouSigin)
                 {
-                    if (lstContactSign.Count > 0 && lstContactSign[0].Email != "" && lstContactSign[0].Name != "" && lstContactSign[0].Phone != "")
+                    if (lstContactSign.Count > 0 && lstContactSign[0].Email != "" && lstContactSign[0].Name != "" && lstContactSign[0].Telefone != "")
                     {
                         foreach (var ContactSign in lstContactSign)
                         {
@@ -1437,7 +1447,7 @@ namespace WebApplication1.Controllers
 
                             ca.Email = ContactSign.Email;
                             ca.Name = ContactSign.Name;
-                            ca.Telefone = ContactSign.Phone;
+                            ca.Telefone = ContactSign.Telefone;
                             ca.ProposalID = proposal.ID;
                             db.BB_Proposal_Contacts_Signing.Add(ca);
                         }
@@ -1448,7 +1458,7 @@ namespace WebApplication1.Controllers
 
                 if (!encontrouSigin)
                 {
-                    if (lstContactSign.Count > 0 && lstContactSign[0].Email != "" && lstContactSign[0].Name != "" && lstContactSign[0].Phone != "")
+                    if (lstContactSign.Count > 0 && lstContactSign[0].Email != "" && lstContactSign[0].Name != "" && lstContactSign[0].Telefone != "")
                     {
                         foreach (var ContactSign in lstContactSign)
                         {
@@ -1456,7 +1466,7 @@ namespace WebApplication1.Controllers
 
                             ca.Email = ContactSign.Email;
                             ca.Name = ContactSign.Name;
-                            ca.Telefone = ContactSign.Phone;
+                            ca.Telefone = ContactSign.Telefone;
                             ca.ProposalID = proposal.ID;
                             db.BB_Proposal_Contacts_Signing.Add(ca);
                         }
@@ -1474,7 +1484,7 @@ namespace WebApplication1.Controllers
                 bool encontrouConct = db.BB_Proposal_Contacts_Documentation.Any(x => x.ProposalID == proposal.ID);
                 if (encontrouConct)
                 {
-                    if (lstContactDocumentantion.Count > 0 && lstContactDocumentantion[0].Email != "" && lstContactDocumentantion[0].Name != "" && lstContactDocumentantion[0].Phone != "")
+                    if (lstContactDocumentantion.Count > 0 && lstContactDocumentantion[0].Email != "" && lstContactDocumentantion[0].Name != "" && lstContactDocumentantion[0].Telefone != "")
                     {
                         foreach (var ContactSign1 in lstContactDocumentantion)
                         {
@@ -1482,7 +1492,7 @@ namespace WebApplication1.Controllers
 
                             ca.Email = ContactSign1.Email;
                             ca.Name = ContactSign1.Name;
-                            ca.Telefone = ContactSign1.Phone;
+                            ca.Telefone = ContactSign1.Telefone;
                             ca.ProposalID = proposal.ID;
                             db.BB_Proposal_Contacts_Documentation.Add(ca);
                         }
@@ -1493,7 +1503,7 @@ namespace WebApplication1.Controllers
 
                 if (!encontrouConct)
                 {
-                    if (lstContactDocumentantion.Count > 0 && lstContactDocumentantion[0].Email != "" && lstContactDocumentantion[0].Name != "" && lstContactDocumentantion[0].Phone != "")
+                    if (lstContactDocumentantion.Count > 0 && lstContactDocumentantion[0].Email != "" && lstContactDocumentantion[0].Name != "" && lstContactDocumentantion[0].Telefone != "")
                     {
                         foreach (var ContactSign in lstContactSign)
                         {
@@ -1501,7 +1511,7 @@ namespace WebApplication1.Controllers
 
                             ca.Email = ContactSign.Email;
                             ca.Name = ContactSign.Name;
-                            ca.Telefone = ContactSign.Phone;
+                            ca.Telefone = ContactSign.Telefone;
                             ca.ProposalID = proposal.ID;
                             db.BB_Proposal_Contacts_Documentation.Add(ca);
                         }
@@ -2557,7 +2567,7 @@ namespace WebApplication1.Controllers
 
         public string Name { get; set; }
         public string Email { get; set; }
-        public string Phone { get; set; }
+        public string Telefone { get; set; }
     }
 
     public class UserName1

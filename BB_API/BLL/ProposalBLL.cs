@@ -1684,7 +1684,7 @@ namespace WebApplication1.BLL
 
                 if (proposal.CRM_QUOTE_ID != null)
                 {
-                    err.ProposalObj.ClientApproval.Documents = db.LD_DocumentProposal.Where(dp => dp.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                    err.ProposalObj.ClientApproval.Documents = db.LD_DocumentProposal.Where(dp => dp.QuoteNumber == proposal.CRM_QUOTE_ID && dp.ClassificationID != 5).ToList();
                     err.ProposalObj.ClientApproval.DocumentTypes = db.LD_DocumentClassification.ToList();
                 }
 
@@ -1785,7 +1785,7 @@ namespace WebApplication1.BLL
 
                 //LD_DocumentProposal - Contractos
                 err.ProposalObj.Draft.contracts = new BusinessContract();
-                List<LD_DocumentProposal> contractDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                List<LD_DocumentProposal> contractDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.ClassificationID == 5).ToList();
                 if (contractDocs != null)
                 {
                     err.ProposalObj.Draft.contracts.contractDocs = contractDocs;

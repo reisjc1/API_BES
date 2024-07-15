@@ -1344,7 +1344,7 @@ namespace WebApplication1.Controllers
         {
             List<BB_Commission_General> commission_lst = new List<BB_Commission_General>();
 
-            string tempPath = Path.Combine(Path.GetTempPath(), "TempCommissionsFile.xlsx");
+            string tempPath = Path.Combine("c:\\DocumentPrinting\\", "TempCommissionsFile.xlsx");
             Application excelApp = null;
             Workbook workbook = null;
             Worksheet worksheet = null;
