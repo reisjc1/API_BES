@@ -210,12 +210,18 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                if (p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
+                var DLfromDraft = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo;
+
+                List<int> IDX_Included = DLfromDraft.Select(x => x.IDX).ToList();
+
+                if (DLfromDraft.Count() > 0)
                 {
+                    List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = dbX.BB_Proposal_DeliveryLocation
+                        .Where(x => x.ProposalID == p.Draft.details.ID && !IDX_Included.Contains(x.IDX))
+                        .ToList();
 
-                    List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
 
-                    if(dl_lst_toDelete != null)
+                    if (dl_lst_toDelete != null)
                     {
                         // "Updating" BB_Proposal_ItemDoBasket
 
@@ -258,35 +264,35 @@ namespace WebApplication1.Controllers
                     }
 
 
-                    List<BB_Proposal_DeliveryLocation> dl_lst_toSave = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo
-                                                                    .Select(dl => new BB_Proposal_DeliveryLocation
-                                                                    {
-                                                                        ProposalID = dl.ProposalID,
-                                                                        ID = dl.ID,
-                                                                        Adress1 = dl.Adress1,
-                                                                        Adress2 = dl.Adress2,
-                                                                        PostalCode = dl.PostalCode,
-                                                                        City = dl.City,
-                                                                        County = dl.County,
-                                                                        Contacto = dl.Contacto,
-                                                                        Email = dl.Email,
-                                                                        Phone = dl.Phone,
-                                                                        DeliveryDate = dl.DeliveryDate,
-                                                                        Department = dl.Department,
-                                                                        Floor = dl.Floor,
-                                                                        Building = dl.Building,
-                                                                        Room = dl.Room,
-                                                                        Schedule = dl.Schedule,
-                                                                        Payer = dl.Payer,
-                                                                        BillReceiver = dl.BillReceiver,
-                                                                        DeliveryContact = dl.DeliveryContact,
-                                                                        ITContact = dl.ITContact,
-                                                                        ServiceContact = dl.ServiceContact,
-                                                                        CopiesContact = dl.CopiesContact,
-                                                                        DeliveryDelegation = dl.DeliveryDelegation,
-                                                                        AccountType = dl.AccountType
-                                                                    })
-                                                                    .ToList();
+                    //List<BB_Proposal_DeliveryLocation> dl_lst_toSave = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo
+                    //                                                .Select(dl => new BB_Proposal_DeliveryLocation
+                    //                                                {
+                    //                                                    ProposalID = dl.ProposalID,
+                    //                                                    ID = dl.ID,
+                    //                                                    Adress1 = dl.Adress1,
+                    //                                                    Adress2 = dl.Adress2,
+                    //                                                    PostalCode = dl.PostalCode,
+                    //                                                    City = dl.City,
+                    //                                                    County = dl.County,
+                    //                                                    Contacto = dl.Contacto,
+                    //                                                    Email = dl.Email,
+                    //                                                    Phone = dl.Phone,
+                    //                                                    DeliveryDate = dl.DeliveryDate,
+                    //                                                    Department = dl.Department,
+                    //                                                    Floor = dl.Floor,
+                    //                                                    Building = dl.Building,
+                    //                                                    Room = dl.Room,
+                    //                                                    Schedule = dl.Schedule,
+                    //                                                    Payer = dl.Payer,
+                    //                                                    BillReceiver = dl.BillReceiver,
+                    //                                                    DeliveryContact = dl.DeliveryContact,
+                    //                                                    ITContact = dl.ITContact,
+                    //                                                    ServiceContact = dl.ServiceContact,
+                    //                                                    CopiesContact = dl.CopiesContact,
+                    //                                                    DeliveryDelegation = dl.DeliveryDelegation,
+                    //                                                    AccountType = dl.AccountType
+                    //                                                })
+                    //                                                .ToList();
 
                     //foreach (var DL_toSave in dl_lst_toSave)
                     //{
@@ -312,7 +318,7 @@ namespace WebApplication1.Controllers
                     //    }
                     //}
 
-                    dbX.BB_Proposal_DeliveryLocation.AddRange(dl_lst_toSave);
+                    //dbX.BB_Proposal_DeliveryLocation.AddRange(dl_lst_toSave);
 
                         try
                         {
@@ -341,20 +347,20 @@ namespace WebApplication1.Controllers
 
                         IMapper iMapperItems = configpItemns.CreateMapper();
 
-                        int DL_IDX = 0;
+                        //int DL_IDX = 0;
 
-                        foreach (var item in p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo)
+                        foreach (var dl in DLfromDraft)
                         {
 
-                            if (assignItem.DeliveryLocationAssociated == item.IDX)
+                            if (assignItem.DeliveryLocationAssociated == dl.IDX)
                             {
                                 // é equipamento
-                                DL_IDX = dbX.BB_Proposal_DeliveryLocation.Where(x => 
-                                            x.ProposalID == p.Draft.details.ID && 
-                                            x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
+                                //DL_IDX = dbX.BB_Proposal_DeliveryLocation.Where(x => 
+                                //            x.ProposalID == p.Draft.details.ID && 
+                                //            x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
 
                                 BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
-                                bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
+                                //bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
                                 dbX.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
                                 try
                                 {
