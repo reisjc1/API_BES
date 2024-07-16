@@ -122,7 +122,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == d.ID).ToList();
 
                     BB_FinancingType ft = db.BB_FinancingType.Where(x => x.Code == pf.FinancingTypeCode).FirstOrDefault();
-                    
+
                     switch (ft.Code)
                     {
                         case 0:
@@ -131,8 +131,6 @@ namespace WebApplication1.Models.SetupXML.XML
                             break;
 
                         case 1:
-                        case 2:
-                        case 4:
                             financingType = "L";
                             contractType = "008";
                             break;
@@ -142,6 +140,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             contractType = "005";
                             break;
 
+                        case 2:
                         case 5:
                             financingType = "M";
                             contractType = "003";
@@ -156,7 +155,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     //    user = dbuUser.AspNetUsers.Where(x => x.Email == d.CreatedBy).FirstOrDefault();
                     //}
 
-                  
+
 
                     DateTime? createdTimeDealN = d.CreatedTime;
                     if (createdTimeDealN.HasValue)
