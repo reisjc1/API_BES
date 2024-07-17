@@ -2133,7 +2133,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           <EntitySet Name="RD_AddressAcronyms" EntityType="BB_DB_DEVModel.RD_AddressAcronyms" />
           <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
-          <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
           <EntitySet Name="BB_Proposal_ItemDoBasket" EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" />
           <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel.BB_Proposal" />
           <AssociationSet Name="FK_BB_Proposal_OPSManage_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal">
@@ -2164,11 +2163,12 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
-          <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
           <EntitySet Name="BB_TypeOfClient" EntityType="BB_DB_DEVModel.BB_TypeOfClient" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="vw_get_DataIntegration" EntityType="BB_DB_DEVModel.vw_get_DataIntegration" />
           <EntitySet Name="BB_RD_Estados_Fecho_CRM" EntityType="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM" />
+          <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
+          <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3502,8 +3502,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="DeliveryDelegation" Type="Int32" />
           <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ContractNumber" Type="Int32" />
-          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="DupPosition" Type="Int32" />
         </EntityType>
         <EntityType Name="BB_Proposal_ItemDoBasket">
           <Key>
@@ -3920,6 +3918,17 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="BB_TypeOfClient">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="Prospect" Type="Boolean" />
+          <Property Name="NewBusinessLine" Type="Boolean" />
+          <Property Name="GMA" Type="Boolean" />
+          <Property Name="BEUSupport" Type="Boolean" />
+        </EntityType>
         <EntityType Name="BB_Proposal_Financing">
           <Key>
             <PropertyRef Name="ID" />
@@ -3938,16 +3947,38 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="DateExpired" Type="DateTime" Precision="3" />
           <Property Name="Factor" Type="Double" />
         </EntityType>
-        <EntityType Name="BB_TypeOfClient">
+        <EntityType Name="BB_Proposal_DeliveryLocation">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="IDX" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProposalID" Type="Int32" />
-          <Property Name="Prospect" Type="Boolean" />
-          <Property Name="NewBusinessLine" Type="Boolean" />
-          <Property Name="GMA" Type="Boolean" />
-          <Property Name="BEUSupport" Type="Boolean" />
+          <Property Name="ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
+          <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Floor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Building" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Room" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Schedule" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Payer" Type="Boolean" />
+          <Property Name="BillReceiver" Type="Boolean" />
+          <Property Name="DeliveryContact" Type="Int32" />
+          <Property Name="ITContact" Type="Int32" />
+          <Property Name="ServiceContact" Type="Int32" />
+          <Property Name="CopiesContact" Type="Int32" />
+          <Property Name="DeliveryDelegation" Type="Int32" />
+          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ContractNumber" Type="Int32" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DupPosition" Type="Int32" />
         </EntityType>
         <EntityType Name="vw_get_DataIntegration">
           <Key>
@@ -5284,8 +5315,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
               <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
-                <ScalarProperty Name="DupPosition" ColumnName="DupPosition" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
                 <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
                 <ScalarProperty Name="AccountType" ColumnName="AccountType" />
                 <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
@@ -5726,6 +5755,18 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BB_TypeOfClient">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_TypeOfClient">
+              <MappingFragment StoreEntitySet="BB_TypeOfClient">
+                <ScalarProperty Name="BEUSupport" ColumnName="BEUSupport" />
+                <ScalarProperty Name="GMA" ColumnName="GMA" />
+                <ScalarProperty Name="NewBusinessLine" ColumnName="NewBusinessLine" />
+                <ScalarProperty Name="Prospect" ColumnName="Prospect" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BB_Proposal_Financing">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
               <MappingFragment StoreEntitySet="BB_Proposal_Financing">
@@ -5745,15 +5786,37 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_TypeOfClient">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_TypeOfClient">
-              <MappingFragment StoreEntitySet="BB_TypeOfClient">
-                <ScalarProperty Name="BEUSupport" ColumnName="BEUSupport" />
-                <ScalarProperty Name="GMA" ColumnName="GMA" />
-                <ScalarProperty Name="NewBusinessLine" ColumnName="NewBusinessLine" />
-                <ScalarProperty Name="Prospect" ColumnName="Prospect" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+          <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
+              <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
+                <ScalarProperty Name="DupPosition" ColumnName="DupPosition" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+                <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
+                <ScalarProperty Name="CopiesContact" ColumnName="CopiesContact" />
+                <ScalarProperty Name="ServiceContact" ColumnName="ServiceContact" />
+                <ScalarProperty Name="ITContact" ColumnName="ITContact" />
+                <ScalarProperty Name="DeliveryContact" ColumnName="DeliveryContact" />
+                <ScalarProperty Name="BillReceiver" ColumnName="BillReceiver" />
+                <ScalarProperty Name="Payer" ColumnName="Payer" />
+                <ScalarProperty Name="Schedule" ColumnName="Schedule" />
+                <ScalarProperty Name="Room" ColumnName="Room" />
+                <ScalarProperty Name="Building" ColumnName="Building" />
+                <ScalarProperty Name="Floor" ColumnName="Floor" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Contacto" ColumnName="Contacto" />
+                <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Adress2" ColumnName="Adress2" />
+                <ScalarProperty Name="Adress1" ColumnName="Adress1" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="IDX" ColumnName="IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -956,172 +956,58 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    if (p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Count() > 0)
+                    var dl_BillTo = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Where(x => x.AccountType == "Bill To");
+
+                    if(dl_BillTo != null)
                     {
-
-                        List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
-
-                        // "Updating" BB_Proposal_ItemDoBasket
-
-                        List<int> lst_IDX = dl_lst_toDelete.Select(x => x.IDX).ToList();
-
-                        List<BB_Proposal_ItemDoBasket> basketItems_lst_toDelete = new List<BB_Proposal_ItemDoBasket>();
-
-                        foreach (int IDX in lst_IDX)
+                        foreach(var billTo in dl_BillTo)
                         {
-                            List<BB_Proposal_ItemDoBasket> IDX_items = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == IDX).ToList();
-                            basketItems_lst_toDelete.AddRange(IDX_items);
-                        }
-
-                        if (basketItems_lst_toDelete.Count() > 0)
-                        {
-                            db.BB_Proposal_ItemDoBasket.RemoveRange(basketItems_lst_toDelete);
-                            try
+                            using (var db = new BB_DB_DEVEntities2())
                             {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-
-                        // "Updating" BB_Proposal_DeliveryLocation
-                        if (dl_lst_toDelete.Count() > 0)
-                        {
-                            db.BB_Proposal_DeliveryLocation.RemoveRange(dl_lst_toDelete);
-                            try
-                            {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-
-
-                        List<BB_Proposal_DeliveryLocation> dl_lst_toSave = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo
-                                                                        .Select(dl => new BB_Proposal_DeliveryLocation
-                                                                        {
-                                                                            ProposalID = dl.ProposalID,
-                                                                            ID = dl.ID,
-                                                                            Adress1 = dl.Adress1,
-                                                                            Adress2 = dl.Adress2,
-                                                                            PostalCode = dl.PostalCode,
-                                                                            City = dl.City,
-                                                                            County = dl.County,
-                                                                            Contacto = dl.Contacto,
-                                                                            Email = dl.Email,
-                                                                            Phone = dl.Phone,
-                                                                            DeliveryDate = dl.DeliveryDate,
-                                                                            Department = dl.Department,
-                                                                            Floor = dl.Floor,
-                                                                            Building = dl.Building,
-                                                                            Room = dl.Room,
-                                                                            Schedule = dl.Schedule,
-                                                                            Payer = dl.Payer,
-                                                                            BillReceiver = dl.BillReceiver,
-                                                                            DeliveryContact = dl.DeliveryContact,
-                                                                            ITContact = dl.ITContact,
-                                                                            ServiceContact = dl.ServiceContact,
-                                                                            CopiesContact = dl.CopiesContact,
-                                                                            DeliveryDelegation = dl.DeliveryDelegation,
-                                                                            AccountType = dl.AccountType
-                                                                        })
-                                                                        .ToList();
-
-                        db.BB_Proposal_DeliveryLocation.AddRange(dl_lst_toSave);
-                    }
-
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Message.ToString();
-                    }
-
-
-
-                    if (p.Draft.deliveryLocationsBES.AssignedItems.Count() > 0)
-                    {
-
-                        foreach (var assignItem in p.Draft.deliveryLocationsBES.AssignedItems)
-                        {
-
-                            var configpItemns = new MapperConfiguration(cfg =>
-                            {
-                                cfg.CreateMap<AssignedItems, BB_Proposal_ItemDoBasket>();
-                            });
-
-                            IMapper iMapperItems = configpItemns.CreateMapper();
-
-                            int DL_IDX = 0;
-
-                            foreach (var item in p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo)
-                            {
-
-                                if (assignItem.DeliveryLocationAssociated == item.IDX)
+                                bool exists = db.BB_Proposal_DeliveryLocation.Any(x => x.IDX == billTo.IDX && x.ProposalID == p.Draft.details.ID);
+                                // se existe (editar)
+                                if (exists)
                                 {
-                                    // é equipamento
-                                    DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == p.Draft.details.ID && x.ID == item.ID).Select(x => x.IDX).FirstOrDefault();
-
-                                    BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
-                                    bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
-                                    db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
-                                    try
-                                    {
-                                        db.SaveChanges();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ex.Message.ToString();
-                                    }
+                                    db.Entry(billTo).State = EntityState.Modified;
                                 }
+                                else
+                                {
+                                    db.BB_Proposal_DeliveryLocation.Add(billTo);
+                                }
+                                db.SaveChanges();
+
                             }
                         }
                     }
 
-                    //if (p.Draft.deliveryLocations != null)
+                    //var DLfromDraft = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo;
+
+                    //List<int> IDX_Included = DLfromDraft.Select(x => x.IDX).ToList();
+
+                    //if (DLfromDraft.Count() > 0)
                     //{
+                    //    List<BB_Proposal_DeliveryLocation> dl_lst_toDelete = db.BB_Proposal_DeliveryLocation
+                    //        .Where(x => x.ProposalID == p.Draft.details.ID && !IDX_Included.Contains(x.IDX))
+                    //        .ToList();
 
-                    //    foreach (var item in p.Draft.deliveryLocations)
+
+                    //    if (dl_lst_toDelete.Count() > 0)
                     //    {
+                    //        // "Updating" BB_Proposal_ItemDoBasket
 
-                    //        var configpDelivery = new MapperConfiguration(cfg =>
+                    //        List<int> lst_IDX = dl_lst_toDelete.Select(x => x.IDX).ToList();
+
+                    //        List<BB_Proposal_ItemDoBasket> basketItems_lst_toDelete = new List<BB_Proposal_ItemDoBasket>();
+
+                    //        foreach (int IDX in lst_IDX)
                     //        {
-                    //            cfg.CreateMap<DeliveryLocation, BB_Proposal_DeliveryLocation>();
-                    //        });
-
-                    //        IMapper iMapperDelivery = configpDelivery.CreateMapper();
-
-                    //        BB_Proposal_DeliveryLocation bb_Proposal_DeliveryLocation = iMapperDelivery.Map<DeliveryLocation, BB_Proposal_DeliveryLocation>(item);
-                    //        bb_Proposal_DeliveryLocation.ProposalID = ProposalID;
-                    //        db.BB_Proposal_DeliveryLocation.Add(bb_Proposal_DeliveryLocation);
-
-                    //        try
-                    //        {
-                    //            db.SaveChanges();
-                    //        }
-                    //        catch (Exception ex)
-                    //        {
-                    //            ex.Message.ToString();
+                    //            List<BB_Proposal_ItemDoBasket> IDX_items = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == IDX).ToList();
+                    //            basketItems_lst_toDelete.AddRange(IDX_items);
                     //        }
 
-                    //        foreach (var item1 in item.items)
+                    //        if (basketItems_lst_toDelete.Count() > 0)
                     //        {
-                    //            var configpItemns = new MapperConfiguration(cfg =>
-                    //            {
-                    //                cfg.CreateMap<ItemDoBasket, BB_Proposal_ItemDoBasket>();
-                    //            });
-
-                    //            IMapper iMapperItems = configpItemns.CreateMapper();
-
-                    //            BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<ItemDoBasket, BB_Proposal_ItemDoBasket>(item1);
-                    //            bb_Proposal_ItemDoBasket.DeliveryLocationID = bb_Proposal_DeliveryLocation.IDX;
-                    //            db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
+                    //            db.BB_Proposal_ItemDoBasket.RemoveRange(basketItems_lst_toDelete);
                     //            try
                     //            {
                     //                db.SaveChanges();
@@ -1132,11 +1018,78 @@ namespace WebApplication1.BLL
                     //            }
                     //        }
 
+                    //        // "Updating" BB_Proposal_DeliveryLocation
+                    //        if (dl_lst_toDelete.Count() > 0)
+                    //        {
+                    //            db.BB_Proposal_DeliveryLocation.RemoveRange(dl_lst_toDelete);
+                    //            try
+                    //            {
+                    //                db.SaveChanges();
+                    //            }
+                    //            catch (Exception ex)
+                    //            {
+                    //                ex.Message.ToString();
+                    //            }
+                    //        }
                     //    }
+
+
+                    //    try
+                    //    {
+                    //        db.SaveChanges();
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        ex.Message.ToString();
+                    //    }
+
                     //}
 
 
-                    //BB_PROPOSAL_COnsigments
+
+
+                    //if (p.Draft.deliveryLocationsBES.AssignedItems.Count() > 0)
+                    //{
+
+                    //    foreach (var assignItem in p.Draft.deliveryLocationsBES.AssignedItems)
+                    //    {
+
+                    //        var configpItemns = new MapperConfiguration(cfg =>
+                    //        {
+                    //            cfg.CreateMap<AssignedItems, BB_Proposal_ItemDoBasket>();
+                    //        });
+
+                    //        IMapper iMapperItems = configpItemns.CreateMapper();
+
+                    //        int DL_IDX = 0;
+
+                    //        foreach (var dl in DLfromDraft)
+                    //        {
+
+                    //            if (assignItem.DeliveryLocationAssociated == dl.IDX)
+                    //            {
+                    //                // é equipamento
+                    //                DL_IDX = db.BB_Proposal_DeliveryLocation.Where(x =>
+                    //                            x.ProposalID == p.Draft.details.ID &&
+                    //                            x.ID == dl.ID).Select(x => x.IDX).FirstOrDefault();
+
+                    //                BB_Proposal_ItemDoBasket bb_Proposal_ItemDoBasket = iMapperItems.Map<AssignedItems, BB_Proposal_ItemDoBasket>(assignItem);
+                    //                bb_Proposal_ItemDoBasket.DeliveryLocationID = DL_IDX;
+                    //                db.BB_Proposal_ItemDoBasket.Add(bb_Proposal_ItemDoBasket);
+                    //                try
+                    //                {
+                    //                    db.SaveChanges();
+                    //                }
+                    //                catch (Exception ex)
+                    //                {
+                    //                    ex.Message.ToString();
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
+                   //BB_PROPOSAL_COnsigments
                     var configConsigments = new MapperConfiguration(cfg =>
                     {
                         cfg.CreateMap<Consignment, BB_Proposal_Consignments>();
@@ -1684,7 +1637,7 @@ namespace WebApplication1.BLL
 
                 if (proposal.CRM_QUOTE_ID != null)
                 {
-                    err.ProposalObj.ClientApproval.Documents = db.LD_DocumentProposal.Where(dp => dp.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                    err.ProposalObj.ClientApproval.Documents = db.LD_DocumentProposal.Where(dp => dp.QuoteNumber == proposal.CRM_QUOTE_ID && dp.ClassificationID != 5).ToList();
                     err.ProposalObj.ClientApproval.DocumentTypes = db.LD_DocumentClassification.ToList();
                 }
 
@@ -1785,7 +1738,7 @@ namespace WebApplication1.BLL
 
                 //LD_DocumentProposal - Contractos
                 err.ProposalObj.Draft.contracts = new BusinessContract();
-                List<LD_DocumentProposal> contractDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                List<LD_DocumentProposal> contractDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.ClassificationID == 5).ToList();
                 if (contractDocs != null)
                 {
                     err.ProposalObj.Draft.contracts.contractDocs = contractDocs;

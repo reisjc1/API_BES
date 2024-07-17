@@ -20,6 +20,7 @@ using System.Web.Http;
 using WebApplication1.App_Start;
 using WebApplication1.BLL;
 using WebApplication1.Models;
+using WebApplication1.Models.SetupXML;
 using WebApplication1.Models.ViewModels;
 
 namespace WebApplication1.Controllers
@@ -706,6 +707,12 @@ namespace WebApplication1.Controllers
                 message.Body = strBuilder.ToString();
 
                 await emailSend.SendEmailaync(message);
+
+                ComissionController comission = new ComissionController();
+                if(l.ProposalID != null)
+                {
+                    comission.CreateCommission((int)l.ProposalID);
+                }
             }
             catch (Exception ex)
             {
@@ -2393,7 +2400,11 @@ namespace WebApplication1.Controllers
             vt.retomasTotal = retomas != null && retomas.HasValue && retomas.Value != 0 ? retomas.Value : 0;
             a.ProposalObj.valoretotais = vt;
 
+            LeaseDeskBLL lDBll = new LeaseDeskBLL();
 
+            List<ConditionPVP> condPvp = lDBll.FinancingDetails(proposalID);
+
+            a.ProposalObj.ConditionsPvp = condPvp;
 
 
 
@@ -3540,15 +3551,6 @@ namespace WebApplication1.Controllers
                             data.ContractNumberPai = proposalObj.ContractNumberPai;
                             data.DataFechoContracto = proposalObj.DataFechoContracto;
 
-                            // ###############################################################
-                            // PARA EFEITOS DE TESTE, APAGAR DEPOIS <------ ##################
-                            data.Plant = "TESTE PLANT";                             // #######
-                            data.CodArrend = "TESTE CODARREND";                     // #######
-                            data.AccordNumber = "TESTE ACCORDNUMBER";               // #######
-                            data.ContractNumberPai = "TESTE CONTRACTNUMBERPAI";     // #######
-                            // ###############################################################
-                            // ###############################################################
-
                             proposalID = proposalObj.ID;
                         }
                     }
@@ -3620,7 +3622,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("SaveMultiContractInfo")]
-        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract)
+        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract, string plant)
         {
             try
             {
@@ -3640,7 +3642,7 @@ namespace WebApplication1.Controllers
 
                                 bb_Proposal_Client.ClientID = soldTo;
                                 bb_proposal.ClientAccountNumber= soldTo;
-
+                                bb_proposal.Plant = plant;
                             }
 
                             db.Entry(bb_proposal).State = EntityState.Modified;
@@ -3656,6 +3658,8 @@ namespace WebApplication1.Controllers
                 return null;
             }
         }
+
+
 
     }
     public class GravarObser

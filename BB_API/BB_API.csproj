@@ -257,6 +257,7 @@
     <Compile Include="BLL\EmailService.cs" />
     <Compile Include="BLL\HomepageDasboards.cs" />
     <Compile Include="BLL\HumanResourcesBLL.cs" />
+    <Compile Include="BLL\LeaseDeskBLL.cs" />
     <Compile Include="BLL\ProposalBLL.cs" />
     <Compile Include="BLL\ServiceBLL.cs" />
     <Compile Include="Controllers\ComissionController.cs" />
