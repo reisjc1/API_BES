@@ -948,6 +948,8 @@
           <Property Name="DeliveryDelegation" Type="int" />
           <Property Name="AccountType" Type="varchar" MaxLength="50" />
           <Property Name="ContractNumber" Type="int" />
+          <Property Name="Comments" Type="varchar(max)" />
+          <Property Name="DupPosition" Type="int" />
         </EntityType>
         <EntityType Name="BB_Proposal_DL_ClientContacts">
           <Key>
@@ -977,6 +979,7 @@
           <Property Name="MonthlyIncome" Type="float" />
           <Property Name="DateApproval" Type="datetime" />
           <Property Name="DateExpired" Type="datetime" />
+          <Property Name="Factor" Type="float" />
         </EntityType>
         <EntityType Name="BB_Proposal_FinancingMonthly">
           <Key>
@@ -1348,6 +1351,16 @@
           <Property Name="BWExcess" Type="float" />
           <Property Name="CExcess" Type="float" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BB_RD_Estados_Fecho_CRM">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Percentagem" Type="int" />
+          <Property Name="Estado" Type="varchar" MaxLength="120" />
+        </EntityType>
         <EntityType Name="BB_RD_MIF_Renovation_Programs">
           <Key>
             <PropertyRef Name="ID" />
@@ -1684,6 +1697,23 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="SA" Type="varchar" MaxLength="10" />
           <Property Name="Street" Type="text" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_get_DataIntegration">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodeRef" Type="nvarchar(max)" />
+          <Property Name="Family" Type="nvarchar(max)" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="PVP" Type="float" />
+          <Property Name="BinaryImage" Type="nvarchar(max)" />
+          <Property Name="IsMarginBEU" Type="bit" />
+          <Property Name="MarginBEU" Type="float" />
+          <Property Name="BOM" Type="nvarchar(max)" />
+        </EntityType>
         <Association Name="FK_BB_PrintingService_Machines_BB_PrintingServices">
           <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="1" />
           <End Role="BB_PrintingService_Machines" Type="Self.BB_PrintingService_Machines" Multiplicity="*" />
@@ -1886,6 +1916,13 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="LD_DocumentProposal" EntityType="Self.LD_DocumentProposal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LD_FinancingDocument" EntityType="Self.LD_FinancingDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RD_AddressAcronyms" EntityType="Self.RD_AddressAcronyms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_RD_Estados_Fecho_CRM" EntityType="Self.BB_RD_Estados_Fecho_CRM" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BB_RD_Estados_Fecho_CRM].[ID] AS [ID], 
+    [BB_RD_Estados_Fecho_CRM].[Percentagem] AS [Percentagem], 
+    [BB_RD_Estados_Fecho_CRM].[Estado] AS [Estado]
+    FROM [dbo].[BB_RD_Estados_Fecho_CRM] AS [BB_RD_Estados_Fecho_CRM]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="BB_RD_WFA" EntityType="Self.BB_RD_WFA" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [BB_RD_WFA].[ID] AS [ID], 
@@ -1933,6 +1970,20 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
     [BB_RD_WFA_Elements].[Description] AS [Description], 
     [BB_RD_WFA_Elements].[IsEnabled] AS [IsEnabled]
     FROM [dbo].[BB_RD_WFA_Elements] AS [BB_RD_WFA_Elements]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_get_DataIntegration" EntityType="Self.vw_get_DataIntegration" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_get_DataIntegration].[ID] AS [ID], 
+    [vw_get_DataIntegration].[CodeRef] AS [CodeRef], 
+    [vw_get_DataIntegration].[Family] AS [Family], 
+    [vw_get_DataIntegration].[Name] AS [Name], 
+    [vw_get_DataIntegration].[Description] AS [Description], 
+    [vw_get_DataIntegration].[PVP] AS [PVP], 
+    [vw_get_DataIntegration].[BinaryImage] AS [BinaryImage], 
+    [vw_get_DataIntegration].[IsMarginBEU] AS [IsMarginBEU], 
+    [vw_get_DataIntegration].[MarginBEU] AS [MarginBEU], 
+    [vw_get_DataIntegration].[BOM] AS [BOM]
+    FROM [dbo].[vw_get_DataIntegration] AS [vw_get_DataIntegration]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="Self.FK_BB_PrintingService_Machines_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
@@ -2116,6 +2167,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
           <EntitySet Name="BB_TypeOfClient" EntityType="BB_DB_DEVModel.BB_TypeOfClient" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
+          <EntitySet Name="vw_get_DataIntegration" EntityType="BB_DB_DEVModel.vw_get_DataIntegration" />
+          <EntitySet Name="BB_RD_Estados_Fecho_CRM" EntityType="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3449,6 +3502,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="DeliveryDelegation" Type="Int32" />
           <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ContractNumber" Type="Int32" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DupPosition" Type="Int32" />
         </EntityType>
         <EntityType Name="BB_Proposal_ItemDoBasket">
           <Key>
@@ -3881,6 +3936,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="MonthlyIncome" Type="Double" />
           <Property Name="DateApproval" Type="DateTime" Precision="3" />
           <Property Name="DateExpired" Type="DateTime" Precision="3" />
+          <Property Name="Factor" Type="Double" />
         </EntityType>
         <EntityType Name="BB_TypeOfClient">
           <Key>
@@ -3892,6 +3948,29 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="NewBusinessLine" Type="Boolean" />
           <Property Name="GMA" Type="Boolean" />
           <Property Name="BEUSupport" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="vw_get_DataIntegration">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PVP" Type="Double" />
+          <Property Name="BinaryImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsMarginBEU" Type="Boolean" />
+          <Property Name="MarginBEU" Type="Double" />
+          <Property Name="BOM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BB_RD_Estados_Fecho_CRM">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Percentagem" Type="Int32" />
+          <Property Name="Estado" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5205,6 +5284,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
               <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
+                <ScalarProperty Name="DupPosition" ColumnName="DupPosition" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
                 <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
                 <ScalarProperty Name="AccountType" ColumnName="AccountType" />
                 <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
@@ -5648,6 +5729,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <EntitySetMapping Name="BB_Proposal_Financing">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
               <MappingFragment StoreEntitySet="BB_Proposal_Financing">
+                <ScalarProperty Name="Factor" ColumnName="Factor" />
                 <ScalarProperty Name="DateExpired" ColumnName="DateExpired" />
                 <ScalarProperty Name="DateApproval" ColumnName="DateApproval" />
                 <ScalarProperty Name="MonthlyIncome" ColumnName="MonthlyIncome" />
@@ -5671,6 +5753,31 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
                 <ScalarProperty Name="NewBusinessLine" ColumnName="NewBusinessLine" />
                 <ScalarProperty Name="Prospect" ColumnName="Prospect" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_get_DataIntegration">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.vw_get_DataIntegration">
+              <MappingFragment StoreEntitySet="vw_get_DataIntegration">
+                <ScalarProperty Name="BOM" ColumnName="BOM" />
+                <ScalarProperty Name="MarginBEU" ColumnName="MarginBEU" />
+                <ScalarProperty Name="IsMarginBEU" ColumnName="IsMarginBEU" />
+                <ScalarProperty Name="BinaryImage" ColumnName="BinaryImage" />
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_Estados_Fecho_CRM">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM">
+              <MappingFragment StoreEntitySet="BB_RD_Estados_Fecho_CRM">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Percentagem" ColumnName="Percentagem" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

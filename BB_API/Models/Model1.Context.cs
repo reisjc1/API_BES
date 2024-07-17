@@ -137,5 +137,7 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
         public virtual DbSet<BB_TypeOfClient> BB_TypeOfClient { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
+        public virtual DbSet<vw_get_DataIntegration> vw_get_DataIntegration { get; set; }
+        public virtual DbSet<BB_RD_Estados_Fecho_CRM> BB_RD_Estados_Fecho_CRM { get; set; }
     }
 }
