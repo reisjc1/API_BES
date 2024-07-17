@@ -3472,37 +3472,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="Movil" Type="Int32" />
           <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="BB_Proposal_DeliveryLocation">
-          <Key>
-            <PropertyRef Name="IDX" />
-          </Key>
-          <Property Name="IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
-          <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Floor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Building" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Room" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Schedule" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Payer" Type="Boolean" />
-          <Property Name="BillReceiver" Type="Boolean" />
-          <Property Name="DeliveryContact" Type="Int32" />
-          <Property Name="ITContact" Type="Int32" />
-          <Property Name="ServiceContact" Type="Int32" />
-          <Property Name="CopiesContact" Type="Int32" />
-          <Property Name="DeliveryDelegation" Type="Int32" />
-          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ContractNumber" Type="Int32" />
-        </EntityType>
         <EntityType Name="BB_Proposal_ItemDoBasket">
           <Key>
             <PropertyRef Name="ID" />
@@ -3929,6 +3898,29 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="GMA" Type="Boolean" />
           <Property Name="BEUSupport" Type="Boolean" />
         </EntityType>
+        <EntityType Name="vw_get_DataIntegration">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PVP" Type="Double" />
+          <Property Name="BinaryImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsMarginBEU" Type="Boolean" />
+          <Property Name="MarginBEU" Type="Double" />
+          <Property Name="BOM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BB_RD_Estados_Fecho_CRM">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Percentagem" Type="Int32" />
+          <Property Name="Estado" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="BB_Proposal_Financing">
           <Key>
             <PropertyRef Name="ID" />
@@ -3979,29 +3971,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="ContractNumber" Type="Int32" />
           <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="DupPosition" Type="Int32" />
-        </EntityType>
-        <EntityType Name="vw_get_DataIntegration">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PVP" Type="Double" />
-          <Property Name="BinaryImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsMarginBEU" Type="Boolean" />
-          <Property Name="MarginBEU" Type="Double" />
-          <Property Name="BOM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="BB_RD_Estados_Fecho_CRM">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Percentagem" Type="Int32" />
-          <Property Name="Estado" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5312,38 +5281,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
-              <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
-                <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
-                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
-                <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
-                <ScalarProperty Name="CopiesContact" ColumnName="CopiesContact" />
-                <ScalarProperty Name="ServiceContact" ColumnName="ServiceContact" />
-                <ScalarProperty Name="ITContact" ColumnName="ITContact" />
-                <ScalarProperty Name="DeliveryContact" ColumnName="DeliveryContact" />
-                <ScalarProperty Name="BillReceiver" ColumnName="BillReceiver" />
-                <ScalarProperty Name="Payer" ColumnName="Payer" />
-                <ScalarProperty Name="Schedule" ColumnName="Schedule" />
-                <ScalarProperty Name="Room" ColumnName="Room" />
-                <ScalarProperty Name="Building" ColumnName="Building" />
-                <ScalarProperty Name="Floor" ColumnName="Floor" />
-                <ScalarProperty Name="Department" ColumnName="Department" />
-                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Contacto" ColumnName="Contacto" />
-                <ScalarProperty Name="County" ColumnName="County" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
-                <ScalarProperty Name="Adress2" ColumnName="Adress2" />
-                <ScalarProperty Name="Adress1" ColumnName="Adress1" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="IDX" ColumnName="IDX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_Proposal_ItemDoBasket">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_ItemDoBasket">
               <MappingFragment StoreEntitySet="BB_Proposal_ItemDoBasket">
@@ -5767,6 +5704,31 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="vw_get_DataIntegration">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.vw_get_DataIntegration">
+              <MappingFragment StoreEntitySet="vw_get_DataIntegration">
+                <ScalarProperty Name="BOM" ColumnName="BOM" />
+                <ScalarProperty Name="MarginBEU" ColumnName="MarginBEU" />
+                <ScalarProperty Name="IsMarginBEU" ColumnName="IsMarginBEU" />
+                <ScalarProperty Name="BinaryImage" ColumnName="BinaryImage" />
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_RD_Estados_Fecho_CRM">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM">
+              <MappingFragment StoreEntitySet="BB_RD_Estados_Fecho_CRM">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Percentagem" ColumnName="Percentagem" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BB_Proposal_Financing">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
               <MappingFragment StoreEntitySet="BB_Proposal_Financing">
@@ -5817,31 +5779,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="IDX" ColumnName="IDX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vw_get_DataIntegration">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.vw_get_DataIntegration">
-              <MappingFragment StoreEntitySet="vw_get_DataIntegration">
-                <ScalarProperty Name="BOM" ColumnName="BOM" />
-                <ScalarProperty Name="MarginBEU" ColumnName="MarginBEU" />
-                <ScalarProperty Name="IsMarginBEU" ColumnName="IsMarginBEU" />
-                <ScalarProperty Name="BinaryImage" ColumnName="BinaryImage" />
-                <ScalarProperty Name="PVP" ColumnName="PVP" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Family" ColumnName="Family" />
-                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_RD_Estados_Fecho_CRM">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM">
-              <MappingFragment StoreEntitySet="BB_RD_Estados_Fecho_CRM">
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-                <ScalarProperty Name="Percentagem" ColumnName="Percentagem" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
