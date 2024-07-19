@@ -26,7 +26,7 @@ namespace WebApplication1.Models.SetupXML.XML
                 {
                     foreach (var item in order.Z1ZVOE_ORDER_ITEMS)
                     {
-                        if (contracts[0].VT_VLAUFZ == "002")
+                        if (contracts[0].VT_VLAUFZ == "002" || contracts[0].VT_VLAUFZ == "005" || contracts[0].VT_VLAUFZ == "008")
                         {
                             BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
                             BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.MATERIAL).FirstOrDefault();
