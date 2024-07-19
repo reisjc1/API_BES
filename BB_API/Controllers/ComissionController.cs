@@ -1196,7 +1196,7 @@ namespace WebApplication1.Controllers
 
                     var basket = loadProposal.ProposalObj.Draft.baskets.os_basket;
 
-                    bb_commission_general.CN_HW = basket.Where(x => x.Family.Contains("HW")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_HW = basket.Where(x => x.Family.Contains("HW") && x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
                     bb_commission_general.Margen_HW = profit_Hard.GPTotal;
                     bb_commission_general.Margen_HW_Nuevo = bb_commission_general.Margen_HW;
 
