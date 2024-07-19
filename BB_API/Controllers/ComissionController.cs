@@ -1251,7 +1251,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.baskets.GMA;
                     bb_commission_general.Es_Invoice_List = bb_commission_general.Invoice_List;
                     bb_commission_general.Support_BEU = loadProposal.ProposalObj.Draft.baskets.BEUSupport;
-                    //bb_commission_general.CBB = loadProposal.ProposalObj.Draft.baskets.CBB;
+                    bb_commission_general.CBB = bb_commission_general.Es_GMA;
                     bb_commission_general.Numero_Cliente_SAP = bb_commission_general.Numero_Cliente;
                     bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;
 
