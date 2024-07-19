@@ -619,6 +619,28 @@ namespace WebApplication1.Controllers
         }
 
 
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetEstadoFechoCRM")]
+        public IHttpActionResult GetEstadoFechoCRM()
+        {
+            try
+            {
+                List<BB_RD_Estados_Fecho_CRM> lst_Estados = new List<BB_RD_Estados_Fecho_CRM>();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    lst_Estados = db.BB_RD_Estados_Fecho_CRM.ToList();
+                }
+
+                return Ok(lst_Estados);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [AcceptVerbs("GET", "POST")]
         [ActionName("getContactosByAccountNumber")]
         public async Task<HttpResponseMessage> getContactosByAccountNumber(string accountnumber)

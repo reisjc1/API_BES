@@ -3551,15 +3551,6 @@ namespace WebApplication1.Controllers
                             data.ContractNumberPai = proposalObj.ContractNumberPai;
                             data.DataFechoContracto = proposalObj.DataFechoContracto;
 
-                            // ###############################################################
-                            // PARA EFEITOS DE TESTE, APAGAR DEPOIS <------ ##################
-                            data.Plant = "TESTE PLANT";                             // #######
-                            data.CodArrend = "TESTE CODARREND";                     // #######
-                            data.AccordNumber = "TESTE ACCORDNUMBER";               // #######
-                            data.ContractNumberPai = "TESTE CONTRACTNUMBERPAI";     // #######
-                            // ###############################################################
-                            // ###############################################################
-
                             proposalID = proposalObj.ID;
                         }
                     }
@@ -3631,7 +3622,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("SaveMultiContractInfo")]
-        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract)
+        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract, string plant)
         {
             try
             {
@@ -3651,7 +3642,7 @@ namespace WebApplication1.Controllers
 
                                 bb_Proposal_Client.ClientID = soldTo;
                                 bb_proposal.ClientAccountNumber= soldTo;
-
+                                bb_proposal.Plant = plant;
                             }
 
                             db.Entry(bb_proposal).State = EntityState.Modified;

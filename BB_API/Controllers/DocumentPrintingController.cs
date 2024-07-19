@@ -3205,7 +3205,7 @@ namespace WebApplication1.Controllers
 
                 WriteExportExcelServicosRecorrentes(@path + "ConfiguracaoContrato.xlsx", e.Draft.details.ID);
                 WriteExportExcelFinanciamento(@path + "ConfiguracaoContrato.xlsx", e.Draft.details.ID);
-
+                WriteExportExcelServiciosPrinting(@path + "ConfiguracaoContrato.xlsx", e.Draft.details.ID);
                 //Create HTTP Response.
                 //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
 
@@ -3474,7 +3474,7 @@ namespace WebApplication1.Controllers
 
                     int idx = 7;
                     BB_FinancingType FinancingType = db.BB_FinancingType.Where(x => x.ID == finacing.FinancingTypeCode).FirstOrDefault();
-                    if (finacing != null)
+                    if (finacing != null && finacing.FinancingTypeCode != 0)
                     {
 
                         BB_FinancingPaymentMethod FinancingPaymentMethod = db.BB_FinancingPaymentMethod.Where(x => x.ID == finacing.PaymentMethodId).FirstOrDefault();
@@ -3524,7 +3524,7 @@ namespace WebApplication1.Controllers
                         ws.Cells["A" + idx].Value = "Financiacion";
                         idx++;
                         ws.Cells["A" + idx].Value = "Produto Financiero:"; ws.Cells["A" + idx].Style.Font.Bold = true;
-                        ws.Cells["B" + idx].Value = FinancingType.Type.ToString();
+                        ws.Cells["B" + idx].Value = "Venda Directa";
                     }
                     pck.Save();
 
@@ -3582,7 +3582,7 @@ namespace WebApplication1.Controllers
                     ws.Cells["B3"].Value = cliente.Name;
                     ws.Cells["B4"].Value = cliente.NIF;
 
-                    
+
                     ApprovedPrintingService activePS = null;
                     ValoresTotaisRenda vt = new ValoresTotaisRenda();
                     string tipologiaPrintingService = "Haga click por modelo: no incluye volumen";
@@ -3598,9 +3598,9 @@ namespace WebApplication1.Controllers
                             vt.VolumeC = activePS.CVolume;
                             vt.VVA = activePS.GlobalClickVVA.PVP;
                             vt.clickPriceBW = activePS.GlobalClickVVA.BWExcessPVP;
-                            vt.clickPriceC = activePS.GlobalClickVVA.CExcessPVP != null? activePS.GlobalClickVVA.CExcessPVP: 0;
+                            vt.clickPriceC = activePS.GlobalClickVVA.CExcessPVP != null ? activePS.GlobalClickVVA.CExcessPVP : 0;
                             duracaoContacto = activePS.ContractDuration.ToString();
-                           
+
                             switch (activePS.GlobalClickVVA.RentBillingFrequency)
                             {
                                 case 3:
@@ -3655,2149 +3655,2155 @@ namespace WebApplication1.Controllers
                                 default: break;
                             }
 
-                            switch (activePS.GlobalClickVVA.ExcessBillingFrequency)
-                            {
-                                case 3:
-                                    //vt.RendaFinanciada = vt.RendaFinanciada * 3;
-                                    frequenciaRendaExcecisva = "Trimestral";
-                                    //fee = fee * 3;
-                                    break;
-                                case 6:
-                                    //vt.RendaFinanciada = vt.RendaFinanciada * 6;
-                                    frequenciaRendaExcecisva = "Semestral";
-                                    //fee = fee * 6;
-                                    break;
-                                default: break;
-                            }
+
 
                             tipologiaPrintingService = "Haga click en Global: no incluye volumen";
                         }
+                        if (activePS != null && activePS.GlobalClickNoVolume == null && activePS.GlobalClickVVA == null)
+                        {
+                            duracaoContacto = activePS.ContractDuration.ToString();
 
-                    }
-
-
-                    int idx = 7;
-                    ws.Cells["A" + idx].Value = "Servicios Printing"; ws.Cells["A" + idx].Style.Font.Bold = true;
-                    idx++;
-                    ws.Cells["A" + idx].Value = "Cotizaciones aprobadas:";
-                    ws.Cells["B" + idx].Value = tipologiaPrintingService;
-                    idx++;
-                    
-                    ws.Cells["A" + idx].Value = "Duración del contrato:";
-                    ws.Cells["B" + idx].Value = duracaoContacto;
-                    idx++;
+                        }
 
 
-                    ws.Cells["A" + idx].Value = "Facturación de Renta Fija:";
-                    ws.Cells["B" + idx].Value = frequenciaRenda;
-                    idx++;
-
-                    ws.Cells["A" + idx].Value = "Facturación excesiva de páginas:";
-                    ws.Cells["B" + idx].Value = frequenciaRendaExcecisva;
-                    idx++;
-
-                    ws.Cells["A" + idx].Value = "Volumen Total Negro:";
-                    ws.Cells["B" + idx].Value = vt.VolumeBW;
-                    idx++;
-
-                    ws.Cells["A" + idx].Value = "Volumen Total Color:";
-                    ws.Cells["B" + idx].Value = vt.VolumeC;
-                    idx++;
-
-                    if(tipologiaPrintingService == "Haga click en Global: con volumen incluido (VVA)")
-                    {
-                        ws.Cells["A" + idx].Value = "VVA:";
-                        ws.Cells["B" + idx].Value = vt.VVA;
+                        int idx = 7;
+                        ws.Cells["A" + idx].Value = "Servicios Printing"; ws.Cells["A" + idx].Style.Font.Bold = true;
+                        idx++;
+                        ws.Cells["A" + idx].Value = "Cotizaciones aprobadas:";
+                        ws.Cells["B" + idx].Value = tipologiaPrintingService;
                         idx++;
 
-                        ws.Cells["A" + idx].Value = "Exceso negro:";
-                        ws.Cells["B" + idx].Value = vt.clickPriceBW;
+                        ws.Cells["A" + idx].Value = "Duración del contrato:";
+                        ws.Cells["B" + idx].Value = duracaoContacto;
                         idx++;
 
-                        ws.Cells["A" + idx].Value = "Exceso Color::";
-                        ws.Cells["B" + idx].Value = vt.clickPriceC;
-                        idx++;
-                    }
 
-                    if (tipologiaPrintingService == "Haga click en Global: no incluye volumen")
-                    {
-                        ws.Cells["A" + idx].Value = "VVA:";
-                        ws.Cells["B" + idx].Value = vt.VVA;
+                        ws.Cells["A" + idx].Value = "Facturación de Renta Fija:";
+                        ws.Cells["B" + idx].Value = frequenciaRenda;
                         idx++;
 
-                        ws.Cells["A" + idx].Value = "Negro:";
-                        ws.Cells["B" + idx].Value = vt.clickPriceBW;
+                        ws.Cells["A" + idx].Value = "Facturación excesiva de páginas:";
+                        ws.Cells["B" + idx].Value = frequenciaRendaExcecisva;
                         idx++;
 
-                        ws.Cells["A" + idx].Value = "Color:";
-                        ws.Cells["B" + idx].Value = vt.clickPriceC;
+                        ws.Cells["A" + idx].Value = "Volumen Total Negro:";
+                        ws.Cells["B" + idx].Value = vt.VolumeBW;
                         idx++;
+
+                        ws.Cells["A" + idx].Value = "Volumen Total Color:";
+                        ws.Cells["B" + idx].Value = vt.VolumeC;
+                        idx++;
+
+                        if (tipologiaPrintingService == "Haga click en Global: con volumen incluido (VVA)")
+                        {
+                            ws.Cells["A" + idx].Value = "VVA:";
+                            ws.Cells["B" + idx].Value = vt.VVA;
+                            idx++;
+
+                            ws.Cells["A" + idx].Value = "Exceso negro:";
+                            ws.Cells["B" + idx].Value = vt.clickPriceBW;
+                            idx++;
+
+                            ws.Cells["A" + idx].Value = "Exceso Color::";
+                            ws.Cells["B" + idx].Value = vt.clickPriceC;
+                            idx++;
+                        }
+
+                        if (tipologiaPrintingService == "Haga click en Global: no incluye volumen")
+                        {
+                            ws.Cells["A" + idx].Value = "Click Negro:";
+                            ws.Cells["B" + idx].Value = vt.clickPriceBW;
+                            idx++;
+
+                            ws.Cells["A" + idx].Value = "Click Color:";
+                            ws.Cells["B" + idx].Value = vt.clickPriceC;
+                            idx++;
+                        }
+
+                        if (tipologiaPrintingService == "Haga click por modelo: no incluye volumen")
+                        {
+                           
+                            ws.Cells["A" + idx].Value = "Machine";
+                            ws.Cells["B" + idx].Value = "Click Negro";
+                            ws.Cells["C" + idx].Value = "Click Color";
+                            idx++;
+                            foreach ( var item in activePS.Machines)
+                            {
+
+                                ws.Cells["A" + idx].Value = item.Description;
+                                ws.Cells["B" + idx].Value = item.ClickPriceBW;
+                                ws.Cells["C" + idx].Value = item.ClickPriceC;
+                                idx++;
+
+                            }
+
+                        }
                     }
 
 
                     pck.Save();
 
 
-                pck.Stream.Close();
-            }
+                    pck.Stream.Close();
+                }
             }
             catch (Exception ex)
             {
                 File.Delete(@path + "\\ConfiguracaoNegocio.xlsx");
 
             }
-}
-
-private void WriteExportExcel(string path, ProposalRootObject p)
-{
-    try
-    {
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            BB_Clientes cliente = new BB_Clientes();
-
-            //using (var db = new BB_DB_DEVEntities2())
-            //{
-            //    cliente = db.BB_Clientes.Where(x => x.accountnumber == acocuntNumber).FirstOrDefault();
-            //    lstBB_Proposal_Contacts_Signing = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == proposalID).ToList();
-            //}
-
-            FileInfo newFile = new FileInfo(path);
-
-            ExcelPackage pck = new ExcelPackage(newFile);
-            //Add the Content sheet
-            var ws = pck.Workbook.Worksheets["Sheet1"];
-            //ws.View.ShowGridLines = false;
-            //ws.Cells["A1"].Value = "Funcionalidade indisponível temporariamente.";
-
-            ws.Cells["A1"].Value = "Quote";
-            ws.Cells["A2"].Value = "Acocunt Number";
-            ws.Cells["A3"].Value = "Cliente";
-            ws.Cells["A4"].Value = "NIF";
-
-            ws.Cells["B1"].Value = p.Draft.details.CRM_QUOTE_ID;
-            ws.Cells["B2"].Value = p.Draft.client.accountnumber;
-            ws.Cells["B3"].Value = p.Draft.client.Name;
-            ws.Cells["B4"].Value = p.Draft.client.NIF;
-
-            int idx = 6;
-
-            ws.Cells["A" + idx].Value = "OneShot";
-            idx++;
-            ws.Cells["A" + idx].Value = "Family";
-            ws.Cells["B" + idx].Value = "CodeRef";
-            ws.Cells["C" + idx].Value = "Description";
-            ws.Cells["D" + idx].Value = "UnitPriceCost";
-            ws.Cells["E" + idx].Value = "Qty";
-            ws.Cells["F" + idx].Value = "TotalCost";
-            ws.Cells["G" + idx].Value = "Margin";
-            ws.Cells["H" + idx].Value = "PVP";
-            ws.Cells["I" + idx].Value = "TotalPVP";
-            ws.Cells["J" + idx].Value = "DiscountPercentage";
-            ws.Cells["K" + idx].Value = "UnitDiscountPrice";
-            ws.Cells["L" + idx].Value = "GPTotal";
-            ws.Cells["M" + idx].Value = "GPPercentage";
-            ws.Cells["N" + idx].Value = "TotalNetsale";
-            ws.Cells["N" + idx].Value = "Lei Copia Privada";
-            idx++;
-
-            bool isBusinessdeveloper = IsBusinessdeveloper(p.Draft.details.CreatedBy);
-
-            foreach (var i in p.Draft.baskets.os_basket)
-            {
-                double? copia = db.BB_Equipamentos.Where(x => x.CodeRef == i.CodeRef).Select(x => x.TCP).FirstOrDefault();
-
-                ws.Cells["A" + idx].Value = i.Family;
-                ws.Cells["B" + idx].Value = i.CodeRef;
-                ws.Cells["C" + idx].Value = i.Description;
-                ws.Cells["D" + idx].Value = isBusinessdeveloper ? i.UnitPriceCost.ToString() : "-";
-                ws.Cells["E" + idx].Value = i.Qty;
-                ws.Cells["F" + idx].Value = isBusinessdeveloper ? i.TotalCost.ToString() : "-";
-                ws.Cells["G" + idx].Value = i.Margin;
-                ws.Cells["H" + idx].Value = i.PVP;
-                ws.Cells["I" + idx].Value = i.TotalPVP;
-                ws.Cells["J" + idx].Value = i.DiscountPercentage;
-                ws.Cells["K" + idx].Value = i.UnitDiscountPrice;
-                ws.Cells["L" + idx].Value = isBusinessdeveloper ? i.GPTotal.ToString() : "-";
-                ws.Cells["M" + idx].Value = isBusinessdeveloper ? i.GPPercentage.ToString() : "-";
-                ws.Cells["N" + idx].Value = i.TotalNetsale;
-                ws.Cells["N" + idx].Value = i.IsUsed.GetValueOrDefault() ? 0 : copia.GetValueOrDefault();
-                idx++;
-            }
-            idx++;
-            idx++;
-            ws.Cells["A" + idx].Value = "Serv. recorrentes";
-            idx++;
-            ws.Cells["A" + idx].Value = "Family";
-            ws.Cells["B" + idx].Value = "CodeRef";
-            ws.Cells["C" + idx].Value = "Description";
-            ws.Cells["D" + idx].Value = "UnitPriceCost";
-            ws.Cells["E" + idx].Value = "Qty";
-
-            ws.Cells["F" + idx].Value = "TotalCost";
-            ws.Cells["G" + idx].Value = "Margin";
-            ws.Cells["H" + idx].Value = "PVP";
-            ws.Cells["I" + idx].Value = "TotalPVP";
-            ws.Cells["J" + idx].Value = "DiscountPercentage";
-            ws.Cells["K" + idx].Value = "UnitDiscountPrice";
-            ws.Cells["L" + idx].Value = "GPTotal";
-            ws.Cells["M" + idx].Value = "GPPercentage";
-            ws.Cells["N" + idx].Value = "TotalNetsale";
-            ws.Cells["O" + idx].Value = "TotalMonths";
-            idx++;
-
-            foreach (var i in p.Draft.baskets.rs_basket)
-            {
-                ws.Cells["A" + idx].Value = i.Family;
-                ws.Cells["B" + idx].Value = i.CodeRef;
-                ws.Cells["C" + idx].Value = i.Description;
-                ws.Cells["D" + idx].Value = i.UnitPriceCost;
-                ws.Cells["E" + idx].Value = i.Qty;
-
-                ws.Cells["F" + idx].Value = i.TotalCost;
-                ws.Cells["G" + idx].Value = i.Margin;
-                ws.Cells["H" + idx].Value = i.PVP;
-                ws.Cells["I" + idx].Value = i.TotalPVP;
-                ws.Cells["J" + idx].Value = i.DiscountPercentage;
-                ws.Cells["K" + idx].Value = i.UnitDiscountPrice;
-                ws.Cells["L" + idx].Value = i.GPTotal;
-                ws.Cells["M" + idx].Value = i.GPPercentage;
-                ws.Cells["N" + idx].Value = i.TotalNetsale;
-                ws.Cells["O" + idx].Value = i.TotalMonths;
-                idx++;
-            }
-
-            idx++;
-            ws.Cells["A" + idx].Value = "OPS Implement";
-            idx++;
-            ws.Cells["A" + idx].Value = "Family";
-            ws.Cells["B" + idx].Value = "CodeRef";
-            ws.Cells["C" + idx].Value = "Description";
-            ws.Cells["D" + idx].Value = "PVP";
-            ws.Cells["E" + idx].Value = "Quantity";
-            ws.Cells["F" + idx].Value = "Total Cost";
-            //ws.Cells["G" + idx].Value = "1 - (i.UnitDiscountPrice / i.PVP)) * 100)";
-            ws.Cells["G" + idx].Value = "UnitDiscountPrice";
-            ws.Cells["H" + idx].Value = "Total Net Sale";
-
-            idx++;
-            if (p.Draft.opsPacks.opsImplement.Count() > 0)
-            {
-                foreach (var i in p.Draft.opsPacks.opsImplement)
-                {
-                    ws.Cells["A" + idx].Value = i.Family;
-                    ws.Cells["B" + idx].Value = i.CodeRef;
-                    ws.Cells["C" + idx].Value = i.Description;
-                    ws.Cells["D" + idx].Value = i.PVP;
-                    ws.Cells["E" + idx].Value = i.Quantity;
-                    ws.Cells["F" + idx].Value = i.PVP * i.Quantity;
-                    //ws.Cells["G" + idx].Value = ((1 - (i.UnitDiscountPrice / i.PVP)) * 100);
-                    ws.Cells["G" + idx].Value = i.UnitDiscountPrice;
-                    ws.Cells["H" + idx].Value = i.UnitDiscountPrice * i.Quantity;
-                    idx++;
-                }
-            }
-            else
-            {
-                idx++;
-            }
-
-            idx++;
-            ws.Cells["A" + idx].Value = "OPS Manage";
-            idx++;
-            ws.Cells["A" + idx].Value = "Family";
-            ws.Cells["B" + idx].Value = "CodeRef";
-            ws.Cells["C" + idx].Value = "Description";
-            ws.Cells["D" + idx].Value = "PVP";
-            ws.Cells["E" + idx].Value = "Quantity";
-            ws.Cells["F" + idx].Value = "TotalMonths";
-            ws.Cells["G" + idx].Value = "PVP Total";
-            //ws.Cells["H" + idx].Value = "1 - (i.UnitDiscountPrice / i.PVP)) * 100)";
-            ws.Cells["H" + idx].Value = "UnitDiscountPrice";
-            ws.Cells["I" + idx].Value = "Total Net Sale";
-
-            idx++;
-            if (p.Draft.opsPacks.opsManage.Count() > 0)
-            {
-                foreach (var i in p.Draft.opsPacks.opsManage)
-                {
-                    ws.Cells["A" + idx].Value = i.Family;
-                    ws.Cells["B" + idx].Value = i.CodeRef;
-                    ws.Cells["C" + idx].Value = i.Description;
-                    ws.Cells["D" + idx].Value = i.PVP;
-                    ws.Cells["E" + idx].Value = i.Quantity;
-                    ws.Cells["F" + idx].Value = i.TotalMonths;
-                    ws.Cells["G" + idx].Value = i.PVP * i.Quantity * i.TotalMonths;
-                    //ws.Cells["H" + idx].Value = ((1 - (i.UnitDiscountPrice / i.PVP)) * 100);
-                    ws.Cells["H" + idx].Value = i.UnitDiscountPrice;
-                    ws.Cells["I" + idx].Value = i.UnitDiscountPrice * i.Quantity * i.TotalMonths;
-                    idx++;
-                }
-            }
-            else
-            {
-                idx++;
-            }
-
-
-            idx++;
-            ws.Cells["A" + idx].Value = "Financiamento";
-            idx++;
-            ws.Cells["A" + idx].Value = "Mensal";
-            ws.Cells["B" + idx].Value = "24";
-            foreach (var i in p.Draft.financing.FinancingFactors.Monthly)
-            {
-                if (i.Contracto == 24)
-                    ws.Cells["C" + idx].Value = i.Value;
-            }
-            idx++;
-            ws.Cells["A" + idx].Value = "Mensal";
-            ws.Cells["B" + idx].Value = "36";
-            foreach (var i in p.Draft.financing.FinancingFactors.Monthly)
-            {
-                if (i.Contracto == 36)
-                    ws.Cells["C" + idx].Value = i.Value;
-            }
-            idx++;
-            ws.Cells["A" + idx].Value = "Mensal";
-            ws.Cells["B" + idx].Value = "48";
-            foreach (var i in p.Draft.financing.FinancingFactors.Monthly)
-            {
-                if (i.Contracto == 48)
-                    ws.Cells["C" + idx].Value = i.Value;
-            }
-            idx++;
-            ws.Cells["A" + idx].Value = "Mensal";
-            ws.Cells["B" + idx].Value = "60";
-            foreach (var i in p.Draft.financing.FinancingFactors.Monthly)
-            {
-                if (i.Contracto == 60)
-                    ws.Cells["C" + idx].Value = i.Value;
-            }
-
-            idx++;
-            ws.Cells["A" + idx].Value = "Trimestral";
-            ws.Cells["B" + idx].Value = "8";
-            foreach (var i in p.Draft.financing.FinancingFactors.Trimestral)
-            {
-                if (i.Contracto == 8)
-                    ws.Cells["C" + idx].Value = i.Value;
-            }
-            idx++;
-            ws.Cells["A" + idx].Value = "Trimestral";
-            ws.Cells["B" + idx].Value = "12";
-            foreach (var i in p.Draft.financing.FinancingFactors.Trimestral)
-            {
-                if (i.Contracto == 12)
-                    ws.Cells["C" + idx].Value = i.Value;
-            }
-            idx++;
-            ws.Cells["A" + idx].Value = "Trimestral";
-            ws.Cells["B" + idx].Value = "16";
-            foreach (var i in p.Draft.financing.FinancingFactors.Trimestral)
-            {
-                if (i.Contracto == 16)
-                    ws.Cells["C" + idx].Value = i.Value;
-            }
-            idx++;
-            ws.Cells["A" + idx].Value = "Trimestral";
-            ws.Cells["B" + idx].Value = "20";
-            foreach (var i in p.Draft.financing.FinancingFactors.Trimestral)
-            {
-                if (i.Contracto == 20)
-                    ws.Cells["C" + idx].Value = i.Value;
-            }
-
-            //KOnica Representante
-            //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
-            //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
-
-            pck.Save();
-
-
-            pck.Stream.Close();
-        }
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\ConfiguracaoNegocio.xlsx");
-
-    }
-}
-
-private bool IsBusinessdeveloper(string v)
-{
-    if (v == "Joao.Reis@konicaminolta.pt"
-        || v == "Fernando.Rodrigues@konicaminolta.pt"
-        || v == "Vitor.Medeiros@konicaminolta.pt"
-         || v == "Catarina.polaco@konicaminolta.pt"
-           || v == "maria.moraisribeiro@konicaminolta.pt"
-          || v == "Marta.Sousa@konicaminolta.pt")
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-[AcceptVerbs("GET", "POST")]
-[ActionName("PrintingContracto")]
-public HttpResponseMessage PrintingContracto(GerarContrato gc)
-{
-    //int ID = 375;
-
-    //GerarContrato gc = new GerarContrato();
-    //gc.proposalID = 472;
-    //gc.Selectmonthly = 18;
-
-    //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
-    string erro = "";
-    //int proposalID = ID;
-    //int? proposalID = o.ProposalID;
-    //Create HTTP Response.
-    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-
-    string path = "";
-    try
-    {
-        BB_Proposal p = new BB_Proposal();
-        AspNetUsers c = new AspNetUsers();
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            p = db.BB_Proposal.Where(x => x.ID == gc.proposalID).First();
-
-        }
-        using (var db = new masterEntities())
-        {
-            c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
-
         }
 
-
-        string strUser = c.DisplayName;
-        string strFolder = "Contracto";
-        string strCliente = c.DisplayName;
-        path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
-
-        if (!Directory.Exists(path))
-            System.IO.Directory.CreateDirectory(path);
-
-
-        using (var stream = File.Open(@AppSettingsGet.DocumentPrintingContractoTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        private void WriteExportExcel(string path, ProposalRootObject p)
         {
-
             try
             {
-                using (var outputFile = new FileStream(path + "\\Contracto.xlsx", FileMode.Create))
+                using (var db = new BB_DB_DEVEntities2())
                 {
-                    stream.CopyTo(outputFile);
-                }
-            }
-            catch (IOException)
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-        }
+                    BB_Clientes cliente = new BB_Clientes();
 
-        WriteContractoCliente(@path + "\\Contracto.xlsx", p.ClientAccountNumber, gc.proposalID);
+                    //using (var db = new BB_DB_DEVEntities2())
+                    //{
+                    //    cliente = db.BB_Clientes.Where(x => x.accountnumber == acocuntNumber).FirstOrDefault();
+                    //    lstBB_Proposal_Contacts_Signing = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == proposalID).ToList();
+                    //}
 
-        //Cliente WRITE TO EXCEL
-        //bool resultClient = WriteToExcelCliente(@path + "\\Proposal.xlsx", proposalID);
-        WriteContractoQuote(@path + "\\Contracto.xlsx", gc.proposalID, p);
-        //Thread.Sleep(3000);
-        //WritePropostaFinanceira(@path + "\\Contracto.xlsx", proposalID, p);
+                    FileInfo newFile = new FileInfo(path);
 
-        WriteContractoServicos(@path + "\\Contracto.xlsx", gc.proposalID, p);
+                    ExcelPackage pck = new ExcelPackage(newFile);
+                    //Add the Content sheet
+                    var ws = pck.Workbook.Worksheets["Sheet1"];
+                    //ws.View.ShowGridLines = false;
+                    //ws.Cells["A1"].Value = "Funcionalidade indisponível temporariamente.";
 
-        WriteContractoService2(@path + "\\Contracto.xlsx", p.ClientAccountNumber, gc.proposalID);
-        //WritePropostaOutrasCondicoes(@path + "\\Contracto.xlsx", proposalID, p);
+                    ws.Cells["A1"].Value = "Quote";
+                    ws.Cells["A2"].Value = "Acocunt Number";
+                    ws.Cells["A3"].Value = "Cliente";
+                    ws.Cells["A4"].Value = "NIF";
 
-        WriteContractoAutoR(@path + "\\Contracto.xlsx", p.ClientAccountNumber);
+                    ws.Cells["B1"].Value = p.Draft.details.CRM_QUOTE_ID;
+                    ws.Cells["B2"].Value = p.Draft.client.accountnumber;
+                    ws.Cells["B3"].Value = p.Draft.client.Name;
+                    ws.Cells["B4"].Value = p.Draft.client.NIF;
 
-        WriteContractoDeclaracao(@path + "\\Contracto.xlsx", p.ClientAccountNumber, p.ID);
+                    int idx = 6;
 
+                    ws.Cells["A" + idx].Value = "OneShot";
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Family";
+                    ws.Cells["B" + idx].Value = "CodeRef";
+                    ws.Cells["C" + idx].Value = "Description";
+                    ws.Cells["D" + idx].Value = "UnitPriceCost";
+                    ws.Cells["E" + idx].Value = "Qty";
+                    ws.Cells["F" + idx].Value = "TotalCost";
+                    ws.Cells["G" + idx].Value = "Margin";
+                    ws.Cells["H" + idx].Value = "PVP";
+                    ws.Cells["I" + idx].Value = "TotalPVP";
+                    ws.Cells["J" + idx].Value = "DiscountPercentage";
+                    ws.Cells["K" + idx].Value = "UnitDiscountPrice";
+                    ws.Cells["L" + idx].Value = "GPTotal";
+                    ws.Cells["M" + idx].Value = "GPPercentage";
+                    ws.Cells["N" + idx].Value = "TotalNetsale";
+                    ws.Cells["N" + idx].Value = "Lei Copia Privada";
+                    idx++;
 
-        ExportWorkbookToPdfContrato(@path + "\\Contracto.xlsx", @path + "\\Contracto.pdf", gc.proposalID);
+                    bool isBusinessdeveloper = IsBusinessdeveloper(p.Draft.details.CreatedBy);
 
-
-        string filePath = @path + "\\Contracto.pdf";
-        string excelPath = @path + "\\Contracto.xlsx";
-
-        if (gc.TipoFicheiro == "PDF")
-        {
-            if (!File.Exists(filePath))
-            {
-                //Throw 404 (Not Found) exception if File not found.
-                response.StatusCode = HttpStatusCode.NotFound;
-                response.ReasonPhrase = string.Format("File not found: .");
-                throw new HttpResponseException(response);
-            }
-
-            byte[] bytes = File.ReadAllBytes(filePath);
-
-            //Set the Response Content.
-
-            response.Content = new ByteArrayContent(bytes);
-
-            //Set the Response Content Length.
-            response.Content.Headers.ContentLength = bytes.LongLength;
-
-            //Set the Content Disposition Header Value and FileName.
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = "Contracto.pdf";
-
-            //Set the File Content Type.
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.pdf"));
-        }
-        if (gc.TipoFicheiro == "EXCEL")
-        {
-            if (!File.Exists(excelPath))
-            {
-                //Throw 404 (Not Found) exception if File not found.
-                response.StatusCode = HttpStatusCode.NotFound;
-                response.ReasonPhrase = string.Format("File not found: .");
-                throw new HttpResponseException(response);
-            }
-
-            byte[] bytes = File.ReadAllBytes(excelPath);
-
-            //Set the Response Content.
-
-            response.Content = new ByteArrayContent(bytes);
-
-            //Set the Response Content Length.
-            response.Content.Headers.ContentLength = bytes.LongLength;
-
-            //Set the Content Disposition Header Value and FileName.
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = "Contrato.xlsx";
-
-            //Set the File Content Type.
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contrato.xlsx"));
-        }
-
-
-        return response;
-
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.xlsx");
-        erro = ex.Message.ToString();
-    }
-    Console.WriteLine(erro);
-    return response;
-}
-
-[AcceptVerbs("GET", "POST")]
-[ActionName("PrintingContractoFormal")]
-public HttpResponseMessage PrintingContractoFormal(GerarContratoFormal gc)
-{
-    //int ID = 375;
-
-    //GerarContrato gc = new GerarContrato();
-    //gc.proposalID = 472;
-    gc.Selectmonthly = 18;
-
-    //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
-    string erro = "";
-    //int proposalID = ID;
-    //int? proposalID = o.ProposalID;
-    //Create HTTP Response.
-    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-    List<BB_Proposal_Quote> quotes = new List<BB_Proposal_Quote>();
-    string path = "";
-    List<DeliveryLocation> deliveryLocations;
-    try
-    {
-        BB_Proposal p = new BB_Proposal();
-        AspNetUsers c = new AspNetUsers();
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            p = db.BB_Proposal.Where(x => x.ID == gc.proposalID).First();
-            quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == gc.proposalID).ToList();
-
-            deliveryLocations = new List<DeliveryLocation>();
-            List<BB_Proposal_DeliveryLocation> bb_Proposal_DeliveryLocation = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == gc.proposalID).ToList();
-            foreach (var item in bb_Proposal_DeliveryLocation)
-            {
-                var configDelivery = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<BB_Proposal_DeliveryLocation, DeliveryLocation>();
-                });
-
-                IMapper iMapperDelivery = configDelivery.CreateMapper();
-
-                DeliveryLocation dl = iMapperDelivery.Map<BB_Proposal_DeliveryLocation, DeliveryLocation>(item);
-
-
-
-                List<BB_Proposal_ItemDoBasket> itemDoBasket = new List<BB_Proposal_ItemDoBasket>();
-                itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == item.IDX).ToList();
-
-                dl.items = new List<ItemDoBasket>();
-                foreach (var item1 in itemDoBasket)
-                {
-                    var configItem = new MapperConfiguration(cfg =>
+                    foreach (var i in p.Draft.baskets.os_basket)
                     {
-                        cfg.CreateMap<BB_Proposal_ItemDoBasket, ItemDoBasket>();
-                    });
-
-                    IMapper iMapperItem = configItem.CreateMapper();
-
-                    ItemDoBasket i = iMapperItem.Map<BB_Proposal_ItemDoBasket, ItemDoBasket>(item1);
-                    i.psConfig = new PsConfig();
-                    i.counters = new List<Counter>();
-                    dl.items.Add(i);
-                }
-
-                deliveryLocations.Add(dl);
-            }
-
-
-        }
-        using (var db = new masterEntities())
-        {
-            c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
-
-        }
-
-
-
-
-
-
-
-        string strUser = c.DisplayName;
-        string strFolder = "Contracto";
-        string strCliente = c.DisplayName;
-        path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente + "\\" + p.ID;
-
-        if (!Directory.Exists(path))
-            System.IO.Directory.CreateDirectory(path);
-
-
-        using (var stream = File.Open(@AppSettingsGet.DocumentPrintingContractoWordTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        {
-
-            try
-            {
-                using (var outputFile = new FileStream(path + "\\ContractoFormal.doc", FileMode.Create))
-                {
-                    stream.CopyTo(outputFile);
-                }
-            }
-            catch (IOException)
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-        }
-
-
-        WriteContractoFormal(@path + "\\ContractoFormal.doc", p.ClientAccountNumber, gc, quotes, deliveryLocations);
-        //WriteContractoFormalEmail(@path + "\\ContractoFormal.doc", p.ClientAccountNumber, gc.ENDEREÇODEMAIL);
-
-        //ExportWorkbookToPdf(@path + "\\Contracto.xlsx", @path + "\\Contracto.pdf");
-
-
-        string filePath = @path + "\\ContractoFormal.doc";
-
-
-        //Check whether File exists.
-        if (!File.Exists(filePath))
-        {
-            //Throw 404 (Not Found) exception if File not found.
-            response.StatusCode = HttpStatusCode.NotFound;
-            response.ReasonPhrase = string.Format("File not found: .");
-            throw new HttpResponseException(response);
-        }
-
-        byte[] bytes = File.ReadAllBytes(filePath);
-
-        //Set the Response Content.
-
-        response.Content = new ByteArrayContent(bytes);
-
-        //Set the Response Content Length.
-        response.Content.Headers.ContentLength = bytes.LongLength;
-
-        //Set the Content Disposition Header Value and FileName.
-        response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-        response.Content.Headers.ContentDisposition.FileName = "Contracto.doc";
-
-        //Set the File Content Type.
-        response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.doc"));
-        return response;
-
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.doc");
-        erro = ex.Message.ToString();
-    }
-    Console.WriteLine(erro);
-    return response;
-}
-private void WriteContractoFormal(string path, string clientAccountNumber, GerarContratoFormal gc, List<BB_Proposal_Quote> qotes, List<DeliveryLocation> deliveryLocations)
-{
-    try
-    {
-        Microsoft.Office.Interop.Word.Application wordApp = null;
-        wordApp = new Microsoft.Office.Interop.Word.Application();
-        wordApp.Visible = false;
-        //wordApp.AutomationSecurity 
-        wordApp.DisplayAlerts = WdAlertLevel.wdAlertsNone;
-
-        Document wordDoc = wordApp.Documents.Open(@path);
-
-        wordDoc.Activate();
-
-
-        FindAndReplace(wordApp, "[Cliente]", gc.Cliente);
-        FindAndReplace(wordApp, "[quotas/anónima]", gc.quotasAnonimas != null && gc.quotasAnonimas.Length > 0 ? gc.quotasAnonimas : "[quotas/anónima]");
-        FindAndReplace(wordApp, "[morada]", gc.Morada);
-        FindAndReplace(wordApp, "[número]", gc.NIF);
-        FindAndReplace(wordApp, "[nome do legal representante ou procurador]", gc.LegalRepresentante);
-        FindAndReplace(wordApp, "[qualidade em que actua e que pode ser a de gerente, administrador ou procurador]", gc.QualidadeRepresentante);
-        FindAndReplace(wordApp, "[ABREVIATURA CLIENTE]", gc.AbreviaturaCliente);
-        FindAndReplace(wordApp, "[número de meses]", gc.NrMesesContrato);// -  presente contrato entra em vigor na data de entrega/instalação do(s) 
-        FindAndReplace(wordApp, "[cap] - capital social", gc.CapitalSocial);
-        FindAndReplace(wordApp, "[N.º de páginas]", gc.NrPaginasPreto);// - equipamentos, e serviços prestados, que incluem a realização mensal das primeira páginas a preto
-        FindAndReplace(wordApp, "[valorN]", gc.ValorPaginaPreto);// - preço das paginas a preto
-        FindAndReplace(wordApp, "[valor por extensoN]", gc.ValorExtensoPaginaPreto);// - valor por extenso
-        FindAndReplace(wordApp, "[valorE]", gc.ValorExtensoPaginaPreto); //- valor excendente
-        FindAndReplace(wordApp, "[valor por extensoE]", gc.ValorExtensoPaginaPretoExcedente);// - valor por extenso excednete
-        FindAndReplace(wordApp, "[DESIGNAÇÃO COMERCIAL DO CLIENTE]", gc.DesignacaoComercialCliente);// -  designacao comercial do cliente
-        FindAndReplace(wordApp, "[ENDEREÇO DE MAIL]", gc.ENDEREÇODEMAIL);// -  designacao comercial do cliente
-
-
-
-
-
-        object oMissing = System.Reflection.Missing.Value;
-        object oEndOfDoc = "\\Tabela1";
-        //Table newTable;
-        //Range wrdRng = wordDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-
-        Table newTable = wordDoc.Tables[2];
-        Range wrdRng = newTable.Range;
-
-        //newTable = wordDoc.Tables.Add(wrdRng, qotes.Count, 3);
-        newTable.Borders.InsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
-        newTable.Borders.OutsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
-        newTable.AllowAutoFit = true;
-
-
-        newTable.Cell(1, 1).Range.Text = "coderef";
-        newTable.Cell(1, 2).Range.Text = "Description";
-        newTable.Cell(1, 3).Range.Text = "Quantidade";
-        newTable.Rows.Add();
-
-        int idx = 2;
-        foreach (var i in qotes)
-        {
-
-            newTable.Cell(idx, 1).Range.Text = i.CodeRef;
-            newTable.Cell(idx, 2).Range.Text = i.Description;
-            newTable.Cell(idx, 3).Range.Text = i.Qty.ToString();
-            newTable.Rows.Add();
-            idx++;
-        }
-
-        Table newTable1 = wordDoc.Tables[3];
-        Range wrdRng1 = newTable1.Range;
-
-        //newTable = wordDoc.Tables.Add(wrdRng, qotes.Count, 3);
-        newTable1.Borders.InsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
-        newTable1.Borders.OutsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
-        newTable1.AllowAutoFit = true;
-
-
-        newTable1.Cell(1, 1).Range.Text = "coderef";
-        newTable1.Cell(1, 2).Range.Text = "Description";
-        newTable1.Cell(1, 3).Range.Text = "Morada";
-        newTable1.Cell(1, 4).Range.Text = "Codigo Postal";
-        newTable1.Cell(1, 5).Range.Text = "Cidade";
-        newTable1.Cell(1, 6).Range.Text = "Contacto";
-
-        newTable1.Rows.Add();
-
-        idx = 2;
-        foreach (var item in deliveryLocations)
-        {
-
-            foreach (var i in item.items)
-            {
-                newTable1.Cell(idx, 1).Range.Text = i.CodeRef;
-                newTable1.Cell(idx, 2).Range.Text = i.Description;
-                newTable1.Cell(idx, 3).Range.Text = item.Adress1 + "," + item.Adress2;
-                newTable1.Cell(idx, 4).Range.Text = item.PostalCode;
-                newTable1.Cell(idx, 5).Range.Text = item.City;
-                newTable1.Cell(idx, 6).Range.Text = item.Contacto;
-            }
-
-            newTable1.Rows.Add();
-            idx++;
-        }
-
-
-        wordDoc.Save();
-
-        wordDoc.Close();
-        Marshal.ReleaseComObject(wordApp);
-        wordApp = null;
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-
-
-    }
-    catch (Exception ex)
-    {
-        ex.Message.ToString();
-    }
-}
-public HttpResponseMessage DownloadContrato(int? contratoID)
-{
-    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-    LD_Contrato p = new LD_Contrato();
-    LD_DocSign_Control_Files dsf = new LD_DocSign_Control_Files();
-    using (var db = new BB_DB_DEV_LeaseDesk())
-    {
-        p = db.LD_Contrato.Where(x => x.ID == contratoID).First();
-
-        dsf = db.LD_DocSign_Control_Files.Where(x => x.ProposalID == p.ProposalID).OrderBy(x => x.OrderFile).FirstOrDefault();
-    }
-
-    if (!File.Exists(dsf.FilePath))
-    {
-        //Throw 404 (Not Found) exception if File not found.
-        response.StatusCode = HttpStatusCode.NotFound;
-        response.ReasonPhrase = string.Format("File not found: .");
-        throw new HttpResponseException(response);
-    }
-
-    string filename = Path.GetFileName(dsf.FilePath);
-    byte[] bytes = File.ReadAllBytes(dsf.FilePath);
-
-    //Set the Response Content.
-
-    response.Content = new ByteArrayContent(bytes);
-
-    //Set the Response Content Length.
-    response.Content.Headers.ContentLength = bytes.LongLength;
-
-    //Set the Content Disposition Header Value and FileName.
-    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-    response.Content.Headers.ContentDisposition.FileName = filename;
-
-    //Set the File Content Type.
-    response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(filename));
-    return response;
-}
-
-public void WriteContractoServicos(string path, int? ProposalID, BB_Proposal p)
-{
-    try
-    {
-
-        ProposalBLL p1 = new ProposalBLL();
-        LoadProposalInfo ii = new LoadProposalInfo();
-        ii.ProposalId = ProposalID.GetValueOrDefault();
-        ActionResponse loadProposal = p1.LoadProposal(ii);
-
-        List<BB_Proposal_Quote> quotes = new List<BB_Proposal_Quote>();
-        BB_Proposal_Overvaluation sobrevalorizacao = new BB_Proposal_Overvaluation();
-        List<BB_Equipamentos> lstEquipamentos = new List<BB_Equipamentos>();
-
-        List<BB_Proposal_Counters> lstContadores = new List<BB_Proposal_Counters>();
-
-        BB_PrintingServices active = null;
-        BB_VVA vva = null;
-        GlobalClickVVA vva1 = null;
-        GlobalClickNoVolume nv1 = null;
-        BB_PrintingServices_NoVolume nv = null;
-
-        Nullable<int> BWVolume = 0;
-        Nullable<int> CVolume = 0;
-
-        BB_Proposal_Financing f = new BB_Proposal_Financing();
-        FileInfo newFile = new FileInfo(path);
-
-        ExcelPackage pck = new ExcelPackage(newFile);
-        //Add the Content sheet
-        var ws = pck.Workbook.Worksheets["Serviço"];
-        int frquency = 1;
-
-
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2
-                .Include(x => x.BB_PrintingServices.Select(y => y.BB_VVA))
-                .Include(x => x.BB_PrintingServices.Select(y => y.BB_PrintingServices_NoVolume))
-                .Where(x => x.ProposalID == ProposalID)
-                .FirstOrDefault();
-
-            ApprovedPrintingService activePS = null;
-            if (ps2 != null && ps2.BB_PrintingServices.Count > 0)
-            {
-
-                //active = ps2.BB_PrintingServices.ToList()[(int)ps2.ActivePrintingService - 1];
-
-                if (loadProposal.ProposalObj.Draft.printingServices2.ActivePrintingService != null)
-                {
-                    activePS = loadProposal.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[loadProposal.ProposalObj.Draft.printingServices2.ActivePrintingService.Value - 1];
-                    if (activePS != null)
+                        double? copia = db.BB_Equipamentos.Where(x => x.CodeRef == i.CodeRef).Select(x => x.TCP).FirstOrDefault();
+
+                        ws.Cells["A" + idx].Value = i.Family;
+                        ws.Cells["B" + idx].Value = i.CodeRef;
+                        ws.Cells["C" + idx].Value = i.Description;
+                        ws.Cells["D" + idx].Value = isBusinessdeveloper ? i.UnitPriceCost.ToString() : "-";
+                        ws.Cells["E" + idx].Value = i.Qty;
+                        ws.Cells["F" + idx].Value = isBusinessdeveloper ? i.TotalCost.ToString() : "-";
+                        ws.Cells["G" + idx].Value = i.Margin;
+                        ws.Cells["H" + idx].Value = i.PVP;
+                        ws.Cells["I" + idx].Value = i.TotalPVP;
+                        ws.Cells["J" + idx].Value = i.DiscountPercentage;
+                        ws.Cells["K" + idx].Value = i.UnitDiscountPrice;
+                        ws.Cells["L" + idx].Value = isBusinessdeveloper ? i.GPTotal.ToString() : "-";
+                        ws.Cells["M" + idx].Value = isBusinessdeveloper ? i.GPPercentage.ToString() : "-";
+                        ws.Cells["N" + idx].Value = i.TotalNetsale;
+                        ws.Cells["N" + idx].Value = i.IsUsed.GetValueOrDefault() ? 0 : copia.GetValueOrDefault();
+                        idx++;
+                    }
+                    idx++;
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Serv. recorrentes";
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Family";
+                    ws.Cells["B" + idx].Value = "CodeRef";
+                    ws.Cells["C" + idx].Value = "Description";
+                    ws.Cells["D" + idx].Value = "UnitPriceCost";
+                    ws.Cells["E" + idx].Value = "Qty";
+
+                    ws.Cells["F" + idx].Value = "TotalCost";
+                    ws.Cells["G" + idx].Value = "Margin";
+                    ws.Cells["H" + idx].Value = "PVP";
+                    ws.Cells["I" + idx].Value = "TotalPVP";
+                    ws.Cells["J" + idx].Value = "DiscountPercentage";
+                    ws.Cells["K" + idx].Value = "UnitDiscountPrice";
+                    ws.Cells["L" + idx].Value = "GPTotal";
+                    ws.Cells["M" + idx].Value = "GPPercentage";
+                    ws.Cells["N" + idx].Value = "TotalNetsale";
+                    ws.Cells["O" + idx].Value = "TotalMonths";
+                    idx++;
+
+                    foreach (var i in p.Draft.baskets.rs_basket)
                     {
-                        BWVolume = activePS.BWVolume;
-                        CVolume = activePS.CVolume;
-                        if (activePS.GlobalClickVVA != null)
+                        ws.Cells["A" + idx].Value = i.Family;
+                        ws.Cells["B" + idx].Value = i.CodeRef;
+                        ws.Cells["C" + idx].Value = i.Description;
+                        ws.Cells["D" + idx].Value = i.UnitPriceCost;
+                        ws.Cells["E" + idx].Value = i.Qty;
+
+                        ws.Cells["F" + idx].Value = i.TotalCost;
+                        ws.Cells["G" + idx].Value = i.Margin;
+                        ws.Cells["H" + idx].Value = i.PVP;
+                        ws.Cells["I" + idx].Value = i.TotalPVP;
+                        ws.Cells["J" + idx].Value = i.DiscountPercentage;
+                        ws.Cells["K" + idx].Value = i.UnitDiscountPrice;
+                        ws.Cells["L" + idx].Value = i.GPTotal;
+                        ws.Cells["M" + idx].Value = i.GPPercentage;
+                        ws.Cells["N" + idx].Value = i.TotalNetsale;
+                        ws.Cells["O" + idx].Value = i.TotalMonths;
+                        idx++;
+                    }
+
+                    idx++;
+                    ws.Cells["A" + idx].Value = "OPS Implement";
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Family";
+                    ws.Cells["B" + idx].Value = "CodeRef";
+                    ws.Cells["C" + idx].Value = "Description";
+                    ws.Cells["D" + idx].Value = "PVP";
+                    ws.Cells["E" + idx].Value = "Quantity";
+                    ws.Cells["F" + idx].Value = "Total Cost";
+                    //ws.Cells["G" + idx].Value = "1 - (i.UnitDiscountPrice / i.PVP)) * 100)";
+                    ws.Cells["G" + idx].Value = "UnitDiscountPrice";
+                    ws.Cells["H" + idx].Value = "Total Net Sale";
+
+                    idx++;
+                    if (p.Draft.opsPacks.opsImplement.Count() > 0)
+                    {
+                        foreach (var i in p.Draft.opsPacks.opsImplement)
                         {
-                            //vva = active.BB_VVA;
-                            vva1 = activePS.GlobalClickVVA;
-                            frquency = vva1.RentBillingFrequency;
-                        }
-                        if (activePS.GlobalClickNoVolume != null)
-                        {
-                            //nv = active.BB_PrintingServices_NoVolume;
-                            nv1 = activePS.GlobalClickNoVolume;
-                            frquency = nv1.PageBillingFrequency;
+                            ws.Cells["A" + idx].Value = i.Family;
+                            ws.Cells["B" + idx].Value = i.CodeRef;
+                            ws.Cells["C" + idx].Value = i.Description;
+                            ws.Cells["D" + idx].Value = i.PVP;
+                            ws.Cells["E" + idx].Value = i.Quantity;
+                            ws.Cells["F" + idx].Value = i.PVP * i.Quantity;
+                            //ws.Cells["G" + idx].Value = ((1 - (i.UnitDiscountPrice / i.PVP)) * 100);
+                            ws.Cells["G" + idx].Value = i.UnitDiscountPrice;
+                            ws.Cells["H" + idx].Value = i.UnitDiscountPrice * i.Quantity;
+                            idx++;
                         }
                     }
+                    else
+                    {
+                        idx++;
+                    }
+
+                    idx++;
+                    ws.Cells["A" + idx].Value = "OPS Manage";
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Family";
+                    ws.Cells["B" + idx].Value = "CodeRef";
+                    ws.Cells["C" + idx].Value = "Description";
+                    ws.Cells["D" + idx].Value = "PVP";
+                    ws.Cells["E" + idx].Value = "Quantity";
+                    ws.Cells["F" + idx].Value = "TotalMonths";
+                    ws.Cells["G" + idx].Value = "PVP Total";
+                    //ws.Cells["H" + idx].Value = "1 - (i.UnitDiscountPrice / i.PVP)) * 100)";
+                    ws.Cells["H" + idx].Value = "UnitDiscountPrice";
+                    ws.Cells["I" + idx].Value = "Total Net Sale";
+
+                    idx++;
+                    if (p.Draft.opsPacks.opsManage.Count() > 0)
+                    {
+                        foreach (var i in p.Draft.opsPacks.opsManage)
+                        {
+                            ws.Cells["A" + idx].Value = i.Family;
+                            ws.Cells["B" + idx].Value = i.CodeRef;
+                            ws.Cells["C" + idx].Value = i.Description;
+                            ws.Cells["D" + idx].Value = i.PVP;
+                            ws.Cells["E" + idx].Value = i.Quantity;
+                            ws.Cells["F" + idx].Value = i.TotalMonths;
+                            ws.Cells["G" + idx].Value = i.PVP * i.Quantity * i.TotalMonths;
+                            //ws.Cells["H" + idx].Value = ((1 - (i.UnitDiscountPrice / i.PVP)) * 100);
+                            ws.Cells["H" + idx].Value = i.UnitDiscountPrice;
+                            ws.Cells["I" + idx].Value = i.UnitDiscountPrice * i.Quantity * i.TotalMonths;
+                            idx++;
+                        }
+                    }
+                    else
+                    {
+                        idx++;
+                    }
+
+
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Financiamento";
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Mensal";
+                    ws.Cells["B" + idx].Value = "24";
+                    foreach (var i in p.Draft.financing.FinancingFactors.Monthly)
+                    {
+                        if (i.Contracto == 24)
+                            ws.Cells["C" + idx].Value = i.Value;
+                    }
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Mensal";
+                    ws.Cells["B" + idx].Value = "36";
+                    foreach (var i in p.Draft.financing.FinancingFactors.Monthly)
+                    {
+                        if (i.Contracto == 36)
+                            ws.Cells["C" + idx].Value = i.Value;
+                    }
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Mensal";
+                    ws.Cells["B" + idx].Value = "48";
+                    foreach (var i in p.Draft.financing.FinancingFactors.Monthly)
+                    {
+                        if (i.Contracto == 48)
+                            ws.Cells["C" + idx].Value = i.Value;
+                    }
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Mensal";
+                    ws.Cells["B" + idx].Value = "60";
+                    foreach (var i in p.Draft.financing.FinancingFactors.Monthly)
+                    {
+                        if (i.Contracto == 60)
+                            ws.Cells["C" + idx].Value = i.Value;
+                    }
+
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Trimestral";
+                    ws.Cells["B" + idx].Value = "8";
+                    foreach (var i in p.Draft.financing.FinancingFactors.Trimestral)
+                    {
+                        if (i.Contracto == 8)
+                            ws.Cells["C" + idx].Value = i.Value;
+                    }
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Trimestral";
+                    ws.Cells["B" + idx].Value = "12";
+                    foreach (var i in p.Draft.financing.FinancingFactors.Trimestral)
+                    {
+                        if (i.Contracto == 12)
+                            ws.Cells["C" + idx].Value = i.Value;
+                    }
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Trimestral";
+                    ws.Cells["B" + idx].Value = "16";
+                    foreach (var i in p.Draft.financing.FinancingFactors.Trimestral)
+                    {
+                        if (i.Contracto == 16)
+                            ws.Cells["C" + idx].Value = i.Value;
+                    }
+                    idx++;
+                    ws.Cells["A" + idx].Value = "Trimestral";
+                    ws.Cells["B" + idx].Value = "20";
+                    foreach (var i in p.Draft.financing.FinancingFactors.Trimestral)
+                    {
+                        if (i.Contracto == 20)
+                            ws.Cells["C" + idx].Value = i.Value;
+                    }
+
+                    //KOnica Representante
+                    //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
+                    //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
+
+                    pck.Save();
+
+
+                    pck.Stream.Close();
                 }
-                quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == ProposalID).ToList();
-                lstContadores = db.BB_Proposal_Counters.Where(x => x.ProposalID == ProposalID).ToList();
-                lstEquipamentos = db.BB_Equipamentos.ToList();
-                f = db.BB_Proposal_Financing.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\ConfiguracaoNegocio.xlsx");
+
+            }
+        }
+
+        private bool IsBusinessdeveloper(string v)
+        {
+            if (v == "Joao.Reis@konicaminolta.pt"
+                || v == "Fernando.Rodrigues@konicaminolta.pt"
+                || v == "Vitor.Medeiros@konicaminolta.pt"
+                 || v == "Catarina.polaco@konicaminolta.pt"
+                   || v == "maria.moraisribeiro@konicaminolta.pt"
+                  || v == "Marta.Sousa@konicaminolta.pt")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("PrintingContracto")]
+        public HttpResponseMessage PrintingContracto(GerarContrato gc)
+        {
+            //int ID = 375;
+
+            //GerarContrato gc = new GerarContrato();
+            //gc.proposalID = 472;
+            //gc.Selectmonthly = 18;
+
+            //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
+            string erro = "";
+            //int proposalID = ID;
+            //int? proposalID = o.ProposalID;
+            //Create HTTP Response.
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+
+            string path = "";
+            try
+            {
+                BB_Proposal p = new BB_Proposal();
+                AspNetUsers c = new AspNetUsers();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    p = db.BB_Proposal.Where(x => x.ID == gc.proposalID).First();
+
+                }
+                using (var db = new masterEntities())
+                {
+                    c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
+
+                }
+
+
+                string strUser = c.DisplayName;
+                string strFolder = "Contracto";
+                string strCliente = c.DisplayName;
+                path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
+
+                if (!Directory.Exists(path))
+                    System.IO.Directory.CreateDirectory(path);
+
+
+                using (var stream = File.Open(@AppSettingsGet.DocumentPrintingContractoTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+
+                    try
+                    {
+                        using (var outputFile = new FileStream(path + "\\Contracto.xlsx", FileMode.Create))
+                        {
+                            stream.CopyTo(outputFile);
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                }
+
+                WriteContractoCliente(@path + "\\Contracto.xlsx", p.ClientAccountNumber, gc.proposalID);
+
+                //Cliente WRITE TO EXCEL
+                //bool resultClient = WriteToExcelCliente(@path + "\\Proposal.xlsx", proposalID);
+                WriteContractoQuote(@path + "\\Contracto.xlsx", gc.proposalID, p);
+                //Thread.Sleep(3000);
+                //WritePropostaFinanceira(@path + "\\Contracto.xlsx", proposalID, p);
+
+                WriteContractoServicos(@path + "\\Contracto.xlsx", gc.proposalID, p);
+
+                WriteContractoService2(@path + "\\Contracto.xlsx", p.ClientAccountNumber, gc.proposalID);
+                //WritePropostaOutrasCondicoes(@path + "\\Contracto.xlsx", proposalID, p);
+
+                WriteContractoAutoR(@path + "\\Contracto.xlsx", p.ClientAccountNumber);
+
+                WriteContractoDeclaracao(@path + "\\Contracto.xlsx", p.ClientAccountNumber, p.ID);
+
+
+                ExportWorkbookToPdfContrato(@path + "\\Contracto.xlsx", @path + "\\Contracto.pdf", gc.proposalID);
+
+
+                string filePath = @path + "\\Contracto.pdf";
+                string excelPath = @path + "\\Contracto.xlsx";
+
+                if (gc.TipoFicheiro == "PDF")
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        //Throw 404 (Not Found) exception if File not found.
+                        response.StatusCode = HttpStatusCode.NotFound;
+                        response.ReasonPhrase = string.Format("File not found: .");
+                        throw new HttpResponseException(response);
+                    }
+
+                    byte[] bytes = File.ReadAllBytes(filePath);
+
+                    //Set the Response Content.
+
+                    response.Content = new ByteArrayContent(bytes);
+
+                    //Set the Response Content Length.
+                    response.Content.Headers.ContentLength = bytes.LongLength;
+
+                    //Set the Content Disposition Header Value and FileName.
+                    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    response.Content.Headers.ContentDisposition.FileName = "Contracto.pdf";
+
+                    //Set the File Content Type.
+                    response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.pdf"));
+                }
+                if (gc.TipoFicheiro == "EXCEL")
+                {
+                    if (!File.Exists(excelPath))
+                    {
+                        //Throw 404 (Not Found) exception if File not found.
+                        response.StatusCode = HttpStatusCode.NotFound;
+                        response.ReasonPhrase = string.Format("File not found: .");
+                        throw new HttpResponseException(response);
+                    }
+
+                    byte[] bytes = File.ReadAllBytes(excelPath);
+
+                    //Set the Response Content.
+
+                    response.Content = new ByteArrayContent(bytes);
+
+                    //Set the Response Content Length.
+                    response.Content.Headers.ContentLength = bytes.LongLength;
+
+                    //Set the Content Disposition Header Value and FileName.
+                    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    response.Content.Headers.ContentDisposition.FileName = "Contrato.xlsx";
+
+                    //Set the File Content Type.
+                    response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contrato.xlsx"));
+                }
+
+
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\Contracto.xlsx");
+                erro = ex.Message.ToString();
+            }
+            Console.WriteLine(erro);
+            return response;
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("PrintingContractoFormal")]
+        public HttpResponseMessage PrintingContractoFormal(GerarContratoFormal gc)
+        {
+            //int ID = 375;
+
+            //GerarContrato gc = new GerarContrato();
+            //gc.proposalID = 472;
+            gc.Selectmonthly = 18;
+
+            //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
+            string erro = "";
+            //int proposalID = ID;
+            //int? proposalID = o.ProposalID;
+            //Create HTTP Response.
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            List<BB_Proposal_Quote> quotes = new List<BB_Proposal_Quote>();
+            string path = "";
+            List<DeliveryLocation> deliveryLocations;
+            try
+            {
+                BB_Proposal p = new BB_Proposal();
+                AspNetUsers c = new AspNetUsers();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    p = db.BB_Proposal.Where(x => x.ID == gc.proposalID).First();
+                    quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == gc.proposalID).ToList();
+
+                    deliveryLocations = new List<DeliveryLocation>();
+                    List<BB_Proposal_DeliveryLocation> bb_Proposal_DeliveryLocation = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == gc.proposalID).ToList();
+                    foreach (var item in bb_Proposal_DeliveryLocation)
+                    {
+                        var configDelivery = new MapperConfiguration(cfg =>
+                        {
+                            cfg.CreateMap<BB_Proposal_DeliveryLocation, DeliveryLocation>();
+                        });
+
+                        IMapper iMapperDelivery = configDelivery.CreateMapper();
+
+                        DeliveryLocation dl = iMapperDelivery.Map<BB_Proposal_DeliveryLocation, DeliveryLocation>(item);
+
+
+
+                        List<BB_Proposal_ItemDoBasket> itemDoBasket = new List<BB_Proposal_ItemDoBasket>();
+                        itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == item.IDX).ToList();
+
+                        dl.items = new List<ItemDoBasket>();
+                        foreach (var item1 in itemDoBasket)
+                        {
+                            var configItem = new MapperConfiguration(cfg =>
+                            {
+                                cfg.CreateMap<BB_Proposal_ItemDoBasket, ItemDoBasket>();
+                            });
+
+                            IMapper iMapperItem = configItem.CreateMapper();
+
+                            ItemDoBasket i = iMapperItem.Map<BB_Proposal_ItemDoBasket, ItemDoBasket>(item1);
+                            i.psConfig = new PsConfig();
+                            i.counters = new List<Counter>();
+                            dl.items.Add(i);
+                        }
+
+                        deliveryLocations.Add(dl);
+                    }
+
+
+                }
+                using (var db = new masterEntities())
+                {
+                    c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
+
+                }
+
+
+
+
+
+
+
+                string strUser = c.DisplayName;
+                string strFolder = "Contracto";
+                string strCliente = c.DisplayName;
+                path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente + "\\" + p.ID;
+
+                if (!Directory.Exists(path))
+                    System.IO.Directory.CreateDirectory(path);
+
+
+                using (var stream = File.Open(@AppSettingsGet.DocumentPrintingContractoWordTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+
+                    try
+                    {
+                        using (var outputFile = new FileStream(path + "\\ContractoFormal.doc", FileMode.Create))
+                        {
+                            stream.CopyTo(outputFile);
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                }
+
+
+                WriteContractoFormal(@path + "\\ContractoFormal.doc", p.ClientAccountNumber, gc, quotes, deliveryLocations);
+                //WriteContractoFormalEmail(@path + "\\ContractoFormal.doc", p.ClientAccountNumber, gc.ENDEREÇODEMAIL);
+
+                //ExportWorkbookToPdf(@path + "\\Contracto.xlsx", @path + "\\Contracto.pdf");
+
+
+                string filePath = @path + "\\ContractoFormal.doc";
+
+
+                //Check whether File exists.
+                if (!File.Exists(filePath))
+                {
+                    //Throw 404 (Not Found) exception if File not found.
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.ReasonPhrase = string.Format("File not found: .");
+                    throw new HttpResponseException(response);
+                }
+
+                byte[] bytes = File.ReadAllBytes(filePath);
+
+                //Set the Response Content.
+
+                response.Content = new ByteArrayContent(bytes);
+
+                //Set the Response Content Length.
+                response.Content.Headers.ContentLength = bytes.LongLength;
+
+                //Set the Content Disposition Header Value and FileName.
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "Contracto.doc";
+
+                //Set the File Content Type.
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.doc"));
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\Contracto.doc");
+                erro = ex.Message.ToString();
+            }
+            Console.WriteLine(erro);
+            return response;
+        }
+        private void WriteContractoFormal(string path, string clientAccountNumber, GerarContratoFormal gc, List<BB_Proposal_Quote> qotes, List<DeliveryLocation> deliveryLocations)
+        {
+            try
+            {
+                Microsoft.Office.Interop.Word.Application wordApp = null;
+                wordApp = new Microsoft.Office.Interop.Word.Application();
+                wordApp.Visible = false;
+                //wordApp.AutomationSecurity 
+                wordApp.DisplayAlerts = WdAlertLevel.wdAlertsNone;
+
+                Document wordDoc = wordApp.Documents.Open(@path);
+
+                wordDoc.Activate();
+
+
+                FindAndReplace(wordApp, "[Cliente]", gc.Cliente);
+                FindAndReplace(wordApp, "[quotas/anónima]", gc.quotasAnonimas != null && gc.quotasAnonimas.Length > 0 ? gc.quotasAnonimas : "[quotas/anónima]");
+                FindAndReplace(wordApp, "[morada]", gc.Morada);
+                FindAndReplace(wordApp, "[número]", gc.NIF);
+                FindAndReplace(wordApp, "[nome do legal representante ou procurador]", gc.LegalRepresentante);
+                FindAndReplace(wordApp, "[qualidade em que actua e que pode ser a de gerente, administrador ou procurador]", gc.QualidadeRepresentante);
+                FindAndReplace(wordApp, "[ABREVIATURA CLIENTE]", gc.AbreviaturaCliente);
+                FindAndReplace(wordApp, "[número de meses]", gc.NrMesesContrato);// -  presente contrato entra em vigor na data de entrega/instalação do(s) 
+                FindAndReplace(wordApp, "[cap] - capital social", gc.CapitalSocial);
+                FindAndReplace(wordApp, "[N.º de páginas]", gc.NrPaginasPreto);// - equipamentos, e serviços prestados, que incluem a realização mensal das primeira páginas a preto
+                FindAndReplace(wordApp, "[valorN]", gc.ValorPaginaPreto);// - preço das paginas a preto
+                FindAndReplace(wordApp, "[valor por extensoN]", gc.ValorExtensoPaginaPreto);// - valor por extenso
+                FindAndReplace(wordApp, "[valorE]", gc.ValorExtensoPaginaPreto); //- valor excendente
+                FindAndReplace(wordApp, "[valor por extensoE]", gc.ValorExtensoPaginaPretoExcedente);// - valor por extenso excednete
+                FindAndReplace(wordApp, "[DESIGNAÇÃO COMERCIAL DO CLIENTE]", gc.DesignacaoComercialCliente);// -  designacao comercial do cliente
+                FindAndReplace(wordApp, "[ENDEREÇO DE MAIL]", gc.ENDEREÇODEMAIL);// -  designacao comercial do cliente
+
+
+
+
+
+                object oMissing = System.Reflection.Missing.Value;
+                object oEndOfDoc = "\\Tabela1";
+                //Table newTable;
+                //Range wrdRng = wordDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
+
+                Table newTable = wordDoc.Tables[2];
+                Range wrdRng = newTable.Range;
+
+                //newTable = wordDoc.Tables.Add(wrdRng, qotes.Count, 3);
+                newTable.Borders.InsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
+                newTable.Borders.OutsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
+                newTable.AllowAutoFit = true;
+
+
+                newTable.Cell(1, 1).Range.Text = "coderef";
+                newTable.Cell(1, 2).Range.Text = "Description";
+                newTable.Cell(1, 3).Range.Text = "Quantidade";
+                newTable.Rows.Add();
+
+                int idx = 2;
+                foreach (var i in qotes)
+                {
+
+                    newTable.Cell(idx, 1).Range.Text = i.CodeRef;
+                    newTable.Cell(idx, 2).Range.Text = i.Description;
+                    newTable.Cell(idx, 3).Range.Text = i.Qty.ToString();
+                    newTable.Rows.Add();
+                    idx++;
+                }
+
+                Table newTable1 = wordDoc.Tables[3];
+                Range wrdRng1 = newTable1.Range;
+
+                //newTable = wordDoc.Tables.Add(wrdRng, qotes.Count, 3);
+                newTable1.Borders.InsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
+                newTable1.Borders.OutsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
+                newTable1.AllowAutoFit = true;
+
+
+                newTable1.Cell(1, 1).Range.Text = "coderef";
+                newTable1.Cell(1, 2).Range.Text = "Description";
+                newTable1.Cell(1, 3).Range.Text = "Morada";
+                newTable1.Cell(1, 4).Range.Text = "Codigo Postal";
+                newTable1.Cell(1, 5).Range.Text = "Cidade";
+                newTable1.Cell(1, 6).Range.Text = "Contacto";
+
+                newTable1.Rows.Add();
+
+                idx = 2;
+                foreach (var item in deliveryLocations)
+                {
+
+                    foreach (var i in item.items)
+                    {
+                        newTable1.Cell(idx, 1).Range.Text = i.CodeRef;
+                        newTable1.Cell(idx, 2).Range.Text = i.Description;
+                        newTable1.Cell(idx, 3).Range.Text = item.Adress1 + "," + item.Adress2;
+                        newTable1.Cell(idx, 4).Range.Text = item.PostalCode;
+                        newTable1.Cell(idx, 5).Range.Text = item.City;
+                        newTable1.Cell(idx, 6).Range.Text = item.Contacto;
+                    }
+
+                    newTable1.Rows.Add();
+                    idx++;
+                }
+
+
+                wordDoc.Save();
+
+                wordDoc.Close();
+                Marshal.ReleaseComObject(wordApp);
+                wordApp = null;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+        }
+        public HttpResponseMessage DownloadContrato(int? contratoID)
+        {
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            LD_Contrato p = new LD_Contrato();
+            LD_DocSign_Control_Files dsf = new LD_DocSign_Control_Files();
+            using (var db = new BB_DB_DEV_LeaseDesk())
+            {
+                p = db.LD_Contrato.Where(x => x.ID == contratoID).First();
+
+                dsf = db.LD_DocSign_Control_Files.Where(x => x.ProposalID == p.ProposalID).OrderBy(x => x.OrderFile).FirstOrDefault();
             }
 
-            if (activePS == null)
+            if (!File.Exists(dsf.FilePath))
             {
+                //Throw 404 (Not Found) exception if File not found.
+                response.StatusCode = HttpStatusCode.NotFound;
+                response.ReasonPhrase = string.Format("File not found: .");
+                throw new HttpResponseException(response);
+            }
+
+            string filename = Path.GetFileName(dsf.FilePath);
+            byte[] bytes = File.ReadAllBytes(dsf.FilePath);
+
+            //Set the Response Content.
+
+            response.Content = new ByteArrayContent(bytes);
+
+            //Set the Response Content Length.
+            response.Content.Headers.ContentLength = bytes.LongLength;
+
+            //Set the Content Disposition Header Value and FileName.
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = filename;
+
+            //Set the File Content Type.
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(filename));
+            return response;
+        }
+
+        public void WriteContractoServicos(string path, int? ProposalID, BB_Proposal p)
+        {
+            try
+            {
+
+                ProposalBLL p1 = new ProposalBLL();
+                LoadProposalInfo ii = new LoadProposalInfo();
+                ii.ProposalId = ProposalID.GetValueOrDefault();
+                ActionResponse loadProposal = p1.LoadProposal(ii);
+
+                List<BB_Proposal_Quote> quotes = new List<BB_Proposal_Quote>();
+                BB_Proposal_Overvaluation sobrevalorizacao = new BB_Proposal_Overvaluation();
+                List<BB_Equipamentos> lstEquipamentos = new List<BB_Equipamentos>();
+
+                List<BB_Proposal_Counters> lstContadores = new List<BB_Proposal_Counters>();
+
+                BB_PrintingServices active = null;
+                BB_VVA vva = null;
+                GlobalClickVVA vva1 = null;
+                GlobalClickNoVolume nv1 = null;
+                BB_PrintingServices_NoVolume nv = null;
+
+                Nullable<int> BWVolume = 0;
+                Nullable<int> CVolume = 0;
+
+                BB_Proposal_Financing f = new BB_Proposal_Financing();
+                FileInfo newFile = new FileInfo(path);
+
+                ExcelPackage pck = new ExcelPackage(newFile);
+                //Add the Content sheet
+                var ws = pck.Workbook.Worksheets["Serviço"];
+                int frquency = 1;
+
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2
+                        .Include(x => x.BB_PrintingServices.Select(y => y.BB_VVA))
+                        .Include(x => x.BB_PrintingServices.Select(y => y.BB_PrintingServices_NoVolume))
+                        .Where(x => x.ProposalID == ProposalID)
+                        .FirstOrDefault();
+
+                    ApprovedPrintingService activePS = null;
+                    if (ps2 != null && ps2.BB_PrintingServices.Count > 0)
+                    {
+
+                        //active = ps2.BB_PrintingServices.ToList()[(int)ps2.ActivePrintingService - 1];
+
+                        if (loadProposal.ProposalObj.Draft.printingServices2.ActivePrintingService != null)
+                        {
+                            activePS = loadProposal.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[loadProposal.ProposalObj.Draft.printingServices2.ActivePrintingService.Value - 1];
+                            if (activePS != null)
+                            {
+                                BWVolume = activePS.BWVolume;
+                                CVolume = activePS.CVolume;
+                                if (activePS.GlobalClickVVA != null)
+                                {
+                                    //vva = active.BB_VVA;
+                                    vva1 = activePS.GlobalClickVVA;
+                                    frquency = vva1.RentBillingFrequency;
+                                }
+                                if (activePS.GlobalClickNoVolume != null)
+                                {
+                                    //nv = active.BB_PrintingServices_NoVolume;
+                                    nv1 = activePS.GlobalClickNoVolume;
+                                    frquency = nv1.PageBillingFrequency;
+                                }
+                            }
+                        }
+                        quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == ProposalID).ToList();
+                        lstContadores = db.BB_Proposal_Counters.Where(x => x.ProposalID == ProposalID).ToList();
+                        lstEquipamentos = db.BB_Equipamentos.ToList();
+                        f = db.BB_Proposal_Financing.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
+                    }
+
+                    if (activePS == null)
+                    {
+                        pck.Workbook.Worksheets.Delete(ws);
+                    }
+                    else
+                    {
+                        int billingFrequency = 0;
+                        ws.Cells["F22"].Value = BWVolume != 0 ? BWVolume.ToString() : "";
+                        ws.Cells["G22"].Value = CVolume != 0 ? CVolume.ToString() : "";
+
+                        ws.Cells["H4"].Value = p.CRM_QUOTE_ID;
+                        string strExcende = " ";
+                        if (vva1 != null)
+                        {
+                            billingFrequency = vva1.ExcessBillingFrequency;
+                            ws.Cells["F9"].Value = "Pagínas";
+                            ws.Cells["F10"].Value = "Incluidas";
+                            ws.Cells["F11"].Value = "Preto";
+
+                            ws.Cells["G9"].Value = "Pagínas";
+                            ws.Cells["G10"].Value = "Incluidas";
+                            ws.Cells["G11"].Value = "Cores";
+
+                            ws.Cells["F22"].Value = BWVolume.Value * ((frquency == 0 || frquency == 1) ? 1 : 3);
+                            ws.Cells["G22"].Value = CVolume.Value * ((frquency == 0 || frquency == 1) ? 1 : 3); ;
+
+                            ws.Cells["H8"].Value = "Páginas Excedentes";
+                            strExcende = " excendentes ";
+                            List<BB_Proposal_Quote> q = quotes.Where(x => x.TCP != null).ToList();
+                            int c = 12;
+                            foreach (var item in q)
+                            {
+                                BB_Equipamentos equi = lstEquipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                if (equi != null)
+                                {
+                                    List<BB_Proposal_Counters> counter = lstContadores.Where(x => x.OSID == item.ID).ToList();
+                                    if (counter.Count > 0)
+                                    {
+                                        ws.Cells["C10"].Value = "Contadores Iniciais";
+                                        ws.Cells["C11"].Value = "Preto";
+                                        ws.Cells["D11"].Value = "Cor";
+                                        foreach (var i in counter)
+                                        {
+                                            ws.Cells["A" + c].Value = equi.Name + "-" + i.serialNumber;
+                                            ws.Cells["C" + c].Value = i.bwCounter;
+                                            ws.Cells["D" + c].Value = i.cCounter;
+                                            ws.Cells["H" + c].Value = vva1.BWExcessPVP != 0 ? vva1.BWExcessPVP.ToString() : "";
+                                            ws.Cells["I" + c].Value = vva1.CExcessPVP != 0 ? vva1.CExcessPVP.ToString() : "";
+                                            c++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ws.Cells["A" + c].Value = equi.Name;
+                                        ws.Cells["H" + c].Value = vva1.BWExcessPVP != 0 ? vva1.BWExcessPVP.ToString() : "";
+                                        ws.Cells["I" + c].Value = vva1.CExcessPVP != 0 ? vva1.CExcessPVP.ToString() : "";
+                                        c++;
+                                    }
+                                }
+                            }
+                            if (f != null && f.IncludeServices.Value == false)
+                            {
+                                if (f.FinancingTypeCode != 3 || f.FinancingTypeCode != 6)
+                                {
+                                    ws.Cells["E9"].Value = "Valor";
+                                    ws.Cells["E10"].Value = "Taxa Fixa";
+                                    switch (vva1.RentBillingFrequency)
+                                    {
+                                        case 1: ws.Cells["E11"].Value = "Mensal"; break;
+                                        case 3: ws.Cells["E11"].Value = "Trimestral"; break;
+                                        case 6: ws.Cells["E11"].Value = "Semestral"; break;
+                                        default: ws.Cells["E11"].Value = "Mensal"; break;
+                                    }
+
+                                    double vvaRenda = vva1.PVP * vva1.RentBillingFrequency;
+                                    ws.Cells["E22"].Value = vva1.PVP != 0 ? vvaRenda.ToString() : "";
+                                }
+                            }
+                            else
+                            {
+                                ws.Cells["E9"].Value = "";
+                                ws.Cells["E10"].Value = "";
+                                ws.Cells["E11"].Value = "";
+                                ws.Cells["E22"].Value = "";
+                            }
+                        }
+
+                        if (nv1 != null)
+                        {
+                            billingFrequency = nv1.PageBillingFrequency;
+                            ws.Cells["E22"].Value = "";
+                            ws.Cells["F22"].Value = "";
+                            ws.Cells["G22"].Value = "";
+                            ws.Cells["H8"].Value = "";
+
+                            List<BB_Proposal_Quote> q = quotes.Where(x => x.TCP != null).ToList();
+                            int idx = 12;
+                            foreach (var item in q)
+                            {
+                                BB_Equipamentos equi = lstEquipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                if (equi != null)
+                                {
+                                    List<BB_Proposal_Counters> counter = lstContadores.Where(x => x.OSID == item.ID).ToList();
+                                    if (counter.Count > 0)
+                                    {
+                                        ws.Cells["C10"].Value = "Contadores Iniciais";
+                                        ws.Cells["C11"].Value = "Preto";
+                                        ws.Cells["D11"].Value = "Cor";
+                                        foreach (var i in counter)
+                                        {
+                                            ws.Cells["A" + idx].Value = equi.Name + "-" + i.serialNumber;
+                                            ws.Cells["C" + idx].Value = i.bwCounter;
+                                            ws.Cells["D" + idx].Value = i.cCounter;
+                                            ws.Cells["H" + idx].Value = nv1.GlobalClickBW != 0 ? Math.Round(nv1.GlobalClickBW, 5) + "€" : "";
+                                            ws.Cells["I" + idx].Value = nv1.GlobalClickC != 0 ? Math.Round(nv1.GlobalClickC, 5) + "€" : "";
+                                            idx++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ws.Cells["A" + idx].Value = equi.Name;
+                                        ws.Cells["H" + idx].Value = nv1.GlobalClickBW != 0 ? Math.Round(nv1.GlobalClickBW, 5) + "€" : "";
+                                        ws.Cells["I" + idx].Value = nv1.GlobalClickC != 0 ? Math.Round(nv1.GlobalClickC, 5) + "€" : "";
+                                        idx++;
+                                    }
+                                }
+                            }
+                            if (f != null && f.IncludeServices.Value == false)
+                            {
+                                if (f.FinancingTypeCode != 3 || f.FinancingTypeCode != 6)
+                                {
+                                    ws.Cells["E9"].Value = "Valor";
+                                    ws.Cells["E10"].Value = "Taxa Fixa";
+                                    switch (nv1.PageBillingFrequency)
+                                    {
+                                        case 1: ws.Cells["E11"].Value = "Mensal"; break;
+                                        case 3: ws.Cells["E11"].Value = "Trimestral"; break;
+                                        case 6: ws.Cells["E11"].Value = "Semestral"; break;
+                                        default: ws.Cells["E11"].Value = "Mensal"; break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ws.Cells["E9"].Value = "";
+                                ws.Cells["E10"].Value = "";
+                                ws.Cells["E11"].Value = "";
+                                ws.Cells["E22"].Value = "";
+                            }
+                        }
+
+                        if (vva1 == null && nv1 == null && activePS.ClickPerModel != null)
+                        {
+                            billingFrequency = activePS.ClickPerModel.PageBillingFrequency;
+                            ws.Cells["E22"].Value = "";
+                            ws.Cells["F22"].Value = "";
+                            ws.Cells["G22"].Value = "";
+                            ws.Cells["H8"].Value = "";
+
+                            List<Machine> q = activePS.Machines.ToList();
+                            int idx = 12;
+                            foreach (var item in q)
+                            {
+                                BB_Equipamentos equi = lstEquipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                if (equi != null)
+                                {
+                                    List<BB_Proposal_Counters> counter = lstContadores.Where(x => x.OSID == item.ID).ToList();
+                                    if (counter.Count > 0)
+                                    {
+                                        ws.Cells["C10"].Value = "Contadores Iniciais";
+                                        ws.Cells["C11"].Value = "Preto";
+                                        ws.Cells["D11"].Value = "Cor";
+                                        foreach (var i in counter)
+                                        {
+                                            ws.Cells["A" + idx].Value = equi.Name + "-" + i.serialNumber;
+                                            ws.Cells["C" + idx].Value = i.bwCounter;
+                                            ws.Cells["D" + idx].Value = i.cCounter;
+                                            ws.Cells["H" + idx].Value = item.ClickPriceBW.GetValueOrDefault() != 0 ? Math.Round(item.ClickPriceBW.GetValueOrDefault(), 5) + "€" : "";
+                                            ws.Cells["I" + idx].Value = item.ClickPriceC.GetValueOrDefault() != 0 ? Math.Round(item.ClickPriceC.GetValueOrDefault(), 5) + "€" : "";
+                                            idx++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ws.Cells["A" + idx].Value = equi.Name;
+                                        ws.Cells["H" + idx].Value = item.ClickPriceBW.GetValueOrDefault() != 0 ? Math.Round(item.ClickPriceBW.GetValueOrDefault(), 5) + "€" : "";
+                                        ws.Cells["I" + idx].Value = item.ClickPriceC.GetValueOrDefault() != 0 ? Math.Round(item.ClickPriceC.GetValueOrDefault(), 5) + "€" : "";
+                                        idx++;
+                                    }
+                                }
+                            }
+                            //if (f != null && f.IncludeServices.Value == false)
+                            //{
+                            //    ws.Cells["E9"].Value = "Valor";
+                            //    ws.Cells["E10"].Value = "Taxa Fixa";
+                            //    switch (billingFrequency)
+                            //    {
+                            //        case 1: ws.Cells["E11"].Value = "Mensal"; break;
+                            //        case 3: ws.Cells["E11"].Value = "Trimestral"; break;
+                            //        case 6: ws.Cells["E11"].Value = "Semestral"; break;
+                            //        default: ws.Cells["E11"].Value = "Mensal"; break;
+                            //    }
+                            //}
+                            //else
+                            //{
+                            ws.Cells["E9"].Value = "";
+                            ws.Cells["E10"].Value = "";
+                            ws.Cells["E11"].Value = "";
+                            ws.Cells["E22"].Value = "";
+                            //}
+                        }
+
+                        string m = "";
+                        switch (billingFrequency)
+                        {
+                            case 1:
+                                m = "Mensal";
+                                break;
+                            case 3:
+                                m = "Trimestral";
+                                break;
+                            case 6:
+                                m = "Semestral";
+                                break;
+                            default:
+                                break;
+                        }
+
+                        ws.Cells["F27"].Value = activePS.ContractDuration + " meses";
+                        ws.Cells["A29"].Value = "A facturação de páginas" + strExcende + "produzidas terá uma períodicidade:";
+                        ws.Cells["F29"].Value = m;
+
+
+                        if (f.PaymentAfter == 60)
+                        {
+                            ws.Cells["A31"].Value = "O  pagamento das faturas referentes ao débito de páginas produzidas, deverá ser efectuado no prazo de 60 dias a contar da data de emissão das mesmas.";
+
+                        }
+                    }
+
+                    pck.Save();
+                    pck.Stream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\Contracto.xlsx");
+            }
+        }
+
+        private void WriteContractoCliente(string path, string acocuntNumber, int? proposalID)
+        {
+            try
+            {
+                BB_Clientes cliente = new BB_Clientes();
+                List<BB_Proposal_Contacts_Signing> lstBB_Proposal_Contacts_Signing = new List<BB_Proposal_Contacts_Signing>();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    cliente = db.BB_Clientes.Where(x => x.accountnumber == acocuntNumber).FirstOrDefault();
+                    lstBB_Proposal_Contacts_Signing = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == proposalID).ToList();
+                }
+                FileInfo newFile = new FileInfo(path);
+
+                ExcelPackage pck = new ExcelPackage(newFile);
+                //Add the Content sheet
+                var ws = pck.Workbook.Worksheets["Ordem_Aquisicao"];
+                //ws.View.ShowGridLines = false;
+
+                ////ws.Column(4).OutlineLevel = 1;
+                ////ws.Column(4).Collapsed = true;
+                ////ws.Column(5).OutlineLevel = 1;
+                ////ws.Column(5).Collapsed = true;
+                ////ws.OutLineSummaryRight = true;
+
+                ////Headers
+                //ws.Cells["D4"].Value = cliente.Name != null ? cliente.Name : "";
+                //ws.Cells["D6"].Value = cliente.NIF != null ? cliente.NIF : "";
+                //ws.Cells["D5"].Value = cliente.address1_line1 != null ? cliente.address1_line1 : "";
+                //ws.Cells["J5"].Value = cliente.PostalCode != null ? cliente.PostalCode + " " + cliente.City : "";
+                //ws.Cells["K3"].Value = cliente.accountnumber;
+                //ws.Cells["J6"].Value = cliente.emailaddress1;
+                //ws.Cells["F6"].Value = cliente.telephone1;
+
+                BB_Proposal_Contacts_Signing cs = new BB_Proposal_Contacts_Signing();
+                cs = lstBB_Proposal_Contacts_Signing.Count > 0 ? lstBB_Proposal_Contacts_Signing[0] : new BB_Proposal_Contacts_Signing();
+
+                ws.Cells["D4"].Value = cliente.Name != null ? cliente.Name : "";
+                ws.Cells["D6"].Value = cliente.NIF != null ? cliente.NIF : "";
+                ws.Cells["D5"].Value = cliente.address1_line1 != null ? cliente.address1_line1 : "";
+                ws.Cells["J5"].Value = cliente.PostalCode != null ? cliente.PostalCode + " " + cliente.City : "";
+                ws.Cells["K3"].Value = cliente.accountnumber;
+                ws.Cells["J6"].Value = cs.Email;
+                ws.Cells["F6"].Value = cs.Telefone;
+
+                //KOnica Representante
+                //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
+                //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
+
+                pck.Save();
+
+
+                pck.Stream.Close();
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\Contracto.xlsx");
+
+            }
+        }
+
+        private void WriteContractoService2(string path, string acocuntNumber, int? proposalID)
+        {
+            try
+            {
+                FileInfo newFile = new FileInfo(path);
+
+                ExcelPackage pck = new ExcelPackage(newFile);
+
+                var ws = pck.Workbook.Worksheets["Service2"];
+                int? nrMeses = 0;
+                List<BB_Proposal_Quote_RS> lst = new List<BB_Proposal_Quote_RS>();
+                List<BB_Proposal_OPSManage> opsManage = new List<BB_Proposal_OPSManage>();
+
+                BB_Proposal_PrazoDiferenciado p = new BB_Proposal_PrazoDiferenciado();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    lst = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+                    opsManage = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
+                    p = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalID).FirstOrDefault();
+                }
+
+                if (lst != null && lst.Count() == 0 && opsManage != null && opsManage.Count() == 0)
+                {
+                    pck.Workbook.Worksheets.Delete(ws);
+                }
+                else
+                {
+                    int idx = 10;
+                    double? taxafixa = 0;
+
+                    foreach (var item in lst)
+                    {
+                        ws.Cells["A" + idx].Value = item.Description;
+                        ws.Cells["F" + idx].Value = item.CodeRef;
+                        ws.Cells["G" + idx].Value = item.Qty;
+                        ws.Cells["H" + idx].Value = item.TotalMonths;
+                        ws.Cells["I" + idx].Value = item.MonthlyFee;
+                        idx++;
+                        taxafixa += item.MonthlyFee;
+                        nrMeses = nrMeses > item.TotalMonths ? nrMeses : item.TotalMonths;
+                    }
+                    foreach (var item in opsManage)
+                    {
+                        ws.Cells["A" + idx].Value = item.Name + " - " + item.Description;
+                        ws.Cells["F" + idx].Value = item.CodeRef;
+                        ws.Cells["G" + idx].Value = item.Quantity;
+                        ws.Cells["H" + idx].Value = item.TotalMonths;
+                        ws.Cells["I" + idx].Value = item.UnitDiscountPrice * item.Quantity;
+                        idx++;
+                        //taxafixa +=   item.UnitDiscountPrice * item.Quantity * item.TotalMonths;
+                        taxafixa += item.UnitDiscountPrice * item.Quantity;
+                        nrMeses = nrMeses > item.TotalMonths ? nrMeses : item.TotalMonths;
+                    }
+
+                    int frquency = 1;
+                    BB_PrintingServices active = null;
+                    BB_VVA vva = null;
+                    BB_PrintingServices_NoVolume nv = null;
+                    Nullable<int> BWVolume = 0;
+                    Nullable<int> CVolume = 0;
+
+                    using (var db = new BB_DB_DEVEntities2())
+                    {
+                        BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2
+                            .Include(x => x.BB_PrintingServices.Select(y => y.BB_VVA))
+                            .Include(x => x.BB_PrintingServices.Select(y => y.BB_PrintingServices_NoVolume))
+                            .Where(x => x.ProposalID == proposalID)
+                            .FirstOrDefault();
+
+                        if (ps2 != null && ps2.BB_PrintingServices.Count > 0)
+                        {
+
+                            active = ps2.BB_PrintingServices.ToList()[(int)ps2.ActivePrintingService - 1];
+                            if (active != null)
+                            {
+                                BWVolume = active.BWVolume;
+                                CVolume = active.CVolume;
+                                if (active.BB_VVA != null)
+                                {
+                                    vva = active.BB_VVA;
+                                    frquency = vva.RentBillingFrequency.GetValueOrDefault();
+                                }
+                                if (active.BB_PrintingServices_NoVolume != null)
+                                {
+                                    nv = active.BB_PrintingServices_NoVolume;
+                                    frquency = nv.PageBillingFrequency.GetValueOrDefault();
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+                    ws.Cells["I28"].Value = taxafixa;
+                    ws.Cells["F33"].Value = nrMeses;
+                    ws.Cells["F35"].Value = ((frquency == 0 || frquency == 1) ? "Mensal" : "Trimestral");
+
+                    //FLEXPAGE
+                    if (p != null && (p.FinancingID == 6 || p.FinancingID == 5))
+                    {
+                        taxafixa = 0;
+                        idx = 10;
+
+                        foreach (var item in lst)
+                        {
+                            ws.Cells["I" + idx].Value = "";
+                            idx++;
+                        }
+                        foreach (var item in opsManage)
+                        {
+                            ws.Cells["I" + idx].Value = "";
+                            idx++;
+                        }
+
+                        ws.Cells["I28"].Value = "";
+                        ws.Cells["H28"].Value = "";
+                        ws.Cells["I9"].Value = "";
+                        ws.Cells["I8"].Value = "";
+                    }
+
+
+                    idx = 10;
+                    if (p != null && p.FinancingID == 3)
+                    {
+                        foreach (var item in lst)
+                        {
+                            ws.Cells["I" + idx].Value = "";
+                            idx++;
+                        }
+                        foreach (var item in opsManage)
+                        {
+                            ws.Cells["I" + idx].Value = "";
+                            idx++;
+                        }
+                        ws.Cells["H28"].Value = "";
+                        ws.Cells["I28"].Value = "";
+                        ws.Cells["I8"].Value = "";
+                        ws.Cells["I9"].Value = "";
+
+                    }
+                }
+
+
+                //KOnica Representante
+                //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
+                //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
+
+                pck.Save();
+
+
+                pck.Stream.Close();
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\Contracto.xlsx");
+
+            }
+        }
+
+        private void WriteContractoAutoR(string path, string acocuntNumber)
+        {
+            try
+            {
+                FileInfo newFile = new FileInfo(path);
+
+                ExcelPackage pck = new ExcelPackage(newFile);
+
+                var ws = pck.Workbook.Worksheets["AutoR"];
+
                 pck.Workbook.Worksheets.Delete(ws);
+
+                //KOnica Representante
+                //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
+                //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
+
+                pck.Save();
+
+
+                pck.Stream.Close();
             }
-            else
+            catch (Exception ex)
             {
-                int billingFrequency = 0;
-                ws.Cells["F22"].Value = BWVolume != 0 ? BWVolume.ToString() : "";
-                ws.Cells["G22"].Value = CVolume != 0 ? CVolume.ToString() : "";
-
-                ws.Cells["H4"].Value = p.CRM_QUOTE_ID;
-                string strExcende = " ";
-                if (vva1 != null)
-                {
-                    billingFrequency = vva1.ExcessBillingFrequency;
-                    ws.Cells["F9"].Value = "Pagínas";
-                    ws.Cells["F10"].Value = "Incluidas";
-                    ws.Cells["F11"].Value = "Preto";
-
-                    ws.Cells["G9"].Value = "Pagínas";
-                    ws.Cells["G10"].Value = "Incluidas";
-                    ws.Cells["G11"].Value = "Cores";
-
-                    ws.Cells["F22"].Value = BWVolume.Value * ((frquency == 0 || frquency == 1) ? 1 : 3);
-                    ws.Cells["G22"].Value = CVolume.Value * ((frquency == 0 || frquency == 1) ? 1 : 3); ;
-
-                    ws.Cells["H8"].Value = "Páginas Excedentes";
-                    strExcende = " excendentes ";
-                    List<BB_Proposal_Quote> q = quotes.Where(x => x.TCP != null).ToList();
-                    int c = 12;
-                    foreach (var item in q)
-                    {
-                        BB_Equipamentos equi = lstEquipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
-                        if (equi != null)
-                        {
-                            List<BB_Proposal_Counters> counter = lstContadores.Where(x => x.OSID == item.ID).ToList();
-                            if (counter.Count > 0)
-                            {
-                                ws.Cells["C10"].Value = "Contadores Iniciais";
-                                ws.Cells["C11"].Value = "Preto";
-                                ws.Cells["D11"].Value = "Cor";
-                                foreach (var i in counter)
-                                {
-                                    ws.Cells["A" + c].Value = equi.Name + "-" + i.serialNumber;
-                                    ws.Cells["C" + c].Value = i.bwCounter;
-                                    ws.Cells["D" + c].Value = i.cCounter;
-                                    ws.Cells["H" + c].Value = vva1.BWExcessPVP != 0 ? vva1.BWExcessPVP.ToString() : "";
-                                    ws.Cells["I" + c].Value = vva1.CExcessPVP != 0 ? vva1.CExcessPVP.ToString() : "";
-                                    c++;
-                                }
-                            }
-                            else
-                            {
-                                ws.Cells["A" + c].Value = equi.Name;
-                                ws.Cells["H" + c].Value = vva1.BWExcessPVP != 0 ? vva1.BWExcessPVP.ToString() : "";
-                                ws.Cells["I" + c].Value = vva1.CExcessPVP != 0 ? vva1.CExcessPVP.ToString() : "";
-                                c++;
-                            }
-                        }
-                    }
-                    if (f != null && f.IncludeServices.Value == false)
-                    {
-                        if (f.FinancingTypeCode != 3 || f.FinancingTypeCode != 6)
-                        {
-                            ws.Cells["E9"].Value = "Valor";
-                            ws.Cells["E10"].Value = "Taxa Fixa";
-                            switch (vva1.RentBillingFrequency)
-                            {
-                                case 1: ws.Cells["E11"].Value = "Mensal"; break;
-                                case 3: ws.Cells["E11"].Value = "Trimestral"; break;
-                                case 6: ws.Cells["E11"].Value = "Semestral"; break;
-                                default: ws.Cells["E11"].Value = "Mensal"; break;
-                            }
-
-                            double vvaRenda = vva1.PVP * vva1.RentBillingFrequency;
-                            ws.Cells["E22"].Value = vva1.PVP != 0 ? vvaRenda.ToString() : "";
-                        }
-                    }
-                    else
-                    {
-                        ws.Cells["E9"].Value = "";
-                        ws.Cells["E10"].Value = "";
-                        ws.Cells["E11"].Value = "";
-                        ws.Cells["E22"].Value = "";
-                    }
-                }
-
-                if (nv1 != null)
-                {
-                    billingFrequency = nv1.PageBillingFrequency;
-                    ws.Cells["E22"].Value = "";
-                    ws.Cells["F22"].Value = "";
-                    ws.Cells["G22"].Value = "";
-                    ws.Cells["H8"].Value = "";
-
-                    List<BB_Proposal_Quote> q = quotes.Where(x => x.TCP != null).ToList();
-                    int idx = 12;
-                    foreach (var item in q)
-                    {
-                        BB_Equipamentos equi = lstEquipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
-                        if (equi != null)
-                        {
-                            List<BB_Proposal_Counters> counter = lstContadores.Where(x => x.OSID == item.ID).ToList();
-                            if (counter.Count > 0)
-                            {
-                                ws.Cells["C10"].Value = "Contadores Iniciais";
-                                ws.Cells["C11"].Value = "Preto";
-                                ws.Cells["D11"].Value = "Cor";
-                                foreach (var i in counter)
-                                {
-                                    ws.Cells["A" + idx].Value = equi.Name + "-" + i.serialNumber;
-                                    ws.Cells["C" + idx].Value = i.bwCounter;
-                                    ws.Cells["D" + idx].Value = i.cCounter;
-                                    ws.Cells["H" + idx].Value = nv1.GlobalClickBW != 0 ? Math.Round(nv1.GlobalClickBW, 5) + "€" : "";
-                                    ws.Cells["I" + idx].Value = nv1.GlobalClickC != 0 ? Math.Round(nv1.GlobalClickC, 5) + "€" : "";
-                                    idx++;
-                                }
-                            }
-                            else
-                            {
-                                ws.Cells["A" + idx].Value = equi.Name;
-                                ws.Cells["H" + idx].Value = nv1.GlobalClickBW != 0 ? Math.Round(nv1.GlobalClickBW, 5) + "€" : "";
-                                ws.Cells["I" + idx].Value = nv1.GlobalClickC != 0 ? Math.Round(nv1.GlobalClickC, 5) + "€" : "";
-                                idx++;
-                            }
-                        }
-                    }
-                    if (f != null && f.IncludeServices.Value == false)
-                    {
-                        if (f.FinancingTypeCode != 3 || f.FinancingTypeCode != 6)
-                        {
-                            ws.Cells["E9"].Value = "Valor";
-                            ws.Cells["E10"].Value = "Taxa Fixa";
-                            switch (nv1.PageBillingFrequency)
-                            {
-                                case 1: ws.Cells["E11"].Value = "Mensal"; break;
-                                case 3: ws.Cells["E11"].Value = "Trimestral"; break;
-                                case 6: ws.Cells["E11"].Value = "Semestral"; break;
-                                default: ws.Cells["E11"].Value = "Mensal"; break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ws.Cells["E9"].Value = "";
-                        ws.Cells["E10"].Value = "";
-                        ws.Cells["E11"].Value = "";
-                        ws.Cells["E22"].Value = "";
-                    }
-                }
-
-                if (vva1 == null && nv1 == null && activePS.ClickPerModel != null)
-                {
-                    billingFrequency = activePS.ClickPerModel.PageBillingFrequency;
-                    ws.Cells["E22"].Value = "";
-                    ws.Cells["F22"].Value = "";
-                    ws.Cells["G22"].Value = "";
-                    ws.Cells["H8"].Value = "";
-
-                    List<Machine> q = activePS.Machines.ToList();
-                    int idx = 12;
-                    foreach (var item in q)
-                    {
-                        BB_Equipamentos equi = lstEquipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
-                        if (equi != null)
-                        {
-                            List<BB_Proposal_Counters> counter = lstContadores.Where(x => x.OSID == item.ID).ToList();
-                            if (counter.Count > 0)
-                            {
-                                ws.Cells["C10"].Value = "Contadores Iniciais";
-                                ws.Cells["C11"].Value = "Preto";
-                                ws.Cells["D11"].Value = "Cor";
-                                foreach (var i in counter)
-                                {
-                                    ws.Cells["A" + idx].Value = equi.Name + "-" + i.serialNumber;
-                                    ws.Cells["C" + idx].Value = i.bwCounter;
-                                    ws.Cells["D" + idx].Value = i.cCounter;
-                                    ws.Cells["H" + idx].Value = item.ClickPriceBW.GetValueOrDefault() != 0 ? Math.Round(item.ClickPriceBW.GetValueOrDefault(), 5) + "€" : "";
-                                    ws.Cells["I" + idx].Value = item.ClickPriceC.GetValueOrDefault() != 0 ? Math.Round(item.ClickPriceC.GetValueOrDefault(), 5) + "€" : "";
-                                    idx++;
-                                }
-                            }
-                            else
-                            {
-                                ws.Cells["A" + idx].Value = equi.Name;
-                                ws.Cells["H" + idx].Value = item.ClickPriceBW.GetValueOrDefault() != 0 ? Math.Round(item.ClickPriceBW.GetValueOrDefault(), 5) + "€" : "";
-                                ws.Cells["I" + idx].Value = item.ClickPriceC.GetValueOrDefault() != 0 ? Math.Round(item.ClickPriceC.GetValueOrDefault(), 5) + "€" : "";
-                                idx++;
-                            }
-                        }
-                    }
-                    //if (f != null && f.IncludeServices.Value == false)
-                    //{
-                    //    ws.Cells["E9"].Value = "Valor";
-                    //    ws.Cells["E10"].Value = "Taxa Fixa";
-                    //    switch (billingFrequency)
-                    //    {
-                    //        case 1: ws.Cells["E11"].Value = "Mensal"; break;
-                    //        case 3: ws.Cells["E11"].Value = "Trimestral"; break;
-                    //        case 6: ws.Cells["E11"].Value = "Semestral"; break;
-                    //        default: ws.Cells["E11"].Value = "Mensal"; break;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    ws.Cells["E9"].Value = "";
-                    ws.Cells["E10"].Value = "";
-                    ws.Cells["E11"].Value = "";
-                    ws.Cells["E22"].Value = "";
-                    //}
-                }
-
-                string m = "";
-                switch (billingFrequency)
-                {
-                    case 1:
-                        m = "Mensal";
-                        break;
-                    case 3:
-                        m = "Trimestral";
-                        break;
-                    case 6:
-                        m = "Semestral";
-                        break;
-                    default:
-                        break;
-                }
-
-                ws.Cells["F27"].Value = activePS.ContractDuration + " meses";
-                ws.Cells["A29"].Value = "A facturação de páginas" + strExcende + "produzidas terá uma períodicidade:";
-                ws.Cells["F29"].Value = m;
-
-
-                if (f.PaymentAfter == 60)
-                {
-                    ws.Cells["A31"].Value = "O  pagamento das faturas referentes ao débito de páginas produzidas, deverá ser efectuado no prazo de 60 dias a contar da data de emissão das mesmas.";
-
-                }
-            }
-
-            pck.Save();
-            pck.Stream.Close();
-        }
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.xlsx");
-    }
-}
-
-private void WriteContractoCliente(string path, string acocuntNumber, int? proposalID)
-{
-    try
-    {
-        BB_Clientes cliente = new BB_Clientes();
-        List<BB_Proposal_Contacts_Signing> lstBB_Proposal_Contacts_Signing = new List<BB_Proposal_Contacts_Signing>();
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            cliente = db.BB_Clientes.Where(x => x.accountnumber == acocuntNumber).FirstOrDefault();
-            lstBB_Proposal_Contacts_Signing = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == proposalID).ToList();
-        }
-        FileInfo newFile = new FileInfo(path);
-
-        ExcelPackage pck = new ExcelPackage(newFile);
-        //Add the Content sheet
-        var ws = pck.Workbook.Worksheets["Ordem_Aquisicao"];
-        //ws.View.ShowGridLines = false;
-
-        ////ws.Column(4).OutlineLevel = 1;
-        ////ws.Column(4).Collapsed = true;
-        ////ws.Column(5).OutlineLevel = 1;
-        ////ws.Column(5).Collapsed = true;
-        ////ws.OutLineSummaryRight = true;
-
-        ////Headers
-        //ws.Cells["D4"].Value = cliente.Name != null ? cliente.Name : "";
-        //ws.Cells["D6"].Value = cliente.NIF != null ? cliente.NIF : "";
-        //ws.Cells["D5"].Value = cliente.address1_line1 != null ? cliente.address1_line1 : "";
-        //ws.Cells["J5"].Value = cliente.PostalCode != null ? cliente.PostalCode + " " + cliente.City : "";
-        //ws.Cells["K3"].Value = cliente.accountnumber;
-        //ws.Cells["J6"].Value = cliente.emailaddress1;
-        //ws.Cells["F6"].Value = cliente.telephone1;
-
-        BB_Proposal_Contacts_Signing cs = new BB_Proposal_Contacts_Signing();
-        cs = lstBB_Proposal_Contacts_Signing.Count > 0 ? lstBB_Proposal_Contacts_Signing[0] : new BB_Proposal_Contacts_Signing();
-
-        ws.Cells["D4"].Value = cliente.Name != null ? cliente.Name : "";
-        ws.Cells["D6"].Value = cliente.NIF != null ? cliente.NIF : "";
-        ws.Cells["D5"].Value = cliente.address1_line1 != null ? cliente.address1_line1 : "";
-        ws.Cells["J5"].Value = cliente.PostalCode != null ? cliente.PostalCode + " " + cliente.City : "";
-        ws.Cells["K3"].Value = cliente.accountnumber;
-        ws.Cells["J6"].Value = cs.Email;
-        ws.Cells["F6"].Value = cs.Telefone;
-
-        //KOnica Representante
-        //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
-        //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
-
-        pck.Save();
-
-
-        pck.Stream.Close();
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.xlsx");
-
-    }
-}
-
-private void WriteContractoService2(string path, string acocuntNumber, int? proposalID)
-{
-    try
-    {
-        FileInfo newFile = new FileInfo(path);
-
-        ExcelPackage pck = new ExcelPackage(newFile);
-
-        var ws = pck.Workbook.Worksheets["Service2"];
-        int? nrMeses = 0;
-        List<BB_Proposal_Quote_RS> lst = new List<BB_Proposal_Quote_RS>();
-        List<BB_Proposal_OPSManage> opsManage = new List<BB_Proposal_OPSManage>();
-
-        BB_Proposal_PrazoDiferenciado p = new BB_Proposal_PrazoDiferenciado();
-
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            lst = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
-            opsManage = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
-            p = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalID).FirstOrDefault();
-        }
-
-        if (lst != null && lst.Count() == 0 && opsManage != null && opsManage.Count() == 0)
-        {
-            pck.Workbook.Worksheets.Delete(ws);
-        }
-        else
-        {
-            int idx = 10;
-            double? taxafixa = 0;
-
-            foreach (var item in lst)
-            {
-                ws.Cells["A" + idx].Value = item.Description;
-                ws.Cells["F" + idx].Value = item.CodeRef;
-                ws.Cells["G" + idx].Value = item.Qty;
-                ws.Cells["H" + idx].Value = item.TotalMonths;
-                ws.Cells["I" + idx].Value = item.MonthlyFee;
-                idx++;
-                taxafixa += item.MonthlyFee;
-                nrMeses = nrMeses > item.TotalMonths ? nrMeses : item.TotalMonths;
-            }
-            foreach (var item in opsManage)
-            {
-                ws.Cells["A" + idx].Value = item.Name + " - " + item.Description;
-                ws.Cells["F" + idx].Value = item.CodeRef;
-                ws.Cells["G" + idx].Value = item.Quantity;
-                ws.Cells["H" + idx].Value = item.TotalMonths;
-                ws.Cells["I" + idx].Value = item.UnitDiscountPrice * item.Quantity;
-                idx++;
-                //taxafixa +=   item.UnitDiscountPrice * item.Quantity * item.TotalMonths;
-                taxafixa += item.UnitDiscountPrice * item.Quantity;
-                nrMeses = nrMeses > item.TotalMonths ? nrMeses : item.TotalMonths;
-            }
-
-            int frquency = 1;
-            BB_PrintingServices active = null;
-            BB_VVA vva = null;
-            BB_PrintingServices_NoVolume nv = null;
-            Nullable<int> BWVolume = 0;
-            Nullable<int> CVolume = 0;
-
-            using (var db = new BB_DB_DEVEntities2())
-            {
-                BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2
-                    .Include(x => x.BB_PrintingServices.Select(y => y.BB_VVA))
-                    .Include(x => x.BB_PrintingServices.Select(y => y.BB_PrintingServices_NoVolume))
-                    .Where(x => x.ProposalID == proposalID)
-                    .FirstOrDefault();
-
-                if (ps2 != null && ps2.BB_PrintingServices.Count > 0)
-                {
-
-                    active = ps2.BB_PrintingServices.ToList()[(int)ps2.ActivePrintingService - 1];
-                    if (active != null)
-                    {
-                        BWVolume = active.BWVolume;
-                        CVolume = active.CVolume;
-                        if (active.BB_VVA != null)
-                        {
-                            vva = active.BB_VVA;
-                            frquency = vva.RentBillingFrequency.GetValueOrDefault();
-                        }
-                        if (active.BB_PrintingServices_NoVolume != null)
-                        {
-                            nv = active.BB_PrintingServices_NoVolume;
-                            frquency = nv.PageBillingFrequency.GetValueOrDefault();
-                        }
-                    }
-                }
-            }
-
-
-
-
-            ws.Cells["I28"].Value = taxafixa;
-            ws.Cells["F33"].Value = nrMeses;
-            ws.Cells["F35"].Value = ((frquency == 0 || frquency == 1) ? "Mensal" : "Trimestral");
-
-            //FLEXPAGE
-            if (p != null && (p.FinancingID == 6 || p.FinancingID == 5))
-            {
-                taxafixa = 0;
-                idx = 10;
-
-                foreach (var item in lst)
-                {
-                    ws.Cells["I" + idx].Value = "";
-                    idx++;
-                }
-                foreach (var item in opsManage)
-                {
-                    ws.Cells["I" + idx].Value = "";
-                    idx++;
-                }
-
-                ws.Cells["I28"].Value = "";
-                ws.Cells["H28"].Value = "";
-                ws.Cells["I9"].Value = "";
-                ws.Cells["I8"].Value = "";
-            }
-
-
-            idx = 10;
-            if (p != null && p.FinancingID == 3)
-            {
-                foreach (var item in lst)
-                {
-                    ws.Cells["I" + idx].Value = "";
-                    idx++;
-                }
-                foreach (var item in opsManage)
-                {
-                    ws.Cells["I" + idx].Value = "";
-                    idx++;
-                }
-                ws.Cells["H28"].Value = "";
-                ws.Cells["I28"].Value = "";
-                ws.Cells["I8"].Value = "";
-                ws.Cells["I9"].Value = "";
+                File.Delete(@path + "\\Contracto.xlsx");
 
             }
         }
 
-
-        //KOnica Representante
-        //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
-        //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
-
-        pck.Save();
-
-
-        pck.Stream.Close();
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.xlsx");
-
-    }
-}
-
-private void WriteContractoAutoR(string path, string acocuntNumber)
-{
-    try
-    {
-        FileInfo newFile = new FileInfo(path);
-
-        ExcelPackage pck = new ExcelPackage(newFile);
-
-        var ws = pck.Workbook.Worksheets["AutoR"];
-
-        pck.Workbook.Worksheets.Delete(ws);
-
-        //KOnica Representante
-        //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
-        //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
-
-        pck.Save();
-
-
-        pck.Stream.Close();
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.xlsx");
-
-    }
-}
-
-private void WriteContractoDeclaracao(string path, string acocuntNumber, int? ProposalID)
-{
-    try
-    {
-        BB_Proposal_PrazoDiferenciado prazodiferencido = new BB_Proposal_PrazoDiferenciado();
-        BB_Proposal_Overvaluation sobrevalorizacao = new BB_Proposal_Overvaluation();
-
-        BB_Proposal_Financing financiamento = new BB_Proposal_Financing();
-        List<BB_Proposal_FinancingMonthly> financiamentoMensal = new List<BB_Proposal_FinancingMonthly>();
-        List<BB_Proposal_FinancingTrimestral> financiamentoTrimestreal = new List<BB_Proposal_FinancingTrimestral>();
-        BB_Proposal_PrintingServices psconfigs = new BB_Proposal_PrintingServices();
-
-        BB_FinancingType FinancingType = new BB_FinancingType();
-        BB_FinancingPaymentMethod aymentMethod = new BB_FinancingPaymentMethod();
-        BB_FinancingContractType contractType = new BB_FinancingContractType();
-        string servicosIncluidos = "";
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            sobrevalorizacao = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
-            financiamento = db.BB_Proposal_Financing.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
-            psconfigs = db.BB_Proposal_PrintingServices.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
-            if (financiamento != null)
-            {
-                financiamentoMensal = db.BB_Proposal_FinancingMonthly.Where(x => x.ProposalID == ProposalID && x.FinancingID == financiamento.ID).ToList();
-                financiamentoTrimestreal = db.BB_Proposal_FinancingTrimestral.Where(x => x.ProposalID == ProposalID && x.FinancingID == financiamento.ID).ToList();
-                FinancingType = db.BB_FinancingType.Where(x => x.Code == financiamento.FinancingTypeCode).FirstOrDefault();
-                aymentMethod = db.BB_FinancingPaymentMethod.Where(x => x.ID == financiamento.PaymentMethodId).FirstOrDefault();
-                contractType = db.BB_FinancingContractType.Where(x => x.ID == financiamento.ContractTypeId).FirstOrDefault();
-                prazodiferencido = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == ProposalID && x.Type == "TAB" && x.IsAproved.Value == true).FirstOrDefault();
-                servicosIncluidos = financiamento.IncludeServices.Value == true ? " com serviços incluídos" : "";
-            }
-        }
-
-        FileInfo newFile = new FileInfo(path);
-
-        ExcelPackage pck = new ExcelPackage(newFile);
-
-        var ws = pck.Workbook.Worksheets["Declaração"];
-
-        if (financiamento != null && (financiamento.FinancingTypeCode == 0 || financiamento.FinancingTypeCode == 5))
-        {
-            ws.Cells["A33"].Value = "Não Aplicável";
-        }
-
-        if (financiamento != null && financiamento.FinancingTypeCode != 0 && financiamento.FinancingTypeCode != 5 && prazodiferencido != null && prazodiferencido.Alocadora == "BNP")
-        {
-            ws.Cells["A33"].Value = "A Locadora está autorizada pelo Cliente, a transmitir a sua posição contratual no âmbito do presente contrato ao BNP PARIBAS LEASE GROUP, S.A.";
-        }
-
-        if (financiamento != null && financiamento.FinancingTypeCode != 0 && financiamento.FinancingTypeCode != 5 && prazodiferencido != null && prazodiferencido.Alocadora == "GRENK")
-        {
-            ws.Cells["A33"].Value = "A Locadora está autorizada pelo Cliente, a transmitir total ou parcialmente a sua posição contratual no âmbito do presente contrato à GRENKE RENTING, S.A., atuando esta última em seu próprio nome, mas por conta da sociedade denominada Grenke Finance Plc, com sede em Q-House 306, Furze Road, Sandyford Industrial Estate, Dublin 18 (Irlanda)";
-        }
-
-        //KOnica Representante
-        //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
-        //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
-
-
-
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            List<BB_Proposal_Contacts_Signing> cSigning = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == ProposalID).ToList();
-
-            int idx = 0;
-
-            ws.Cells["I40"].Value = "Hugo Silva";
-
-
-            foreach (var i in cSigning)
-            {
-                if (idx == 0)
-                {
-                    ws.Cells["B40"].Value = i.Name;
-                    //ws.Cells["D40"].Value = DateTime.Now.ToString("dd/MM/yyyy");
-
-                }
-                if (idx == 1)
-                {
-                    ws.Cells["B42"].Value = i.Name;
-                    //ws.Cells["D42"].Value = DateTime.Now.ToString("dd/MM/yyyy");
-                    idx++;
-                }
-                idx++;
-
-            }
-        }
-
-
-
-        pck.Save();
-
-
-        pck.Stream.Close();
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.xlsx");
-
-    }
-}
-
-[AcceptVerbs("GET", "POST")]
-[ActionName("ProFormaPrinting")]
-public HttpResponseMessage ProFormaPrinting(int? ProposalID)
-{
-    int ID = 354;
-    //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
-    string erro = "";
-    //int proposalID = ID;
-    int? proposalID = ProposalID;
-    //Create HTTP Response.
-    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-    string path = "";
-    try
-    {
-        BB_Proposal p = new BB_Proposal();
-        AspNetUsers c = new AspNetUsers();
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            p = db.BB_Proposal.Where(x => x.ID == proposalID).First();
-
-        }
-        using (var db = new masterEntities())
-        {
-            c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
-
-        }
-
-
-        string strUser = c.DisplayName;
-        string strFolder = "Proforma";
-        string strCliente = c.DisplayName;
-        path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
-
-        if (!Directory.Exists(path))
-            System.IO.Directory.CreateDirectory(path);
-
-
-        using (var stream = File.Open(@AppSettingsGet.ProFormaPrintingTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        {
-
-            try
-            {
-                using (var outputFile = new FileStream(path + "\\ProForma.xlsx", FileMode.Create))
-                {
-                    stream.CopyTo(outputFile);
-                }
-            }
-            catch (IOException)
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-        }
-
-
-        //QUOTE WRITE TO EXCEL
-        string resultQuote = ProFormaWriteToExcelQuote(@path + "\\Proforma.xlsx", proposalID, p.ValueTotal, p.ClientAccountNumber);
-        //BtnTest_Click(@path + "\\ProForma.xlsx");
-        //Cliente WRITE TO EXCEL
-        //bool resultClient = WriteToExcelCliente(@path + "\\Proposal.xlsx", proposalID);
-
-        //Thread.Sleep(3000);
-
-
-
-
-        ExportWorkbookToPdfProforma(@path + "\\ProForma.xlsx", @path + "\\ProForma.pdf", proposalID);
-
-
-        string filePath = @path + "\\ProForma.pdf";
-
-
-        //Check whether File exists.
-        if (!File.Exists(filePath))
-        {
-            //Throw 404 (Not Found) exception if File not found.
-            response.StatusCode = HttpStatusCode.NotFound;
-            response.ReasonPhrase = string.Format("File not found: .");
-            throw new HttpResponseException(response);
-        }
-
-        byte[] bytes = File.ReadAllBytes(filePath);
-
-        //Set the Response Content.
-
-        response.Content = new ByteArrayContent(bytes);
-
-        //Set the Response Content Length.
-        response.Content.Headers.ContentLength = bytes.LongLength;
-
-        //Set the Content Disposition Header Value and FileName.
-        response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-        response.Content.Headers.ContentDisposition.FileName = "ProForma.pdf";
-
-        //Set the File Content Type.
-        response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("ProForma.pdf"));
-        return response;
-
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\ProForma.xlsx");
-        erro = ex.Message.ToString();
-    }
-    Console.WriteLine(erro);
-    return response;
-}
-
-[AcceptVerbs("GET", "POST")]
-[ActionName("DetalheDownload")]
-public HttpResponseMessage DetalheDownload(int? ProposalID)
-{
-    int ID = 354;
-    //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
-    string erro = "";
-    //int proposalID = ID;
-    int? proposalID = ProposalID;
-    //Create HTTP Response.
-    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-    string path = "";
-    try
-    {
-        BB_Proposal_LeaseDesk_Detalhe d = new BB_Proposal_LeaseDesk_Detalhe();
-        BB_Proposal p = new BB_Proposal();
-        AspNetUsers c = new AspNetUsers();
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            d = db.BB_Proposal_LeaseDesk_Detalhe.Where(x => x.ID == ProposalID).FirstOrDefault();
-            p = db.BB_Proposal.Where(x => x.ID == d.ProposalID).First();
-
-        }
-        using (var db = new masterEntities())
-        {
-            c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
-
-        }
-
-
-        string strUser = c.DisplayName;
-        string strFolder = "NUS";
-        string strCliente = c.DisplayName;
-        path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
-
-        if (!Directory.Exists(path))
-            System.IO.Directory.CreateDirectory(path);
-
-
-        using (var stream = File.Open(@AppSettingsGet.NUS_Template, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        {
-
-            try
-            {
-                using (var outputFile = new FileStream(path + "\\NUS_Template.xlsx", FileMode.Create))
-                {
-                    stream.CopyTo(outputFile);
-                }
-            }
-            catch (IOException)
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-        }
-
-
-        //QUOTE WRITE TO EXCEL
-        string resultQuote = NUSDetalheExcel(@path + "\\NUS_Template.xlsx", ProposalID);
-
-        //BtnTest_Click(@path + "\\ProForma.xlsx");
-        //Cliente WRITE TO EXCEL
-        //bool resultClient = WriteToExcelCliente(@path + "\\Proposal.xlsx", proposalID);
-
-        //Thread.Sleep(3000);
-
-
-
-
-        //ExportWorkbookToPdfProforma(@path + "\\NUS_Template.xlsx", @path + "\\NUS_Template.pdf", proposalID);
-
-
-        //string filePath = @path + "\\NUS_Template.pdf";
-
-
-        //Check whether File exists.
-        string excelPath = @path + "\\NUS_Template.xlsx";
-
-
-
-        if (!File.Exists(excelPath))
-        {
-            //Throw 404 (Not Found) exception if File not found.
-            response.StatusCode = HttpStatusCode.NotFound;
-            response.ReasonPhrase = string.Format("File not found: .");
-            throw new HttpResponseException(response);
-        }
-
-        byte[] bytes = File.ReadAllBytes(excelPath);
-
-        //Set the Response Content.
-
-        response.Content = new ByteArrayContent(bytes);
-
-        //Set the Response Content Length.
-        response.Content.Headers.ContentLength = bytes.LongLength;
-
-        //Set the Content Disposition Header Value and FileName.
-        response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-        response.Content.Headers.ContentDisposition.FileName = "NUS_Template.xlsx";
-
-        //Set the File Content Type.
-        response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("NUS_Template.xlsx"));
-
-        return response;
-
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\NUS_Template.xlsx");
-        erro = ex.Message.ToString();
-    }
-    Console.WriteLine(erro);
-    return response;
-}
-
-private string NUSDetalheExcel(string path, int? DetalheID)
-{
-    try
-    {
-        BB_Clientes cliente = new BB_Clientes();
-        BB_Proposal_LeaseDesk_Detalhe l = new BB_Proposal_LeaseDesk_Detalhe();
-        BB_Proposal p = new BB_Proposal();
-        using (var db = new BB_DB_DEVEntities2())
-        {
-
-            l = db.BB_Proposal_LeaseDesk_Detalhe.Where(x => x.ID == DetalheID).FirstOrDefault();
-            p = db.BB_Proposal.Where(x => x.ID == l.ProposalID).FirstOrDefault();
-            cliente = db.BB_Clientes.Where(x => x.accountnumber == p.AccountManager).FirstOrDefault();
-        }
-        FileInfo newFile = new FileInfo(path);
-
-        ExcelPackage pck = new ExcelPackage(newFile);
-        //Add the Content sheet
-        var ws = pck.Workbook.Worksheets["Formulário Encomenda"];
-        //ws.View.ShowGridLines = false;
-
-        ////ws.Column(4).OutlineLevel = 1;
-        ////ws.Column(4).Collapsed = true;
-        ////ws.Column(5).OutlineLevel = 1;
-        ////ws.Column(5).Collapsed = true;
-        ////ws.OutLineSummaryRight = true;
-
-        ////Headers
-        //ws.Cells["D4"].Value = cliente.Name != null ? cliente.Name : "";
-        //ws.Cells["D6"].Value = cliente.NIF != null ? cliente.NIF : "";
-        //ws.Cells["D5"].Value = cliente.address1_line1 != null ? cliente.address1_line1 : "";
-        //ws.Cells["J5"].Value = cliente.PostalCode != null ? cliente.PostalCode + " " + cliente.City : "";
-        //ws.Cells["K3"].Value = cliente.accountnumber;
-        //ws.Cells["J6"].Value = cliente.emailaddress1;
-        //ws.Cells["F6"].Value = cliente.telephone1;
-
-
-        //Numero de cliente
-        ws.Cells["F6"].Value = cliente.accountnumber;
-
-        //Moara
-        ws.Cells["F8"].Value = l.Adress1;
-
-        //CodigoPostal
-        ws.Cells["F10"].Value = l.PostalCode;
-
-        //Localidade
-        ws.Cells["F11"].Value = l.City;
-
-        //Localidade
-        ws.Cells["F12"].Value = l.Contacto;
-
-        //Contribuinte
-        ws.Cells["F14"].Value = cliente.NIF;
-
-
-        //KOnica Representante
-        //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
-        //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
-
-        pck.Save();
-
-
-        pck.Stream.Close();
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.xlsx");
-
-    }
-
-    return "";
-}
-
-private void FindAndReplace(Microsoft.Office.Interop.Word.Application doc, object findText, object replaceWithText)
-{
-    //options
-    object matchCase = false;
-    object matchWholeWord = true;
-    object matchWildCards = false;
-    object matchSoundsLike = false;
-    object matchAllWordForms = false;
-    object forward = true;
-    object format = false;
-    object matchKashida = false;
-    object matchDiacritics = false;
-    object matchAlefHamza = false;
-    object matchControl = false;
-    object read_only = false;
-    object visible = false;
-    object replace = 2;
-    object wrap = 1;
-    //execute find and replace
-
-
-    doc.Selection.Find.Execute(ref findText, ref matchCase, ref matchWholeWord,
-        ref matchWildCards, ref matchSoundsLike, ref matchAllWordForms, ref forward, ref wrap, ref format, ref replaceWithText, ref replace,
-        ref matchKashida, ref matchDiacritics, ref matchAlefHamza, ref matchControl);
-
-    doc.Selection.Find.ClearFormatting();
-}
-
-[AcceptVerbs("GET", "POST")]
-[ActionName("PrintingContractoByProposalID")]
-public HttpResponseMessage PrintingContractoByProposalID(int? proposalID)
-{
-    //int ID = 375;
-
-    //GerarContrato gc = new GerarContrato();
-    //gc.proposalID = 472;
-    //gc.Selectmonthly = 18;
-
-    //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
-    string erro = "";
-    //int proposalID = ID;
-    //int? proposalID = o.ProposalID;
-    //Create HTTP Response.
-    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-
-    string path = "";
-    try
-    {
-        BB_Proposal p = new BB_Proposal();
-        AspNetUsers c = new AspNetUsers();
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            p = db.BB_Proposal.Where(x => x.ID == proposalID).First();
-
-        }
-        using (var db = new masterEntities())
-        {
-            c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
-
-        }
-
-
-        string strUser = c.DisplayName;
-        string strFolder = "Contracto";
-        string strCliente = c.DisplayName;
-        path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
-
-        if (!Directory.Exists(path))
-            System.IO.Directory.CreateDirectory(path);
-
-
-        using (var stream = File.Open(@AppSettingsGet.DocumentPrintingContractoTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        {
-
-            try
-            {
-                using (var outputFile = new FileStream(path + "\\Contracto.xlsx", FileMode.Create))
-                {
-                    stream.CopyTo(outputFile);
-                }
-            }
-            catch (IOException)
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-        }
-
-        WriteContractoCliente(@path + "\\Contracto.xlsx", p.ClientAccountNumber, proposalID);
-
-        //Cliente WRITE TO EXCEL
-        //bool resultClient = WriteToExcelCliente(@path + "\\Proposal.xlsx", proposalID);
-        WriteContractoQuote(@path + "\\Contracto.xlsx", proposalID, p);
-        //Thread.Sleep(3000);
-        //WritePropostaFinanceira(@path + "\\Contracto.xlsx", proposalID, p);
-
-        WriteContractoServicos(@path + "\\Contracto.xlsx", proposalID, p);
-
-        WriteContractoService2(@path + "\\Contracto.xlsx", p.ClientAccountNumber, proposalID);
-        //WritePropostaOutrasCondicoes(@path + "\\Contracto.xlsx", proposalID, p);
-
-        WriteContractoAutoR(@path + "\\Contracto.xlsx", p.ClientAccountNumber);
-
-        WriteContractoDeclaracao(@path + "\\Contracto.xlsx", p.ClientAccountNumber, p.ID);
-
-
-        ExportWorkbookToPdfContrato(@path + "\\Contracto.xlsx", @path + "\\Contracto.pdf", proposalID);
-
-
-        string filePath = @path + "\\Contracto.pdf";
-        string excelPath = @path + "\\Contracto.xlsx";
-
-        if (false)
-        {
-            if (!File.Exists(filePath))
-            {
-                //Throw 404 (Not Found) exception if File not found.
-                response.StatusCode = HttpStatusCode.NotFound;
-                response.ReasonPhrase = string.Format("File not found: .");
-                throw new HttpResponseException(response);
-            }
-
-            byte[] bytes = File.ReadAllBytes(filePath);
-
-            //Set the Response Content.
-
-            response.Content = new ByteArrayContent(bytes);
-
-            //Set the Response Content Length.
-            response.Content.Headers.ContentLength = bytes.LongLength;
-
-            //Set the Content Disposition Header Value and FileName.
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = "Contracto.pdf";
-
-            //Set the File Content Type.
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.pdf"));
-        }
-        if (true)
-        {
-            if (!File.Exists(excelPath))
-            {
-                //Throw 404 (Not Found) exception if File not found.
-                response.StatusCode = HttpStatusCode.NotFound;
-                response.ReasonPhrase = string.Format("File not found: .");
-                throw new HttpResponseException(response);
-            }
-
-            byte[] bytes = File.ReadAllBytes(excelPath);
-
-            //Set the Response Content.
-
-            response.Content = new ByteArrayContent(bytes);
-
-            //Set the Response Content Length.
-            response.Content.Headers.ContentLength = bytes.LongLength;
-
-            //Set the Content Disposition Header Value and FileName.
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = "Contrato.xlsx";
-
-            //Set the File Content Type.
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contrato.xlsx"));
-        }
-
-
-        return response;
-
-    }
-    catch (Exception ex)
-    {
-        File.Delete(@path + "\\Contracto.xlsx");
-        erro = ex.Message.ToString();
-    }
-    Console.WriteLine(erro);
-    return response;
-}
-
-[AcceptVerbs("GET", "POST")]
-[ActionName("GenerateContractExcel")]
-public HttpResponseMessage GenerateContractExcel(int proposalID)
-{
-    string error = "";
-    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-    try
-    {
-        string filePath = GenerateContract(proposalID);
-        filePath += ".xlsx";
-        if (!File.Exists(filePath))
-        {
-            response.StatusCode = HttpStatusCode.NotFound;
-            response.ReasonPhrase = string.Format("File not found: .");
-            throw new HttpResponseException(response);
-        }
-        byte[] bytes = File.ReadAllBytes(filePath);
-        response.Content = new ByteArrayContent(bytes);
-        response.Content.Headers.ContentLength = bytes.LongLength;
-        response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-        response.Content.Headers.ContentDisposition.FileName = "Contrato.xlsx";
-        response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contrato.xlsx"));
-    }
-    catch (Exception ex)
-    {
-        error = ex.Message.ToString();
-    }
-    return response;
-}
-
-[AcceptVerbs("GET", "POST")]
-[ActionName("GenerateContractPDF")]
-public HttpResponseMessage GenerateContractPDF(int proposalID)
-{
-    string error = "";
-    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-    try
-    {
-        string filePath = GenerateContract(proposalID);
-        filePath += ".pdf";
-        if (!File.Exists(filePath))
-        {
-            response.StatusCode = HttpStatusCode.NotFound;
-            response.ReasonPhrase = string.Format("File not found: .");
-            throw new HttpResponseException(response);
-        }
-        byte[] bytes = File.ReadAllBytes(filePath);
-        response.Content = new ByteArrayContent(bytes);
-        response.Content.Headers.ContentLength = bytes.LongLength;
-        response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-        response.Content.Headers.ContentDisposition.FileName = "Contracto.pdf";
-        response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.pdf"));
-    }
-    catch (Exception ex)
-    {
-        error = ex.Message.ToString();
-    }
-    return response;
-}
-
-private string GenerateContract(int proposalID)
-{
-    string path = "";
-    string error = "";
-    string filePath = "";
-    try
-    {
-        BB_Proposal proposal = new BB_Proposal();
-        AspNetUsers accountManager = new AspNetUsers();
-        using (var db = new BB_DB_DEVEntities2())
-        {
-            proposal = db.BB_Proposal.Where(x => x.ID == proposalID).First();
-
-        }
-        using (var db = new masterEntities())
-        {
-            accountManager = db.AspNetUsers.Where(x => x.Email == proposal.CreatedBy).FirstOrDefault();
-        }
-        string strUser = accountManager.DisplayName;
-        string strFolder = "Contracto";
-        string strCliente = accountManager.DisplayName;
-        path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
-        if (!Directory.Exists(path))
-            System.IO.Directory.CreateDirectory(path);
-        using (var stream = File.Open(@AppSettingsGet.DocumentPrintingContractoTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        private void WriteContractoDeclaracao(string path, string acocuntNumber, int? ProposalID)
         {
             try
             {
-                using (var outputFile = new FileStream(path + "\\Contracto.xlsx", FileMode.Create))
+                BB_Proposal_PrazoDiferenciado prazodiferencido = new BB_Proposal_PrazoDiferenciado();
+                BB_Proposal_Overvaluation sobrevalorizacao = new BB_Proposal_Overvaluation();
+
+                BB_Proposal_Financing financiamento = new BB_Proposal_Financing();
+                List<BB_Proposal_FinancingMonthly> financiamentoMensal = new List<BB_Proposal_FinancingMonthly>();
+                List<BB_Proposal_FinancingTrimestral> financiamentoTrimestreal = new List<BB_Proposal_FinancingTrimestral>();
+                BB_Proposal_PrintingServices psconfigs = new BB_Proposal_PrintingServices();
+
+                BB_FinancingType FinancingType = new BB_FinancingType();
+                BB_FinancingPaymentMethod aymentMethod = new BB_FinancingPaymentMethod();
+                BB_FinancingContractType contractType = new BB_FinancingContractType();
+                string servicosIncluidos = "";
+                using (var db = new BB_DB_DEVEntities2())
                 {
-                    stream.CopyTo(outputFile);
+                    sobrevalorizacao = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
+                    financiamento = db.BB_Proposal_Financing.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
+                    psconfigs = db.BB_Proposal_PrintingServices.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
+                    if (financiamento != null)
+                    {
+                        financiamentoMensal = db.BB_Proposal_FinancingMonthly.Where(x => x.ProposalID == ProposalID && x.FinancingID == financiamento.ID).ToList();
+                        financiamentoTrimestreal = db.BB_Proposal_FinancingTrimestral.Where(x => x.ProposalID == ProposalID && x.FinancingID == financiamento.ID).ToList();
+                        FinancingType = db.BB_FinancingType.Where(x => x.Code == financiamento.FinancingTypeCode).FirstOrDefault();
+                        aymentMethod = db.BB_FinancingPaymentMethod.Where(x => x.ID == financiamento.PaymentMethodId).FirstOrDefault();
+                        contractType = db.BB_FinancingContractType.Where(x => x.ID == financiamento.ContractTypeId).FirstOrDefault();
+                        prazodiferencido = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == ProposalID && x.Type == "TAB" && x.IsAproved.Value == true).FirstOrDefault();
+                        servicosIncluidos = financiamento.IncludeServices.Value == true ? " com serviços incluídos" : "";
+                    }
                 }
+
+                FileInfo newFile = new FileInfo(path);
+
+                ExcelPackage pck = new ExcelPackage(newFile);
+
+                var ws = pck.Workbook.Worksheets["Declaração"];
+
+                if (financiamento != null && (financiamento.FinancingTypeCode == 0 || financiamento.FinancingTypeCode == 5))
+                {
+                    ws.Cells["A33"].Value = "Não Aplicável";
+                }
+
+                if (financiamento != null && financiamento.FinancingTypeCode != 0 && financiamento.FinancingTypeCode != 5 && prazodiferencido != null && prazodiferencido.Alocadora == "BNP")
+                {
+                    ws.Cells["A33"].Value = "A Locadora está autorizada pelo Cliente, a transmitir a sua posição contratual no âmbito do presente contrato ao BNP PARIBAS LEASE GROUP, S.A.";
+                }
+
+                if (financiamento != null && financiamento.FinancingTypeCode != 0 && financiamento.FinancingTypeCode != 5 && prazodiferencido != null && prazodiferencido.Alocadora == "GRENK")
+                {
+                    ws.Cells["A33"].Value = "A Locadora está autorizada pelo Cliente, a transmitir total ou parcialmente a sua posição contratual no âmbito do presente contrato à GRENKE RENTING, S.A., atuando esta última em seu próprio nome, mas por conta da sociedade denominada Grenke Finance Plc, com sede em Q-House 306, Furze Road, Sandyford Industrial Estate, Dublin 18 (Irlanda)";
+                }
+
+                //KOnica Representante
+                //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
+                //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
+
+
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    List<BB_Proposal_Contacts_Signing> cSigning = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == ProposalID).ToList();
+
+                    int idx = 0;
+
+                    ws.Cells["I40"].Value = "Hugo Silva";
+
+
+                    foreach (var i in cSigning)
+                    {
+                        if (idx == 0)
+                        {
+                            ws.Cells["B40"].Value = i.Name;
+                            //ws.Cells["D40"].Value = DateTime.Now.ToString("dd/MM/yyyy");
+
+                        }
+                        if (idx == 1)
+                        {
+                            ws.Cells["B42"].Value = i.Name;
+                            //ws.Cells["D42"].Value = DateTime.Now.ToString("dd/MM/yyyy");
+                            idx++;
+                        }
+                        idx++;
+
+                    }
+                }
+
+
+
+                pck.Save();
+
+
+                pck.Stream.Close();
             }
-            catch (IOException)
+            catch (Exception ex)
             {
-                if (stream != null)
-                    stream.Close();
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
+                File.Delete(@path + "\\Contracto.xlsx");
+
             }
         }
-        WriteContractoCliente(@path + "\\Contracto.xlsx", proposal.ClientAccountNumber, proposalID);
-        WriteContractoQuote(@path + "\\Contracto.xlsx", proposalID, proposal);
-        WriteContractoServicos(@path + "\\Contracto.xlsx", proposalID, proposal);
-        WriteContractoService2(@path + "\\Contracto.xlsx", proposal.ClientAccountNumber, proposalID);
-        WriteContractoAutoR(@path + "\\Contracto.xlsx", proposal.ClientAccountNumber);
-        WriteContractoDeclaracao(@path + "\\Contracto.xlsx", proposal.ClientAccountNumber, proposal.ID);
-        ExportWorkbookToPdfContrato(@path + "\\Contracto.xlsx", @path + "\\Contracto.pdf", proposalID);
-        filePath = @path + "\\Contracto";
 
-    }
-    catch (Exception ex)
-    {
-        error = ex.Message.ToString();
-    }
-    return filePath;
-}
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("ProFormaPrinting")]
+        public HttpResponseMessage ProFormaPrinting(int? ProposalID)
+        {
+            int ID = 354;
+            //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
+            string erro = "";
+            //int proposalID = ID;
+            int? proposalID = ProposalID;
+            //Create HTTP Response.
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            string path = "";
+            try
+            {
+                BB_Proposal p = new BB_Proposal();
+                AspNetUsers c = new AspNetUsers();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    p = db.BB_Proposal.Where(x => x.ID == proposalID).First();
+
+                }
+                using (var db = new masterEntities())
+                {
+                    c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
+
+                }
+
+
+                string strUser = c.DisplayName;
+                string strFolder = "Proforma";
+                string strCliente = c.DisplayName;
+                path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
+
+                if (!Directory.Exists(path))
+                    System.IO.Directory.CreateDirectory(path);
+
+
+                using (var stream = File.Open(@AppSettingsGet.ProFormaPrintingTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+
+                    try
+                    {
+                        using (var outputFile = new FileStream(path + "\\ProForma.xlsx", FileMode.Create))
+                        {
+                            stream.CopyTo(outputFile);
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                }
+
+
+                //QUOTE WRITE TO EXCEL
+                string resultQuote = ProFormaWriteToExcelQuote(@path + "\\Proforma.xlsx", proposalID, p.ValueTotal, p.ClientAccountNumber);
+                //BtnTest_Click(@path + "\\ProForma.xlsx");
+                //Cliente WRITE TO EXCEL
+                //bool resultClient = WriteToExcelCliente(@path + "\\Proposal.xlsx", proposalID);
+
+                //Thread.Sleep(3000);
+
+
+
+
+                ExportWorkbookToPdfProforma(@path + "\\ProForma.xlsx", @path + "\\ProForma.pdf", proposalID);
+
+
+                string filePath = @path + "\\ProForma.pdf";
+
+
+                //Check whether File exists.
+                if (!File.Exists(filePath))
+                {
+                    //Throw 404 (Not Found) exception if File not found.
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.ReasonPhrase = string.Format("File not found: .");
+                    throw new HttpResponseException(response);
+                }
+
+                byte[] bytes = File.ReadAllBytes(filePath);
+
+                //Set the Response Content.
+
+                response.Content = new ByteArrayContent(bytes);
+
+                //Set the Response Content Length.
+                response.Content.Headers.ContentLength = bytes.LongLength;
+
+                //Set the Content Disposition Header Value and FileName.
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "ProForma.pdf";
+
+                //Set the File Content Type.
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("ProForma.pdf"));
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\ProForma.xlsx");
+                erro = ex.Message.ToString();
+            }
+            Console.WriteLine(erro);
+            return response;
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DetalheDownload")]
+        public HttpResponseMessage DetalheDownload(int? ProposalID)
+        {
+            int ID = 354;
+            //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
+            string erro = "";
+            //int proposalID = ID;
+            int? proposalID = ProposalID;
+            //Create HTTP Response.
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            string path = "";
+            try
+            {
+                BB_Proposal_LeaseDesk_Detalhe d = new BB_Proposal_LeaseDesk_Detalhe();
+                BB_Proposal p = new BB_Proposal();
+                AspNetUsers c = new AspNetUsers();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    d = db.BB_Proposal_LeaseDesk_Detalhe.Where(x => x.ID == ProposalID).FirstOrDefault();
+                    p = db.BB_Proposal.Where(x => x.ID == d.ProposalID).First();
+
+                }
+                using (var db = new masterEntities())
+                {
+                    c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
+
+                }
+
+
+                string strUser = c.DisplayName;
+                string strFolder = "NUS";
+                string strCliente = c.DisplayName;
+                path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
+
+                if (!Directory.Exists(path))
+                    System.IO.Directory.CreateDirectory(path);
+
+
+                using (var stream = File.Open(@AppSettingsGet.NUS_Template, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+
+                    try
+                    {
+                        using (var outputFile = new FileStream(path + "\\NUS_Template.xlsx", FileMode.Create))
+                        {
+                            stream.CopyTo(outputFile);
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                }
+
+
+                //QUOTE WRITE TO EXCEL
+                string resultQuote = NUSDetalheExcel(@path + "\\NUS_Template.xlsx", ProposalID);
+
+                //BtnTest_Click(@path + "\\ProForma.xlsx");
+                //Cliente WRITE TO EXCEL
+                //bool resultClient = WriteToExcelCliente(@path + "\\Proposal.xlsx", proposalID);
+
+                //Thread.Sleep(3000);
+
+
+
+
+                //ExportWorkbookToPdfProforma(@path + "\\NUS_Template.xlsx", @path + "\\NUS_Template.pdf", proposalID);
+
+
+                //string filePath = @path + "\\NUS_Template.pdf";
+
+
+                //Check whether File exists.
+                string excelPath = @path + "\\NUS_Template.xlsx";
+
+
+
+                if (!File.Exists(excelPath))
+                {
+                    //Throw 404 (Not Found) exception if File not found.
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.ReasonPhrase = string.Format("File not found: .");
+                    throw new HttpResponseException(response);
+                }
+
+                byte[] bytes = File.ReadAllBytes(excelPath);
+
+                //Set the Response Content.
+
+                response.Content = new ByteArrayContent(bytes);
+
+                //Set the Response Content Length.
+                response.Content.Headers.ContentLength = bytes.LongLength;
+
+                //Set the Content Disposition Header Value and FileName.
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "NUS_Template.xlsx";
+
+                //Set the File Content Type.
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("NUS_Template.xlsx"));
+
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\NUS_Template.xlsx");
+                erro = ex.Message.ToString();
+            }
+            Console.WriteLine(erro);
+            return response;
+        }
+
+        private string NUSDetalheExcel(string path, int? DetalheID)
+        {
+            try
+            {
+                BB_Clientes cliente = new BB_Clientes();
+                BB_Proposal_LeaseDesk_Detalhe l = new BB_Proposal_LeaseDesk_Detalhe();
+                BB_Proposal p = new BB_Proposal();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+
+                    l = db.BB_Proposal_LeaseDesk_Detalhe.Where(x => x.ID == DetalheID).FirstOrDefault();
+                    p = db.BB_Proposal.Where(x => x.ID == l.ProposalID).FirstOrDefault();
+                    cliente = db.BB_Clientes.Where(x => x.accountnumber == p.AccountManager).FirstOrDefault();
+                }
+                FileInfo newFile = new FileInfo(path);
+
+                ExcelPackage pck = new ExcelPackage(newFile);
+                //Add the Content sheet
+                var ws = pck.Workbook.Worksheets["Formulário Encomenda"];
+                //ws.View.ShowGridLines = false;
+
+                ////ws.Column(4).OutlineLevel = 1;
+                ////ws.Column(4).Collapsed = true;
+                ////ws.Column(5).OutlineLevel = 1;
+                ////ws.Column(5).Collapsed = true;
+                ////ws.OutLineSummaryRight = true;
+
+                ////Headers
+                //ws.Cells["D4"].Value = cliente.Name != null ? cliente.Name : "";
+                //ws.Cells["D6"].Value = cliente.NIF != null ? cliente.NIF : "";
+                //ws.Cells["D5"].Value = cliente.address1_line1 != null ? cliente.address1_line1 : "";
+                //ws.Cells["J5"].Value = cliente.PostalCode != null ? cliente.PostalCode + " " + cliente.City : "";
+                //ws.Cells["K3"].Value = cliente.accountnumber;
+                //ws.Cells["J6"].Value = cliente.emailaddress1;
+                //ws.Cells["F6"].Value = cliente.telephone1;
+
+
+                //Numero de cliente
+                ws.Cells["F6"].Value = cliente.accountnumber;
+
+                //Moara
+                ws.Cells["F8"].Value = l.Adress1;
+
+                //CodigoPostal
+                ws.Cells["F10"].Value = l.PostalCode;
+
+                //Localidade
+                ws.Cells["F11"].Value = l.City;
+
+                //Localidade
+                ws.Cells["F12"].Value = l.Contacto;
+
+                //Contribuinte
+                ws.Cells["F14"].Value = cliente.NIF;
+
+
+                //KOnica Representante
+                //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
+                //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
+
+                pck.Save();
+
+
+                pck.Stream.Close();
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\Contracto.xlsx");
+
+            }
+
+            return "";
+        }
+
+        private void FindAndReplace(Microsoft.Office.Interop.Word.Application doc, object findText, object replaceWithText)
+        {
+            //options
+            object matchCase = false;
+            object matchWholeWord = true;
+            object matchWildCards = false;
+            object matchSoundsLike = false;
+            object matchAllWordForms = false;
+            object forward = true;
+            object format = false;
+            object matchKashida = false;
+            object matchDiacritics = false;
+            object matchAlefHamza = false;
+            object matchControl = false;
+            object read_only = false;
+            object visible = false;
+            object replace = 2;
+            object wrap = 1;
+            //execute find and replace
+
+
+            doc.Selection.Find.Execute(ref findText, ref matchCase, ref matchWholeWord,
+                ref matchWildCards, ref matchSoundsLike, ref matchAllWordForms, ref forward, ref wrap, ref format, ref replaceWithText, ref replace,
+                ref matchKashida, ref matchDiacritics, ref matchAlefHamza, ref matchControl);
+
+            doc.Selection.Find.ClearFormatting();
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("PrintingContractoByProposalID")]
+        public HttpResponseMessage PrintingContractoByProposalID(int? proposalID)
+        {
+            //int ID = 375;
+
+            //GerarContrato gc = new GerarContrato();
+            //gc.proposalID = 472;
+            //gc.Selectmonthly = 18;
+
+            //BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
+            string erro = "";
+            //int proposalID = ID;
+            //int? proposalID = o.ProposalID;
+            //Create HTTP Response.
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+
+            string path = "";
+            try
+            {
+                BB_Proposal p = new BB_Proposal();
+                AspNetUsers c = new AspNetUsers();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    p = db.BB_Proposal.Where(x => x.ID == proposalID).First();
+
+                }
+                using (var db = new masterEntities())
+                {
+                    c = db.AspNetUsers.Where(x => x.Email == p.CreatedBy).FirstOrDefault();
+
+                }
+
+
+                string strUser = c.DisplayName;
+                string strFolder = "Contracto";
+                string strCliente = c.DisplayName;
+                path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
+
+                if (!Directory.Exists(path))
+                    System.IO.Directory.CreateDirectory(path);
+
+
+                using (var stream = File.Open(@AppSettingsGet.DocumentPrintingContractoTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+
+                    try
+                    {
+                        using (var outputFile = new FileStream(path + "\\Contracto.xlsx", FileMode.Create))
+                        {
+                            stream.CopyTo(outputFile);
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                }
+
+                WriteContractoCliente(@path + "\\Contracto.xlsx", p.ClientAccountNumber, proposalID);
+
+                //Cliente WRITE TO EXCEL
+                //bool resultClient = WriteToExcelCliente(@path + "\\Proposal.xlsx", proposalID);
+                WriteContractoQuote(@path + "\\Contracto.xlsx", proposalID, p);
+                //Thread.Sleep(3000);
+                //WritePropostaFinanceira(@path + "\\Contracto.xlsx", proposalID, p);
+
+                WriteContractoServicos(@path + "\\Contracto.xlsx", proposalID, p);
+
+                WriteContractoService2(@path + "\\Contracto.xlsx", p.ClientAccountNumber, proposalID);
+                //WritePropostaOutrasCondicoes(@path + "\\Contracto.xlsx", proposalID, p);
+
+                WriteContractoAutoR(@path + "\\Contracto.xlsx", p.ClientAccountNumber);
+
+                WriteContractoDeclaracao(@path + "\\Contracto.xlsx", p.ClientAccountNumber, p.ID);
+
+
+                ExportWorkbookToPdfContrato(@path + "\\Contracto.xlsx", @path + "\\Contracto.pdf", proposalID);
+
+
+                string filePath = @path + "\\Contracto.pdf";
+                string excelPath = @path + "\\Contracto.xlsx";
+
+                if (false)
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        //Throw 404 (Not Found) exception if File not found.
+                        response.StatusCode = HttpStatusCode.NotFound;
+                        response.ReasonPhrase = string.Format("File not found: .");
+                        throw new HttpResponseException(response);
+                    }
+
+                    byte[] bytes = File.ReadAllBytes(filePath);
+
+                    //Set the Response Content.
+
+                    response.Content = new ByteArrayContent(bytes);
+
+                    //Set the Response Content Length.
+                    response.Content.Headers.ContentLength = bytes.LongLength;
+
+                    //Set the Content Disposition Header Value and FileName.
+                    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    response.Content.Headers.ContentDisposition.FileName = "Contracto.pdf";
+
+                    //Set the File Content Type.
+                    response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.pdf"));
+                }
+                if (true)
+                {
+                    if (!File.Exists(excelPath))
+                    {
+                        //Throw 404 (Not Found) exception if File not found.
+                        response.StatusCode = HttpStatusCode.NotFound;
+                        response.ReasonPhrase = string.Format("File not found: .");
+                        throw new HttpResponseException(response);
+                    }
+
+                    byte[] bytes = File.ReadAllBytes(excelPath);
+
+                    //Set the Response Content.
+
+                    response.Content = new ByteArrayContent(bytes);
+
+                    //Set the Response Content Length.
+                    response.Content.Headers.ContentLength = bytes.LongLength;
+
+                    //Set the Content Disposition Header Value and FileName.
+                    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    response.Content.Headers.ContentDisposition.FileName = "Contrato.xlsx";
+
+                    //Set the File Content Type.
+                    response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contrato.xlsx"));
+                }
+
+
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\Contracto.xlsx");
+                erro = ex.Message.ToString();
+            }
+            Console.WriteLine(erro);
+            return response;
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GenerateContractExcel")]
+        public HttpResponseMessage GenerateContractExcel(int proposalID)
+        {
+            string error = "";
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                string filePath = GenerateContract(proposalID);
+                filePath += ".xlsx";
+                if (!File.Exists(filePath))
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.ReasonPhrase = string.Format("File not found: .");
+                    throw new HttpResponseException(response);
+                }
+                byte[] bytes = File.ReadAllBytes(filePath);
+                response.Content = new ByteArrayContent(bytes);
+                response.Content.Headers.ContentLength = bytes.LongLength;
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "Contrato.xlsx";
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contrato.xlsx"));
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message.ToString();
+            }
+            return response;
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GenerateContractPDF")]
+        public HttpResponseMessage GenerateContractPDF(int proposalID)
+        {
+            string error = "";
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                string filePath = GenerateContract(proposalID);
+                filePath += ".pdf";
+                if (!File.Exists(filePath))
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.ReasonPhrase = string.Format("File not found: .");
+                    throw new HttpResponseException(response);
+                }
+                byte[] bytes = File.ReadAllBytes(filePath);
+                response.Content = new ByteArrayContent(bytes);
+                response.Content.Headers.ContentLength = bytes.LongLength;
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "Contracto.pdf";
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.pdf"));
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message.ToString();
+            }
+            return response;
+        }
+
+        private string GenerateContract(int proposalID)
+        {
+            string path = "";
+            string error = "";
+            string filePath = "";
+            try
+            {
+                BB_Proposal proposal = new BB_Proposal();
+                AspNetUsers accountManager = new AspNetUsers();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    proposal = db.BB_Proposal.Where(x => x.ID == proposalID).First();
+
+                }
+                using (var db = new masterEntities())
+                {
+                    accountManager = db.AspNetUsers.Where(x => x.Email == proposal.CreatedBy).FirstOrDefault();
+                }
+                string strUser = accountManager.DisplayName;
+                string strFolder = "Contracto";
+                string strCliente = accountManager.DisplayName;
+                path = @AppSettingsGet.DocumentPrintingFolder + strUser + "\\" + strFolder + "\\" + strCliente;
+                if (!Directory.Exists(path))
+                    System.IO.Directory.CreateDirectory(path);
+                using (var stream = File.Open(@AppSettingsGet.DocumentPrintingContractoTemplate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    try
+                    {
+                        using (var outputFile = new FileStream(path + "\\Contracto.xlsx", FileMode.Create))
+                        {
+                            stream.CopyTo(outputFile);
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Close();
+                    }
+                }
+                WriteContractoCliente(@path + "\\Contracto.xlsx", proposal.ClientAccountNumber, proposalID);
+                WriteContractoQuote(@path + "\\Contracto.xlsx", proposalID, proposal);
+                WriteContractoServicos(@path + "\\Contracto.xlsx", proposalID, proposal);
+                WriteContractoService2(@path + "\\Contracto.xlsx", proposal.ClientAccountNumber, proposalID);
+                WriteContractoAutoR(@path + "\\Contracto.xlsx", proposal.ClientAccountNumber);
+                WriteContractoDeclaracao(@path + "\\Contracto.xlsx", proposal.ClientAccountNumber, proposal.ID);
+                ExportWorkbookToPdfContrato(@path + "\\Contracto.xlsx", @path + "\\Contracto.pdf", proposalID);
+                filePath = @path + "\\Contracto";
+
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message.ToString();
+            }
+            return filePath;
+        }
 
     }
 }

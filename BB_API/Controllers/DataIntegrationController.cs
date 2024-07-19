@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -11,6 +12,8 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.WebPages;
+using WebApplication1.App_Start;
 using WebApplication1.BLL;
 using WebApplication1.Models;
 using WebApplication1.Provider;
@@ -34,10 +37,54 @@ namespace WebApplication1.Controllers
             //List<BB_Data_Integration> lst_BBDI = db.BB_Data_Integration.ToList();
             //return db.BB_Data_Integration.Take(10).Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
             //return lst_BBDI.Select(x => new DIItem { CodeRef = x.CodeRef, Family = x.Family, Name = x.Description_English, Description = x.Description_Portuguese, PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU }).ToList();
-            return db.BB_Data_Integration.Select(x => new DIItem { ID = x.ID, CodeRef = x.CodeRef, 
+            /*
+            List<DIItem> dIItems = db.BB_Data_Integration.Select(x => new DIItem { ID = x.ID, CodeRef = x.CodeRef, 
                    Family = x.Family, Name = x.Description_English,Description = x.Description_Portuguese, 
                    PVP = x.PVP, BinaryImage = x.BinaryImage, IsMarginBEU = x.IsMarginBEU, MarginBEU = x.MarginBEU,
                    BOM = x.BOM}).ToList();
+            */
+            string query = "SELECT ID, " +
+                                 "CodeRef, " +
+                                 "Family, " +
+                                 "Description_English as Name, " +
+                                 "Description_Portuguese as Description, " +
+                                 "PVP, " +
+                                 "BinaryImage, " +
+                                 "IsMarginBEU, " +
+                                 "MarginBEU, " +
+                                 "BOM " +
+                                 "FROM BB_Data_Integration";
+            List<DIItem> dIItems = new List<DIItem>();
+            string bdConnect = @AppSettingsGet.BasedadosConnect;
+            using (SqlConnection conn = new SqlConnection(bdConnect))
+            {
+
+                SqlCommand command = new SqlCommand(query, conn);
+                conn.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    
+                    while (reader.Read())
+                    {
+                        dIItems.Add(new DIItem()
+                        {
+                            ID = (int)reader["ID"],
+                            CodeRef = reader["CodeRef"].ToString(),
+                            Family = reader["Family"].ToString(),
+                            Name = reader["Name"].ToString(),
+                            Description = reader["Description"].ToString(),
+                            PVP = reader["PVP"].ToString() != "" ? (double?)reader["PVP"] : null,
+                            BinaryImage = reader["BinaryImage"].ToString(),
+                            IsMarginBEU = reader["IsMarginBEU"].ToString() != "" ? (bool?)reader["IsMarginBEU"] : null,
+                            MarginBEU = reader["MarginBEU"].ToString() != "" ? (double?)reader["MarginBEU"] : null,
+                            BOM = reader["BOM"].ToString()
+                        });
+                    }
+                } finally { reader.Close(); conn.Close();}
+            }
+            
+            return dIItems;
         }
 
         public BB_Data_Integration Get(int id)
