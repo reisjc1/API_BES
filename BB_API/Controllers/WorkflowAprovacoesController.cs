@@ -545,6 +545,12 @@ namespace WebApplication1.Controllers
 
 
                     wfa_create_obj.Lst_Approver = new List<WFA_Approvers>();
+                    wfa_create_obj.Lst_Approver.Add(new WFA_Approvers
+                    {
+                        ID = "Regional Manager",
+                        Name = "Regional Manager"
+                    });
+
                     using (var dbX = new masterEntities())
                     {
                         List<AspNetUsers> approverLst = dbX.AspNetUsers
