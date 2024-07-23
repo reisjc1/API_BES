@@ -1847,7 +1847,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("WFAProcessValidation")]
-        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, string user_ID, int control_ID, int level_ID)
+        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, bool lowerLevels, string user_ID, int control_ID, int level_ID)
         {
             try
             {
@@ -1867,7 +1867,8 @@ namespace WebApplication1.Controllers
                                                                     && x.WFA_Workflow_Proposal_ID == wf_p.ID 
                                                                     && x.WFA_Control_ID == control_ID 
                                                                     && x.WFA_Level_ID == level_ID)
-                                                                    .FirstOrDefault();
+                                                                .FirstOrDefault();
+
 
 
                     if(approver_control != null)
@@ -1878,6 +1879,33 @@ namespace WebApplication1.Controllers
                         db.SaveChanges();
                     }
 
+
+                    if (lowerLevels)
+                    {
+                        int? level = db.BB_WFA_Levels.Where(l => l.ID == level_ID)
+                                                     .FirstOrDefault()
+                                                     .Level;                        
+                        while (--level > 0)
+                        {
+                            level_ID = db.BB_WFA_Levels.Where(l => l.Level == level && l.WFA_Control_ID == control_ID)
+                                                       .FirstOrDefault()
+                                                       .ID;
+                            if (level_ID == null) break;
+                            approver_control = db.BB_WFA_Approvers_Control
+                                                .Where(x => x.WFA_Workflow_Proposal_ID == wf_p.ID
+                                                    && x.WFA_Control_ID == control_ID
+                                                    && x.WFA_Level_ID == level_ID)
+                                                .FirstOrDefault();
+
+                            if (approver_control != null)
+                            {
+                                approver_control.IsApproved = isApproved;
+
+                                db.Entry(approver_control).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                        }
+                    }
 
                     string msg = isApproved ? "El proceso ha sido aprobado." : "El proceso ha sido rechazado.";
 
