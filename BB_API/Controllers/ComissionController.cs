@@ -1156,7 +1156,19 @@ namespace WebApplication1.Controllers
                     }
                      
                     bb_commission_general.Periodo_Solicitado = bb_commission_general.Ano_Mes_CN;
-                    bb_commission_general.HR_Comentario = null;
+
+                    var HRCommentsList = db.BB_WFA_Comments_Business.Where(x => x.ProposalID == proposalID && x.CommentType == "RRHH").ToList();
+                    string HRComments = "";
+                    if (HRCommentsList.Count() >= 1)
+                    {
+                        foreach( var comment in HRCommentsList)
+                        {
+                            HRComments += comment.Comment;
+                        } 
+                    }
+
+
+                    bb_commission_general.HR_Comentario = HRComments;
                     bb_commission_general.Invoice_List = null;
                     bb_commission_general.BB_Numero = proposalID.ToString();
                     bb_commission_general.BB_Numero_Entero = proposal.CreatedTime.Value.Year + proposalID.ToString();

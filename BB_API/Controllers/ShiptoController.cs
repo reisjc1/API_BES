@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Http;
@@ -109,6 +110,61 @@ namespace WebApplication1.Controllers
         // ##################################################################################
 
         [AcceptVerbs("GET", "POST")]
+        [ActionName("EditDeliveryLocation")]
+        public IHttpActionResult EditDeliveryLocation(BB_LocaisEnvio deliveryLocation)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    BB_LocaisEnvio localEnvio = db.BB_LocaisEnvio.Where(x => x.ID == deliveryLocation.ID).FirstOrDefault();
+
+                    localEnvio = deliveryLocation;
+
+                    db.BB_LocaisEnvio.AddOrUpdate(localEnvio);
+                    db.SaveChanges();
+                }
+
+                return Ok(deliveryLocation);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DeleteDeliveryLocation")]
+        public IHttpActionResult DeleteDeliveryLocation(int ID)
+        {
+            BB_LocaisEnvio localEnvioDelete = null;
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    localEnvioDelete = db.BB_LocaisEnvio.Where(x => x.ID == ID).FirstOrDefault();
+
+                    if (localEnvioDelete != null)
+                    {
+                        db.BB_LocaisEnvio.Remove(localEnvioDelete);
+                        db.SaveChanges();
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+            
+            return Ok(localEnvioDelete);
+        }
+
+        // ##################################################################################
+        // ##################################################################################
+
+        [AcceptVerbs("GET", "POST")]
         [ActionName("AddNewBBProposalDeliveryLocation")]
         public IHttpActionResult AddNewBBProposalDeliveryLocation(BB_Proposal_DeliveryLocation bb_proposal_deliveryLocation)
         {
@@ -204,6 +260,10 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
         }
+
+        // ##################################################################################
+        // ##################################################################################
+
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("SaveDeliveryLocation")]

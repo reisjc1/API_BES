@@ -3569,7 +3569,9 @@ namespace WebApplication1.Controllers
                                 dl_info.Tipo = deliverLocation.AccountType;
                                 dl_info.DeliveryLocation = deliverLocation.Adress1 + " " + deliverLocation.PostalCode;
 
-                                BB_LocaisEnvio bb_local_envio = dbX.BB_LocaisEnvio.Where(x => x.ID == deliverLocation.IDX).FirstOrDefault();
+                                int? deliverLocationID = Int32.Parse(deliverLocation.ID);
+
+                                BB_LocaisEnvio bb_local_envio = dbX.BB_LocaisEnvio.Where(x => x.ID == deliverLocationID).FirstOrDefault();
                                 if(bb_local_envio != null)
                                 {
                                     dl_info.CIF = bb_local_envio.NIF_CIF;
