@@ -124,9 +124,9 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="0.75" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.vw_get_DataIntegration" Width="1.5" PointX="3.375" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM" Width="1.5" PointX="5.375" PointY="33.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Financing" Width="1.5" PointX="33.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" Width="1.5" PointX="24.375" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_LocaisEnvio" Width="1.5" PointX="33.375" PointY="25.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Financing" Width="1.5" PointX="0.75" PointY="26.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
