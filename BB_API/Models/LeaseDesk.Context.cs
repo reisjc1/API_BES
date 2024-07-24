@@ -52,5 +52,6 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_DocSign_Control_History> LD_DocSign_Control_History { get; set; }
         public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
         public virtual DbSet<BB_Proposal_Client> BB_Proposal_Client { get; set; }
+        public virtual DbSet<BB_FinancingContractType> BB_FinancingContractType { get; set; }
     }
 }

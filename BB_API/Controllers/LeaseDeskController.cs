@@ -3539,7 +3539,6 @@ namespace WebApplication1.Controllers
                     {
 
                         int? contractProposal = db.LD_Contrato.Where(x => x.ID == contractID).Select(x => x.ProposalID).FirstOrDefault();
-
                         if(contractProposal != null)
                         {
                             BB_Proposal proposalObj = db.BB_Proposal.Where(x => x.ID == contractProposal).FirstOrDefault();
@@ -3550,6 +3549,9 @@ namespace WebApplication1.Controllers
                             data.AccordNumber = proposalObj.AccordNumber;
                             data.ContractNumberPai = proposalObj.ContractNumberPai;
                             data.DataFechoContracto = proposalObj.DataFechoContracto;
+
+                            
+
 
                             proposalID = proposalObj.ID;
                         }
@@ -3596,6 +3598,35 @@ namespace WebApplication1.Controllers
                 return Ok(data);
             }
         }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetFinancingCompaniesList")]
+        public IHttpActionResult GetFinancingCompaniesList()
+        {
+            List<BB_FinancingContractType> financingContractTypes = null;
+            List<FinancingCompany> companies = new List<FinancingCompany>();
+            using(var db = new BB_DB_DEVEntities2())
+            {
+                financingContractTypes = db.BB_FinancingContractType.ToList();
+                foreach(var fct in financingContractTypes)
+                {
+                    companies.Add(new FinancingCompany
+                    {
+                        Code = fct.CompanyCode,
+                        CompanyAndCode = fct.Company + " - " + fct.CompanyCode
+                    });
+                }
+            }
+
+            return Ok(companies);
+        }
+
+        public class FinancingCompany
+        {
+            public string Code { get; set; }
+            public string CompanyAndCode { get; set; }
+        }
+
         public class MultiData
         {
             public bool? isMultipleContracts { get; set; }

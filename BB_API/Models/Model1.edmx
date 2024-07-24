@@ -351,6 +351,7 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Company" Type="nvarchar(max)" />
+          <Property Name="CompanyCode" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="BB_FinancingPaymentMethod">
           <Key>
@@ -400,6 +401,7 @@
           <Property Name="ParentAccountNumber" Type="nvarchar(max)" />
           <Property Name="TypeAccount" Type="nvarchar(max)" />
           <Property Name="AccountID" Type="nvarchar(max)" />
+          <Property Name="IsNewAddress" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Logs_Proposal">
           <Key>
@@ -2402,6 +2404,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Company" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BB_FinancingPaymentMethod">
           <Key>
@@ -3450,6 +3453,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="ParentAccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TypeAccount" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsNewAddress" Type="Boolean" />
         </EntityType>
         <EntityType Name="RD_AddressAcronyms">
           <Key>
@@ -4222,6 +4226,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySetMapping Name="BB_FinancingContractType">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_FinancingContractType">
               <MappingFragment StoreEntitySet="BB_FinancingContractType">
+                <ScalarProperty Name="CompanyCode" ColumnName="CompanyCode" />
                 <ScalarProperty Name="Company" ColumnName="Company" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
@@ -5228,6 +5233,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySetMapping Name="BB_LocaisEnvio">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
               <MappingFragment StoreEntitySet="BB_LocaisEnvio">
+                <ScalarProperty Name="IsNewAddress" ColumnName="IsNewAddress" />
                 <ScalarProperty Name="AccountID" ColumnName="AccountID" />
                 <ScalarProperty Name="TypeAccount" ColumnName="TypeAccount" />
                 <ScalarProperty Name="ParentAccountNumber" ColumnName="ParentAccountNumber" />
