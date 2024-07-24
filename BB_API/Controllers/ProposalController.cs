@@ -1436,6 +1436,7 @@ namespace WebApplication1.Controllers
                 //}
 
                 //Contacto Assinaturara
+                /*
                 bool encontrouSigin = db.BB_Proposal_Contacts_Signing.Any(x => x.ProposalID == proposal.ID);
                 if (encontrouSigin)
                 {
@@ -1455,7 +1456,7 @@ namespace WebApplication1.Controllers
                         db.SaveChanges();
                     }
                 }
-
+                
                 if (!encontrouSigin)
                 {
                     if (lstContactSign.Count > 0 && lstContactSign[0].Email != "" && lstContactSign[0].Name != "" && lstContactSign[0].Telefone != "")
@@ -1478,7 +1479,7 @@ namespace WebApplication1.Controllers
                         strErro.AppendFormat("¡Es necesario completar el contacto de la firma!", Environment.NewLine);
                     }
                 }
-
+                */
 
                 //DOCUMENTacAo
                 bool encontrouConct = db.BB_Proposal_Contacts_Documentation.Any(x => x.ProposalID == proposal.ID);

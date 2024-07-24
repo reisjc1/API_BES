@@ -16,7 +16,7 @@ namespace BB_API.Controllers
         public BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
         public ActionResult Index()
         {
-            ViewBag.Title = "Test 123";
+            ViewBag.Title = "API BES";
             return View();
         }
 
