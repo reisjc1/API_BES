@@ -108,7 +108,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_MIF_Renovations_Comments> BB_MIF_Renovations_Comments { get; set; }
         public virtual DbSet<BB_MIF_Renovations> BB_MIF_Renovations { get; set; }
         public virtual DbSet<BB_DeliveryContactsInfo> BB_DeliveryContactsInfo { get; set; }
-        public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
         public virtual DbSet<RD_AddressAcronyms> RD_AddressAcronyms { get; set; }
         public virtual DbSet<BB_Proposal_DL_ClientContacts> BB_Proposal_DL_ClientContacts { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
@@ -139,5 +138,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_RD_Estados_Fecho_CRM> BB_RD_Estados_Fecho_CRM { get; set; }
         public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
+        public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
     }
 }

@@ -41,5 +41,6 @@ namespace WebApplication1.Models
         public string ParentAccountNumber { get; set; }
         public string TypeAccount { get; set; }
         public string AccountID { get; set; }
+        public Nullable<bool> IsNewAddress { get; set; }
     }
 }

@@ -16,5 +16,6 @@ namespace WebApplication1.Models
     {
         public int ID { get; set; }
         public string Company { get; set; }
+        public string CompanyCode { get; set; }
     }
 }
