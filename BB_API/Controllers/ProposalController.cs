@@ -1505,7 +1505,7 @@ namespace WebApplication1.Controllers
                 {
                     if (lstContactDocumentantion.Count > 0 && lstContactDocumentantion[0].Email != "" && lstContactDocumentantion[0].Name != "" && lstContactDocumentantion[0].Telefone != "")
                     {
-                        foreach (var ContactSign in lstContactSign)
+                        foreach (var ContactSign in lstContactDocumentantion)
                         {
                             BB_Proposal_Contacts_Documentation ca = new BB_Proposal_Contacts_Documentation();
 

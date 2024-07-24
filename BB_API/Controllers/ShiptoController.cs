@@ -458,7 +458,16 @@ namespace WebApplication1.Controllers
                         le.ParentAccountNumber = rdr["ParentAccountNumber"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ParentAccountNumber")) : "";
                         le.TypeAccount = rdr["TypeAccount"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("TypeAccount")) : "";
                         le.AccountID = rdr["AccountID"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("AccountID")) : "";
+                        object objIsNewAddress = rdr["IsNewAddress"];
 
+                        if (objIsNewAddress != null)
+                        {
+                            le.IsNewAddress = ConvertToBoolean(objIsNewAddress);
+                        }
+                        else
+                        {
+                            le.IsNewAddress = false;
+                        }
                         lst_Locais_Saved.Add(le);
                     }
                     rdr.Close();
