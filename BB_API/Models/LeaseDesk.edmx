@@ -43,6 +43,14 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="BB_FinancingContractType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Company" Type="nvarchar(max)" />
+          <Property Name="CompanyCode" Type="varchar" MaxLength="15" />
+        </EntityType>
         <EntityType Name="BB_Proposal">
           <Key>
             <PropertyRef Name="ID" />
@@ -397,6 +405,7 @@
         <EntityContainer Name="BB_DB_DEVModel1StoreContainer">
           <EntitySet Name="BB_Clientes" EntityType="Self.BB_Clientes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Documents_Type" EntityType="Self.BB_Documents_Type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_FinancingContractType" EntityType="Self.BB_FinancingContractType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal" EntityType="Self.BB_Proposal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Client" EntityType="Self.BB_Proposal_Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="Self.BB_Proposal_Contacts_Documentation" Schema="dbo" store:Type="Tables" />
@@ -455,6 +464,7 @@
           <EntitySet Name="LD_DocSign_Control_History" EntityType="BB_DB_DEVModel1.LD_DocSign_Control_History" />
           <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel1.BB_Proposal" />
           <EntitySet Name="BB_Proposal_Client" EntityType="BB_DB_DEVModel1.BB_Proposal_Client" />
+          <EntitySet Name="BB_FinancingContractType" EntityType="BB_DB_DEVModel1.BB_FinancingContractType" />
         </EntityContainer>
         <EntityType Name="LD_DocumentClassification">
           <Key>
@@ -844,6 +854,14 @@
           <Property Name="ProposalID" Type="Int32" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsPublicSector" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_FinancingContractType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Company" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1263,6 +1281,15 @@
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="IsNewClient" ColumnName="IsNewClient" />
                 <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_FinancingContractType">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_FinancingContractType">
+              <MappingFragment StoreEntitySet="BB_FinancingContractType">
+                <ScalarProperty Name="CompanyCode" ColumnName="CompanyCode" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

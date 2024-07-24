@@ -121,6 +121,20 @@ namespace WebApplication1.BLL
                 using (var context = new BB_DB_DEVEntities2())
                 {
                     BB_Proposal proposal = context.BB_Proposal.Find(p.Draft.details.ID);
+
+                    string financingCompany = context.BB_FinancingContractType
+                                                     .Where(f => f.ID == p.Draft.financing.ContractTypeId)
+                                                     .Select(f=> f.Company + " - " + f.CompanyCode)
+                                                     .FirstOrDefault();
+                    string financingCompanyCode = context.BB_FinancingContractType
+                                             .Where(f => f.ID == p.Draft.financing.ContractTypeId)
+                                             .FirstOrDefault()
+                                             .CompanyCode;
+
+                    proposal.CodArrend = financingCompanyCode;
+                    context.Entry(proposal).State = EntityState.Modified;
+                    context.SaveChanges();
+
                     int ProposalID = proposal.ID;
 
                     //BB_PROPOSAL_QUOTE
