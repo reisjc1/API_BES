@@ -111,7 +111,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
 
-                    LD_Contrato c = db.LD_Contrato.Where(x => x.ID == proposalId).FirstOrDefault();
+                    LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal d = db.BB_Proposal.Where(x => x.ID == c.ProposalID).FirstOrDefault();
                     //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal_PrazoDiferenciado pd = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID != d.ID).FirstOrDefault();
