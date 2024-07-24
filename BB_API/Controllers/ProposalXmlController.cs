@@ -13,10 +13,10 @@ namespace WebApplication1.Controllers
         // GET: ProposalXml
         [System.Web.Http.AcceptVerbs("GET", "POST")]
         [System.Web.Http.ActionName("GetProposalId")]
-        public IHttpActionResult GetProposalId(int proposalId)
+        public IHttpActionResult GetProposalId(int contractId)
         {
             Deal deal = new Deal();
-            deal.DealXML(proposalId);
+            deal.DealXML(contractId);
 
             return Ok();
         }
