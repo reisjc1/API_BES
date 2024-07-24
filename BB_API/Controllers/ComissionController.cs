@@ -1208,11 +1208,11 @@ namespace WebApplication1.Controllers
 
                     var basket = loadProposal.ProposalObj.Draft.baskets.os_basket;
 
-                    bb_commission_general.CN_HW = basket.Where(x => x.Family.Contains("HW") && x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_HW = basket.Where(x => x.Family.Contains("HW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
                     bb_commission_general.Margen_HW = profit_Hard.GPTotal;
                     bb_commission_general.Margen_HW_Nuevo = bb_commission_general.Margen_HW;
 
-                    bb_commission_general.CN_Office_HW = basket.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_Office_HW = basket.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
                     bb_commission_general.Margen_Office_HW = profit_OfficeHW.GPTotal;
 
                     bb_commission_general.CN_PP_HW = basket.Where(x => x.Family.Contains("PPHW")).Sum(x => x.TotalNetsale);
