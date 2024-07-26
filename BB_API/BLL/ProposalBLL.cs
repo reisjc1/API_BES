@@ -585,6 +585,7 @@ namespace WebApplication1.BLL
                                 Total = ut.Total,
                                 Contact = ut.Contact,
                                 Description = ut.Description,
+                                Retirada = ut.Retirada,
                                 Type = ut.Type,
                                 Position = position
                             };
@@ -608,6 +609,7 @@ namespace WebApplication1.BLL
                                 toEdit.Contact = ut.Contact;
                                 toEdit.Description = ut.Description;
                                 toEdit.Type = ut.Type;
+                                toEdit.Retirada = ut.Retirada;
                                 toEdit.Position = position;
                             }
                             try
@@ -1349,7 +1351,8 @@ namespace WebApplication1.BLL
                         Description = item.Description,
                         ID = item.ID,
                         Total = item.Total,
-                        Type = item.Type
+                        Type = item.Type,
+                        Retirada = item.Retirada == null? false : (bool)item.Retirada
                     };
                     err.ProposalObj.Draft.upturns.Add(upturn);
                 }
@@ -2176,6 +2179,7 @@ namespace WebApplication1.BLL
                                 Total = ut.Total,
                                 Contact = ut.Contact,
                                 Description = ut.Description,
+                                Retirada = ut.Retirada,
                                 Type = ut.Type,
                             };
                             db.BB_Proposal_Upturn.Add(newUpturn);

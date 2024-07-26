@@ -21,5 +21,6 @@ namespace WebApplication1.Models
         public string Type { get; set; }
         public string Contact { get; set; }
         public Nullable<int> Position { get; set; }
+        public Nullable<bool> Retirada { get; set; }
     }
 }

@@ -1339,6 +1339,7 @@
           <Property Name="Type" Type="nvarchar(max)" />
           <Property Name="Contact" Type="nvarchar(max)" />
           <Property Name="Position" Type="int" />
+          <Property Name="Retirada" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_Vva">
           <Key>
@@ -2993,6 +2994,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Contact" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Position" Type="Int32" />
+          <Property Name="Retirada" Type="Boolean" />
         </EntityType>
         <EntityType Name="BB_OPS_Implement_Packs">
           <Key>
@@ -4798,6 +4800,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySetMapping Name="BB_Proposal_Upturn">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Upturn">
               <MappingFragment StoreEntitySet="BB_Proposal_Upturn">
+                <ScalarProperty Name="Retirada" ColumnName="Retirada" />
                 <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="Contact" ColumnName="Contact" />
                 <ScalarProperty Name="Type" ColumnName="Type" />

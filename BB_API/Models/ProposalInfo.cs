@@ -635,6 +635,7 @@ namespace WebApplication1.Models
     {
         public Nullable<int> ID { get; set; }
         public double? Total { get; set; }
+        public Boolean Retirada { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
         public string Contact { get; set; }
