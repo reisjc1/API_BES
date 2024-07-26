@@ -559,7 +559,9 @@ namespace WebApplication1.Controllers
                                 using (var db = new BB_DB_DEV_LeaseDesk())
                                 {
                                     LD_DocumentProposal documentoSave = new LD_DocumentProposal();
-                                    documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
+                                    //documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
+                                    documentoSave.ClassificationID = documentData.Type != null ? documentData.Type : 11;
+
                                     documentoSave.CreatedBy = "";
                                     documentoSave.CreatedTime = DateTime.Now;
                                     documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
@@ -749,7 +751,9 @@ namespace WebApplication1.Controllers
                                 using (var db = new BB_DB_DEV_LeaseDesk())
                                 {
                                     LD_DocumentProposal documentoSave = new LD_DocumentProposal();
-                                    documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
+                                    //documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
+                                    documentoSave.ClassificationID = documentData.Type != null ? documentData.Type : 11;
+
                                     documentoSave.CreatedBy = proposal.CreatedBy;
                                     documentoSave.CreatedTime = DateTime.Now;
                                     documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
@@ -804,7 +808,9 @@ namespace WebApplication1.Controllers
                                     else
                                     {
                                         LD_DocumentProposal contractSave = new LD_DocumentProposal();
-                                        contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
+                                        //contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
+                                        contractSave.ClassificationID = contractData.Type != null ? contractData.Type : 5;
+
                                         contractSave.CreatedBy = proposal.CreatedBy;
                                         contractSave.CreatedTime = DateTime.Now;
                                         contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
@@ -916,7 +922,9 @@ namespace WebApplication1.Controllers
                             using (var db = new BB_DB_DEV_LeaseDesk())
                             {
                                 LD_DocumentProposal contractSave = new LD_DocumentProposal();
-                                contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
+                                //contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
+                                contractSave.ClassificationID = contractData.Type != null ? contractData.Type : 5;
+
                                 contractSave.CreatedBy = proposal.CreatedBy;
                                 contractSave.CreatedTime = DateTime.Now;
                                 contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
@@ -979,6 +987,142 @@ namespace WebApplication1.Controllers
 
             err.Message = "Documento añadido con éxito";
             return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("UploadDocument")]
+        public async Task<HttpResponseMessage> UploadDocument()
+        {
+            int? ProposalID = Int32.Parse(HttpContext.Current.Request.Params["ProposalID"]);
+            ActionResponse err = new ActionResponse();
+            StringBuilder c = new StringBuilder();
+
+            try
+            {
+                if (ProposalID == null)
+                {
+
+                    err.Message = "Por favor, guarde su propuesta y vuelva a intentarlo.";
+                    return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
+                }
+                BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == ProposalID).FirstOrDefault();
+
+                //Contracts
+                string root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ProposalID + "\\";
+
+                var documentfiles = new List<string>();
+                int filesCount = HttpContext.Current.Request.Files.Count;
+                if (filesCount > 0)
+                {
+                    if (!Directory.Exists(root))
+                        System.IO.Directory.CreateDirectory(root);
+
+                    for (int k = 0; k < filesCount; k++)
+                    {
+
+                        var document = HttpContext.Current.Request.Files["document" + k];
+                        if (document != null)
+                        {
+                            DocumentoData documentData = JsonConvert.DeserializeObject<DocumentoData>(
+                                                            HttpContext.Current.Request.Params["documentData" + k]);
+
+                            var postedFile = document;
+                            var filePath = root + postedFile.FileName;
+                            postedFile.SaveAs(filePath);
+                            documentfiles.Add(filePath);
+
+                            using (var db = new BB_DB_DEV_LeaseDesk())
+                            {
+                                LD_DocumentProposal contractSave = new LD_DocumentProposal();
+                                //contractSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 5;
+                                contractSave.ClassificationID = documentData.Type != null ? documentData.Type : 5;
+
+                                contractSave.CreatedBy = proposal.CreatedBy;
+                                contractSave.CreatedTime = DateTime.Now;
+                                contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
+                                contractSave.SystemID = 1;
+                                contractSave.FileFullPath = filePath;
+                                contractSave.DocumentIsValid = false;
+                                contractSave.DocumentIsProcess = false;
+                                contractSave.FileName = Path.GetFileName(filePath);
+                                contractSave.ContratoID = null;
+                                contractSave.Comments = documentData != null ? documentData.Comments : "";
+                                db.LD_DocumentProposal.Add(contractSave);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                }
+                else if (HttpContext.Current.Request.Params["document0"].Length > 0)
+                {
+                    int ind = 0;
+                    string documentName = "document" + ind;
+                    do
+                    {
+                        using (var db = new BB_DB_DEV_LeaseDesk())
+                        {
+                            string fileName = HttpContext.Current.Request.Params["fileName" + ind];
+
+                            LD_DocumentProposal conDoc = db.LD_DocumentProposal
+                                .Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.FileName == fileName)
+                                .FirstOrDefault();
+
+                            conDoc.Comments = JsonConvert.DeserializeObject<DocumentoData>(
+                                                    HttpContext.Current.Request.Params["documentData" + ind])
+                                                    .Comments;
+
+                            db.LD_DocumentProposal.AddOrUpdate(conDoc);
+                            db.SaveChanges();
+
+                            ind++;
+                            documentName = "contract" + ind;
+                        }
+                    } while (HttpContext.Current.Request.Params[documentName] != null);
+                    /* List<LD_DocumentProposal> contracts = HttpContext.Current.Request.Params["contract"].ToList();
+                     foreach (LD_DocumentProposal con in )
+                     {
+                         using (var db = new BB_DB_DEV_LeaseDesk())
+                         {
+                             LD_DocumentProposal conDoc = db.LD_DocumentProposal
+                                 .Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.FileName == con.FileName)
+                                 .FirstOrDefault();
+
+                         }
+                     }*/
+                }
+            }
+            catch (Exception ex)
+            {
+                log4net.ThreadContext.Properties["proposal_id"] = ProposalID;
+                log.Error(ex.Message.ToString(), ex);
+                ex.Message.ToString();
+            }
+
+            err.Message = "Documento añadido con éxito";
+            return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetContrats")]
+        public IHttpActionResult GetContrats(int proposalID)
+        {
+            try
+            {
+                List<LD_DocumentProposal> contractDocs = new List<LD_DocumentProposal>();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    //LD_DocumentProposal - Contractos
+                    var CRM_QUOTE_ID = db.BB_Proposal.Where(x => x.ID == proposalID).Select(x => x.CRM_QUOTE_ID).FirstOrDefault();
+
+                    contractDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == CRM_QUOTE_ID && x.ClassificationID == 5).ToList();
+                }
+                    
+                return Ok(contractDocs);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
         private async Task SentEmailPPAsync(BB_Proposal proposal)
         {
@@ -2548,7 +2692,9 @@ namespace WebApplication1.Controllers
 
     public class DocumentoData
     {
-        public LD_DocumentClassification Type { get; set; }
+        //public LD_DocumentClassification Type { get; set; }
+        public int Type { get; set; }
+
         public string Comments { get; set; }
 
     }
