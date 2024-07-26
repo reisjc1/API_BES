@@ -3546,7 +3546,7 @@ namespace WebApplication1.Controllers
                             data.ClientAccountNumber = proposalObj.ClientAccountNumber;
                             data.Plant = proposalObj.Plant;
                             data.CodArrend = proposalObj.CodArrend;
-                            data.AccordNumber = proposalObj.AccordNumber;
+                            //data.AccordNumber = proposalObj.AccordNumber;
                             data.ContractNumberPai = proposalObj.ContractNumberPai;
                             data.DataFechoContracto = proposalObj.DataFechoContracto;
 
@@ -3555,11 +3555,18 @@ namespace WebApplication1.Controllers
 
                             proposalID = proposalObj.ID;
                         }
+
                     }
+
                     using (var dbX = new BB_DB_DEVEntities2())
                     {
                         if (proposalID != null)
                         {
+
+                            string accorNumber = dbX.BB_Proposal_Financing.Where(x => x.ProposalID == proposalID).Select(x => x.AgreementNumber).FirstOrDefault();
+
+                            data.AccordNumber = accorNumber;
+
                             List<BB_Proposal_DeliveryLocation> bb_pp_dl_lst = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
 
                             data.DL_Table_Info_Lst = new List<DL_Table_Info>();
