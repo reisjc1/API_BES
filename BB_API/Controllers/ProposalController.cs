@@ -1035,7 +1035,7 @@ namespace WebApplication1.Controllers
                             {
                                 LD_DocumentProposal contractSave = new LD_DocumentProposal();
                                 //contractSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 5;
-                                contractSave.ClassificationID = documentData.Type != null ? documentData.Type : 5;
+                                contractSave.ClassificationID = documentData.Type != null ? documentData.Type : 11;
 
                                 contractSave.CreatedBy = proposal.CreatedBy;
                                 contractSave.CreatedTime = DateTime.Now;
