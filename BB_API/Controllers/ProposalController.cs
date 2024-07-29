@@ -923,7 +923,7 @@ namespace WebApplication1.Controllers
                             {
                                 LD_DocumentProposal contractSave = new LD_DocumentProposal();
                                 //contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
-                                contractSave.ClassificationID = contractData.Type != null ? contractData.Type : 5;
+                                contractSave.ClassificationID = 5;
 
                                 contractSave.CreatedBy = proposal.CreatedBy;
                                 contractSave.CreatedTime = DateTime.Now;
