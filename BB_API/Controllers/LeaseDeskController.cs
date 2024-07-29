@@ -671,6 +671,7 @@ namespace WebApplication1.Controllers
                     l.ModifiedTime = DateTime.Now;
                     l.ModifiedBy = a.ModifiedBy;
                     l.StatusID = 6;
+                    l.IsClosed = true;
                     db.Entry(l).State = EntityState.Modified;
                     db.SaveChanges();
 
@@ -1781,6 +1782,82 @@ namespace WebApplication1.Controllers
 
                     // 1.  create a command object identifying the stored procedure
                     SqlCommand cmd = new SqlCommand("get_LeaseDesk_ALL_New", conn);
+                    cmd.Parameters.Add("@year1", SqlDbType.NVarChar, 20).Value = year;
+                    cmd.CommandTimeout = 180;
+                    // 2. set the command object so it knows to execute a stored procedure
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    //cmd.Parameters.AddWithValue("@userEmail", Owner.Owner);
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+
+                    // iterate through results, printing each to console
+                    while (rdr.Read())
+                    {
+
+
+                        LD_ContratoModel m = new LD_ContratoModel();
+                        m.ID = (int)rdr["ID"];
+                        m.ProposalID = (int)rdr["ProposalID"];
+                        m.StatusName = rdr["Status"].ToString();
+                        m.SistemaAssinatura = rdr["Assinatura"].ToString();
+                        m.Comments = rdr["Comentarios"].ToString();
+                        m.MotivoDescricao = rdr["EstadoProcesso"].ToString();
+                        m.DevolucaoMotivoDescricao = rdr["Devolucao"].ToString();
+                        m.ComentariosDevolucao = //i.ComentariosDevolucao;
+                        m.QuoteNumber = rdr["Quote"].ToString();
+                        //LD_Contrato_Facturacao cf = db.LD_Contrato_Facturacao.Where(x => x.LDID == i.ID).FirstOrDefault();
+                        //if (cf != null)
+                        //{
+                        //    m.NUS = cf.NUS;
+                        //}
+                        m.isClosed = rdr["isClosed"] != null ? Boolean.Parse(rdr["isClosed"].ToString()) : false;
+
+                        m.NCliente = rdr["NCliente"].ToString();
+                        m.NomeCliente = rdr["Cliente"].ToString();
+
+                        m.ModifiedBy = rdr["ModificadoPor"].ToString();
+                        m.CreatedBy = rdr["CriadoPor"].ToString();
+
+                        m.ModifiedTime = rdr["ModificadoEM"] != null ? DateTime.Parse(rdr["ModificadoEM"].ToString()) : new DateTime();
+                        m.CreatedTime = rdr["CriadoEM"] != null ? DateTime.Parse(rdr["CriadoEM"].ToString()) : new DateTime();
+
+                        m.Financiamento = rdr["Locadora"].ToString();
+
+                        m.TipoNegocio = rdr["TipoNegocio"].ToString();
+
+                        listModel.Add(m);
+
+
+
+                    }
+
+                    rdr.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+
+            return Ok(listModel);
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetProcessosVendasFechados")]
+        public IHttpActionResult GetProcessosVendasFechados(string year)
+        {
+            List<LD_ContratoModel> listModel = new List<LD_ContratoModel>();
+            try
+            {
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
+
+                    conn.Open();
+
+                    // 1.  create a command object identifying the stored procedure
+                    SqlCommand cmd = new SqlCommand("get_LeaseDesk_ALL_New_Fechados", conn);
                     cmd.Parameters.Add("@year1", SqlDbType.NVarChar, 20).Value = year;
                     cmd.CommandTimeout = 180;
                     // 2. set the command object so it knows to execute a stored procedure

@@ -637,7 +637,12 @@ namespace WebApplication1.Controllers
 
                 StringBuilder err1 = ValidarProcessoVenda(lstContactDocumentantion, lstContactSign, proposal, pz, SigningType, SigningTypeObservations, ft, a1);
 
-              
+                if (proposal != null && proposal.StatusID == 11)
+                {
+
+                    err.Message = "Proceso está en el de departamento administración, no es posible volver a enviarlo.";
+                    return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
+                }
 
                 if (err1 != null && err1.Length > 0)
                 {
