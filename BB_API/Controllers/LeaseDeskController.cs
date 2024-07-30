@@ -2216,6 +2216,38 @@ namespace WebApplication1.Controllers
             return Ok();
         }
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DocumentoDelete_new")]
+        public IHttpActionResult DocumentoDelete_new(string quote, string filename1)
+        {
+            List<LD_Contrato> list = new List<LD_Contrato>();
+            try
+            {
+                using (var db = new BB_DB_DEV_LeaseDesk())
+                {
+                    var doc = db.LD_DocumentProposal.Where(x => x.QuoteNumber == quote && x.FileName == filename1).FirstOrDefault();
+                    string filename = doc.FileFullPath;
+                    db.LD_DocumentProposal.Remove(doc);
+
+                    int num = db.SaveChanges();
+
+                    if (num == 1)
+                    {
+                        if (File.Exists(@filename))
+                        {
+                            File.Delete(@filename);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetLD_Sistema")]
