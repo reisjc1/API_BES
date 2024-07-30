@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.Ajax.Utilities;
 using Microsoft.Office.Interop.Word;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
@@ -2549,6 +2550,45 @@ namespace WebApplication1.Controllers
         }
 
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GravarContractoInfo")]
+        public IHttpActionResult GravarContractoInfo(DL_Table_Info ti)
+        {
+            using (var db = new BB_DB_DEVEntities2())
+            {
+                try
+                {
+                    List<BB_Proposal_DeliveryLocation> deliverLocationList = 
+                        db.BB_Proposal_DeliveryLocation
+                           .Where(x => x.ProposalID == ti.ProposalID)
+                           .DistinctBy(x => x.ID)
+                           .ToList();
+
+                    foreach(var deliveryLocation in deliverLocationList)
+                    {
+                        int id = Int32.Parse(deliveryLocation.ID);
+                        BB_LocaisEnvio localEnvio = db.BB_LocaisEnvio.Where(x => x.ID == id).FirstOrDefault();
+
+                        if (localEnvio != null)
+                        {
+                            localEnvio.SAPCustomerNr = ti.SAP_Nr;
+                            db.Entry(localEnvio).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+
+                    }
+
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    return NotFound();
+                }
+            }
+            return Ok(true);
+        }
+
+
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("PontosDeEnvioResumo")]
@@ -2943,9 +2983,6 @@ namespace WebApplication1.Controllers
             }
         }
 
-
-
-
         [AcceptVerbs("GET", "POST")]
         [ActionName("EmitirContrato")]
         public async System.Threading.Tasks.Task<IHttpActionResult> EmitirContratoAsync(EmitirContractoModel ec)
@@ -3095,7 +3132,6 @@ namespace WebApplication1.Controllers
             }
             return Ok();
         }
-
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("GerarContracto")]
@@ -3461,8 +3497,6 @@ namespace WebApplication1.Controllers
         [ActionName("GetPA5Documents")]
         public IHttpActionResult GetPA5Documents(int? contractID)
         {
-
-
             try
             {
                 List<LD_PA5_DocumentType> lstLD_PA5_DocumentType = new List<LD_PA5_DocumentType>();
@@ -3659,9 +3693,6 @@ namespace WebApplication1.Controllers
                             data.ContractNumberPai = proposalObj.ContractNumberPai;
                             data.DataFechoContracto = proposalObj.DataFechoContracto;
 
-                            
-
-
                             proposalID = proposalObj.ID;
                         }
 
@@ -3684,6 +3715,7 @@ namespace WebApplication1.Controllers
                             {
                                 DL_Table_Info dl_info = new DL_Table_Info();
 
+                                dl_info.ProposalID = (int)proposalID;
                                 dl_info.Tipo = deliverLocation.AccountType;
                                 dl_info.DeliveryLocation = deliverLocation.Adress1 + " " + deliverLocation.PostalCode;
 
@@ -3693,12 +3725,10 @@ namespace WebApplication1.Controllers
                                 if(bb_local_envio != null)
                                 {
                                     dl_info.CIF = bb_local_envio.NIF_CIF;
+                                    dl_info.SAP_Nr = bb_local_envio.SAPCustomerNr;
+                                    dl_info.CompanyName = bb_local_envio.NomeCliente;
+                                    dl_info.SAP_Company = bb_local_envio.NomeCliente;
                                 }
-
-                                // VERIFICAR ##########################################
-                                dl_info.CompanyName = "VERIFICAR";
-                                dl_info.SAP_Nr = "VERIFICAR";
-                                dl_info.SAP_Company = "VERIFICAR";   
 
                                 data.DL_Table_Info_Lst.Add(dl_info);
                             }
@@ -3759,6 +3789,7 @@ namespace WebApplication1.Controllers
 
         public class DL_Table_Info
         {
+            public int ProposalID { get; set; }
             public string Tipo { get; set; }
             public string CompanyName { get; set; }
             public string CIF { get; set; }
