@@ -26,7 +26,7 @@ namespace WebApplication1.Models.SetupXML.XML
                 {
                     foreach (var item in order.Z1ZVOE_ORDER_ITEMS)
                     {
-                        if (contracts[0].VT_VLAUFZ == "002" || contracts[0].VT_VLAUFZ == "005" || contracts[0].VT_VLAUFZ == "008")
+                        if (contracts[0].VT_VTART == "002" || contracts[0].VT_VTART == "005" || contracts[0].VT_VTART == "008")
                         {
                             BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
                             BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.MATERIAL).FirstOrDefault();
@@ -80,7 +80,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                             }
                         }
-                        else
+                        if (contracts[0].VT_VTART != "002")
                         {
                             //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
 
@@ -132,16 +132,24 @@ namespace WebApplication1.Models.SetupXML.XML
                     }
 
                 }
-                if (contracts[0].VT_VTART == "003" || contracts[0].VT_VTART == "002") //Renting
-                {
-                    condFlag = "O";
-                }
-                if (contracts[0].VT_VTART == "005") //AL
-                {
-                    condFlag = "A";
-                }
+                //if (contracts[0].VT_VTART == "003" || contracts[0].VT_VTART == "002") //Renting
+                //{
+                //    condFlag = "O";
+                //}
+                //if (contracts[0].VT_VTART == "005") //AL
+                //{
+                //    condFlag = "A";
+                //}
                 foreach (var condition in conditionsPvp)
                 {
+                    if (condition.ConditionCode == "ZPD4" || condition.ConditionCode == "ZSW4")
+                    {
+                        condFlag = "O";
+                    }
+                    else
+                    {
+                        condFlag = "A";
+                    }
                     collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
                     {
                         DOC = order.SD_DOC,
@@ -174,7 +182,6 @@ namespace WebApplication1.Models.SetupXML.XML
             }
             if (financingType == "005")
             {
-
                 financingCode = "ZVBA";
             }
 

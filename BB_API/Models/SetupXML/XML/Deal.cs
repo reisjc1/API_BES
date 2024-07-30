@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using WebApplication1.App_Start;
 using static WebApplication1.Models.SetupXML.XSD;
 
 
@@ -95,7 +96,7 @@ namespace WebApplication1.Models.SetupXML.XML
             {
                 //AspNetUser user = new AspNetUser();
 
-
+                int? contractoID = null;
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     string financingType = "";
@@ -122,6 +123,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == d.ID).ToList();
 
                     BB_FinancingType ft = db.BB_FinancingType.Where(x => x.Code == pf.FinancingTypeCode).FirstOrDefault();
+
+                    contractoID = c.ID;
 
                     switch (ft.Code)
                     {
@@ -243,8 +246,15 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
                     };
-                    string downloadFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
-                    string filepath = $"{downloadFolderPath}\\{arckey}.xml";
+
+                    string dest = AppSettingsGet.LeaseDesk_UploadFile_Contrato_DocuSign;
+
+                    string path = dest + "\\" + contractoID;
+                    if (!Directory.Exists(path))
+                        System.IO.Directory.CreateDirectory(path);
+
+
+                    string filepath = $"{path}\\{arckey}.xml";
                     SerializeToXml(myObject, filepath);
                     UploadFileToSftp(filepath);
 
