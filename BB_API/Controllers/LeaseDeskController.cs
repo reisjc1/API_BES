@@ -2186,14 +2186,14 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("DocumentoDelete")]
-        public IHttpActionResult DocumentoDelete(int? ContractoID)
+        public IHttpActionResult DocumentoDelete(DocumentProposal o)
         {
             List<LD_Contrato> list = new List<LD_Contrato>();
             try
             {
                 using (var db = new BB_DB_DEV_LeaseDesk())
                 {
-                    var doc = db.LD_DocumentProposal.Where(x => x.ID == ContractoID).FirstOrDefault();
+                    var doc = db.LD_DocumentProposal.Where(x => x.QuoteNumber == o.QuoteNumber && x.FileName == o.FileName).FirstOrDefault();
                     string filename = doc.FileFullPath;
                     db.LD_DocumentProposal.Remove(doc);
 
