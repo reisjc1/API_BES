@@ -728,122 +728,124 @@ namespace WebApplication1.Controllers
 
 
 
+                    List<LD_DocumentProposal> lstDocumentProposal = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                    foreach (var item in lstDocumentProposal)
+                    {
+                        item.ContratoID = ld.ID;
+                        using (var db = new BB_DB_DEV_LeaseDesk())
+                        {
+                            db.Entry(item).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+
 
                     //List<String> contactsArray = JsonConvert.DeserializeObject<List<String>>(HttpContext.Current.Request.Params["Contacts"]);
-                    string root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ContractoId + "\\";
+                    //string root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ContractoId + "\\";
 
-                    if (!Directory.Exists(root))
-                        System.IO.Directory.CreateDirectory(root);
+                    //if (!Directory.Exists(root))
+                    //    System.IO.Directory.CreateDirectory(root);
 
-                    var docfiles = new List<string>();
-                    int documentCount = HttpContext.Current.Request.Files.Count;
-                    if (documentCount > 0)
-                    {
-                        for (int j = 0; j < documentCount; j++)
-                        {
+                    //var docfiles = new List<string>();
+                    //int documentCount = HttpContext.Current.Request.Files.Count;
+                    //if (documentCount > 0)
+                    //{
+                    //    for (int j = 0; j < documentCount; j++)
+                    //    {
 
-                            var document = HttpContext.Current.Request.Files["document" + j];
-                            //var documentData = HttpContext.Current.Request.Params["documentData" + j];
-                            if (document != null)
-                            {
-                                DocumentoData documentData = JsonConvert.DeserializeObject<DocumentoData>(HttpContext.Current.Request.Params["documentData" + j]);
+                    //        var document = HttpContext.Current.Request.Files["document" + j];
+                    //        //var documentData = HttpContext.Current.Request.Params["documentData" + j];
+                    //        if (document != null)
+                    //        {
+                    //            DocumentoData documentData = JsonConvert.DeserializeObject<DocumentoData>(HttpContext.Current.Request.Params["documentData" + j]);
 
-                                var postedFile = document;
-                                var filePath = root + postedFile.FileName;
-                                postedFile.SaveAs(filePath);
-                                docfiles.Add(filePath);
+                    //            var postedFile = document;
+                    //            var filePath = root + postedFile.FileName;
+                    //            postedFile.SaveAs(filePath);
+                    //            docfiles.Add(filePath);
 
-                                using (var db = new BB_DB_DEV_LeaseDesk())
-                                {
-                                    LD_DocumentProposal documentoSave = new LD_DocumentProposal();
-                                    //documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
-                                    documentoSave.ClassificationID = documentData.Type != null ? documentData.Type : 11;
+                    //            using (var db = new BB_DB_DEV_LeaseDesk())
+                    //            {
+                    //                LD_DocumentProposal documentoSave = new LD_DocumentProposal();
+                    //                //documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
+                    //                documentoSave.ClassificationID = documentData.Type != null ? documentData.Type : 11;
 
-                                    documentoSave.CreatedBy = proposal.CreatedBy;
-                                    documentoSave.CreatedTime = DateTime.Now;
-                                    documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
-                                    documentoSave.SystemID = 1;
-                                    documentoSave.FileFullPath = filePath;
-                                    documentoSave.DocumentIsValid = false;
-                                    documentoSave.DocumentIsProcess = false;
-                                    documentoSave.FileName = Path.GetFileName(filePath);
-                                    documentoSave.ContratoID = ContractoId;
-                                    documentoSave.Comments = documentData != null ? documentData.Comments : "";
-                                    db.LD_DocumentProposal.Add(documentoSave);
-                                    db.SaveChanges();
-                                }
-                            }
-                        }
-                    }
+                    //                documentoSave.CreatedBy = proposal.CreatedBy;
+                    //                documentoSave.CreatedTime = DateTime.Now;
+                    //                documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
+                    //                documentoSave.SystemID = 1;
+                    //                documentoSave.FileFullPath = filePath;
+                    //                documentoSave.DocumentIsValid = false;
+                    //                documentoSave.DocumentIsProcess = false;
+                    //                documentoSave.FileName = Path.GetFileName(filePath);
+                    //                documentoSave.ContratoID = ContractoId;
+                    //                documentoSave.Comments = documentData != null ? documentData.Comments : "";
+                    //                db.LD_DocumentProposal.Add(documentoSave);
+                    //                db.SaveChanges();
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
-                    //Contracts
-                    root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ProposalID + "\\";
+                    ////Contracts
+                    //root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ProposalID + "\\";
 
-                    var contractfiles = new List<string>();
-                    int contractCount = HttpContext.Current.Request.Files.Count;
-                    if(contractCount > 0)
-                    {
-                        if (!Directory.Exists(root))
-                            System.IO.Directory.CreateDirectory(root);
+                    //var contractfiles = new List<string>();
+                    //int contractCount = HttpContext.Current.Request.Files.Count;
+                    //if(contractCount > 0)
+                    //{
+                    //    if (!Directory.Exists(root))
+                    //        System.IO.Directory.CreateDirectory(root);
 
-                        for (int k = 0; k < documentCount; k++)
-                        {
+                    //    for (int k = 0; k < documentCount; k++)
+                    //    {
 
-                            var contract = HttpContext.Current.Request.Files["contract" + k];
-                            if (contract != null)
-                            {
-                                DocumentoData contractData = JsonConvert.DeserializeObject<DocumentoData>(
-                                                                HttpContext.Current.Request.Params["contractData" + k]);
+                    //        var contract = HttpContext.Current.Request.Files["contract" + k];
+                    //        if (contract != null)
+                    //        {
+                    //            DocumentoData contractData = JsonConvert.DeserializeObject<DocumentoData>(
+                    //                                            HttpContext.Current.Request.Params["contractData" + k]);
 
-                                var postedFile = contract;
-                                var filePath = root + postedFile.FileName;
-                                postedFile.SaveAs(filePath);
-                                contractfiles.Add(filePath);
+                    //            var postedFile = contract;
+                    //            var filePath = root + postedFile.FileName;
+                    //            postedFile.SaveAs(filePath);
+                    //            contractfiles.Add(filePath);
 
-                                using (var db = new BB_DB_DEV_LeaseDesk())
-                                {
-                                    LD_DocumentProposal exists = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.FileName == postedFile.FileName).FirstOrDefault();
+                    //            using (var db = new BB_DB_DEV_LeaseDesk())
+                    //            {
+                    //                LD_DocumentProposal exists = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.FileName == postedFile.FileName).FirstOrDefault();
 
-                                    if(exists != null)
-                                    {
-                                        exists.ContratoID = ContractoId;
-                                        db.Entry(exists).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-                                    else
-                                    {
-                                        LD_DocumentProposal contractSave = new LD_DocumentProposal();
-                                        //contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
-                                        contractSave.ClassificationID = contractData.Type != null ? contractData.Type : 5;
+                    //                if(exists != null)
+                    //                {
+                    //                    exists.ContratoID = ContractoId;
+                    //                    db.Entry(exists).State = EntityState.Modified;
+                    //                    db.SaveChanges();
+                    //                }
+                    //                else
+                    //                {
+                    //                    LD_DocumentProposal contractSave = new LD_DocumentProposal();
+                    //                    //contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
+                    //                    contractSave.ClassificationID = contractData.Type != null ? contractData.Type : 5;
 
-                                        contractSave.CreatedBy = proposal.CreatedBy;
-                                        contractSave.CreatedTime = DateTime.Now;
-                                        contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
-                                        contractSave.SystemID = 1;
-                                        contractSave.FileFullPath = filePath;
-                                        contractSave.DocumentIsValid = false;
-                                        contractSave.DocumentIsProcess = false;
-                                        contractSave.FileName = Path.GetFileName(filePath);
-                                        contractSave.ContratoID = ContractoId;
-                                        contractSave.Comments = contractData != null ? contractData.Comments : "";
-                                        db.LD_DocumentProposal.Add(contractSave);
-                                        db.SaveChanges();
-                                    }
+                    //                    contractSave.CreatedBy = proposal.CreatedBy;
+                    //                    contractSave.CreatedTime = DateTime.Now;
+                    //                    contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
+                    //                    contractSave.SystemID = 1;
+                    //                    contractSave.FileFullPath = filePath;
+                    //                    contractSave.DocumentIsValid = false;
+                    //                    contractSave.DocumentIsProcess = false;
+                    //                    contractSave.FileName = Path.GetFileName(filePath);
+                    //                    contractSave.ContratoID = ContractoId;
+                    //                    contractSave.Comments = contractData != null ? contractData.Comments : "";
+                    //                    db.LD_DocumentProposal.Add(contractSave);
+                    //                    db.SaveChanges();
+                    //                }
 
-                                }
-                            }
-                        }
-                        List<LD_DocumentProposal> lstDocumentProposal = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
-                        foreach (var item in lstDocumentProposal)
-                        {
-                            item.ContratoID = ContractoId;
-                            using (var db = new BB_DB_DEV_LeaseDesk())
-                            {
-                                db.Entry(item).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
-                        }
-                    }
+                    //            }
+                    //        }
+                    //    }
+
+                    //}
                 }
 
 
@@ -924,8 +926,15 @@ namespace WebApplication1.Controllers
                             postedFile.SaveAs(filePath);
                             contractfiles.Add(filePath);
 
+                            int? contractID = null;
+
                             using (var db = new BB_DB_DEV_LeaseDesk())
                             {
+                                LD_Contrato ld = db.LD_Contrato.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
+                                if (ld != null)
+                                {
+                                    contractID = ld.ID;
+                                }
                                 LD_DocumentProposal contractSave = new LD_DocumentProposal();
                                 //contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
                                 contractSave.ClassificationID = 5;
@@ -938,7 +947,7 @@ namespace WebApplication1.Controllers
                                 contractSave.DocumentIsValid = false;
                                 contractSave.DocumentIsProcess = false;
                                 contractSave.FileName = Path.GetFileName(filePath);
-                                contractSave.ContratoID = null;
+                                contractSave.ContratoID = contractID;
                                 contractSave.Comments = contractData != null ? contractData.Comments : "";
                                 db.LD_DocumentProposal.Add(contractSave);
                                 db.SaveChanges();
@@ -1036,8 +1045,14 @@ namespace WebApplication1.Controllers
                             postedFile.SaveAs(filePath);
                             documentfiles.Add(filePath);
 
+                            int? contractID = null;
                             using (var db = new BB_DB_DEV_LeaseDesk())
                             {
+                                LD_Contrato ld = db.LD_Contrato.Where(x => x.ProposalID == ProposalID).FirstOrDefault();
+                                if(ld != null)
+                                {
+                                    contractID = ld.ID;
+                                }
                                 LD_DocumentProposal contractSave = new LD_DocumentProposal();
                                 //contractSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 5;
                                 contractSave.ClassificationID = documentData.Type != null ? documentData.Type : 11;
@@ -1050,7 +1065,7 @@ namespace WebApplication1.Controllers
                                 contractSave.DocumentIsValid = false;
                                 contractSave.DocumentIsProcess = false;
                                 contractSave.FileName = Path.GetFileName(filePath);
-                                contractSave.ContratoID = null;
+                                contractSave.ContratoID = contractID;
                                 contractSave.Comments = documentData != null ? documentData.Comments : "";
                                 db.LD_DocumentProposal.Add(contractSave);
                                 db.SaveChanges();
@@ -1083,17 +1098,7 @@ namespace WebApplication1.Controllers
                             documentName = "contract" + ind;
                         }
                     } while (HttpContext.Current.Request.Params[documentName] != null);
-                    /* List<LD_DocumentProposal> contracts = HttpContext.Current.Request.Params["contract"].ToList();
-                     foreach (LD_DocumentProposal con in )
-                     {
-                         using (var db = new BB_DB_DEV_LeaseDesk())
-                         {
-                             LD_DocumentProposal conDoc = db.LD_DocumentProposal
-                                 .Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.FileName == con.FileName)
-                                 .FirstOrDefault();
-
-                         }
-                     }*/
+                    
                 }
             }
             catch (Exception ex)
@@ -1101,6 +1106,14 @@ namespace WebApplication1.Controllers
                 log4net.ThreadContext.Properties["proposal_id"] = ProposalID;
                 log.Error(ex.Message.ToString(), ex);
                 ex.Message.ToString();
+            }
+
+            List<LD_DocumentProposal> documentsDocs = new List<LD_DocumentProposal>();
+            using (var db = new BB_DB_DEVEntities2())
+            {
+                var CRM_QUOTE_ID = db.BB_Proposal.Where(x => x.ID == ProposalID).Select(x => x.CRM_QUOTE_ID).FirstOrDefault();
+
+                documentsDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == CRM_QUOTE_ID && x.ClassificationID != 5).ToList();
             }
 
             err.Message = "Documento añadido con éxito";
@@ -1123,6 +1136,29 @@ namespace WebApplication1.Controllers
                 }
                     
                 return Ok(contractDocs);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetDocuments")]
+        public IHttpActionResult GetDocuments(int proposalID)
+        {
+            try
+            {
+                List<LD_DocumentProposal> documentsDocs = new List<LD_DocumentProposal>();
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    //LD_DocumentProposal - Contractos
+                    var CRM_QUOTE_ID = db.BB_Proposal.Where(x => x.ID == proposalID).Select(x => x.CRM_QUOTE_ID).FirstOrDefault();
+
+                    documentsDocs = db.LD_DocumentProposal.Where(x => x.QuoteNumber == CRM_QUOTE_ID && x.ClassificationID != 5).ToList();
+                }
+
+                return Ok(documentsDocs);
             }
             catch (Exception ex)
             {
