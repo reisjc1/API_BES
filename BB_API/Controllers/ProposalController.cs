@@ -641,13 +641,13 @@ namespace WebApplication1.Controllers
                 {
 
                     err.Message = "Proceso está en el de departamento administración, no es posible volver a enviarlo.";
-                    return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
+                    return Request.CreateResponse<ActionResponse>(HttpStatusCode.NotAcceptable, err);
                 }
 
                 if (err1 != null && err1.Length > 0)
                 {
                     err.Message = err1.ToString();
-                    return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
+                    return Request.CreateResponse<ActionResponse>(HttpStatusCode.NotAcceptable, err);
                 }
 
 
@@ -1689,12 +1689,14 @@ namespace WebApplication1.Controllers
 
                 if (!encontrouConct)
                 {
-                    if (lstContactDocumentantion.Count > 0 && lstContactDocumentantion[0].Email != "" && lstContactDocumentantion[0].Name != "" && lstContactDocumentantion[0].Telefone != "")
+                    if (lstContactDocumentantion.Count > 0 && 
+                        lstContactDocumentantion[0].Email != "" && lstContactDocumentantion[0].Email != null &&
+                        lstContactDocumentantion[0].Name != "" && lstContactDocumentantion[0].Name != null &&
+                        lstContactDocumentantion[0].Telefone != "" && lstContactDocumentantion[0].Telefone != null)
                     {
                         foreach (var ContactSign in lstContactDocumentantion)
                         {
                             BB_Proposal_Contacts_Documentation ca = new BB_Proposal_Contacts_Documentation();
-
                             ca.Email = ContactSign.Email;
                             ca.Name = ContactSign.Name;
                             ca.Telefone = ContactSign.Telefone;
