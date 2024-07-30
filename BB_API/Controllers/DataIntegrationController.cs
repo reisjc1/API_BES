@@ -196,7 +196,7 @@ namespace WebApplication1.Controllers
         public List<BB_Clientes_> Clientes([FromBody]Owner_ Owner)
         {
             AspNetUsers user = usersDB.AspNetUsers.Where(x => x.UserName == Owner.Owner).FirstOrDefault();
-            return db.BB_Clientes.Where(x => x.Owner == user.DisplayName).Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, PostalCode = x.PostalCode, address1_line1 = x.address1_line1, emailaddress1 = x.emailaddress1, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
+                return db.BB_Clientes.Where(x => x.Owner == user.DisplayName).Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, PostalCode = x.PostalCode, address1_line1 = x.address1_line1, emailaddress1 = x.emailaddress1, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
         }
 
         [AcceptVerbs("GET", "POST")]
@@ -257,7 +257,9 @@ namespace WebApplication1.Controllers
         [ActionName("BNPFactors")]
         public List<BB_Bank_Bnp> BNPFactors()
         {
-            return db.BB_Bank_Bnp.ToList();
+            List<BB_Bank_Bnp> bB_Bank_s = new List<BB_Bank_Bnp>();
+            bB_Bank_s = db.BB_Bank_Bnp.ToList();
+            return bB_Bank_s;
         }
 
 

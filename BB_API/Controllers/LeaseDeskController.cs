@@ -672,6 +672,7 @@ namespace WebApplication1.Controllers
                     l.ModifiedTime = DateTime.Now;
                     l.ModifiedBy = a.ModifiedBy;
                     l.StatusID = 6;
+                    l.IsClosed = true;
                     db.Entry(l).State = EntityState.Modified;
                     db.SaveChanges();
 
@@ -1844,6 +1845,82 @@ namespace WebApplication1.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
+        [ActionName("GetProcessosVendasFechados")]
+        public IHttpActionResult GetProcessosVendasFechados(string year)
+        {
+            List<LD_ContratoModel> listModel = new List<LD_ContratoModel>();
+            try
+            {
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
+                {
+
+                    conn.Open();
+
+                    // 1.  create a command object identifying the stored procedure
+                    SqlCommand cmd = new SqlCommand("get_LeaseDesk_ALL_New_Fechados", conn);
+                    cmd.Parameters.Add("@year1", SqlDbType.NVarChar, 20).Value = year;
+                    cmd.CommandTimeout = 180;
+                    // 2. set the command object so it knows to execute a stored procedure
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    //cmd.Parameters.AddWithValue("@userEmail", Owner.Owner);
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+
+                    // iterate through results, printing each to console
+                    while (rdr.Read())
+                    {
+
+
+                        LD_ContratoModel m = new LD_ContratoModel();
+                        m.ID = (int)rdr["ID"];
+                        m.ProposalID = (int)rdr["ProposalID"];
+                        m.StatusName = rdr["Status"].ToString();
+                        m.SistemaAssinatura = rdr["Assinatura"].ToString();
+                        m.Comments = rdr["Comentarios"].ToString();
+                        m.MotivoDescricao = rdr["EstadoProcesso"].ToString();
+                        m.DevolucaoMotivoDescricao = rdr["Devolucao"].ToString();
+                        m.ComentariosDevolucao = //i.ComentariosDevolucao;
+                        m.QuoteNumber = rdr["Quote"].ToString();
+                        //LD_Contrato_Facturacao cf = db.LD_Contrato_Facturacao.Where(x => x.LDID == i.ID).FirstOrDefault();
+                        //if (cf != null)
+                        //{
+                        //    m.NUS = cf.NUS;
+                        //}
+                        m.isClosed = rdr["isClosed"] != null ? Boolean.Parse(rdr["isClosed"].ToString()) : false;
+
+                        m.NCliente = rdr["NCliente"].ToString();
+                        m.NomeCliente = rdr["Cliente"].ToString();
+
+                        m.ModifiedBy = rdr["ModificadoPor"].ToString();
+                        m.CreatedBy = rdr["CriadoPor"].ToString();
+
+                        m.ModifiedTime = rdr["ModificadoEM"] != null ? DateTime.Parse(rdr["ModificadoEM"].ToString()) : new DateTime();
+                        m.CreatedTime = rdr["CriadoEM"] != null ? DateTime.Parse(rdr["CriadoEM"].ToString()) : new DateTime();
+
+                        m.Financiamento = rdr["Locadora"].ToString();
+
+                        m.TipoNegocio = rdr["TipoNegocio"].ToString();
+
+                        listModel.Add(m);
+
+
+
+                    }
+
+                    rdr.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+
+            return Ok(listModel);
+        }
+
+        [AcceptVerbs("GET", "POST")]
         [ActionName("GetProcessosVendas_OLD")]
         public IHttpActionResult GetProcessosVendas_OLD()
         {
@@ -2118,6 +2195,38 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEV_LeaseDesk())
                 {
                     var doc = db.LD_DocumentProposal.Where(x => x.ID == ContractoID).FirstOrDefault();
+                    string filename = doc.FileFullPath;
+                    db.LD_DocumentProposal.Remove(doc);
+
+                    int num = db.SaveChanges();
+
+                    if (num == 1)
+                    {
+                        if (File.Exists(@filename))
+                        {
+                            File.Delete(@filename);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DocumentoDelete_new")]
+        public IHttpActionResult DocumentoDelete_new(string quote, string filename1)
+        {
+            List<LD_Contrato> list = new List<LD_Contrato>();
+            try
+            {
+                using (var db = new BB_DB_DEV_LeaseDesk())
+                {
+                    var doc = db.LD_DocumentProposal.Where(x => x.QuoteNumber == quote && x.FileName == filename1).FirstOrDefault();
                     string filename = doc.FileFullPath;
                     db.LD_DocumentProposal.Remove(doc);
 
@@ -3580,17 +3689,24 @@ namespace WebApplication1.Controllers
                             data.ClientAccountNumber = proposalObj.ClientAccountNumber;
                             data.Plant = proposalObj.Plant;
                             data.CodArrend = proposalObj.CodArrend;
-                            data.AccordNumber = proposalObj.AccordNumber;
+                            //data.AccordNumber = proposalObj.AccordNumber;
                             data.ContractNumberPai = proposalObj.ContractNumberPai;
                             data.DataFechoContracto = proposalObj.DataFechoContracto;
 
                             proposalID = proposalObj.ID;
                         }
+
                     }
+
                     using (var dbX = new BB_DB_DEVEntities2())
                     {
                         if (proposalID != null)
                         {
+
+                            string accorNumber = dbX.BB_Proposal_Financing.Where(x => x.ProposalID == proposalID).Select(x => x.AgreementNumber).FirstOrDefault();
+
+                            data.AccordNumber = accorNumber;
+
                             List<BB_Proposal_DeliveryLocation> bb_pp_dl_lst = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
 
                             data.DL_Table_Info_Lst = new List<DL_Table_Info>();
