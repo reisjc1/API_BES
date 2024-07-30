@@ -1179,7 +1179,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Cifra_Negocio = proposal.SubTotal;
 
                     // Soma de todos os GP daquele proposalID (incluindo RS)
-                    bb_commission_general.Margen_Total = profitDictionary.Where(d => d.Key != "OfficeHW").Sum(x => x.Value.GPTotal);
+                    bb_commission_general.Margen_Total = profitDictionary.Where(d => d.Key != "HW" && d.Key != "IMS_EXCLUDING" && d.Key != "MOBOTIX" && d.Key != "PPHW" && d.Key != "MCS" && d.Key != "IMS" && d.Key != "BPS").Sum(x => x.Value.GPTotal);
 
                     // Same as above
                     bb_commission_general.Margen_Total_Nueva = bb_commission_general.Margen_Total;
