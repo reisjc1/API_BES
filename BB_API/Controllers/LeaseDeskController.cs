@@ -22,6 +22,7 @@ using WebApplication1.App_Start;
 using WebApplication1.BLL;
 using WebApplication1.Models;
 using WebApplication1.Models.SetupXML;
+using WebApplication1.Models.SetupXML.XML;
 using WebApplication1.Models.ViewModels;
 
 namespace WebApplication1.Controllers
@@ -711,7 +712,7 @@ namespace WebApplication1.Controllers
                 await emailSend.SendEmailaync(message);
 
                 ComissionController comission = new ComissionController();
-                if(l.ProposalID != null)
+                if (l.ProposalID != null)
                 {
                     comission.CreateCommission((int)l.ProposalID);
                 }
@@ -2558,13 +2559,13 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    List<BB_Proposal_DeliveryLocation> deliverLocationList = 
+                    List<BB_Proposal_DeliveryLocation> deliverLocationList =
                         db.BB_Proposal_DeliveryLocation
                            .Where(x => x.ProposalID == ti.ProposalID)
                            .DistinctBy(x => x.ID)
                            .ToList();
 
-                    foreach(var deliveryLocation in deliverLocationList)
+                    foreach (var deliveryLocation in deliverLocationList)
                     {
                         int id = Int32.Parse(deliveryLocation.ID);
                         BB_LocaisEnvio localEnvio = db.BB_LocaisEnvio.Where(x => x.ID == id).FirstOrDefault();
@@ -2970,7 +2971,7 @@ namespace WebApplication1.Controllers
             {
                 lstLD_DocSign_Control_Files = db.LD_DocSign_Control_Files.Where(x => x.ProposalID == ProposalID).ToList();
 
-                foreach(var i in lstLD_DocSign_Control_Files)
+                foreach (var i in lstLD_DocSign_Control_Files)
                 {
                     db.LD_DocSign_Control_Files.Remove(i);
                     db.SaveChanges();
@@ -3173,7 +3174,7 @@ namespace WebApplication1.Controllers
 
                     gc.lst_BB_Proposal_Contacts_Signing = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == proposalID).ToList();
 
-                    gc.lst_BB_Proposal_Contacts_Documentation = 
+                    gc.lst_BB_Proposal_Contacts_Documentation =
                         db.BB_Proposal_Contacts_Documentation.Where(x => x.ProposalID == proposalID).ToList();
 
                 }
@@ -3682,7 +3683,7 @@ namespace WebApplication1.Controllers
                     {
 
                         int? contractProposal = db.LD_Contrato.Where(x => x.ID == contractID).Select(x => x.ProposalID).FirstOrDefault();
-                        if(contractProposal != null)
+                        if (contractProposal != null)
                         {
                             BB_Proposal proposalObj = db.BB_Proposal.Where(x => x.ID == contractProposal).FirstOrDefault();
                             data.isMultipleContracts = proposalObj.IsMultipleContract;
@@ -3711,7 +3712,7 @@ namespace WebApplication1.Controllers
 
                             data.DL_Table_Info_Lst = new List<DL_Table_Info>();
 
-                            foreach(var deliverLocation in bb_pp_dl_lst)
+                            foreach (var deliverLocation in bb_pp_dl_lst)
                             {
                                 DL_Table_Info dl_info = new DL_Table_Info();
 
@@ -3722,7 +3723,7 @@ namespace WebApplication1.Controllers
                                 int? deliverLocationID = Int32.Parse(deliverLocation.ID);
 
                                 BB_LocaisEnvio bb_local_envio = dbX.BB_LocaisEnvio.Where(x => x.ID == deliverLocationID).FirstOrDefault();
-                                if(bb_local_envio != null)
+                                if (bb_local_envio != null)
                                 {
                                     dl_info.CIF = bb_local_envio.NIF_CIF;
                                     dl_info.SAP_Nr = bb_local_envio.SAPCustomerNr;
@@ -3736,9 +3737,10 @@ namespace WebApplication1.Controllers
                     }
                 }
 
-            return Ok(data);
+                return Ok(data);
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 string errorMessage = ex.Message;
                 return Ok(data);
@@ -3751,10 +3753,10 @@ namespace WebApplication1.Controllers
         {
             List<BB_FinancingContractType> financingContractTypes = null;
             List<FinancingCompany> companies = new List<FinancingCompany>();
-            using(var db = new BB_DB_DEVEntities2())
+            using (var db = new BB_DB_DEVEntities2())
             {
                 financingContractTypes = db.BB_FinancingContractType.ToList();
-                foreach(var fct in financingContractTypes)
+                foreach (var fct in financingContractTypes)
                 {
                     companies.Add(new FinancingCompany
                     {
@@ -3816,12 +3818,12 @@ namespace WebApplication1.Controllers
                         {
                             BB_Proposal bb_proposal = db.BB_Proposal.Where(x => x.ID == contractProposal).FirstOrDefault();
                             bb_proposal.IsMultipleContract = isMultipleContract;
-                            if(soldTo != null)
+                            if (soldTo != null)
                             {
                                 BB_Proposal_Client bb_Proposal_Client = db.BB_Proposal_Client.Where(x => x.ProposalID == bb_proposal.ID).FirstOrDefault();
 
                                 bb_Proposal_Client.ClientID = soldTo;
-                                bb_proposal.ClientAccountNumber= soldTo;
+                                bb_proposal.ClientAccountNumber = soldTo;
                                 bb_proposal.Plant = plant;
                             }
 
@@ -3838,121 +3840,159 @@ namespace WebApplication1.Controllers
                 return null;
             }
         }
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DownloadXml")]
+        public IHttpActionResult DownloadXml(int contractId)
+        {
+            try
+            {
+                
+                string directoryPath = Path.Combine(@"C:\LeaseDesk\Documentation\Contrato", contractId.ToString());
+
+                if (!Directory.Exists(directoryPath))
+                {
+                    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Pasta não encontrada"));
+                }
+
+               
+                string[] xmlFiles = Directory.GetFiles(directoryPath, "*.xml");
+
+                if (xmlFiles.Length == 0)
+                {
+                    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Arquivo XML não encontrado na pasta"));
+                }
+
+              
+                string filePath = xmlFiles[0];
+
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new ByteArrayContent(File.ReadAllBytes(filePath));
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = Path.GetFileName(filePath)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
+
+                return ResponseMessage(response);
+            }
+            catch (Exception ex)
+            {
+              
+                return InternalServerError(ex);
+            }
+        }
+        public class GravarObser
+        {
+
+            public int? id { get; set; }
+
+            public string Observacoes { get; set; }
+            public string modifiedby { get; set; }
+            public int? motivoID { get; set; }
+
+        }
+        public class PrazoDiferenciado
+        {
+            public int ID { get; set; }
+            public int ProposalID { get; set; }
+            public string Cliente { get; set; }
+            public double? ValorProposta { get; set; }
+            public string NIF { get; set; }
+            public string ProdutoFinanceiro { get; set; }
+            public double? ValorRenda { get; set; }
+            public double? ValorFactor { get; set; }
+            public int? nrMeses { get; set; }
+            public int? Frequency { get; set; }
+            public string CreatedBy { get; set; }
+            public string ModifiedBy { get; set; }
+            public DateTime? CreatedTime { get; set; }
+            public DateTime? ModifiedTime { get; set; }
+
+            public string Alocadora { get; set; }
+
+            public string comments { get; set; }
+
+            public bool? isApproved { get; set; }
+
+            public string Type1 { get; set; }
+            public string AccountNumber { get; set; }
+
+            public string quotenumber { get; set; }
+
+            public string GestorContaObservacoes { get; set; }
+
+            public List<BB_Proposal_PrazoDiferenciado_History> history { get; set; }
+
+            public ValoresTotaisRenda vva { get; set; }
+            public bool? Flexpage { get; set; }
+
+            public Nullable<bool> IsComplete { get; set; }
+
+            public bool? isSobrevarizacao { get; set; }
+
+            public double? totalSobrevalorizacao { get; set; }
+
+            public string NLocadora { get; set; }
+
+            public List<BB_Proposal_Overvaluation> sobrevalorizacao { get; set; }
+            public List<BB_Proposal_Aprovacao_Quote> configuracaoNegocio { get; set; }
+            public string DSO { get; set; }
+
+            public double? leicopiaprivada { get; set; }
+
+            public int nrMaquinas { get; set; }
+            public double? TaxaMensalServicosRecorrentes { get; set; }
+
+            public double? TaxaMensalOPSManage { get; set; }
+
+            public double? ValorBnpAprovacao { get; set; }
+
+            public DateTime? DataExpiracao { get; set; }
+
+        }
 
 
+        public class LD_Contrato_Model
+        {
+            public int ID { get; set; }
+            public Nullable<int> ProposalID { get; set; }
+            public string QuoteNumber { get; set; }
+            public string PathContracto { get; set; }
+            public string Comments { get; set; }
+            public string CreatedBy { get; set; }
+            public Nullable<System.DateTime> CreatedTime { get; set; }
+            public string ModifiedBy { get; set; }
+            public Nullable<System.DateTime> ModifiedTime { get; set; }
+            public Nullable<bool> ContratoValidado { get; set; }
+            public Nullable<bool> ContratoGerado { get; set; }
+            public Nullable<System.DateTime> Assinatura { get; set; }
+            public Nullable<int> SystemAssinaturaID { get; set; }
+            public Nullable<int> StatusID { get; set; }
+            public string FilenameContracto { get; set; }
+            public Nullable<int> TipoContratoID { get; set; }
+            public string ComentariosGC { get; set; }
 
-    }
-    public class GravarObser
-    {
+            public string TipoContrato { get; set; }
 
-        public int? id { get; set; }
+            public string ComentariosDevolucao { get; set; }
 
-        public string Observacoes { get; set; }
-        public string modifiedby { get; set; }
-        public int? motivoID { get; set; }
+            public Nullable<int> MotivoID { get; set; }
 
-    }
-    public class PrazoDiferenciado
-    {
-        public int ID { get; set; }
-        public int ProposalID { get; set; }
-        public string Cliente { get; set; }
-        public double? ValorProposta { get; set; }
-        public string NIF { get; set; }
-        public string ProdutoFinanceiro { get; set; }
-        public double? ValorRenda { get; set; }
-        public double? ValorFactor { get; set; }
-        public int? nrMeses { get; set; }
-        public int? Frequency { get; set; }
-        public string CreatedBy { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime? CreatedTime { get; set; }
-        public DateTime? ModifiedTime { get; set; }
+            public Nullable<int> DevolucaoMotivoID { get; set; }
 
-        public string Alocadora { get; set; }
+            public bool? isClosed { get; set; }
 
-        public string comments { get; set; }
+            public string NUS { get; set; }
 
-        public bool? isApproved { get; set; }
+            public string FacuracaoModifiedby { get; set; }
+            public DateTime? FacuracaoModifiedtime { get; set; }
 
-        public string Type1 { get; set; }
-        public string AccountNumber { get; set; }
+            public string FolderDOC { get; set; }
 
-        public string quotenumber { get; set; }
-
-        public string GestorContaObservacoes { get; set; }
-
-        public List<BB_Proposal_PrazoDiferenciado_History> history { get; set; }
-
-        public ValoresTotaisRenda vva { get; set; }
-        public bool? Flexpage { get; set; }
-
-        public Nullable<bool> IsComplete { get; set; }
-
-        public bool? isSobrevarizacao { get; set; }
-
-        public double? totalSobrevalorizacao { get; set; }
-
-        public string NLocadora { get; set; }
-
-        public List<BB_Proposal_Overvaluation> sobrevalorizacao { get; set; }
-        public List<BB_Proposal_Aprovacao_Quote> configuracaoNegocio { get; set; }
-        public string DSO { get; set; }
-
-        public double? leicopiaprivada { get; set; }
-
-        public int nrMaquinas { get; set; }
-        public double? TaxaMensalServicosRecorrentes { get; set; }
-
-        public double? TaxaMensalOPSManage { get; set; }
-
-        public double? ValorBnpAprovacao { get; set; }
-
-        public DateTime? DataExpiracao { get; set; }
-
-    }
-
-
-    public class LD_Contrato_Model
-    {
-        public int ID { get; set; }
-        public Nullable<int> ProposalID { get; set; }
-        public string QuoteNumber { get; set; }
-        public string PathContracto { get; set; }
-        public string Comments { get; set; }
-        public string CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedTime { get; set; }
-        public string ModifiedBy { get; set; }
-        public Nullable<System.DateTime> ModifiedTime { get; set; }
-        public Nullable<bool> ContratoValidado { get; set; }
-        public Nullable<bool> ContratoGerado { get; set; }
-        public Nullable<System.DateTime> Assinatura { get; set; }
-        public Nullable<int> SystemAssinaturaID { get; set; }
-        public Nullable<int> StatusID { get; set; }
-        public string FilenameContracto { get; set; }
-        public Nullable<int> TipoContratoID { get; set; }
-        public string ComentariosGC { get; set; }
-
-        public string TipoContrato { get; set; }
-
-        public string ComentariosDevolucao { get; set; }
-
-        public Nullable<int> MotivoID { get; set; }
-
-        public Nullable<int> DevolucaoMotivoID { get; set; }
-
-        public bool? isClosed { get; set; }
-
-        public string NUS { get; set; }
-
-        public string FacuracaoModifiedby { get; set; }
-        public DateTime? FacuracaoModifiedtime { get; set; }
-
-        public string FolderDOC { get; set; }
-
-        public bool? IsButtonImitirDocSign { get; set; }
-        public bool? IsButtonSuspender { get; set; }
-        public bool? IsButtonDelete { get; set; }
+            public bool? IsButtonImitirDocSign { get; set; }
+            public bool? IsButtonSuspender { get; set; }
+            public bool? IsButtonDelete { get; set; }
+        }
     }
 
 }

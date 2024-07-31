@@ -90,7 +90,7 @@ namespace WebApplication1.Models.SetupXML.XML
         }
 
 
-        public void DealXML(int contractId)
+        public string DealXML(int contractId)
         {
             try
             {
@@ -249,7 +249,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     string dest = AppSettingsGet.LeaseDesk_UploadFile_Contrato_DocuSign;
 
-                    string path = dest + "\\" + contractoID;
+                    string path = dest + contractoID;
                     if (!Directory.Exists(path))
                         System.IO.Directory.CreateDirectory(path);
 
@@ -258,10 +258,12 @@ namespace WebApplication1.Models.SetupXML.XML
                     SerializeToXml(myObject, filepath);
                     UploadFileToSftp(filepath);
 
+                    return filepath;
                 }
             }
             catch (Exception e)
             {
+                return null;
                 Console.WriteLine(e.ToString());
             }
 
