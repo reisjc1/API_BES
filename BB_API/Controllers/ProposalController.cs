@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using log4net;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
@@ -1690,9 +1691,12 @@ namespace WebApplication1.Controllers
                 if (!encontrouConct)
                 {
                     if (lstContactDocumentantion.Count > 0 && 
-                        lstContactDocumentantion[0].Email != "" && lstContactDocumentantion[0].Email != null &&
-                        lstContactDocumentantion[0].Name != "" && lstContactDocumentantion[0].Name != null &&
-                        lstContactDocumentantion[0].Telefone != "" && lstContactDocumentantion[0].Telefone != null)
+                        lstContactDocumentantion[0].Email != "" && 
+                        lstContactDocumentantion[0].Name != "" && 
+                        lstContactDocumentantion[0].Telefone != "" && 
+                        !string.IsNullOrWhiteSpace(lstContactDocumentantion[0].Email) &&
+                        !string.IsNullOrWhiteSpace(lstContactDocumentantion[0].Name) &&
+                        !string.IsNullOrWhiteSpace(lstContactDocumentantion[0].Telefone))
                     {
                         foreach (var ContactSign in lstContactDocumentantion)
                         {
