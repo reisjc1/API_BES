@@ -7,6 +7,7 @@
       <Diagram DiagramId="90aa9934d1864be5907067aa40790d50" Name="Diagram1">
         <EntityTypeShape EntityType="masterModel.AspNetUsers" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="masterModel.KM_UserRole" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="masterModel.AspNetUserRoles_KM" Width="1.5" PointX="3.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

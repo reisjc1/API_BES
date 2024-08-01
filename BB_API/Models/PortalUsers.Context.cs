@@ -27,5 +27,6 @@ namespace WebApplication1.Models
     
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<KM_UserRole> KM_UserRole { get; set; }
+        public virtual DbSet<AspNetUserRoles_KM> AspNetUserRoles_KM { get; set; }
     }
 }
