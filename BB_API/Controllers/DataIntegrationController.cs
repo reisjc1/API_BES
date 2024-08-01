@@ -196,7 +196,24 @@ namespace WebApplication1.Controllers
         public List<BB_Clientes_> Clientes([FromBody]Owner_ Owner)
         {
             AspNetUsers user = usersDB.AspNetUsers.Where(x => x.UserName == Owner.Owner).FirstOrDefault();
-                return db.BB_Clientes.Where(x => x.Owner == user.DisplayName).Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, PostalCode = x.PostalCode, address1_line1 = x.address1_line1, emailaddress1 = x.emailaddress1, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
+
+          
+            AspNetUserRoles_KM useroleKM = usersDB.AspNetUserRoles_KM.Where(x => x.UserId == user.Id).FirstOrDefault();
+
+            //inside sales
+            if(useroleKM != null && useroleKM.RoleId == 11.ToString())
+            {
+                return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, PostalCode = x.PostalCode, address1_line1 = x.address1_line1, emailaddress1 = x.emailaddress1, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
+            }
+
+            //majorAccounts
+            if (useroleKM != null && useroleKM.RoleId == 15.ToString())
+            {
+                return db.BB_Clientes.Where(x=>x.GMA != null).Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, PostalCode = x.PostalCode, address1_line1 = x.address1_line1, emailaddress1 = x.emailaddress1, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
+            }
+
+
+            return db.BB_Clientes.Where(x => x.Owner == user.DisplayName).Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, PostalCode = x.PostalCode, address1_line1 = x.address1_line1, emailaddress1 = x.emailaddress1, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
         }
 
         [AcceptVerbs("GET", "POST")]
