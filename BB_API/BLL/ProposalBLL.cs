@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using log4net;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -97,26 +98,23 @@ namespace WebApplication1.BLL
                     //db.BB_Proposal_DeliveryLocation.RemoveRange(lstd);
                     db.Entry(proposal).State = proposal.ID == 0 ? EntityState.Added : EntityState.Modified;
                     db.SaveChanges();
-                    /*
-                    if(proposal != null)
+
+                    if (proposal != null)
                     {
-                        foreach(var opsManage in proposal.BB_Proposal_OPSManage)
+                        var settings = new JsonSerializerSettings
                         {
-                            opsManage.BB_Proposal = null;
-                        }
-                        foreach (var opsImplement in proposal.BB_Proposal_OPSImplement)
-                        {
-                            opsImplement.BB_Proposal = null;
-                        }
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        };
+
                         log4net.ThreadContext.Properties["proposal_id"] = proposal.ID;
-                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(proposal);
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(proposal, settings);
                         Exception message = new Exception("Proposta gravada com sucesso");
                         log.Info(json, message);
                     }
-                    */
+
                 }
 
-                
+
 
                 using (var context = new BB_DB_DEVEntities2())
                 {
