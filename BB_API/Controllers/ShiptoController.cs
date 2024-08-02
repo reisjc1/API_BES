@@ -222,11 +222,9 @@ namespace WebApplication1.Controllers
             try
             {
                 List<BB_Proposal_DL_ClientContacts> lst_contacts = new List<BB_Proposal_DL_ClientContacts>();
-                int ClientID = 0;
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    ClientID = db.BB_Clientes.Where(x => x.accountnumber == accountnumber).Select(x => x.ID).FirstOrDefault();
-                    lst_contacts = db.BB_Proposal_DL_ClientContacts.Where(x => x.ClientID == ClientID).ToList();
+                    lst_contacts = db.BB_Proposal_DL_ClientContacts.Where(x => x.ClientID == accountnumber).ToList();
                 }
 
                 return Ok(lst_contacts);

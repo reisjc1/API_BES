@@ -15,7 +15,7 @@ namespace WebApplication1.Models
     public partial class BB_Proposal_DL_ClientContacts
     {
         public int ID { get; set; }
-        public Nullable<int> ClientID { get; set; }
+        public string ClientID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public Nullable<int> Tel { get; set; }
