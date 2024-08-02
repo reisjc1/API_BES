@@ -958,7 +958,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientID" Type="int" />
+          <Property Name="ClientID" Type="nvarchar(max)" />
           <Property Name="Name" Type="varchar" MaxLength="50" />
           <Property Name="Surname" Type="varchar" MaxLength="50" />
           <Property Name="Tel" Type="int" />
@@ -2135,7 +2135,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_MIF_Renovations" EntityType="BB_DB_DEVModel.BB_MIF_Renovations" />
           <EntitySet Name="BB_DeliveryContactsInfo" EntityType="BB_DB_DEVModel.BB_DeliveryContactsInfo" />
           <EntitySet Name="RD_AddressAcronyms" EntityType="BB_DB_DEVModel.RD_AddressAcronyms" />
-          <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
           <EntitySet Name="BB_Proposal_ItemDoBasket" EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" />
           <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel.BB_Proposal" />
           <AssociationSet Name="FK_BB_Proposal_OPSManage_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal">
@@ -2173,6 +2172,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
           <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
+          <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3434,18 +3434,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="SA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Street" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="BB_Proposal_DL_ClientContacts">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientID" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Tel" Type="Int32" />
-          <Property Name="Movil" Type="Int32" />
-          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="BB_Proposal_ItemDoBasket">
           <Key>
             <PropertyRef Name="ID" />
@@ -3979,6 +3967,18 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="DateExpired" Type="DateTime" Precision="3" />
           <Property Name="Factor" Type="Double" />
           <Property Name="AgreementNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_DL_ClientContacts">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Tel" Type="Int32" />
+          <Property Name="Movil" Type="Int32" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5245,19 +5245,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_DL_ClientContacts">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts">
-              <MappingFragment StoreEntitySet="BB_Proposal_DL_ClientContacts">
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Movil" ColumnName="Movil" />
-                <ScalarProperty Name="Tel" ColumnName="Tel" />
-                <ScalarProperty Name="Surname" ColumnName="Surname" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_Proposal_ItemDoBasket">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_ItemDoBasket">
               <MappingFragment StoreEntitySet="BB_Proposal_ItemDoBasket">
@@ -5790,6 +5777,19 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
                 <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
                 <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_DL_ClientContacts">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts">
+              <MappingFragment StoreEntitySet="BB_Proposal_DL_ClientContacts">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Movil" ColumnName="Movil" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

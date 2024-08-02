@@ -95,7 +95,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_MIF_Renovations" Width="1.5" PointX="14.375" PointY="29.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_DeliveryContactsInfo" Width="1.5" PointX="28.375" PointY="19.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.RD_AddressAcronyms" Width="1.5" PointX="28.375" PointY="23.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" Width="1.5" PointX="16.375" PointY="29.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" Width="1.5" PointX="18.75" PointY="29.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal" Width="1.5" PointX="9.375" PointY="30.875" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" />
@@ -127,6 +126,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" Width="1.5" PointX="24.375" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_LocaisEnvio" Width="1.5" PointX="33.375" PointY="25.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Financing" Width="1.5" PointX="0.75" PointY="26.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" Width="1.5" PointX="33.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
