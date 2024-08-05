@@ -157,6 +157,24 @@ namespace WebApplication1.Models.SetupXML.XML
                         });
                         i++;
                     }
+                    if (partnerInfo.POST_CODE1.StartsWith("29") || partnerInfo.POST_CODE1.StartsWith("46"))
+                    {
+                        string customerTU = "";
+                        if (partnerInfo.POST_CODE1.StartsWith("29"))
+                        {
+                            customerTU = "149450";
+                        }
+                        if (partnerInfo.POST_CODE1.StartsWith("46"))
+                        {
+                            customerTU = "150423";
+                        }
+                        collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                        {
+                            SD_DOC = order.Sd_Doc,
+                            PARTN_ROLE = "TU",
+                            CUSTOMER = partnerInfo.CUSTOMER,
+                        });
+                    }
 
 
                     using (var db = new BB_DB_DEVEntities2())
@@ -180,7 +198,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
                                         {
                                             SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
-                                            PARTN_ROLE = "RE", //"WE",
+                                            PARTN_ROLE = "RE", 
                                             CUSTOMER = "1137222",       //lEnvio.SAPCustomerNr.ToString(),             // partnerInfo.CUSTOMER, //
                                             CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
                                             CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
@@ -197,7 +215,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
                                         {
                                             SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
-                                            PARTN_ROLE = "RG", //"WE",
+                                            PARTN_ROLE = "RG",
                                             CUSTOMER = "1132367",       //lEnvio.SAPCustomerNr.ToString(),             // partnerInfo.CUSTOMER, //
                                             CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
                                             CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
@@ -206,6 +224,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                 }
                             }
+                           
                         }
 
                     }
