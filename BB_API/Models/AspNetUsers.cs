@@ -14,6 +14,12 @@ namespace WebApplication1.Models
     
     public partial class AspNetUsers
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public AspNetUsers()
+        {
+            this.AspNetRoles = new HashSet<AspNetRoles>();
+        }
+    
         public string Id { get; set; }
         public string Email { get; set; }
         public bool EmailConfirmed { get; set; }
@@ -37,5 +43,9 @@ namespace WebApplication1.Models
         public string Country { get; set; }
         public string ErpNumber { get; set; }
         public Nullable<bool> IsEnabled { get; set; }
+        public string FunctionSimpleDeal { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AspNetRoles> AspNetRoles { get; set; }
     }
 }

@@ -20,6 +20,7 @@ using WebApplication1.BLL;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using DocumentFormat.OpenXml.Drawing;
+using Microsoft.Ajax.Utilities;
 
 namespace WebApplication1.Controllers
 {
@@ -489,18 +490,25 @@ namespace WebApplication1.Controllers
                         {
                             using (var dbX = new masterEntities())
                             {
+                                List<AspNetRoles> roles = (from r in dbX.AspNetRoles
+                                                           join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
+                                                           select r)
+                                                  .DistinctBy(x => x.Id)
+                                                  .ToList();
+
                                 string approverID = db.BB_WFA_Levels
                                                     .Where(x => x.WFA_Control_ID == item.ID && x.Level == level.Level)
                                                     .Select(x => x.WFA_Approver_ID).FirstOrDefault();
 
                                 
                                 string userName = dbX.AspNetUsers.Where(x => x.Id == approverID).Select(x => x.DisplayName).FirstOrDefault();
-                                if (userName is null && approverID == "Regional Manager")
+                                if (userName is null && roles.Where(r => r.Name == approverID).FirstOrDefault() != null)
                                 {
-                                    userName = "Regional Manager";
+                                        userName = approverID;
+                                    
                                 }
 
-                                    Level levelX = new Level()
+                                Level levelX = new Level()
                                 {
                                     Approver = userName,
                                     Condition = db.BB_RD_WFA_Condition.Where(x => x.ID == level.Condition_ID).Select(x => x.Condition).FirstOrDefault() + " " + level.Condition_Value,
@@ -550,14 +558,25 @@ namespace WebApplication1.Controllers
 
 
                     wfa_create_obj.Lst_Approver = new List<WFA_Approvers>();
-                    wfa_create_obj.Lst_Approver.Add(new WFA_Approvers
-                    {
-                        ID = "Regional Manager",
-                        Name = "Regional Manager"
-                    });
-
+                    
                     using (var dbX = new masterEntities())
                     {
+                        List<AspNetRoles> roles = (from r in dbX.AspNetRoles
+                                                  join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
+                                                  select r)
+                                                  .DistinctBy(x => x.Id)
+                                                  .ToList();
+
+                        foreach(var r in roles)
+                        {
+                            wfa_create_obj.Lst_Approver.Add(new WFA_Approvers
+                            {
+                                ID = r.Name,
+                                Name = r.Name
+                            });
+                        }
+
+
                         List<AspNetUsers> approverLst = dbX.AspNetUsers
                                 .Where(a=> a.IsEnabled == true && a.Country == "BES")
                                 .OrderBy(a=>a.DisplayName)
@@ -1164,13 +1183,24 @@ namespace WebApplication1.Controllers
 
 
                     wfa_obj.Lst_Approver = new List<WFA_Approvers>();
-                    wfa_obj.Lst_Approver.Add(new WFA_Approvers
-                    {
-                        ID = "Regional Manager",
-                        Name = "Regional Manager"
-                    });
+                    
                     using (var dbX = new masterEntities())
                     {
+                        List<AspNetRoles> roles = (from r in dbX.AspNetRoles
+                                                   join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
+                                                   select r)
+                                                  .DistinctBy(x => x.Id)
+                                                  .ToList();
+
+                        foreach (var r in roles)
+                        {
+                            wfa_obj.Lst_Approver.Add(new WFA_Approvers
+                            {
+                                ID = r.Name,
+                                Name = r.Name
+                            });
+                        }
+
                         List<AspNetUsers> approverLst = dbX.AspNetUsers
                             .Where(a => a.IsEnabled == true && a.Country == "BES")
                             .OrderBy(a=>a.DisplayName)
