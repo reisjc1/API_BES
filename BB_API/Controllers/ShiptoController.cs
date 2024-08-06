@@ -338,7 +338,14 @@ namespace WebApplication1.Controllers
                 foreach(var toDetele in bB_Proposal_DeliveryLocations)
                 {
                     List<BB_Proposal_ItemDoBasket> itemBasket = dbX.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == toDetele.IDX).ToList();
-                    if(itemBasket != null)
+                    if(itemBasket.Count > 0)
+                    {
+                        foreach(var itemBasketToDelete in itemBasket)
+                        {
+                            dbX.BB_Proposal_ItemDoBasket.RemoveRange(itemBasket);
+                        }
+                    }
+                    else 
                     {
                         dbX.BB_Proposal_ItemDoBasket.RemoveRange(itemBasket);
                     }
