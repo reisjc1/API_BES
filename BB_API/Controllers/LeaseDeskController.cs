@@ -3851,7 +3851,14 @@ namespace WebApplication1.Controllers
 
                 if (!Directory.Exists(directoryPath))
                 {
-                    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Pasta não encontrada"));
+                    Deal deal = new Deal();
+                    deal.DealXML(contractId);
+                    directoryPath = Path.Combine(@"C:\LeaseDesk\Documentation\Contrato", contractId.ToString());
+                    if(!Directory.Exists(directoryPath))
+                    {
+                        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Pasta não encontrada"));
+                    }
+                    
                 }
 
                
@@ -3859,7 +3866,15 @@ namespace WebApplication1.Controllers
 
                 if (xmlFiles.Length == 0)
                 {
-                    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Arquivo XML não encontrado na pasta"));
+                    Deal deal = new Deal();
+                    deal.DealXML(contractId);
+                    xmlFiles = Directory.GetFiles(directoryPath, "*.xml");
+                    if(xmlFiles.Length == 0)
+                    {
+                        return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Arquivo XML não encontrado na pasta"));
+                    }
+
+
                 }
 
               
