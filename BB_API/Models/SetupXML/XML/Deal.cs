@@ -211,7 +211,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             TEST = "X",
                             IDOCTYP = "Z1ZVOE_DEAL",
                             MESTYP = "Z1ZVOE_DEAL",
-                            MESCOD = "BES",                   //"EBB",         
+                            MESCOD = "EBB",   //"BES",                   //"EBB",         
                             STDMES = "Z1ZVOE",
                             SNDPOR = "eddy",
                             SNDPRT = "LS",
