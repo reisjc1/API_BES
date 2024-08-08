@@ -19,7 +19,8 @@ namespace WebApplication1.Models.SetupXML.XML
         private string sftpServer = "sftp.konicaminolta.eu";
         private string sftpUser = "EnBa9ycbGg";
         private string sftpPassword = "N37H4mabKf58TrVa";
-        private string sftpDirectory = "/qa/in"; // Ajuste conforme necessário
+        
+        //private string sftpDirectory = $"/{sftpFolder}/in"; // Ajuste conforme necessário
         public static void SerializeToXml<T>(T obj, string filePath)
         {
 
@@ -45,10 +46,12 @@ namespace WebApplication1.Models.SetupXML.XML
         {
             using (var sftp = new SftpClient(sftpServer, sftpUser, sftpPassword))
             {
+                string sftpFolder = @AppSettingsGet.SFTP;
                 try
                 {
                     sftp.Connect();
 
+                    string sftpDirectory = $"/{sftpFolder}/in"; // Ajuste conforme necessário
                     using (var fileStream = new FileStream(filepath, FileMode.Open))
                     {
                         sftp.UploadFile(fileStream, Path.Combine(sftpDirectory, Path.GetFileName(filepath)));
@@ -197,6 +200,10 @@ namespace WebApplication1.Models.SetupXML.XML
                     Conditions conditionsConfig = new Conditions();
                     var collectionConditions = conditionsConfig.ConfigConditions(collectionOrders, collectionContracts);
 
+                    //Config SAP 
+                    string mescod = @AppSettingsGet.SapConfigMESCOD;
+                    string rcvprn = @AppSettingsGet.RCVPRN;
+
                     //DEAL
                     Z1ZVOE_DEAL_1 myObject = new Z1ZVOE_DEAL_1();
                     myObject.IDOC = new Z1ZVOE_DEAL_1IDOC
@@ -211,12 +218,12 @@ namespace WebApplication1.Models.SetupXML.XML
                             TEST = "X",
                             IDOCTYP = "Z1ZVOE_DEAL",
                             MESTYP = "Z1ZVOE_DEAL",
-                            MESCOD = "BES",                   //"EBB",         
+                            MESCOD = mescod,   //"BES",                   //"EBB",         
                             STDMES = "Z1ZVOE",
                             SNDPOR = "eddy",
                             SNDPRT = "LS",
                             SNDPRN = "VIS",
-                            RCVPRN = "EUQCLNT100", //Quando Estiver em Prod : EUPCLNT100
+                            RCVPRN =  rcvprn,//"EUQCLNT100", //Quando Estiver em Prod : EUPCLNT100
                             RCVPRT = "LS",
                             ARCKEY = arckey
                         },

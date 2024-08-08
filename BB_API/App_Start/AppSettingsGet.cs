@@ -91,6 +91,18 @@ namespace WebApplication1.App_Start
         {
             get { return ConfigurationManager.AppSettings["HumanResourcesFileLocation"].ToString(); }
         }
+        public static string SapConfigMESCOD
+        {
+            get { return ConfigurationManager.AppSettings["SAPENVIROMENT_MESCOD"].ToString(); }
+        }
+        public static string RCVPRN
+        {
+            get { return ConfigurationManager.AppSettings["SAPENVIROMENT_RCVPRN"].ToString(); }
+        }
+        public static string SFTP
+        {
+            get { return ConfigurationManager.AppSettings["SAPENVIROMENT_SFTP"].ToString(); }
+        }
 
         public static string BasedadosConnect
         {
