@@ -409,8 +409,37 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // ##################################################################################
+        // ##################################################################################
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("DeleteDeliveryLocationIDX")]
+        public IHttpActionResult DeleteDeliveryLocationIDX(int IDX)
+        {
+            try
+            {
+                BB_Proposal_DeliveryLocation bB_Proposal_DeliveryLocations = dbX.BB_Proposal_DeliveryLocation.Where(x => x.IDX == IDX).FirstOrDefault();
 
+                List<BB_Proposal_ItemDoBasket> IDX_items = dbX.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == IDX).ToList();
+
+                if (bB_Proposal_DeliveryLocations != null)
+                {
+                    dbX.BB_Proposal_DeliveryLocation.Remove(bB_Proposal_DeliveryLocations);
+                }
+
+                if(IDX_items != null)
+                {
+                    dbX.BB_Proposal_ItemDoBasket.RemoveRange(IDX_items);
+                }
+                dbX.SaveChanges();
+
+                return Ok(IDX);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
         // ----------------------------- HELPERS -----------------------------
 
         public List<BB_LocaisEnvio> GetDeliveryLocationsFromSP(string AccountNumber, string ParentAccountNumber)
