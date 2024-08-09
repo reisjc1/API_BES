@@ -2344,41 +2344,41 @@ namespace WebApplication1.Controllers
             //sobrevalorizacao = a.ProposalObj.Draft.overvaluations.Select(x => x.Total).FirstOrDefault();
             double? OPSHWvalorTotal = 0;
             double? OPSHWUnti = 0;
-            if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0 && sobrevalorizacao1 > 0)
-            {
-                if (a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").Count() > 0)
-                {
+            //if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0 && sobrevalorizacao1 > 0)
+            //{
+            //    if (a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").Count() > 0)
+            //    {
 
 
-                    OPSHWvalorTotal = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.TotalNetsale)).First();
+            //        OPSHWvalorTotal = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.TotalNetsale)).First();
 
-                    OPSHWUnti = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.UnitDiscountPrice)).First();
-                }
-            }
+            //        OPSHWUnti = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.UnitDiscountPrice)).First();
+            //    }
+            //}
 
-            if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0)
-            {
+            //if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0)
+            //{
 
-                a.ProposalObj.Draft.details.ValueTotal = 0;
-                foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
-                {
-                    quote.TotalNetsale = sobrevalorizacao1 != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao1) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
-                    quote.UnitDiscountPrice = Math.Round((quote.TotalNetsale / quote.Qty), 2);
-                    //quote.TotalNetsale = sobrevalorizacao != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
+            //    a.ProposalObj.Draft.details.ValueTotal = 0;
+            //    foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
+            //    {
+            //        quote.TotalNetsale = sobrevalorizacao1 != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao1) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
+            //        quote.UnitDiscountPrice = Math.Round((quote.TotalNetsale / quote.Qty), 2);
+            //        //quote.TotalNetsale = sobrevalorizacao != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
 
-                    a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
-                }
-                a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
-            }
-            else
-            {
-                //a.ProposalObj.Draft.details.ValueTotal = 0;
-                //foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
-                //{
-                //    a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
-                //}
-                //a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
-            }
+            //        a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
+            //    }
+            //    a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
+            //}
+            //else
+            //{
+            //    //a.ProposalObj.Draft.details.ValueTotal = 0;
+            //    //foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
+            //    //{
+            //    //    a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
+            //    //}
+            //    //a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
+            //}
 
             using (var db1 = new BB_DB_DEV_LeaseDesk())
             {
