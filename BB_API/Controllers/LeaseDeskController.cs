@@ -2330,8 +2330,15 @@ namespace WebApplication1.Controllers
 
                 if (a.ProposalObj.Draft.financing.diffTerm != null)
                     a.ProposalObj.Draft.financing.diffTerm.Nlocadora = nLocadora;
+
+                a.ProposalObj.Draft.financingDetails = new FinancingDetails();
+                string contractType = db.BB_FinancingContractType.Where(x => x.ID == a.ProposalObj.Draft.financing.ContractTypeId).Select(x => x.Company).FirstOrDefault();
+                a.ProposalObj.Draft.financingDetails.ContractType = contractType;
+                string financingType = db.BB_FinancingType.Where(x => x.Code == a.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
+                a.ProposalObj.Draft.financingDetails.FinancingType = financingType;
             }
 
+            a.ProposalObj.Draft.financing.DateApproval = a.ProposalObj.Draft.financing.DateApproval;
 
             //sobrevalorizacao = (sobrevalorizacao + retomas) - retomas;
 

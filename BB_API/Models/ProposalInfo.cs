@@ -183,6 +183,8 @@ namespace WebApplication1.Models
         public List<Maquinas_Usadas_Gestor> Maquinas_Usadas_Gestor { get; set; }
         public List<BB_Permissions> shareProfileDelegation { get; set; }
         public BusinessContract contracts { get; set; }
+        public FinancingDetails financingDetails { get; set; }
+
     }
 
     public class OPSPacks
@@ -416,6 +418,11 @@ namespace WebApplication1.Models
         public string AgreementNumber { get; set; }
     }
 
+    public class FinancingDetails
+    {
+        public string ContractType { get; set; }
+        public string FinancingType { get; set; }
+    }
     public class DiffTerm
     {
         public double? Factor { get; set; }
