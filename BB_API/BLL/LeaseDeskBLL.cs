@@ -55,7 +55,7 @@ namespace WebApplication1.BLL
                 List<ItemGroups> groups = GetGroups(proposalId);
 
 
-                List<ConditionPVP> condPvp = cond.ConditionsVariables(groups, contractType, financing.Months);
+                List<ConditionPVP> condPvp = cond.ConditionsVariables(groups, contractType, financing.Months, proposalId, ft.Code);
 
 
                 return condPvp;
@@ -91,7 +91,8 @@ namespace WebApplication1.BLL
 
                             foreach (var item in items)
                             {
-                                if (firstItemGroup == true)
+                                BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                if (bB_Equipamentos != null)
                                 {
                                     ItemGroup group1 = new ItemGroup();
                                     group1.CodeRef = item.CodeRef;

@@ -90,9 +90,9 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             foreach (var item in group)
                             {
-                                //BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
 
-                                if (firstItemGroup == true)
+                                if (bB_Equipamentos != null)
                                 {
                                     collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                                     {

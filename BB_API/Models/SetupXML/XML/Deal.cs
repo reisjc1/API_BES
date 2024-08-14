@@ -198,7 +198,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     //CONDITIONS
                     Conditions conditionsConfig = new Conditions();
-                    var collectionConditions = conditionsConfig.ConfigConditions(collectionOrders, collectionContracts);
+                    var collectionConditions = conditionsConfig.ConfigConditions(collectionOrders, collectionContracts, d.ID);
 
                     //Config SAP 
                     string mescod = @AppSettingsGet.SapConfigMESCOD;
@@ -215,7 +215,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             MANDT = "100",
                             DOCREL = "700",
                             OUTMOD = "X",
-                            TEST = "X",
+                            //TEST = "X",
                             IDOCTYP = "Z1ZVOE_DEAL",
                             MESTYP = "Z1ZVOE_DEAL",
                             MESCOD = mescod,   //"BES",                   //"EBB",         
