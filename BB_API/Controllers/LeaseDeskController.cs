@@ -3853,7 +3853,6 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                
                 string directoryPath = Path.Combine(@"C:\LeaseDesk\Documentation\Contrato", contractId.ToString());
 
                 if (!Directory.Exists(directoryPath))
@@ -3861,14 +3860,12 @@ namespace WebApplication1.Controllers
                     Deal deal = new Deal();
                     deal.DealXML(contractId);
                     directoryPath = Path.Combine(@"C:\LeaseDesk\Documentation\Contrato", contractId.ToString());
-                    if(!Directory.Exists(directoryPath))
+                    if (!Directory.Exists(directoryPath))
                     {
                         return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Pasta não encontrada"));
                     }
-                    
                 }
 
-               
                 string[] xmlFiles = Directory.GetFiles(directoryPath, "*.xml");
 
                 if (xmlFiles.Length == 0)
@@ -3876,16 +3873,16 @@ namespace WebApplication1.Controllers
                     Deal deal = new Deal();
                     deal.DealXML(contractId);
                     xmlFiles = Directory.GetFiles(directoryPath, "*.xml");
-                    if(xmlFiles.Length == 0)
+                    if (xmlFiles.Length == 0)
                     {
                         return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Arquivo XML não encontrado na pasta"));
                     }
-
-
                 }
 
-              
-                string filePath = xmlFiles[0];
+                // Ordena os arquivos pela data de criação e seleciona o mais recente
+                string filePath = xmlFiles
+                                    .OrderByDescending(f => new FileInfo(f).CreationTime)
+                                    .FirstOrDefault();
 
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new ByteArrayContent(File.ReadAllBytes(filePath));
@@ -3899,10 +3896,10 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-              
                 return InternalServerError(ex);
             }
         }
+
         public class GravarObser
         {
 

@@ -12,7 +12,7 @@ namespace WebApplication1.Models.SetupXML.XML
     public class Conditions
     {
         public System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS> ConfigConditions(System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS> orders,
-        System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS> contracts, int proposalId)
+        System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS> contracts, int proposalId, int? ftCode)
         {
             var collectionConditions = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS>();
             foreach (var order in orders)
@@ -84,54 +84,116 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
 
-                            BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
-                            BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.MATERIAL).FirstOrDefault();
+                            BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.MATERIAL && x.Proposal_ID == proposalId).FirstOrDefault();
+                            BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(x => x.CodeRef == item.MATERIAL && x.ProposalID == proposalId).FirstOrDefault();
                             BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                             string financingCode = ConditionMaterial(item.MATERIAL, contracts[0].VT_VTART);
                             
                             ConditionPVP conditionPvp = conditionsPvp.Find(x => x.ConditionCode == financingCode);
-                            if(item.ITM_NUMBER == "20")
+                            if (quote != null)
                             {
-                                if (quote != null)
+                                if (conditionPvp != null)
                                 {
-                                    if (conditionPvp != null)
+                                    double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
+                                    if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
                                     {
-                                        double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
-                                        totalPvp = (quote.UnitDiscountPrice / contratoMeses) * pf.Factor;
-                                        conditionPvp.PVP = conditionPvp.PVP + totalPvp;
+                                        if (ftCode == 5)
+                                        {
+                                            if (pf.Factor > 0)
+                                            {
+                                                totalPvp = (quote.UnitDiscountPrice * (pf.Factor / 100)) + totalPvp;
+                                            }
+                                            else
+                                            {
+                                                totalPvp = (quote.UnitDiscountPrice * (pf.Factor)) + totalPvp;
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            if (pf.Factor > 0)
+                                            {
+                                                totalPvp = ((quote.UnitDiscountPrice / contratoMeses) * (pf.Factor / 100)) + totalPvp;
+                                            }
+                                            else
+                                            {
+                                                totalPvp = ((quote.UnitDiscountPrice / contratoMeses) * (pf.Factor)) + totalPvp;
+                                            }
+
+                                        }
                                     }
                                     else
                                     {
-                                        ConditionPVP condPvp = new ConditionPVP();
-                                        double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
-                                        totalPvp = (quote.UnitDiscountPrice / contratoMeses) * pf.Factor;
-
-                                        condPvp.PVP = totalPvp;
-                                        condPvp.ConditionCode = financingCode;
-                                        conditionsPvp.Add(condPvp);
+                                        totalPvp = (quote.UnitDiscountPrice / contratoMeses) + totalPvp;
                                     }
+                                    totalPvp = Math.Round(totalPvp ?? 0.0, 2);
+                                    conditionPvp.PVP = totalPvp;
                                 }
-                                if (ops != null)
+                                else
                                 {
-                                    if (conditionPvp != null)
+
+                                    ConditionPVP condPvp = new ConditionPVP();
+                                    double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
+                                    totalPvp = 0;
+                                    if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
                                     {
-                                        double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
-                                        totalPvp = (ops.UnitDiscountPrice / contratoMeses) * pf.Factor;
-                                        conditionPvp.PVP = conditionPvp.PVP + totalPvp;
+                                        if (ftCode == 5)
+                                        {
+                                            if (pf.Factor > 0)
+                                            {
+                                                totalPvp = (quote.UnitDiscountPrice) * (pf.Factor / 100);
+                                            }
+                                            else
+                                            {
+                                                totalPvp = (quote.UnitDiscountPrice) * (pf.Factor);
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            
+                                            if (pf.Factor > 0)
+                                            {
+                                                totalPvp = (quote.UnitDiscountPrice / contratoMeses) * (pf.Factor / 100);
+                                            }
+                                            else
+                                            {
+                                                totalPvp = (quote.UnitDiscountPrice / contratoMeses) * (pf.Factor);
+                                            }
+
+                                        }
                                     }
                                     else
                                     {
-                                        ConditionPVP condPvp = new ConditionPVP();
-                                        double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
-                                        totalPvp = (ops.UnitDiscountPrice / contratoMeses) * pf.Factor;
-
-                                        condPvp.PVP = totalPvp;
-                                        condPvp.ConditionCode = financingCode;
-                                        conditionsPvp.Add(condPvp);
+                                        totalPvp = quote.UnitDiscountPrice / contratoMeses;
                                     }
+
+                                    condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
+                                    condPvp.ConditionCode = financingCode;
+                                    conditionsPvp.Add(condPvp);
+
                                 }
                             }
-                           
+                            //if (ops != null)
+                            //{
+                            //    if (conditionPvp != null)
+                            //    {
+                            //        double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
+                            //        totalPvp = (ops.UnitDiscountPrice / contratoMeses) * pf.Factor;
+                            //        conditionPvp.PVP = conditionPvp.PVP + totalPvp;
+                            //    }
+                            //    else
+                            //    {
+                            //        ConditionPVP condPvp = new ConditionPVP();
+                            //        double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
+                            //        totalPvp = (ops.UnitDiscountPrice / contratoMeses) * pf.Factor;
+
+                            //        condPvp.PVP = totalPvp;
+                            //        condPvp.ConditionCode = financingCode;
+                            //        conditionsPvp.Add(condPvp);
+                            //    }
+                            //}
+
 
                         }
                     }
@@ -176,7 +238,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
             string financingCode = null;
 
-            if (financingType == "002" || financingType == "008")
+            if (financingType == "008")
             {
                 financingCode = "ZVBS";
             }
@@ -287,20 +349,19 @@ namespace WebApplication1.Models.SetupXML.XML
                                 
                                 //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
 
-                                BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
-                                BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.CodeRef).FirstOrDefault();
+                                BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.CodeRef && x.Proposal_ID == proposalId).FirstOrDefault();
+                                BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(x => x.CodeRef == item.CodeRef && x.ProposalID == proposalId).FirstOrDefault();
                                 string financingCode = ConditionMaterial(item.CodeRef, financingType);
                                 BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
                                 ConditionPVP conditionPvp = conditionsPvp.Find(x => x.ConditionCode == financingCode);
-                                if(item.BundleRef == true)
+                                if (quote != null)
                                 {
-                                    if (quote != null)
+                                    if (conditionPvp != null)
                                     {
-                                        if (conditionPvp != null)
+
+                                        if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
                                         {
-
-
                                             if (ftCode == 5)
                                             {
                                                 totalPvp = (quote.UnitDiscountPrice * (pf.Factor / 100)) + totalPvp;
@@ -309,70 +370,90 @@ namespace WebApplication1.Models.SetupXML.XML
                                             {
                                                 totalPvp = ((quote.UnitDiscountPrice / contractMonths) * (pf.Factor / 100)) + totalPvp;
                                             }
-
-
-                                            conditionPvp.PVP = totalPvp;
                                         }
                                         else
                                         {
-                                            ConditionPVP condPvp = new ConditionPVP();
-                                            totalPvp = 0;
+                                            totalPvp = (quote.UnitDiscountPrice / contractMonths) + totalPvp;
+                                        }
 
+
+                                        totalPvp = Math.Round(totalPvp ?? 0.0, 2);
+                                        conditionPvp.PVP = totalPvp;
+                                    }
+                                    else
+                                    {
+                                        ConditionPVP condPvp = new ConditionPVP();
+                                        totalPvp = 0;
+                                        if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
+                                        {
                                             if (ftCode == 5)
                                             {
-                                                totalPvp = quote.UnitDiscountPrice * (pf.Factor / 100);
+                                                if (pf.Factor > 0)
+                                                {
+                                                    totalPvp = (quote.UnitDiscountPrice) * (pf.Factor / 100);
+                                                }
+                                                else
+                                                {
+                                                    totalPvp = (quote.UnitDiscountPrice) * (pf.Factor);
+                                                }
+
                                             }
                                             else
                                             {
                                                 totalPvp = (quote.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
                                             }
-
-
-
-                                            condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
-                                            condPvp.ConditionCode = financingCode;
-                                            conditionsPvp.Add(condPvp);
-                                        }
-                                    }
-                                    if (ops != null)
-                                    {
-                                        if (conditionPvp != null)
-                                        {
-
-
-                                            if (ftCode == 5)
-                                            {
-                                                totalPvp = (ops.UnitDiscountPrice * (pf.Factor / 100)) + totalPvp;
-                                            }
-                                            else
-                                            {
-                                                totalPvp = ((ops.UnitDiscountPrice / contractMonths) * (pf.Factor / 100)) + totalPvp;
-                                            }
-
-
-                                            conditionPvp.PVP = totalPvp;
                                         }
                                         else
                                         {
-                                            ConditionPVP condPvp = new ConditionPVP();
-                                            totalPvp = 0;
-
-                                            if (ftCode == 5)
-                                            {
-                                                totalPvp = ops.UnitDiscountPrice * (pf.Factor / 100);
-                                            }
-                                            else
-                                            {
-                                                totalPvp = (ops.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
-                                            }
-
-                                            condPvp.PVP = totalPvp;
-                                            condPvp.ConditionCode = financingCode;
-                                            conditionsPvp.Add(condPvp);
+                                            totalPvp = quote.UnitDiscountPrice / contractMonths;
                                         }
+
+                                        condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
+                                        condPvp.ConditionCode = financingCode;
+                                        conditionsPvp.Add(condPvp);
                                     }
                                 }
-                                
+                                //if (ops != null)
+                                //{
+                                //    if (conditionPvp != null)
+                                //    {
+
+
+                                //        if (ftCode == 5)
+                                //        {
+                                //            totalPvp = (ops.UnitDiscountPrice * (pf.Factor / 100)) + totalPvp;
+                                //        }
+                                //        else
+                                //        {
+                                //            totalPvp = ((ops.UnitDiscountPrice / contractMonths) * (pf.Factor / 100)) + totalPvp;
+                                //        }
+
+
+                                //        conditionPvp.PVP = totalPvp;
+                                //    }
+                                //    else
+                                //    {
+                                //        ConditionPVP condPvp = new ConditionPVP();
+                                //        totalPvp = 0;
+
+                                //        if (ftCode == 5)
+                                //        {
+                                //            totalPvp = ops.UnitDiscountPrice * (pf.Factor / 100);
+                                //        }
+                                //        else
+                                //        {
+                                //            totalPvp = (ops.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
+                                //        }
+
+                                //        condPvp.PVP = totalPvp;
+                                //        condPvp.ConditionCode = financingCode;
+                                //        conditionsPvp.Add(condPvp);
+                                //    }
+                                //}
+
+
+
+
 
                             }
 

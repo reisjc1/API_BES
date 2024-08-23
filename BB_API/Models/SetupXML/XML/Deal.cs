@@ -2,6 +2,7 @@
 using Renci.SshNet;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,23 +20,33 @@ namespace WebApplication1.Models.SetupXML.XML
         private string sftpServer = "sftp.konicaminolta.eu";
         private string sftpUser = "EnBa9ycbGg";
         private string sftpPassword = "N37H4mabKf58TrVa";
-        
+
         //private string sftpDirectory = $"/{sftpFolder}/in"; // Ajuste conforme necessário
         public static void SerializeToXml<T>(T obj, string filePath)
         {
-
-
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T));
 
+               
+                var originalCulture = CultureInfo.CurrentCulture;
+
+               
+                var cultureWithDot = (CultureInfo)originalCulture.Clone();
+                cultureWithDot.NumberFormat.NumberDecimalSeparator = ".";
+
+              
+                CultureInfo.CurrentCulture = cultureWithDot;
+
                 using (StreamWriter writer = new StreamWriter(filePath))
                 {
-
                     serializer.Serialize(writer, obj);
                 }
 
                 Console.WriteLine($"XML file saved successfully to: {filePath}");
+
+             
+                CultureInfo.CurrentCulture = originalCulture;
             }
             catch (Exception ex)
             {
@@ -128,7 +139,10 @@ namespace WebApplication1.Models.SetupXML.XML
                     BB_FinancingType ft = db.BB_FinancingType.Where(x => x.Code == pf.FinancingTypeCode).FirstOrDefault();
 
                     contractoID = c.ID;
-
+                    if(contractId == 3472)
+                    {
+                        ft.Code = 5;
+                    }
                     switch (ft.Code)
                     {
                         case 0:
@@ -198,7 +212,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     //CONDITIONS
                     Conditions conditionsConfig = new Conditions();
-                    var collectionConditions = conditionsConfig.ConfigConditions(collectionOrders, collectionContracts, d.ID);
+                    var collectionConditions = conditionsConfig.ConfigConditions(collectionOrders, collectionContracts, d.ID, ft.Code);
 
                     //Config SAP 
                     string mescod = @AppSettingsGet.SapConfigMESCOD;

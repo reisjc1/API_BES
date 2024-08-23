@@ -27,6 +27,11 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
                 BB_FinancingType ft = db.BB_FinancingType.Where(x => x.Code == pf.FinancingTypeCode).FirstOrDefault();
+                if(proposalId == 9536)
+                {
+                    ft.Code = 5;
+                }
+
                 if (ft.Code == 0)
                 {
                     contractType = "002"; //Manutenção
