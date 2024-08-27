@@ -1365,8 +1365,8 @@ namespace WebApplication1.BLL
                     if (validationRequest.BB_PrintingServices.BWVolume != null) strBuilder.Append("<b>Volume Key</b>: " + validationRequest.BB_PrintingServices.BWVolume + "<br/>");
                     if (validationRequest.BB_PrintingServices.CVolume != null) strBuilder.Append("<b>Volume Cor</b>: " + validationRequest.BB_PrintingServices.CVolume + "<br/>");
                     strBuilder.Append("<br/>");
-                    if (validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickBW != null) strBuilder.Append("<b>Excedente Key</b>: " + validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickBW + " €<br/>");
-                    if (validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickC != null) strBuilder.Append("<b>Excedente Cor</b>: " + validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickC + " €<br/>");
+                    //if (validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickBW != null) strBuilder.Append("<b>Excedente Key</b>: " + validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickBW + " €<br/>");
+                    //if (validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickC != null) strBuilder.Append("<b>Excedente Cor</b>: " + validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickC + " €<br/>");
                     if (validationRequest.BB_PrintingServices.Fee != null) strBuilder.Append("<b>Acréscimo de Renda Cor</b>: " + validationRequest.BB_PrintingServices.Fee + " €<br/>");
                     strBuilder.Append("<br/>");
                     strBuilder.Append("<table style = '" + tableStyle + "'><tr><th style='" + thStyle + "'>Equipamento</th><th style='" + thStyle + "'>Quantidade</th><th style='" + thStyle + "'>Páginas Key</th><th style='" + thStyle + "'>Páginas Cor</th><th style='" + thStyle + "'>ClickPrice Key</th><th style='" + thStyle + "'>ClickPrice Cor</th></tr>");
