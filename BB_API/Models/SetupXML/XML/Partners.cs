@@ -153,27 +153,31 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             TAX_NO_1 = addressAddObj.TAX_NO_1,
                             TAX_NO_2 = addressAddObj.TAX_NO_2,
-                            ADDRNUMBER_2 = addressAddObj.ADDRNUMBER_2
+                            ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
                         });
                         i++;
                     }
-                    if (partnerInfo.POST_CODE1.StartsWith("29") || partnerInfo.POST_CODE1.StartsWith("46"))
+                    if (partnerInfo.POST_CODE1.StartsWith("294 ") || partnerInfo.POST_CODE1.StartsWith("46") || partnerInfo.POST_CODE1.StartsWith("12"))
                     {
                         string customerTU = "";
-                        if (partnerInfo.POST_CODE1.StartsWith("29"))
+                        if (partnerInfo.POST_CODE1.StartsWith("294"))
                         {
                             customerTU = "149450";
                         }
-                        if (partnerInfo.POST_CODE1.StartsWith("46"))
+                        if (partnerInfo.POST_CODE1.StartsWith("46") || partnerInfo.POST_CODE1.StartsWith("12"))
                         {
                             customerTU = "150423";
                         }
-                        collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                        if(partnerInfo.POST_CODE1 != "29470" && partnerInfo.POST_CODE1 != "29470" && partnerInfo.POST_CODE1 != "29490")
                         {
-                            SD_DOC = order.Sd_Doc,
-                            PARTN_ROLE = "TU",
-                            CUSTOMER = partnerInfo.CUSTOMER,
-                        });
+                            collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                            {
+                                SD_DOC = order.Sd_Doc,
+                                PARTN_ROLE = "TU",
+                                CUSTOMER = partnerInfo.CUSTOMER,
+                            });
+                        }
+                      
                     }
 
 

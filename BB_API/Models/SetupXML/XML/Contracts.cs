@@ -140,7 +140,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         VT_LAUFK = vtLaufk,
                         VT_VLAUFZ = pd.PrazoDiferenciado.ToString(),
                         VT_VLAUFE = "3",
-                        VT_ANZPOS = "1",//noOrders.ToString(),
+                        VT_ANZPOS = noOrders.ToString(),
                         VT_VUNDAT = FirstDayNextMonthString,
                         VT_ZTERM = "453E"
                     });

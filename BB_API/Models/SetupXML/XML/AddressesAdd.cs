@@ -52,7 +52,7 @@ namespace WebApplication1.Models.SetupXML.XML
             }
             addressAdd.TAX_NO_1 = partnerInfo.TAX_NO_1;
             addressAdd.TAX_NO_2 = partnerInfo.TAX_NO_2;
-            addressAdd.ADDRNUMBER_2 = AddNumber;
+            //addressAdd.ADDRNUMBER_2 = AddNumber;
             addressAdd.ADDRNUMBER = AddNumber;
             return addressAdd;
 
