@@ -844,7 +844,7 @@ namespace WebApplication1.BLL
                     }
 
                     validationRequest.ApprovedBy = approvedBy;
-                    validationRequest.IsApproved = true;
+                    validationRequest.IsApproved = svr.isApproved;
                     validationRequest.IsComplete = true;
                     validationRequest.SCObservations = svr.SCObservations;
                     validationRequest.BB_PrintingServices.BB_VVA.PVP = svr.ApprovedRent;
@@ -852,7 +852,15 @@ namespace WebApplication1.BLL
                     validationRequest.BB_PrintingServices.BB_VVA.CExcessPVP = svr.ApprovedExcessClickC;
                     validationRequest.BB_PrintingServices.Fee = svr.Fee;
                     validationRequest.ApprovedAt = DateTime.Now;
-                    validationRequest.IsApproved = svr.isApproved;
+
+                    if(svr.isApproved == false)
+                    {
+                        validationRequest.ToDelete = true;
+                    }
+                    else
+                    {
+                        validationRequest.ToDelete = false;
+                    }
 
 
                     foreach (OPSImplement implementPack in svr.OPSImplement)
@@ -1057,6 +1065,15 @@ namespace WebApplication1.BLL
                     validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickC = svr.ApprovedClickPriceC;
                     validationRequest.ApprovedAt = DateTime.Now;
 
+                    if (svr.isApproved == false)
+                    {
+                        validationRequest.ToDelete = true;
+                    }
+                    else
+                    {
+                        validationRequest.ToDelete = false;
+                    }
+
                     foreach (OPSImplement implementPack in svr.OPSImplement)
                     {
                         var toEdit = db.BB_Proposal_OPSImplement.Where(x => x.ID == implementPack.ID).FirstOrDefault();
@@ -1253,11 +1270,19 @@ namespace WebApplication1.BLL
                     }
 
                     validationRequest.ApprovedBy = approvedBy;
-                    validationRequest.IsApproved = true;
+                    validationRequest.IsApproved = svr.isApproved;
                     validationRequest.IsComplete = true;
                     validationRequest.SCObservations = svr.SCObservations;
                     validationRequest.BB_PrintingServices.Fee = svr.Fee;
                     validationRequest.ApprovedAt = DateTime.Now;
+                    if (svr.isApproved == false)
+                    {
+                        validationRequest.ToDelete = true;
+                    }
+                    else
+                    {
+                        validationRequest.ToDelete = false;
+                    }
 
                     foreach (OPSImplement implementPack in svr.OPSImplement)
                     {
