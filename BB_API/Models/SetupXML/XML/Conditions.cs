@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
+using OfficeOpenXml.FormulaParsing.Excel.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace WebApplication1.Models.SetupXML.XML
         public System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS> ConfigConditions(System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS> orders,
         System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS> contracts, int proposalId, int? ftCode)
         {
+            double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
             var collectionConditions = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS>();
             foreach (var order in orders)
             {
@@ -28,8 +30,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
                         if (contracts[0].VT_VTART == "002" || contracts[0].VT_VTART == "005" || contracts[0].VT_VTART == "008")
                         {
-                            BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
-                            BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.MATERIAL).FirstOrDefault();
+                            BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.MATERIAL && x.Proposal_ID == proposalId ).FirstOrDefault();
+                            //BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.MATERIAL).FirstOrDefault();
                             ConditionPVP conditionPVP = new ConditionPVP();
 
 
@@ -50,7 +52,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
 
                                 }
-                                else
+                                else if(quote.Family.Contains("PSV") || quote.Family.Contains("MSV") || quote.Family.Contains("CSV")|| quote.Family.Contains("SV"))
                                 {
                                     ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
                                     if (cond == null)
@@ -65,27 +67,27 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                 }
                             }
-                            if (ops != null)
-                            {
-                                ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
-                                if (cond == null)
-                                {
-                                    conditionPVP.ConditionCode = "ZSW4";
-                                    conditionPVP.PVP = ops.PVP * ops.Quantity;
-                                    conditionsPvp.Add(conditionPVP);
-                                }
-                                else
-                                {
-                                    cond.PVP = cond.PVP + (ops.PVP * ops.Quantity);
-                                }
-                            }
+                            //if (ops != null)
+                            //{
+                            //    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
+                            //    if (cond == null)
+                            //    {
+                            //        conditionPVP.ConditionCode = "ZSW4";
+                            //        conditionPVP.PVP = ops.PVP * ops.Quantity;
+                            //        conditionsPvp.Add(conditionPVP);
+                            //    }
+                            //    else
+                            //    {
+                            //        cond.PVP = cond.PVP + (ops.PVP * ops.Quantity);
+                            //    }
+                            //}
                         }
                         if (contracts[0].VT_VTART != "002")
                         {
                             //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
 
                             BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.MATERIAL && x.Proposal_ID == proposalId).FirstOrDefault();
-                            BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(x => x.CodeRef == item.MATERIAL && x.ProposalID == proposalId).FirstOrDefault();
+                            //BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(x => x.CodeRef == item.MATERIAL && x.ProposalID == proposalId).FirstOrDefault();
                             BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                             string financingCode = ConditionMaterial(item.MATERIAL, contracts[0].VT_VTART);
                             
@@ -94,7 +96,6 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 if (conditionPvp != null)
                                 {
-                                    double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
                                     if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
                                     {
                                         if (ftCode == 5)
@@ -133,7 +134,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
 
                                     ConditionPVP condPvp = new ConditionPVP();
-                                    double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
+                               
                                     totalPvp = 0;
                                     if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
                                     {
@@ -197,6 +198,33 @@ namespace WebApplication1.Models.SetupXML.XML
 
                         }
                     }
+                    BB_Proposal_OPSManage ops = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    
+                    if (ops != null)
+                    {
+                        string line1 = ops.CodeRef;
+                        string line2 = "9960DRC-HTTP ";
+                        BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line2).FirstOrDefault();
+                        double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
+                        double? opsPvpLine2 = opsPack.PVP;
+                        bool condExists = false;
+                        foreach (var cond in conditionsPvp)
+                        {
+                            if (cond.ConditionCode == "ZVBM")
+                            {
+                                condExists = true;
+                                cond.PVP = cond.PVP + (opsPvpLine2 / contratoMeses);
+                            }
+                        }
+                        if(condExists == false)
+                        {
+                            ConditionPVP condPvp = new ConditionPVP();
+                            condPvp.PVP = (opsPvpLine2 / contratoMeses);
+                            condPvp.ConditionCode = "ZVBM";
+                            conditionsPvp.Add(condPvp);
+                        }
+                    }
+
 
                 }
                 //if (contracts[0].VT_VTART == "003" || contracts[0].VT_VTART == "002") //Renting
@@ -292,7 +320,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             if (financingType == "002")
                             {
                                 BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
-                                BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.CodeRef).FirstOrDefault();
+                                //BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.CodeRef).FirstOrDefault();
                                 ConditionPVP conditionPVP = new ConditionPVP();
 
 
@@ -328,20 +356,20 @@ namespace WebApplication1.Models.SetupXML.XML
                                         }
                                     }
                                 }
-                                if (ops != null)
-                                {
-                                    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
-                                    if (cond == null)
-                                    {
-                                        conditionPVP.ConditionCode = "ZSW4";
-                                        conditionPVP.PVP = ops.PVP * ops.Quantity;
-                                        conditionsPvp.Add(conditionPVP);
-                                    }
-                                    else
-                                    {
-                                        cond.PVP = cond.PVP + (ops.PVP * ops.Quantity);
-                                    }
-                                }
+                                //if (ops != null)
+                                //{
+                                //    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
+                                //    if (cond == null)
+                                //    {
+                                //        conditionPVP.ConditionCode = "ZSW4";
+                                //        conditionPVP.PVP = ops.PVP * ops.Quantity;
+                                //        conditionsPvp.Add(conditionPVP);
+                                //    }
+                                //    else
+                                //    {
+                                //        cond.PVP = cond.PVP + (ops.PVP * ops.Quantity);
+                                //    }
+                                //}
 
                             }
                             else
@@ -350,7 +378,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
 
                                 BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.CodeRef && x.Proposal_ID == proposalId).FirstOrDefault();
-                                BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(x => x.CodeRef == item.CodeRef && x.ProposalID == proposalId).FirstOrDefault();
+                              
                                 string financingCode = ConditionMaterial(item.CodeRef, financingType);
                                 BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
@@ -400,7 +428,15 @@ namespace WebApplication1.Models.SetupXML.XML
                                             }
                                             else
                                             {
-                                                totalPvp = (quote.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
+                                                if(pf.Factor > 0)
+                                                {
+                                                    totalPvp = (quote.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
+                                                }
+                                                else
+                                                {
+                                                    totalPvp = (quote.UnitDiscountPrice / contractMonths) * (pf.Factor);
+                                                }
+                                                
                                             }
                                         }
                                         else
@@ -413,54 +449,42 @@ namespace WebApplication1.Models.SetupXML.XML
                                         conditionsPvp.Add(condPvp);
                                     }
                                 }
-                                //if (ops != null)
-                                //{
-                                //    if (conditionPvp != null)
-                                //    {
-
-
-                                //        if (ftCode == 5)
-                                //        {
-                                //            totalPvp = (ops.UnitDiscountPrice * (pf.Factor / 100)) + totalPvp;
-                                //        }
-                                //        else
-                                //        {
-                                //            totalPvp = ((ops.UnitDiscountPrice / contractMonths) * (pf.Factor / 100)) + totalPvp;
-                                //        }
-
-
-                                //        conditionPvp.PVP = totalPvp;
-                                //    }
-                                //    else
-                                //    {
-                                //        ConditionPVP condPvp = new ConditionPVP();
-                                //        totalPvp = 0;
-
-                                //        if (ftCode == 5)
-                                //        {
-                                //            totalPvp = ops.UnitDiscountPrice * (pf.Factor / 100);
-                                //        }
-                                //        else
-                                //        {
-                                //            totalPvp = (ops.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
-                                //        }
-
-                                //        condPvp.PVP = totalPvp;
-                                //        condPvp.ConditionCode = financingCode;
-                                //        conditionsPvp.Add(condPvp);
-                                //    }
-                                //}
-
-
-
-
 
                             }
+                           
 
+                        }
+                        BB_Proposal_OPSManage ops = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                        if (ops != null)
+                        {
+                            string line1 = ops.CodeRef;
+                            string line2 = "9960DRC-HTTP ";
+                            BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line2).FirstOrDefault();
+                            double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
+                            double? opsPvpLine2 = opsPack.PVP;
+                            bool condExists = false;
+                            foreach (var cond in conditionsPvp)
+                            {
+                                if (cond.ConditionCode == "ZVBM")
+                                {
+                                    condExists = true;
+                                    double opsPvpRounded = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
+                                    cond.PVP = cond.PVP + (opsPvpRounded);
+                                }
+                            }
+                            if (condExists == false)
+                            {
+                                ConditionPVP condPvp = new ConditionPVP();
+                                double opsPvpRounded  = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
+                                condPvp.PVP = opsPvpRounded;
+                                condPvp.ConditionCode = "ZVBM";
+                                conditionsPvp.Add(condPvp);
+                            }
                         }
 
                         //pvpItems = pvpItems + itemDoBasket.TotalPVP;
                     }
+                   
 
 
                 }

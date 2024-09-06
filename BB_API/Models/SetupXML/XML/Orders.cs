@@ -85,15 +85,19 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             string contractItm = contractIndexString + "0";
                             List<BB_Proposal_ItemDoBasket> group = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliveryLocation.IDX && x.Group == order.Group).ToList();
-
+                            
                             int itm_number = 30;
-
+                            bool isMachine = false;
                             foreach (var item in group)
                             {
                                 BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                
+
+                                BB_Proposal_ItemDoBasket lastItemGroup = group.Last();
 
                                 if (bB_Equipamentos != null)
                                 {
+                                    isMachine = true;
                                     collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                                     {
                                         SD_DOC = orderDoc,
@@ -108,16 +112,60 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                                 else
                                 {
-                                    collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                    if (item == lastItemGroup && isMachine == false)
                                     {
-                                        SD_DOC = orderDoc,
-                                        ITM_NUMBER = itm_number.ToString(), // contractItm,
-                                        MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
-                                        REQ_QTY = order.Qty.ToString(),
-                                        MODEL_YN = "Y" // Perguntar ao Luis
-                                    });
+                                        collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                        {
+                                            SD_DOC = orderDoc,
+                                            ITM_NUMBER = "20", // contractItm,
+                                            MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
+                                            REQ_QTY = order.Qty.ToString(),
+                                            MODEL_YN = "Y" // Perguntar ao Luis
+                                        });
+
+                                    }
+                                    else
+                                    {
+                                        collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                        {
+                                            SD_DOC = orderDoc,
+                                            ITM_NUMBER = itm_number.ToString(), // contractItm,
+                                            MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
+                                            REQ_QTY = order.Qty.ToString(),
+                                            MODEL_YN = "Y" // Perguntar ao Luis
+                                        });
+
+                                    }
+
                                     itm_number = itm_number + 10;
                                 }
+                            }
+                            BB_Proposal_OPSManage ops = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                            if(ops != null)
+                            {
+                                string line1 = ops.CodeRef;
+                                string line2 = "9960DRC-HTTP ";
+                                BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line2).FirstOrDefault();
+                                double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
+                                double? opsPvpLine2 = opsPack.PVP;
+                                collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                {
+                                    SD_DOC = orderDoc,
+                                    ITM_NUMBER = itm_number.ToString(), // contractItm,
+                                    MATERIAL = line1, //"A6DR021",//order.CodeRef,
+                                    REQ_QTY = "1",
+                                    MODEL_YN = "Y" // Perguntar ao Luis
+                                });
+                                itm_number += 10;
+                                collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                {
+                                    SD_DOC = orderDoc,
+                                    ITM_NUMBER = itm_number.ToString(), // contractItm,
+                                    MATERIAL = line2, //"A6DR021",//order.CodeRef,
+                                    REQ_QTY = "1",
+                                    MODEL_YN = "Y" // Perguntar ao Luis
+                                });
+
                             }
 
                             BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliveryLocation.DeliveryContact).FirstOrDefault();
