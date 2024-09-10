@@ -44,7 +44,8 @@ namespace WebApplication1.Controllers
                     if (parentAccountNr != "")
                     {
                         //nunca enviar ambos os parametros != null
-                        lst_Locais = GetDeliveryLocationsFromSP(null, parentAccountNr);
+                        List<BB_LocaisEnvio> current_lst_Locais = GetDeliveryLocationsFromSP(null, parentAccountNr);
+                        lst_Locais.AddRange(current_lst_Locais);
                         dl.lst_LocaisEnvio = lst_Locais;
                     }
 
