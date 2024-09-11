@@ -656,7 +656,7 @@ namespace WebApplication1.Controllers
 
                 if (proposal != null)
                 {
-                    Observations = HttpContext.Current.Request.Params["Observations"];
+                    Observations = HttpContext.Current.Request.Params["Comments"];
                     int ContractType = Int32.Parse(HttpContext.Current.Request.Params["ContractType"]);
                     int ContractoId = 0;
                     //List<string> contactos = JsonConvert.DeserializeObject<List<string>>(HttpContext.Current.Request.Params["Contacts"]);
