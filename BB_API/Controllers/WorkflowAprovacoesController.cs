@@ -1737,7 +1737,13 @@ namespace WebApplication1.Controllers
                                 TotalCost_ = rdr["TotalCost_"] != DBNull.Value ? (double?)rdr["TotalCost_"] : null,
                                 passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
                                 alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
+                                NotTreated = rdr["NotTreated"] != DBNull.Value ? (bool?)rdr["NotTreated"] : null,
                             };
+                        
+                        if(bbp_quote.passedValidation == false && (bbp_quote.alertMessage=="" || bbp_quote.alertMessage == null))
+                        {
+                            bbp_quote.alertMessage = "pendingApproval";
+                        }
 
                         wrp.Lst_BBP_Quote.Add(bbp_quote);
                     }
@@ -1788,6 +1794,11 @@ namespace WebApplication1.Controllers
                             passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
                             alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
                         };
+
+                        if (bbp_rs_quote.passedValidation == false && (bbp_rs_quote.alertMessage == "" || bbp_rs_quote.alertMessage == null))
+                        {
+                            bbp_rs_quote.alertMessage = "pendingApproval";
+                        }
 
                         wrp.Lst_BBP_RS_Quote.Add(bbp_rs_quote);
                     }
@@ -2135,6 +2146,7 @@ namespace WebApplication1.Controllers
             public Nullable<double> TotalCost_ { get; set; }
             public Nullable<bool> passedValidation { get; set; }
             public string alertMessage { get; set; }
+            public Nullable<bool> NotTreated { get; set; }
         }
 
         public partial class BB_Proposal_Quote_RS_WFA
