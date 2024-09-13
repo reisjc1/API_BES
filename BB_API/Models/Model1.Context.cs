@@ -139,5 +139,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
         public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
         public virtual DbSet<BB_Proposal_DL_ClientContacts> BB_Proposal_DL_ClientContacts { get; set; }
+        public virtual DbSet<BB_Proposal_Condition_Type> BB_Proposal_Condition_Type { get; set; }
     }
 }

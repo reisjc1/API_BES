@@ -872,6 +872,15 @@
           <Property Name="totalCommission" Type="float" />
           <Property Name="ProposalID" Type="int" />
         </EntityType>
+        <EntityType Name="BB_Proposal_Condition_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="ConditionType" Type="varchar" MaxLength="100" />
+          <Property Name="ConditionValue" Type="float" />
+        </EntityType>
         <EntityType Name="BB_Proposal_Consignments">
           <Key>
             <PropertyRef Name="ID" />
@@ -1868,6 +1877,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_Proposal_Aprovacao_Quote" EntityType="Self.BB_Proposal_Aprovacao_Quote" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Client" EntityType="Self.BB_Proposal_Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Commission" EntityType="Self.BB_Proposal_Commission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_Proposal_Condition_Type" EntityType="Self.BB_Proposal_Condition_Type" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Consignments" EntityType="Self.BB_Proposal_Consignments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Contacts" EntityType="Self.BB_Proposal_Contacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="Self.BB_Proposal_Contacts_Documentation" Schema="dbo" store:Type="Tables" />
@@ -2173,6 +2183,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
           <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
+          <EntitySet Name="BB_Proposal_Condition_Type" EntityType="BB_DB_DEVModel.BB_Proposal_Condition_Type" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3979,6 +3990,15 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="Tel" Type="Int32" />
           <Property Name="Movil" Type="Int32" />
           <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Condition_Type">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="ConditionType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ConditionValue" Type="Double" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5790,6 +5810,16 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Condition_Type">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Condition_Type">
+              <MappingFragment StoreEntitySet="BB_Proposal_Condition_Type">
+                <ScalarProperty Name="ConditionValue" ColumnName="ConditionValue" />
+                <ScalarProperty Name="ConditionType" ColumnName="ConditionType" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

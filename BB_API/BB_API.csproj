@@ -457,6 +457,9 @@
     <Compile Include="Models\BB_Proposal_Commission.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_Proposal_Condition_Type.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_Proposal_Consignments.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

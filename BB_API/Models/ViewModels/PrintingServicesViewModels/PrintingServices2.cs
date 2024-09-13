@@ -19,5 +19,6 @@ namespace WebApplication1.Models.ViewModels
         public Nullable<int> ActivePrintingService { get; set; }
         public List<ApprovedPrintingService> ApprovedPrintingServices { get; set; }
         public List<ApprovedPrintingService> PendingServiceQuoteRequests { get; set; }
+        public Nullable<double> PrintingCondition { get; set; }
     }
 }
