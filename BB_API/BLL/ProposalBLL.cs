@@ -1161,7 +1161,6 @@ namespace WebApplication1.BLL
                     typeOfClient.NewBusinessLine = p.Draft.baskets.newBusinessLine;
                     typeOfClient.GMA = p.Draft.baskets.GMA;
                     typeOfClient.BEUSupport = p.Draft.baskets.BEUSupport;
-                    
 
                     try
                     {
@@ -1171,6 +1170,46 @@ namespace WebApplication1.BLL
                     catch (Exception ex)
                     {
                         throw ex;
+                    }
+
+                    if(p.Draft.printingServices2.PrintingCondition != 0)
+                    {
+                        BB_Proposal_Condition_Type existPrintingCondition = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == p.Draft.details.ID && x.ConditionType == "ZVBS").FirstOrDefault();
+
+                        if(existPrintingCondition != null)
+                        {
+                            existPrintingCondition.ConditionValue = p.Draft.printingServices2.PrintingCondition;
+
+                            try
+                            {
+                                db.BB_Proposal_Condition_Type.AddOrUpdate(existPrintingCondition);
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                throw ex;
+                            }
+
+                        }
+                        else
+                        {
+                            BB_Proposal_Condition_Type printingConditionType = new BB_Proposal_Condition_Type()
+                            {
+                                ProposalID = p.Draft.details.ID,
+                                ConditionType = "ZVBS",
+                                ConditionValue = p.Draft.printingServices2.PrintingCondition
+                            };
+
+                            try
+                            {
+                                db.BB_Proposal_Condition_Type.AddOrUpdate(printingConditionType);
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                throw ex;
+                            }
+                        }
                     }
 
 
@@ -1423,6 +1462,9 @@ namespace WebApplication1.BLL
                     .Include(x => x.BB_PrintingServices.Select(ps => ps.BB_VVA))
                     .Include(a => a.BB_PrintingServices.Select(m => m.BB_PrintingService_Machines))
                     .FirstOrDefault(x => x.ProposalID == proposal.ID);
+                BB_Proposal_Condition_Type existPrintingCondition = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposal.ID && x.ConditionType == "ZVBS").FirstOrDefault();
+
+                    
                 if (printingServices2 != null)
                 {
                     PrintingServices2 proposalPS2 = new PrintingServices2()
@@ -1430,8 +1472,14 @@ namespace WebApplication1.BLL
                         ID = printingServices2.ID,
                         ActivePrintingService = printingServices2.ActivePrintingService,
                         ApprovedPrintingServices = new List<ApprovedPrintingService>(),
-                        PendingServiceQuoteRequests = new List<ApprovedPrintingService>()
+                        PendingServiceQuoteRequests = new List<ApprovedPrintingService>(),
+                        PrintingCondition = 0
                     };
+
+                    if (existPrintingCondition != null)
+                    {
+                       proposalPS2.PrintingCondition = existPrintingCondition.ConditionValue;
+                    }
                     foreach (BB_PrintingServices ps in printingServices2.BB_PrintingServices)
                     {
                         ApprovedPrintingService newPS = new ApprovedPrintingService()
@@ -1506,7 +1554,7 @@ namespace WebApplication1.BLL
                             newPS.RequestedAt = validationRequest.RequestedAt;
                             newPS.SCObservations = validationRequest.SCObservations;
                             newPS.SEObservations = validationRequest.SEObservations;
-                            if (validationRequest.IsComplete.Value)
+                            if (validationRequest.IsComplete.Value && validationRequest.IsApproved == true)
                             {
                                 proposalPS2.ApprovedPrintingServices.Add(newPS);
                             }
@@ -2499,6 +2547,26 @@ namespace WebApplication1.BLL
                     throw ex;
                 }
 
+                if (p.Draft.printingServices2.PrintingCondition != 0)
+                {
+                    BB_Proposal_Condition_Type printingConditionType = new BB_Proposal_Condition_Type()
+                    {
+                        ProposalID = p.Draft.details.ID,
+                        ConditionType = "ZVBS",
+                        ConditionValue = p.Draft.printingServices2.PrintingCondition
+                    };
+
+                    try
+                    {
+                        db.BB_Proposal_Condition_Type.AddOrUpdate(printingConditionType);
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+                
 
             }
             catch (Exception e)
