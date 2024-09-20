@@ -683,7 +683,7 @@ namespace WebApplication1.Controllers
                             ld.ProposalID = proposal.ID;
                             ld.QuoteNumber = proposal.CRM_QUOTE_ID;
                             ld.CreatedBy = proposal.CreatedBy;
-                            ld.ModifiedBy = proposal.CreatedBy;
+                            //ld.ModifiedBy = proposal.CreatedBy;
                             ld.CreatedTime = DateTime.Now;
                             ld.ModifiedTime = DateTime.Now;
                             ld.TipoContratoID = ContractType;
