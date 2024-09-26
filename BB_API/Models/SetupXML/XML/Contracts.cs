@@ -122,6 +122,8 @@ namespace WebApplication1.Models.SetupXML.XML
                         formattedDtCont = createdTime.ToString("yyyyMMdd");
                     }
 
+                    bool? isMultipleContract = db.BB_Proposal.Where(x => x.ID == proposalId).Select(x => x.IsMultipleContract).FirstOrDefault();
+
                     int index = contracts.IndexOf(contract) + 1;
                     string contractIndexString = index.ToString();
                     collectionContracts.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS
@@ -136,13 +138,14 @@ namespace WebApplication1.Models.SetupXML.XML
                         VT_VTART = contractType,
                         VT_SERWI = "BES",             //"BES",
                         VT_ESCAL = "08",
-                        VT_AUGRU = "ZCC",             //input de um campo -> ZCC = só 1 contrato   // ZCS
+                        VT_AUGRU = isMultipleContract == false ? "ZCS" : "ZCC",             //input de um campo -> ZCC = só 1 contrato   // ZCS
                         VT_LAUFK = vtLaufk,
                         VT_VLAUFZ = pd.PrazoDiferenciado.ToString(),
                         VT_VLAUFE = "3",
                         VT_ANZPOS = noOrders.ToString(),
                         VT_VUNDAT = FirstDayNextMonthString,
-                        VT_ZTERM = "453E"
+                        VT_ZTERM = "453E",
+                        VT_FAKSK = "X"
                     });
 
                 }
@@ -172,6 +175,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     DateTime currentDate = DateTime.Now;
                     string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
                     int noOrders = bb_itemsDoBasket.Count();
+                    bool? isMultipleContract = db.BB_Proposal.Where(x => x.ID == proposalId).Select(x => x.IsMultipleContract).FirstOrDefault();
 
                     collectionContracts.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS
                     {
@@ -184,13 +188,14 @@ namespace WebApplication1.Models.SetupXML.XML
                         VT_VTART = contractType,
                         VT_SERWI = "BES",       //"BES",
                         VT_ESCAL = "08",        //TODO: Para depois do GO LIVE -- ver com a adm os possiveis valores. 
-                        VT_AUGRU = "ZCC",       //input de um campo -> ZCC = só 1 contrato   // ZCS           //TODO: Falar com a Mylene -- BB_Proposal
+                        VT_AUGRU = isMultipleContract == false ? "ZCS" : "ZCC",       //input de um campo -> ZCC = só 1 contrato   // ZCS           //TODO: Falar com a Mylene -- BB_Proposal
                         VT_LAUFK = vtLaufk,
                         VT_VLAUFZ = pd.PrazoDiferenciado.ToString(),
                         VT_VLAUFE = "3",        //TODO: Para depois do GO LIVE                                                                                                                                                               
                         VT_ANZPOS = "1",//noOrders.ToString(),
                         VT_VUNDAT = FirstDayNextMonthString,
-                        VT_ZTERM = "453E"       //TODO: FinancingPaymentMethods.
+                        VT_ZTERM = "453E",       //TODO: FinancingPaymentMethods.
+                        VT_FAKSK = "X"
                     });
                 }
 

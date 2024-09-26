@@ -73,8 +73,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_OPS_Implement_Packs" Width="1.5" PointX="25.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_OPS_Manage_Packs" Width="1.5" PointX="9.375" PointY="25.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Quote" Width="2.375" PointX="25.375" PointY="19.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_PrintingService_Machines" Width="1.5" PointX="21.375" PointY="38" />
-        <AssociationConnector Association="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_PrintingServices_ClickPerModel" Width="1.5" PointX="21.375" PointY="43.375" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_PrazoDiferenciado_History" Width="2" PointX="10.75" PointY="19.75" />
@@ -128,6 +126,8 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Financing" Width="1.5" PointX="0.75" PointY="26.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" Width="1.5" PointX="33.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Condition_Type" Width="1.5" PointX="28.375" PointY="4.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_PrintingService_Machines" Width="1.5" PointX="21.375" PointY="37.875" />
+        <AssociationConnector Association="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

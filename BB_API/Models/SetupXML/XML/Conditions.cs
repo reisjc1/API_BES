@@ -32,6 +32,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.MATERIAL && x.Proposal_ID == proposalId ).FirstOrDefault();
                             //BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.MATERIAL).FirstOrDefault();
+
                             ConditionPVP conditionPVP = new ConditionPVP();
 
 
@@ -63,7 +64,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                     else
                                     {
-                                        cond.PVP = cond.PVP + quote.TotalPVP;
+                                        cond.PVP = cond.PVP + quote.TotalPVP; 
                                     }
                                 }
                             }
@@ -96,7 +97,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 if (conditionPvp != null)
                                 {
-                                    if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
+                                    if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                     {
                                         if (ftCode == 5)
                                         {
@@ -136,7 +137,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     ConditionPVP condPvp = new ConditionPVP();
                                
                                     totalPvp = 0;
-                                    if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
+                                    if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                     {
                                         if (ftCode == 5)
                                         {
@@ -219,11 +220,21 @@ namespace WebApplication1.Models.SetupXML.XML
                         if(condExists == false)
                         {
                             ConditionPVP condPvp = new ConditionPVP();
-                            condPvp.PVP = (opsPvpLine2 / contratoMeses);
+                            condPvp.PVP = opsPvpLine2 / contratoMeses;
                             condPvp.ConditionCode = "ZVBM";
                             conditionsPvp.Add(condPvp);
                         }
                     }
+
+                    BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+
+                    collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                    {
+                        DOC = order.SD_DOC,
+                        COND_FLAG = "A",
+                        KSCHL = zvbs.ConditionType,
+                        KBETR = Math.Round(zvbs.ConditionValue ?? 0.0, 2).ToString("F2")
+                    }); ;
 
 
                 }
@@ -250,10 +261,9 @@ namespace WebApplication1.Models.SetupXML.XML
                         DOC = order.SD_DOC,
                         COND_FLAG = condFlag,
                         KSCHL = condition.ConditionCode,
-                        KBETR = condition.PVP.ToString()
+                        KBETR = Math.Round(condition.PVP ?? 0.0, 2).ToString("F2")
                     });
                 }
-
 
             }
             return collectionConditions;
@@ -405,7 +415,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         }
 
 
-                                        totalPvp = Math.Round(totalPvp ?? 0.0, 2);
+                                        totalPvp = Double.Parse(Math.Round(totalPvp ?? 0.0, 2).ToString("F2"));;
                                         conditionPvp.PVP = totalPvp;
                                     }
                                     else
@@ -444,7 +454,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             totalPvp = quote.UnitDiscountPrice / contractMonths;
                                         }
 
-                                        condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
+                                        condPvp.PVP = Double.Parse(Math.Round(totalPvp ?? 0.0, 2).ToString("F2"));;
                                         condPvp.ConditionCode = financingCode;
                                         conditionsPvp.Add(condPvp);
                                     }

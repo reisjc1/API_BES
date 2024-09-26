@@ -199,8 +199,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                     APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
                                 });
                             }
-                            if (financing == "AL")
-                            {
+                            //if (financing == "AL")
+                            //{
 
                                 collectionOrdersFinance.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE
                                 {
@@ -210,7 +210,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     LEAS_ZTERM = "E60D"
 
                                 });
-                            }
+                            //}
                             DateTime currentDate = DateTime.Now;
                             string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
                             collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS

@@ -34,8 +34,8 @@ namespace WebApplication1.Models
         public virtual ICollection<BB_Proposal_PrintingServiceValidationRequest> BB_Proposal_PrintingServiceValidationRequest { get; set; }
         public virtual BB_VVA BB_VVA { get; set; }
         public virtual BB_PrintingServices_NoVolume BB_PrintingServices_NoVolume { get; set; }
+        public virtual BB_PrintingServices_ClickPerModel BB_PrintingServices_ClickPerModel { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BB_PrintingService_Machines> BB_PrintingService_Machines { get; set; }
-        public virtual BB_PrintingServices_ClickPerModel BB_PrintingServices_ClickPerModel { get; set; }
     }
 }

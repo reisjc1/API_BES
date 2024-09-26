@@ -243,13 +243,13 @@ namespace WebApplication1.Models.SetupXML.XML
                         },
                         Z1ZVOE_DEAL = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_DEAL
                         {
-                            KUNAG = "1132257",//"1137222",                  //d.ClientAccountNumber
+                            KUNAG = d.ClientAccountNumber, //"1132257",//"1137222",                  
                             VKORG = "5000",
                             VTWEG = "24",
                             SPART = "01",
                             VISPN = arckey,
                             VTTYP = financingType,
-                            PRREL = "X",
+                            PRREL = d.IsMultipleContract == false ? "" : "X",
                             PRRDAT = formattedDtDeal,
                             BNL_RLIST = "X", //Falar com a BEU
                             SALESP = "50004700"   //   user != null && !string.IsNullOrEmpty(user.ErpNumber) ? user.ErpNumber : "",             //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores

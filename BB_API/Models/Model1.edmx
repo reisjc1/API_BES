@@ -2117,11 +2117,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_OPS_Implement_Packs" EntityType="BB_DB_DEVModel.BB_OPS_Implement_Packs" />
           <EntitySet Name="BB_OPS_Manage_Packs" EntityType="BB_DB_DEVModel.BB_OPS_Manage_Packs" />
           <EntitySet Name="BB_Proposal_Quote" EntityType="BB_DB_DEVModel.BB_Proposal_Quote" />
-          <EntitySet Name="BB_PrintingService_Machines" EntityType="BB_DB_DEVModel.BB_PrintingService_Machines" />
-          <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices">
-            <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
-            <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
-          </AssociationSet>
           <EntitySet Name="BB_PrintingServices_ClickPerModel" EntityType="BB_DB_DEVModel.BB_PrintingServices_ClickPerModel" />
           <AssociationSet Name="FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" Association="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
@@ -2184,6 +2179,11 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
           <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
           <EntitySet Name="BB_Proposal_Condition_Type" EntityType="BB_DB_DEVModel.BB_Proposal_Condition_Type" />
+          <EntitySet Name="BB_PrintingService_Machines" EntityType="BB_DB_DEVModel.BB_PrintingService_Machines" />
+          <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices">
+            <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
+            <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -2795,8 +2795,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <NavigationProperty Name="BB_Proposal_PrintingServiceValidationRequest" Relationship="BB_DB_DEVModel.FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_Proposal_PrintingServiceValidationRequest" />
           <NavigationProperty Name="BB_VVA" Relationship="BB_DB_DEVModel.FK_BB_VVA_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_VVA" />
           <NavigationProperty Name="BB_PrintingServices_NoVolume" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_NoVolume_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_PrintingServices_NoVolume" />
-          <NavigationProperty Name="BB_PrintingService_Machines" Relationship="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_PrintingService_Machines" />
           <NavigationProperty Name="BB_PrintingServices_ClickPerModel" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" FromRole="BB_PrintingServices" ToRole="BB_PrintingServices_ClickPerModel" />
+          <NavigationProperty Name="BB_PrintingService_Machines" Relationship="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_PrintingService_Machines" />
         </EntityType>
         <EntityType Name="BB_Proposal_PrintingServices2">
           <Key>
@@ -3073,41 +3073,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="UnitPriceCost_" Type="Double" />
           <Property Name="TotalCost_" Type="Double" />
         </EntityType>
-        <EntityType Name="BB_PrintingService_Machines">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="PrintingServiceID" Type="Int32" Nullable="false" />
-          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BWVolume" Type="Int32" />
-          <Property Name="CVolume" Type="Int32" />
-          <Property Name="BWPVP" Type="Double" />
-          <Property Name="CPVP" Type="Double" />
-          <Property Name="BWCost" Type="Double" />
-          <Property Name="CCost" Type="Double" />
-          <Property Name="ApprovedBW" Type="Double" />
-          <Property Name="ApprovedC" Type="Double" />
-          <Property Name="IsInClient" Type="Boolean" />
-          <Property Name="IsUsed" Type="Boolean" />
-          <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" FromRole="BB_PrintingService_Machines" ToRole="BB_PrintingServices" />
-          <Property Name="RequestedBWClickPrice" Type="Double" />
-          <Property Name="RequestedCClickPrice" Type="Double" />
-        </EntityType>
-        <Association Name="FK_BB_PrintingService_Machines_BB_PrintingServices">
-          <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="1" />
-          <End Type="BB_DB_DEVModel.BB_PrintingService_Machines" Role="BB_PrintingService_Machines" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BB_PrintingServices">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BB_PrintingService_Machines">
-              <PropertyRef Name="PrintingServiceID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="BB_PrintingServices_ClickPerModel">
           <Key>
             <PropertyRef Name="PrintingServiceID" />
@@ -4000,6 +3965,41 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="ConditionType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ConditionValue" Type="Double" />
         </EntityType>
+        <EntityType Name="BB_PrintingService_Machines">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="PrintingServiceID" Type="Int32" Nullable="false" />
+          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BWVolume" Type="Int32" />
+          <Property Name="CVolume" Type="Int32" />
+          <Property Name="BWPVP" Type="Double" />
+          <Property Name="CPVP" Type="Double" />
+          <Property Name="BWCost" Type="Double" />
+          <Property Name="CCost" Type="Double" />
+          <Property Name="ApprovedBW" Type="Double" />
+          <Property Name="ApprovedC" Type="Double" />
+          <Property Name="IsInClient" Type="Boolean" />
+          <Property Name="IsUsed" Type="Boolean" />
+          <Property Name="RequestedBWClickPrice" Type="Double" />
+          <Property Name="RequestedCClickPrice" Type="Double" />
+          <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" FromRole="BB_PrintingService_Machines" ToRole="BB_PrintingServices" />
+        </EntityType>
+        <Association Name="FK_BB_PrintingService_Machines_BB_PrintingServices">
+          <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="1" />
+          <End Type="BB_DB_DEVModel.BB_PrintingService_Machines" Role="BB_PrintingService_Machines" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BB_PrintingServices">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BB_PrintingService_Machines">
+              <PropertyRef Name="PrintingServiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4897,29 +4897,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_PrintingService_Machines">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_PrintingService_Machines">
-              <MappingFragment StoreEntitySet="BB_PrintingService_Machines">
-                <ScalarProperty Name="RequestedCClickPrice" ColumnName="RequestedCClickPrice" />
-                <ScalarProperty Name="RequestedBWClickPrice" ColumnName="RequestedBWClickPrice" />
-                <ScalarProperty Name="IsUsed" ColumnName="IsUsed" />
-                <ScalarProperty Name="IsInClient" ColumnName="IsInClient" />
-                <ScalarProperty Name="ApprovedC" ColumnName="ApprovedC" />
-                <ScalarProperty Name="ApprovedBW" ColumnName="ApprovedBW" />
-                <ScalarProperty Name="CCost" ColumnName="CCost" />
-                <ScalarProperty Name="BWCost" ColumnName="BWCost" />
-                <ScalarProperty Name="CPVP" ColumnName="CPVP" />
-                <ScalarProperty Name="BWPVP" ColumnName="BWPVP" />
-                <ScalarProperty Name="CVolume" ColumnName="CVolume" />
-                <ScalarProperty Name="BWVolume" ColumnName="BWVolume" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
-                <ScalarProperty Name="PrintingServiceID" ColumnName="PrintingServiceID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5821,6 +5798,29 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="ConditionType" ColumnName="ConditionType" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_PrintingService_Machines">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_PrintingService_Machines">
+              <MappingFragment StoreEntitySet="BB_PrintingService_Machines">
+                <ScalarProperty Name="RequestedCClickPrice" ColumnName="RequestedCClickPrice" />
+                <ScalarProperty Name="RequestedBWClickPrice" ColumnName="RequestedBWClickPrice" />
+                <ScalarProperty Name="IsUsed" ColumnName="IsUsed" />
+                <ScalarProperty Name="IsInClient" ColumnName="IsInClient" />
+                <ScalarProperty Name="ApprovedC" ColumnName="ApprovedC" />
+                <ScalarProperty Name="ApprovedBW" ColumnName="ApprovedBW" />
+                <ScalarProperty Name="CCost" ColumnName="CCost" />
+                <ScalarProperty Name="BWCost" ColumnName="BWCost" />
+                <ScalarProperty Name="CPVP" ColumnName="CPVP" />
+                <ScalarProperty Name="BWPVP" ColumnName="BWPVP" />
+                <ScalarProperty Name="CVolume" ColumnName="CVolume" />
+                <ScalarProperty Name="BWVolume" ColumnName="BWVolume" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
+                <ScalarProperty Name="PrintingServiceID" ColumnName="PrintingServiceID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
