@@ -172,7 +172,10 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                     condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
                                     condPvp.ConditionCode = financingCode;
-                                    conditionsPvp.Add(condPvp);
+                                    if(condPvp.ConditionCode != null)
+                                    {
+                                        conditionsPvp.Add(condPvp);
+                                    }
 
                                 }
                             }
@@ -227,16 +230,13 @@ namespace WebApplication1.Models.SetupXML.XML
                     }
 
                     BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-
                     collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
                     {
                         DOC = order.SD_DOC,
                         COND_FLAG = "A",
-                        KSCHL = zvbs.ConditionType,
-                        KBETR = Math.Round(zvbs.ConditionValue ?? 0.0, 2).ToString("F2")
-                    }); ;
-
-
+                        KSCHL = zvbs != null ? zvbs.ConditionType : "ZVBS",
+                        KBETR = zvbs != null ? Math.Round(zvbs.ConditionValue ?? 0.0, 2).ToString("F2") : "0.00"
+                    });
                 }
                 //if (contracts[0].VT_VTART == "003" || contracts[0].VT_VTART == "002") //Renting
                 //{
@@ -276,10 +276,10 @@ namespace WebApplication1.Models.SetupXML.XML
 
             string financingCode = null;
 
-            if (financingType == "008")
-            {
-                financingCode = "ZVBS";
-            }
+            //if (financingType == "008")
+            //{
+            //    financingCode = "ZVBS";
+            //}
 
             if (financingType == "003")
             {
@@ -398,7 +398,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     if (conditionPvp != null)
                                     {
 
-                                        if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
+                                        if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                         {
                                             if (ftCode == 5)
                                             {
@@ -422,7 +422,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     {
                                         ConditionPVP condPvp = new ConditionPVP();
                                         totalPvp = 0;
-                                        if (financingCode == "ZVBR" || financingCode == "ZVBA" || financingCode == "ZVBS")
+                                        if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                         {
                                             if (ftCode == 5)
                                             {
