@@ -864,6 +864,7 @@ namespace WebApplication1.Models
         public List<LD_DocumentProposal> Documents { get; set; }
         public List<BB_Proposal_Contacts_Documentation> DocumentationContacts { get; set; }
         public List<BB_Proposal_Contacts_Signing> SigningContacts { get; set; }
+        public string Observations { get; set; }
 
     }
 

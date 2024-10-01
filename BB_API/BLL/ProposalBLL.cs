@@ -1704,6 +1704,8 @@ namespace WebApplication1.BLL
                     err.ProposalObj.ClientApproval.DocumentTypes = db.LD_DocumentClassification.ToList();
                 }
 
+                err.ProposalObj.ClientApproval.Observations = db.LD_Contrato.Where(x => x.ProposalID == i.ProposalId).Select(x => x.ComentariosGC).FirstOrDefault();
+
                 err.ProposalObj.Draft.deliveryLocations = new List<DeliveryLocation>();
                 List<BB_Proposal_DeliveryLocation> bb_Proposal_DeliveryLocation = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == i.ProposalId).ToList();
                 foreach (var item in bb_Proposal_DeliveryLocation)
