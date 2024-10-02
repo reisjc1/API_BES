@@ -283,20 +283,20 @@ namespace WebApplication1.Models.SetupXML.XML
                             kLFN = "2";
                             if (noVolume != null)
                             {
-                                kBETR = noVolume.GlobalClickC.ToString();
+                                kBETR = noVolume.GlobalClickC.ToString().Replace(",", ".");
                             }
                             else if (clickPerModel != null)
                             {
                                 BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == printingServices.ID && x.CodeRef == codeRef).FirstOrDefault();
                                 if (pSM != null)
                                 {
-                                    kBETR = pSM.ApprovedC.ToString();
+                                    kBETR = pSM.ApprovedC.ToString().Replace(",", ".");
                                 }
                                 //kBETR = clickPerModel
                             }
                             else if (vVA != null)
                             {
-                                kBETR = vVA.PVP.ToString();
+                                kBETR = vVA.PVP.ToString().Replace(",", ".");
                             }
                         }
                         if (printingServices.BWVolume > 0 && printingServices.CVolume == 0)
@@ -305,19 +305,19 @@ namespace WebApplication1.Models.SetupXML.XML
                             kLFN = "1";
                             if (noVolume != null)
                             {
-                                kBETR = noVolume.GlobalClickBW.ToString();
+                                kBETR = noVolume.GlobalClickBW.ToString().Replace(",", ".");
                             }
                             else if (clickPerModel != null)
                             {
                                 BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == printingServices.ID && x.CodeRef == codeRef).FirstOrDefault();
                                 if (pSM != null)
                                 {
-                                    kBETR = pSM.ApprovedBW.ToString();
+                                    kBETR = pSM.ApprovedBW.ToString().Replace(",", ".");
                                 }
                             }
                             else if (vVA != null)
                             {
-                                kBETR = vVA.PVP.ToString();
+                                kBETR = vVA.PVP.ToString().Replace(",", ".");
                             }
                         }
                         int? copiasIncludias = printingServices.BWVolume + printingServices.CVolume;
