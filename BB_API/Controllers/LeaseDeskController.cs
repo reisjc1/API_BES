@@ -2615,6 +2615,9 @@ namespace WebApplication1.Controllers
                         foreach (var i in lstBB_Proposal_DeliveryLocation)
                         {
                             Dictionary<int?, List<BB_Proposal_ItemDoBasket>> lstBB_Proposal_ItemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == i.IDX && x.Group != null).GroupBy(x => x.Group).ToDictionary(x => x.Key, x => x.ToList());
+                            int parseID = Convert.ToInt32(i.ID);
+                            BB_LocaisEnvio currentLocal = db.BB_LocaisEnvio.Where(x => x.ID == parseID).FirstOrDefault();
+                            BB_Proposal_DL_ClientContacts contact = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == i.DeliveryContact).FirstOrDefault();
 
                             foreach (KeyValuePair<int?, List<BB_Proposal_ItemDoBasket>> p in lstBB_Proposal_ItemDoBasket)
                             {
@@ -2622,14 +2625,14 @@ namespace WebApplication1.Controllers
                                 {
                                     BB_Proposal_DeliveryLocationResumoModel resumo = new BB_Proposal_DeliveryLocationResumoModel();
                                     resumo.Group = p.Key;
-                                    resumo.Adress1 = i.Adress1;
+                                    resumo.Adress1 = currentLocal.Adress1;
                                     resumo.Adress2 = i.Adress2;
                                     resumo.PostalCode = i.PostalCode;
                                     resumo.City = i.City;
-                                    resumo.Contacto = i.Contacto;
-                                    resumo.Phone = i.Phone;
-                                    resumo.Email = i.Email;
-
+                                    resumo.Contacto = contact.Name + " " + contact.Surname;
+                                    resumo.Phone = contact.Movil.ToString();
+                                    resumo.Email = contact.Email;
+                                    resumo.AddressType = i.AccountType;
                                     resumo.CodeRef = it.CodeRef;
                                     resumo.Qty = it.Qty;
                                     resumo.Description = it.Description;

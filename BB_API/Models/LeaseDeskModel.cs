@@ -327,6 +327,7 @@ namespace WebApplication1.Models
         public Nullable<int> Group { get; set; }
 
         public Nullable<int> PropostaID { get; set; }
+        public string AddressType { get; set; }
     }
 
     public class BB_Proposal_DeliveryGroup
