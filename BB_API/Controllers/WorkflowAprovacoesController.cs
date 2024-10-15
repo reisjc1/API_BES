@@ -1148,16 +1148,33 @@ namespace WebApplication1.Controllers
         [ActionName("IsApprover")]
         public bool IsApprover(string UserID)
         {
-            using (var db = new BB_DB_DEVEntities2())
+
+            List<string> roles = new List<string>();
+
+            using (var dbMaster = new masterEntities())
             {
-                BB_WFA_Levels approver = db.BB_WFA_Levels.Where(l=> l.WFA_Approver_ID == UserID).FirstOrDefault();
-                if (approver != null)
+                roles = dbMaster.AspNetUserRoles_KM
+                            .Where(l => l.UserId == UserID)
+                            .Join(dbMaster.AspNetRoles,
+                                  userRole => userRole.RoleId,
+                                  role => role.Id,
+                                  (userRole, role) => role.Name)
+                            .ToList();
+            }
+
+            using (var dbBB = new BB_DB_DEVEntities2())
+            {
+                bool hasApprover = dbBB.BB_WFA_Levels
+                                        .Any(level => roles.Contains(level.WFA_Approver_ID));
+
+                if (hasApprover)
                 {
                     return true;
                 }
             }
-            
+
             return false;
+
         }
 
         // #######################################################################################
