@@ -645,6 +645,9 @@ namespace WebApplication1.Controllers
                             Condition_ID = newLine.Level1_Condition,
                             Condition_Value = newLine.Percentage_1,
                             Type_ID = newLine.Level1_Type,
+                            Condition2_ID = newLine.Level1_Condition2,
+                            Condition2_Value = newLine.Percentage2_1,
+                            Type2_ID = newLine.Level1_Type2,
                         };
 
                         BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
@@ -2041,18 +2044,21 @@ namespace WebApplication1.Controllers
             public string Level5_Approver { get; set; }
 
             public int? Level1_Condition { get; set; }
+            public int? Level1_Condition2 { get; set; }
             public int? Level2_Condition { get; set; }
             public int? Level3_Condition { get; set; }
             public int? Level4_Condition { get; set; }
             public int? Level5_Condition { get; set; }
 
             public int? Percentage_1 { get; set; }
+            public int? Percentage2_1 { get; set; }
             public int? Percentage_2 { get; set; }
             public int? Percentage_3 { get; set; }
             public int? Percentage_4 { get; set; }
             public int? Percentage_5 { get; set; }
 
             public int? Level1_Type { get; set; }
+            public int? Level1_Type2 { get; set; }
             public int? Level2_Type { get; set; }
             public int? Level3_Type { get; set; }
             public int? Level4_Type { get; set; }
