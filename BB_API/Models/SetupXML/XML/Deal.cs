@@ -146,13 +146,15 @@ namespace WebApplication1.Models.SetupXML.XML
                     switch (ft.Code)
                     {
                         case 0:
+                        case 1:
                             financingType = "K";
                             contractType = "002";
                             break;
 
-                        case 1:
+                        case 2:
                             financingType = "L";
-                            contractType = "008";
+                            //contractType = "008";
+                            contractType = "002";  //Renting por enquanto enviar 002 e o ideal é enviar 008
                             break;
 
                         case 3:
@@ -160,7 +162,6 @@ namespace WebApplication1.Models.SetupXML.XML
                             contractType = "005";
                             break;
 
-                        case 2:
                         case 5:
                             financingType = "M";
                             contractType = "003";
@@ -169,15 +170,14 @@ namespace WebApplication1.Models.SetupXML.XML
                         default:
                             break;
                     }
-
-                    //using (var dbuUser = new masterEntities())
-                    //{
-                    //    user = dbuUser.AspNetUsers.Where(x => x.Email == d.CreatedBy).FirstOrDefault();
-                    //}
-
+                            //using (var dbuUser = new masterEntities())
+                            //{
+                            //    user = dbuUser.AspNetUsers.Where(x => x.Email == d.CreatedBy).FirstOrDefault();
+                            //}
 
 
-                    DateTime? createdTimeDealN = d.CreatedTime;
+
+                            DateTime? createdTimeDealN = d.CreatedTime;
                     if (createdTimeDealN.HasValue)
                     {
                         DateTime createdTime = createdTimeDealN.Value;
@@ -249,9 +249,9 @@ namespace WebApplication1.Models.SetupXML.XML
                             SPART = "01",
                             VISPN = arckey,
                             VTTYP = financingType,
-                            PRREL = d.IsMultipleContract == false ? "" : "X",
+                            PRREL = "X",
                             PRRDAT = formattedDtDeal,
-                            BNL_RLIST = "X", //Falar com a BEU
+                            BNL_RLIST = c.InvoiceList == true ? "X" : "", //Falar com a BEU
                             SALESP = "50004700"   //   user != null && !string.IsNullOrEmpty(user.ErpNumber) ? user.ErpNumber : "",             //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
                          
 

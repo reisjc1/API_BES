@@ -44,12 +44,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                     if (cond == null)
                                     {
                                         conditionPVP.ConditionCode = "ZPD4";
-                                        conditionPVP.PVP = Math.Round(quote.TotalPVP ?? 0.0, 2);
+                                        conditionPVP.PVP = Math.Round(quote.TotalNetsale ?? 0.0, 2);
                                         conditionsPvp.Add(conditionPVP);
                                     }
                                     else
                                     {
-                                        cond.PVP = Math.Round((cond.PVP + quote.TotalPVP) ?? 0.0, 2);
+                                        cond.PVP = Math.Round((cond.PVP + quote.TotalNetsale) ?? 0.0, 2);
                                     }
 
                                 }
@@ -59,12 +59,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                     if (cond == null)
                                     {
                                         conditionPVP.ConditionCode = "ZSW4";
-                                        conditionPVP.PVP = Math.Round(quote.TotalPVP ?? 0.0, 2);
+                                        conditionPVP.PVP = Math.Round(quote.TotalNetsale ?? 0.0, 2);
                                         conditionsPvp.Add(conditionPVP);
                                     }
                                     else
                                     {
-                                        cond.PVP = Math.Round((cond.PVP + quote.TotalPVP) ?? 0.0, 2);
+                                        cond.PVP = Math.Round((cond.PVP + quote.TotalNetsale) ?? 0.0, 2);
                                     }
                                 }
                             }
@@ -326,9 +326,9 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
                         foreach (var item in items.Items)
                         {
-                            if (financingType == "002")
+                            if (financingType == "002" || financingType == "008")
                             {
-                                BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                BB_Proposal_Quote quote = db.BB_Proposal_Quote.Where(x => x.CodeRef == item.CodeRef && x.Proposal_ID == proposalId).FirstOrDefault();
                                 //BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.CodeRef).FirstOrDefault();
                                 ConditionPVP conditionPVP = new ConditionPVP();
 
@@ -341,12 +341,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                         if (cond == null)
                                         {
                                             conditionPVP.ConditionCode = "ZPD4";
-                                            conditionPVP.PVP = quote.TotalPVP;
+                                            conditionPVP.PVP = quote.TotalNetsale;
                                             conditionsPvp.Add(conditionPVP);
                                         }
                                         else
                                         {
-                                            cond.PVP = cond.PVP + quote.TotalPVP;
+                                            cond.PVP = cond.PVP + quote.TotalNetsale;
                                         }
 
                                     }
@@ -356,12 +356,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                         if (cond == null)
                                         {
                                             conditionPVP.ConditionCode = "ZSW4";
-                                            conditionPVP.PVP = quote.TotalPVP;
+                                            conditionPVP.PVP = quote.TotalNetsale;
                                             conditionsPvp.Add(conditionPVP);
                                         }
                                         else
                                         {
-                                            cond.PVP = cond.PVP + quote.TotalPVP;
+                                            cond.PVP = cond.PVP + quote.TotalNetsale;
                                         }
                                     }
                                 }

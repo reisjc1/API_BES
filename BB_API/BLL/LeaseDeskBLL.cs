@@ -28,13 +28,15 @@ namespace WebApplication1.BLL
                 switch (ft.Code)
                 {
                     case 0:
+                    case 1:
                         financingType = "K";
                         contractType = "002";
                         break;
 
-                    case 1:
+                    case 2:
                         financingType = "L";
-                        contractType = "008";
+                        //contractType = "008";
+                        contractType = "002";//Renting por enquanto enviar 002 e o ideal é enviar 008
                         break;
 
                     case 3:
@@ -42,7 +44,6 @@ namespace WebApplication1.BLL
                         contractType = "005";
                         break;
 
-                    case 2:
                     case 5:
                         financingType = "M";
                         contractType = "003";

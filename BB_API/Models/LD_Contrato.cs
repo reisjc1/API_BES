@@ -40,5 +40,6 @@ namespace WebApplication1.Models
         public Nullable<bool> IsFacturacao { get; set; }
         public string DocusignEnvelopeID { get; set; }
         public Nullable<int> SapVersion { get; set; }
+        public Nullable<bool> InvoiceList { get; set; }
     }
 }

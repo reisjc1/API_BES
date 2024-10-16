@@ -206,7 +206,9 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     SD_DOC = orderDoc,
                                     FINANCE_TYPE = financing,
-                                    LEAS_LVTNR = pd.Alocadora,
+                                    LEAS_KUNNR = ct.CompanyCode,
+                                    LEAS_LVTNR = pf.AgreementNumber,
+                                    LEAS_LFAKT = "1",
                                     LEAS_ZTERM = "E60D"
 
                                 });
