@@ -129,7 +129,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
         public virtual DbSet<BB_WFA_Exception> BB_WFA_Exception { get; set; }
         public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
-        public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
         public virtual DbSet<BB_TypeOfClient> BB_TypeOfClient { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
         public virtual DbSet<vw_get_DataIntegration> vw_get_DataIntegration { get; set; }
@@ -140,5 +139,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_DL_ClientContacts> BB_Proposal_DL_ClientContacts { get; set; }
         public virtual DbSet<BB_Proposal_Condition_Type> BB_Proposal_Condition_Type { get; set; }
         public virtual DbSet<BB_PrintingService_Machines> BB_PrintingService_Machines { get; set; }
+        public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
     }
 }

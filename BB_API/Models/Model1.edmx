@@ -1365,7 +1365,7 @@
           <Property Name="CExcess" Type="float" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_Estados_Fecho_CRM">
           <Key>
             <PropertyRef Name="ID" />
@@ -1397,7 +1397,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_Estados_Fecho_CRM' does n
           <Property Name="State" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA">
           <Key>
             <PropertyRef Name="ID" />
@@ -1406,7 +1406,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA' does not have a prim
           <Property Name="Name" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Approvers">
           <Key>
             <PropertyRef Name="ID" />
@@ -1416,7 +1416,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Approvers' does not h
           <Property Name="Department" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_BU">
           <Key>
             <PropertyRef Name="ID" />
@@ -1427,7 +1427,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_BU' does not have a p
           <Property Name="IsEnabled" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Condition">
           <Key>
             <PropertyRef Name="ID" />
@@ -1436,7 +1436,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition' does not h
           <Property Name="Condition" Type="varchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Condition_Type">
           <Key>
             <PropertyRef Name="ID" />
@@ -1446,7 +1446,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition_Type' does 
           <Property Name="Description" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Customer_Type">
           <Key>
             <PropertyRef Name="ID" />
@@ -1455,7 +1455,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Customer_Type' does n
           <Property Name="Customer" Type="varchar" MaxLength="15" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Elements">
           <Key>
             <PropertyRef Name="ID" />
@@ -1658,6 +1658,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="IsFacturacao" Type="bit" />
           <Property Name="DocusignEnvelopeID" Type="nvarchar(max)" />
           <Property Name="SapVersion" Type="int" />
+          <Property Name="InvoiceList" Type="bit" />
         </EntityType>
         <EntityType Name="LD_DocumentClassification">
           <Key>
@@ -1711,7 +1712,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Street" Type="text" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_get_DataIntegration">
           <Key>
             <PropertyRef Name="ID" />
@@ -2169,7 +2170,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
           <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
-          <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
           <EntitySet Name="BB_TypeOfClient" EntityType="BB_DB_DEVModel.BB_TypeOfClient" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="vw_get_DataIntegration" EntityType="BB_DB_DEVModel.vw_get_DataIntegration" />
@@ -2184,6 +2184,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
           </AssociationSet>
+          <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3719,37 +3720,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="DocumentIsValid" Type="Boolean" />
           <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="LD_Contrato">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PathContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
-          <Property Name="ContratoValidado" Type="Boolean" />
-          <Property Name="ContratoGerado" Type="Boolean" />
-          <Property Name="Assinatura" Type="DateTime" Precision="3" />
-          <Property Name="SystemAssinaturaID" Type="Int32" />
-          <Property Name="StatusID" Type="Int32" />
-          <Property Name="FilenameContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="TipoContratoID" Type="Int32" />
-          <Property Name="ComentariosGC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsClosed" Type="Boolean" />
-          <Property Name="Retorno" Type="Boolean" />
-          <Property Name="ComentariosDevolucao" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="MotivoID" Type="Int32" />
-          <Property Name="DevolucaoMotivoID" Type="Int32" />
-          <Property Name="Pasta" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsFacturacao" Type="Boolean" />
-          <Property Name="DocusignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SapVersion" Type="Int32" />
-        </EntityType>
         <EntityType Name="BB_Commission_General">
           <Key>
             <PropertyRef Name="ID" />
@@ -4000,6 +3970,38 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="LD_Contrato">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PathContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="ContratoValidado" Type="Boolean" />
+          <Property Name="ContratoGerado" Type="Boolean" />
+          <Property Name="Assinatura" Type="DateTime" Precision="3" />
+          <Property Name="SystemAssinaturaID" Type="Int32" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="FilenameContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TipoContratoID" Type="Int32" />
+          <Property Name="ComentariosGC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsClosed" Type="Boolean" />
+          <Property Name="Retorno" Type="Boolean" />
+          <Property Name="ComentariosDevolucao" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MotivoID" Type="Int32" />
+          <Property Name="DevolucaoMotivoID" Type="Int32" />
+          <Property Name="Pasta" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsFacturacao" Type="Boolean" />
+          <Property Name="DocusignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SapVersion" Type="Int32" />
+          <Property Name="InvoiceList" Type="Boolean" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5545,38 +5547,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LD_Contrato">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.LD_Contrato">
-              <MappingFragment StoreEntitySet="LD_Contrato">
-                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
-                <ScalarProperty Name="DocusignEnvelopeID" ColumnName="DocusignEnvelopeID" />
-                <ScalarProperty Name="IsFacturacao" ColumnName="IsFacturacao" />
-                <ScalarProperty Name="Pasta" ColumnName="Pasta" />
-                <ScalarProperty Name="DevolucaoMotivoID" ColumnName="DevolucaoMotivoID" />
-                <ScalarProperty Name="MotivoID" ColumnName="MotivoID" />
-                <ScalarProperty Name="ComentariosDevolucao" ColumnName="ComentariosDevolucao" />
-                <ScalarProperty Name="Retorno" ColumnName="Retorno" />
-                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
-                <ScalarProperty Name="ComentariosGC" ColumnName="ComentariosGC" />
-                <ScalarProperty Name="TipoContratoID" ColumnName="TipoContratoID" />
-                <ScalarProperty Name="FilenameContracto" ColumnName="FilenameContracto" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="SystemAssinaturaID" ColumnName="SystemAssinaturaID" />
-                <ScalarProperty Name="Assinatura" ColumnName="Assinatura" />
-                <ScalarProperty Name="ContratoGerado" ColumnName="ContratoGerado" />
-                <ScalarProperty Name="ContratoValidado" ColumnName="ContratoValidado" />
-                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="PathContracto" ColumnName="PathContracto" />
-                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_Commission_General">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Commission_General">
               <MappingFragment StoreEntitySet="BB_Commission_General">
@@ -5821,6 +5791,39 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="PrintingServiceID" ColumnName="PrintingServiceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Contrato">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.LD_Contrato">
+              <MappingFragment StoreEntitySet="LD_Contrato">
+                <ScalarProperty Name="InvoiceList" ColumnName="InvoiceList" />
+                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
+                <ScalarProperty Name="DocusignEnvelopeID" ColumnName="DocusignEnvelopeID" />
+                <ScalarProperty Name="IsFacturacao" ColumnName="IsFacturacao" />
+                <ScalarProperty Name="Pasta" ColumnName="Pasta" />
+                <ScalarProperty Name="DevolucaoMotivoID" ColumnName="DevolucaoMotivoID" />
+                <ScalarProperty Name="MotivoID" ColumnName="MotivoID" />
+                <ScalarProperty Name="ComentariosDevolucao" ColumnName="ComentariosDevolucao" />
+                <ScalarProperty Name="Retorno" ColumnName="Retorno" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="ComentariosGC" ColumnName="ComentariosGC" />
+                <ScalarProperty Name="TipoContratoID" ColumnName="TipoContratoID" />
+                <ScalarProperty Name="FilenameContracto" ColumnName="FilenameContracto" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="SystemAssinaturaID" ColumnName="SystemAssinaturaID" />
+                <ScalarProperty Name="Assinatura" ColumnName="Assinatura" />
+                <ScalarProperty Name="ContratoGerado" ColumnName="ContratoGerado" />
+                <ScalarProperty Name="ContratoValidado" ColumnName="ContratoValidado" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="PathContracto" ColumnName="PathContracto" />
+                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
