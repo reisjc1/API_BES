@@ -116,6 +116,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     string financingType = "";
                     string contractType = "";
                     string formattedDtDeal = "";
+                    string VTTYPFinancingType = "";
 
                     Random random = new Random();
                     char randomLetter = (char)('A' + random.Next(0, 26));
@@ -146,24 +147,33 @@ namespace WebApplication1.Models.SetupXML.XML
                     switch (ft.Code)
                     {
                         case 0:
-                        case 1:
                             financingType = "K";
+                            VTTYPFinancingType = "SA";
+                            contractType = "002";
+                            break;
+
+                        case 1:
+                            financingType = "L";
+                            VTTYPFinancingType = "DL";
                             contractType = "002";
                             break;
 
                         case 2:
                             financingType = "L";
+                            VTTYPFinancingType = "DL";
                             //contractType = "008";
                             contractType = "002";  //Renting por enquanto enviar 002 e o ideal é enviar 008
                             break;
 
                         case 3:
-                            financingType = "AL";
+                            financingType = "L";
+                            VTTYPFinancingType = "AL";
                             contractType = "005";
                             break;
 
                         case 5:
                             financingType = "M";
+                            VTTYPFinancingType = "AS";
                             contractType = "003";
                             break;
 
@@ -194,7 +204,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     var sDocOrder = new OrdersPartnersList();
                     var collectionOrders = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS>();
 
-                    sDocOrder = ordersConfig.ConfigOrders(d.ID, randomLetterNumber, financingType);
+                    sDocOrder = ordersConfig.ConfigOrders(d.ID, randomLetterNumber, VTTYPFinancingType);
                     foreach (var sDocPartner in sDocOrder.SdDocOrderPartner)
                     {
                         sD_DocOrdersPartners.Add(sDocPartner);

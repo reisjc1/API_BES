@@ -645,9 +645,9 @@ namespace WebApplication1.Controllers
                             Condition_ID = newLine.Level1_Condition,
                             Condition_Value = newLine.Percentage_1,
                             Type_ID = newLine.Level1_Type,
-                            Condition2_ID = newLine.Level1_Condition2,
-                            Condition2_Value = newLine.Percentage2_1,
-                            Type2_ID = newLine.Level1_Type2,
+                            //Condition2_ID = newLine.Level1_Condition2,
+                            //Condition2_Value = newLine.Percentage2_1,
+                            //Type2_ID = newLine.Level1_Type2,
                         };
 
                         BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()

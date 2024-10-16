@@ -29,12 +29,12 @@ namespace WebApplication1.BLL
                 {
                     case 0:
                     case 1:
-                        financingType = "K";
+                        financingType = "SA";
                         contractType = "002";
                         break;
 
                     case 2:
-                        financingType = "L";
+                        financingType = "DL";
                         //contractType = "008";
                         contractType = "002";//Renting por enquanto enviar 002 e o ideal é enviar 008
                         break;
@@ -45,7 +45,7 @@ namespace WebApplication1.BLL
                         break;
 
                     case 5:
-                        financingType = "M";
+                        financingType = "AS";
                         contractType = "003";
                         break;
 
