@@ -21,5 +21,8 @@ namespace WebApplication1.Models
         public Nullable<int> Condition_ID { get; set; }
         public Nullable<double> Condition_Value { get; set; }
         public Nullable<int> Type_ID { get; set; }
+        public Nullable<int> Condition2_ID { get; set; }
+        public Nullable<double> Condition2_Value { get; set; }
+        public Nullable<int> Type2_ID { get; set; }
     }
 }

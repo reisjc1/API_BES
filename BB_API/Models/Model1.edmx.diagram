@@ -113,7 +113,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Customer_Type" Width="1.5" PointX="32.375" PointY="9.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Control" Width="1.5" PointX="32.375" PointY="18.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" Width="1.5" PointX="31.375" PointY="26.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Levels" Width="1.5" PointX="32.375" PointY="21.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Exception" Width="1.5" PointX="30.375" PointY="12.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentProposal" Width="1.5" PointX="32.375" PointY="12.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.LD_Contrato" Width="1.5" PointX="27.375" PointY="32.75" />
@@ -128,6 +127,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Condition_Type" Width="1.5" PointX="28.375" PointY="4.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_PrintingService_Machines" Width="1.5" PointX="21.375" PointY="37.875" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Levels" Width="1.5" PointX="32.375" PointY="21.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1599,6 +1599,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Condition_ID" Type="int" />
           <Property Name="Condition_Value" Type="float" />
           <Property Name="Type_ID" Type="int" />
+          <Property Name="Condition2_ID" Type="int" />
+          <Property Name="Condition2_Value" Type="float" />
+          <Property Name="Type2_ID" Type="int" />
         </EntityType>
         <EntityType Name="BB_WFA_Workflow_Proposal">
           <Key>
@@ -2166,7 +2169,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <EntitySet Name="BB_RD_WFA_Customer_Type" EntityType="BB_DB_DEVModel.BB_RD_WFA_Customer_Type" />
           <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
           <EntitySet Name="BB_WFA_Approvers_Control" EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" />
-          <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
           <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
@@ -2184,6 +2186,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
           </AssociationSet>
+          <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3670,18 +3673,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="IsApproved" Type="Boolean" />
           <Property Name="IsComplete" Type="Boolean" />
         </EntityType>
-        <EntityType Name="BB_WFA_Levels">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="WFA_Control_ID" Type="Int32" />
-          <Property Name="Level" Type="Int32" />
-          <Property Name="WFA_Approver_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="Condition_ID" Type="Int32" />
-          <Property Name="Condition_Value" Type="Double" />
-          <Property Name="Type_ID" Type="Int32" />
-        </EntityType>
         <EntityType Name="BB_WFA_Exception">
           <Key>
             <PropertyRef Name="ID" />
@@ -4000,6 +3991,21 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="BB_WFA_Levels">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WFA_Control_ID" Type="Int32" />
+          <Property Name="Level" Type="Int32" />
+          <Property Name="WFA_Approver_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Condition_ID" Type="Int32" />
+          <Property Name="Condition_Value" Type="Double" />
+          <Property Name="Type_ID" Type="Int32" />
+          <Property Name="Condition2_ID" Type="Int32" />
+          <Property Name="Condition2_Value" Type="Double" />
+          <Property Name="Type2_ID" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5493,19 +5499,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_WFA_Levels">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Levels">
-              <MappingFragment StoreEntitySet="BB_WFA_Levels">
-                <ScalarProperty Name="Type_ID" ColumnName="Type_ID" />
-                <ScalarProperty Name="Condition_Value" ColumnName="Condition_Value" />
-                <ScalarProperty Name="Condition_ID" ColumnName="Condition_ID" />
-                <ScalarProperty Name="WFA_Approver_ID" ColumnName="WFA_Approver_ID" />
-                <ScalarProperty Name="Level" ColumnName="Level" />
-                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_WFA_Exception">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Exception">
               <MappingFragment StoreEntitySet="BB_WFA_Exception">
@@ -5821,6 +5814,22 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="PrintingServiceID" ColumnName="PrintingServiceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Levels">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Levels">
+              <MappingFragment StoreEntitySet="BB_WFA_Levels">
+                <ScalarProperty Name="Type2_ID" ColumnName="Type2_ID" />
+                <ScalarProperty Name="Condition2_Value" ColumnName="Condition2_Value" />
+                <ScalarProperty Name="Condition2_ID" ColumnName="Condition2_ID" />
+                <ScalarProperty Name="Type_ID" ColumnName="Type_ID" />
+                <ScalarProperty Name="Condition_Value" ColumnName="Condition_Value" />
+                <ScalarProperty Name="Condition_ID" ColumnName="Condition_ID" />
+                <ScalarProperty Name="WFA_Approver_ID" ColumnName="WFA_Approver_ID" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
