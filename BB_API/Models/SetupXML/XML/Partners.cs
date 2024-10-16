@@ -87,7 +87,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     }
                     string[] nameParts = partnerInfo.CP_NAME.Split(' ');
-                    partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
+                    //partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
                     if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
                     {
 

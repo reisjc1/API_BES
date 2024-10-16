@@ -32,13 +32,13 @@ namespace WebApplication1.Models.SetupXML.XML
                     ft.Code = 5;
                 }
 
-                if (ft.Code == 0)
+                if (ft.Code == 0 || ft.Code == 1)
                 {
                     contractType = "002"; //Manutenção
                 }
-                if (ft.Code == 1 || ft.Code == 2 || ft.Code == 4)
+                if (ft.Code == 2) //|| ft.Code == 4
                 {
-                    contractType = "008"; //Leasing
+                    contractType = "002"; //Renting por enquanto enviar 002 e o ideal é enviar 008
                 }
                 if (ft.Code == 3)
                 {
@@ -145,7 +145,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         VT_ANZPOS = noOrders.ToString(),
                         VT_VUNDAT = FirstDayNextMonthString,
                         VT_ZTERM = "453E",
-                        VT_FAKSK = "X"
+                        VT_FAKSK = "ZN"
                     });
 
                 }

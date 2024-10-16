@@ -1245,6 +1245,8 @@ namespace WebApplication1.Controllers
 
             c.FolderDOC = contrcto.Pasta;
 
+            c.InvoiceList = contrcto.InvoiceList == null ? true : contrcto.InvoiceList;
+
 
 
             return Ok(c);
@@ -3814,7 +3816,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("SaveMultiContractInfo")]
-        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract, string plant)
+        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract, string plant, bool invoiceList)
         {
             try
             {
@@ -3837,7 +3839,13 @@ namespace WebApplication1.Controllers
                                 bb_proposal.Plant = plant;
                             }
 
+                            LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractID).FirstOrDefault();
+
+                            lD_Contrato.InvoiceList = invoiceList;
+
                             db.Entry(bb_proposal).State = EntityState.Modified;
+                            db.Entry(lD_Contrato).State = EntityState.Modified;
+
                             db.SaveChanges();
                         }
                     }
@@ -4014,6 +4022,7 @@ namespace WebApplication1.Controllers
             public bool? IsButtonImitirDocSign { get; set; }
             public bool? IsButtonSuspender { get; set; }
             public bool? IsButtonDelete { get; set; }
+            public bool? InvoiceList { get; set; }
         }
     }
 
