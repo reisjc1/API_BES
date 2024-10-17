@@ -108,7 +108,7 @@ namespace WebApplication1.Models.SetupXML.XML
         {
             try
             {
-                //AspNetUser user = new AspNetUser();
+                AspNetUsers user = new AspNetUsers();
 
                 int? contractoID = null;
                 using (var db = new BB_DB_DEVEntities2())
@@ -180,14 +180,14 @@ namespace WebApplication1.Models.SetupXML.XML
                         default:
                             break;
                     }
-                            //using (var dbuUser = new masterEntities())
-                            //{
-                            //    user = dbuUser.AspNetUsers.Where(x => x.Email == d.CreatedBy).FirstOrDefault();
-                            //}
+                    using (var dbuUser = new masterEntities())
+                    {
+                        user = dbuUser.AspNetUsers.Where(x => x.Email == d.CreatedBy).FirstOrDefault();
+                    }
 
 
 
-                            DateTime? createdTimeDealN = d.CreatedTime;
+                    DateTime? createdTimeDealN = d.CreatedTime;
                     if (createdTimeDealN.HasValue)
                     {
                         DateTime createdTime = createdTimeDealN.Value;
@@ -262,8 +262,9 @@ namespace WebApplication1.Models.SetupXML.XML
                             PRREL = "X",
                             PRRDAT = formattedDtDeal,
                             BNL_RLIST = c.InvoiceList == true ? "X" : "", //Falar com a BEU
-                            SALESP = "50004700"   //   user != null && !string.IsNullOrEmpty(user.ErpNumber) ? user.ErpNumber : "",             //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
-                         
+                            SALESP = user != null && !string.IsNullOrEmpty(user.ErpNumber) ? user.ErpNumber : "" //"50004700"               //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
+
+
 
 
                         },
