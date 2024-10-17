@@ -512,7 +512,9 @@ namespace WebApplication1.Controllers
                                 {
                                     Approver = userName,
                                     Condition = db.BB_RD_WFA_Condition.Where(x => x.ID == level.Condition_ID).Select(x => x.Condition).FirstOrDefault() + " " + level.Condition_Value,
-                                    Type = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == level.Type_ID).Select(x => x.Description).FirstOrDefault()
+                                    Type = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == level.Type_ID).Select(x => x.Description).FirstOrDefault(),
+                                    Condition2 = db.BB_RD_WFA_Condition.Where(x => x.ID == level.Condition2_ID).Select(x => x.Condition).FirstOrDefault() + " " + level.Condition2_Value,
+                                    Type2 = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == level.Type2_ID).Select(x => x.Description).FirstOrDefault()
                                 };
 
                                 wfa.lstLevel.Add(levelX);
@@ -2036,6 +2038,8 @@ namespace WebApplication1.Controllers
             public string Condition { get; set; }
             public double? Percentage { get; set; }
             public string Type { get; set; }
+            public string Condition2 { get; set; }
+            public string Type2 { get; set; }
         }
 
         public class WFA_Create
