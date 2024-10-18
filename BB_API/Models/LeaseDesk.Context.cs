@@ -39,7 +39,6 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_Observacoes_Motivos> LD_Observacoes_Motivos { get; set; }
         public virtual DbSet<LD_Devolucao_Motivo> LD_Devolucao_Motivo { get; set; }
         public virtual DbSet<LD_Contrato_Facturacao> LD_Contrato_Facturacao { get; set; }
-        public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
         public virtual DbSet<BB_Documents_Type> BB_Documents_Type { get; set; }
         public virtual DbSet<LD_PA5_DocumentProposal> LD_PA5_DocumentProposal { get; set; }
         public virtual DbSet<LD_PA5_DocumentType> LD_PA5_DocumentType { get; set; }
@@ -53,5 +52,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
         public virtual DbSet<BB_Proposal_Client> BB_Proposal_Client { get; set; }
         public virtual DbSet<BB_FinancingContractType> BB_FinancingContractType { get; set; }
+        public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
     }
 }

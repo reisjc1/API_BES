@@ -96,8 +96,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_ItemDoBasket" Width="1.5" PointX="18.75" PointY="29.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal" Width="1.5" PointX="9.375" PointY="30.875" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_OPSImplement" Width="1.5" PointX="11.625" PointY="28.375" />
-        <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_BU" Width="1.5" PointX="29.375" PointY="16.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition" Width="1.5" PointX="29.375" PointY="26.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition_Type" Width="1.5" PointX="29.375" PointY="29.75" />
@@ -128,6 +126,8 @@
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Levels" Width="1.5" PointX="32.375" PointY="21.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.LD_Contrato" Width="1.5" PointX="27.375" PointY="32.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_OPSImplement" Width="1.5" PointX="11.625" PointY="28.375" />
+        <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -110,7 +110,6 @@ namespace WebApplication1.Models
         public virtual DbSet<RD_AddressAcronyms> RD_AddressAcronyms { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
         public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
-        public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
         public virtual DbSet<BB_RD_WFA_BU> BB_RD_WFA_BU { get; set; }
         public virtual DbSet<BB_RD_WFA_Condition> BB_RD_WFA_Condition { get; set; }
         public virtual DbSet<BB_RD_WFA_Condition_Type> BB_RD_WFA_Condition_Type { get; set; }
@@ -140,5 +139,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_PrintingService_Machines> BB_PrintingService_Machines { get; set; }
         public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
+        public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
     }
 }

@@ -169,6 +169,7 @@
           <Property Name="IsFacturacao" Type="bit" />
           <Property Name="DocusignEnvelopeID" Type="nvarchar(max)" />
           <Property Name="SapVersion" Type="int" />
+          <Property Name="InvoiceList" Type="bit" />
         </EntityType>
         <EntityType Name="LD_Contrato_Facturacao">
           <Key>
@@ -451,7 +452,6 @@
           <EntitySet Name="LD_Observacoes_Motivos" EntityType="BB_DB_DEVModel1.LD_Observacoes_Motivos" />
           <EntitySet Name="LD_Devolucao_Motivo" EntityType="BB_DB_DEVModel1.LD_Devolucao_Motivo" />
           <EntitySet Name="LD_Contrato_Facturacao" EntityType="BB_DB_DEVModel1.LD_Contrato_Facturacao" />
-          <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel1.LD_Contrato" />
           <EntitySet Name="BB_Documents_Type" EntityType="BB_DB_DEVModel1.BB_Documents_Type" />
           <EntitySet Name="LD_PA5_DocumentProposal" EntityType="BB_DB_DEVModel1.LD_PA5_DocumentProposal" />
           <EntitySet Name="LD_PA5_DocumentType" EntityType="BB_DB_DEVModel1.LD_PA5_DocumentType" />
@@ -465,6 +465,7 @@
           <EntitySet Name="BB_Proposal" EntityType="BB_DB_DEVModel1.BB_Proposal" />
           <EntitySet Name="BB_Proposal_Client" EntityType="BB_DB_DEVModel1.BB_Proposal_Client" />
           <EntitySet Name="BB_FinancingContractType" EntityType="BB_DB_DEVModel1.BB_FinancingContractType" />
+          <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel1.LD_Contrato" />
         </EntityContainer>
         <EntityType Name="LD_DocumentClassification">
           <Key>
@@ -647,37 +648,6 @@
           <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
           <Property Name="InvoiceAssistant" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="LD_Contrato">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PathContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
-          <Property Name="ContratoValidado" Type="Boolean" />
-          <Property Name="ContratoGerado" Type="Boolean" />
-          <Property Name="Assinatura" Type="DateTime" Precision="3" />
-          <Property Name="SystemAssinaturaID" Type="Int32" />
-          <Property Name="StatusID" Type="Int32" />
-          <Property Name="FilenameContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="TipoContratoID" Type="Int32" />
-          <Property Name="ComentariosGC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsClosed" Type="Boolean" />
-          <Property Name="Retorno" Type="Boolean" />
-          <Property Name="ComentariosDevolucao" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="MotivoID" Type="Int32" />
-          <Property Name="DevolucaoMotivoID" Type="Int32" />
-          <Property Name="Pasta" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsFacturacao" Type="Boolean" />
-          <Property Name="DocusignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SapVersion" Type="Int32" />
         </EntityType>
         <EntityType Name="BB_Documents_Type">
           <Key>
@@ -862,6 +832,38 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Company" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CompanyCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="LD_Contrato">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PathContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="ContratoValidado" Type="Boolean" />
+          <Property Name="ContratoGerado" Type="Boolean" />
+          <Property Name="Assinatura" Type="DateTime" Precision="3" />
+          <Property Name="SystemAssinaturaID" Type="Int32" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="FilenameContracto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TipoContratoID" Type="Int32" />
+          <Property Name="ComentariosGC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsClosed" Type="Boolean" />
+          <Property Name="Retorno" Type="Boolean" />
+          <Property Name="ComentariosDevolucao" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MotivoID" Type="Int32" />
+          <Property Name="DevolucaoMotivoID" Type="Int32" />
+          <Property Name="Pasta" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsFacturacao" Type="Boolean" />
+          <Property Name="DocusignEnvelopeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SapVersion" Type="Int32" />
+          <Property Name="InvoiceList" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1065,38 +1067,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LD_Contrato">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Contrato">
-              <MappingFragment StoreEntitySet="LD_Contrato">
-                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
-                <ScalarProperty Name="DocusignEnvelopeID" ColumnName="DocusignEnvelopeID" />
-                <ScalarProperty Name="IsFacturacao" ColumnName="IsFacturacao" />
-                <ScalarProperty Name="Pasta" ColumnName="Pasta" />
-                <ScalarProperty Name="DevolucaoMotivoID" ColumnName="DevolucaoMotivoID" />
-                <ScalarProperty Name="MotivoID" ColumnName="MotivoID" />
-                <ScalarProperty Name="ComentariosDevolucao" ColumnName="ComentariosDevolucao" />
-                <ScalarProperty Name="Retorno" ColumnName="Retorno" />
-                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
-                <ScalarProperty Name="ComentariosGC" ColumnName="ComentariosGC" />
-                <ScalarProperty Name="TipoContratoID" ColumnName="TipoContratoID" />
-                <ScalarProperty Name="FilenameContracto" ColumnName="FilenameContracto" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="SystemAssinaturaID" ColumnName="SystemAssinaturaID" />
-                <ScalarProperty Name="Assinatura" ColumnName="Assinatura" />
-                <ScalarProperty Name="ContratoGerado" ColumnName="ContratoGerado" />
-                <ScalarProperty Name="ContratoValidado" ColumnName="ContratoValidado" />
-                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="PathContracto" ColumnName="PathContracto" />
-                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_Documents_Type">
             <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Documents_Type">
               <MappingFragment StoreEntitySet="BB_Documents_Type">
@@ -1290,6 +1260,39 @@
               <MappingFragment StoreEntitySet="BB_FinancingContractType">
                 <ScalarProperty Name="CompanyCode" ColumnName="CompanyCode" />
                 <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_Contrato">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Contrato">
+              <MappingFragment StoreEntitySet="LD_Contrato">
+                <ScalarProperty Name="InvoiceList" ColumnName="InvoiceList" />
+                <ScalarProperty Name="SapVersion" ColumnName="SapVersion" />
+                <ScalarProperty Name="DocusignEnvelopeID" ColumnName="DocusignEnvelopeID" />
+                <ScalarProperty Name="IsFacturacao" ColumnName="IsFacturacao" />
+                <ScalarProperty Name="Pasta" ColumnName="Pasta" />
+                <ScalarProperty Name="DevolucaoMotivoID" ColumnName="DevolucaoMotivoID" />
+                <ScalarProperty Name="MotivoID" ColumnName="MotivoID" />
+                <ScalarProperty Name="ComentariosDevolucao" ColumnName="ComentariosDevolucao" />
+                <ScalarProperty Name="Retorno" ColumnName="Retorno" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="ComentariosGC" ColumnName="ComentariosGC" />
+                <ScalarProperty Name="TipoContratoID" ColumnName="TipoContratoID" />
+                <ScalarProperty Name="FilenameContracto" ColumnName="FilenameContracto" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="SystemAssinaturaID" ColumnName="SystemAssinaturaID" />
+                <ScalarProperty Name="Assinatura" ColumnName="Assinatura" />
+                <ScalarProperty Name="ContratoGerado" ColumnName="ContratoGerado" />
+                <ScalarProperty Name="ContratoValidado" ColumnName="ContratoValidado" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="PathContracto" ColumnName="PathContracto" />
+                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

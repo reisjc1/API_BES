@@ -1365,7 +1365,7 @@
           <Property Name="CExcess" Type="float" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_Estados_Fecho_CRM">
           <Key>
             <PropertyRef Name="ID" />
@@ -1397,7 +1397,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_Estados_Fecho_CRM' does n
           <Property Name="State" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA">
           <Key>
             <PropertyRef Name="ID" />
@@ -1406,7 +1406,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA' does not have a prim
           <Property Name="Name" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Approvers">
           <Key>
             <PropertyRef Name="ID" />
@@ -1416,7 +1416,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Approvers' does not h
           <Property Name="Department" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_BU">
           <Key>
             <PropertyRef Name="ID" />
@@ -1427,7 +1427,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_BU' does not have a p
           <Property Name="IsEnabled" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Condition">
           <Key>
             <PropertyRef Name="ID" />
@@ -1436,7 +1436,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition' does not h
           <Property Name="Condition" Type="varchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Condition_Type">
           <Key>
             <PropertyRef Name="ID" />
@@ -1446,7 +1446,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition_Type' does 
           <Property Name="Description" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Customer_Type">
           <Key>
             <PropertyRef Name="ID" />
@@ -1455,7 +1455,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Customer_Type' does n
           <Property Name="Customer" Type="varchar" MaxLength="15" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Elements">
           <Key>
             <PropertyRef Name="ID" />
@@ -1715,7 +1715,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Street" Type="text" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_get_DataIntegration">
           <Key>
             <PropertyRef Name="ID" />
@@ -2150,11 +2150,6 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does no
             <End Role="BB_Proposal" EntitySet="BB_Proposal" />
             <End Role="BB_Proposal_OPSManage" EntitySet="BB_Proposal_OPSManage" />
           </AssociationSet>
-          <EntitySet Name="BB_Proposal_OPSImplement" EntityType="BB_DB_DEVModel.BB_Proposal_OPSImplement" />
-          <AssociationSet Name="FK_BB_Proposal_OPSImplement_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal">
-            <End Role="BB_Proposal" EntitySet="BB_Proposal" />
-            <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
-          </AssociationSet>
           <EntitySet Name="BB_RD_WFA_BU" EntityType="BB_DB_DEVModel.BB_RD_WFA_BU" />
           <EntitySet Name="BB_RD_WFA_Condition" EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition" />
           <EntitySet Name="BB_RD_WFA_Condition_Type" EntityType="BB_DB_DEVModel.BB_RD_WFA_Condition_Type" />
@@ -2188,6 +2183,11 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does no
           </AssociationSet>
           <EntitySet Name="BB_WFA_Levels" EntityType="BB_DB_DEVModel.BB_WFA_Levels" />
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
+          <EntitySet Name="BB_Proposal_OPSImplement" EntityType="BB_DB_DEVModel.BB_Proposal_OPSImplement" />
+          <AssociationSet Name="FK_BB_Proposal_OPSImplement_BB_Proposal" Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal">
+            <End Role="BB_Proposal" EntitySet="BB_Proposal" />
+            <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3496,40 +3496,6 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does no
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="BB_Proposal_OPSImplement">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ProposalID" Type="Int32" Nullable="false" />
-          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InCatalog" Type="Boolean" />
-          <Property Name="IsFinanced" Type="Boolean" />
-          <Property Name="MaxRange" Type="Int32" />
-          <Property Name="MinRange" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PVP" Type="Double" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="UnitDiscountPrice" Type="Double" />
-          <Property Name="Position" Type="Int32" />
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IsValidated" Type="Boolean" />
-          <NavigationProperty Name="BB_Proposal" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal_OPSImplement" ToRole="BB_Proposal" />
-        </EntityType>
-        <Association Name="FK_BB_Proposal_OPSImplement_BB_Proposal">
-          <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
-          <End Type="BB_DB_DEVModel.BB_Proposal_OPSImplement" Role="BB_Proposal_OPSImplement" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="BB_Proposal">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BB_Proposal_OPSImplement">
-              <PropertyRef Name="ProposalID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="BB_RD_WFA_BU">
           <Key>
             <PropertyRef Name="ID" />
@@ -4008,6 +3974,40 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="SapVersion" Type="Int32" />
           <Property Name="InvoiceList" Type="Boolean" />
         </EntityType>
+        <EntityType Name="BB_Proposal_OPSImplement">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ProposalID" Type="Int32" Nullable="false" />
+          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InCatalog" Type="Boolean" />
+          <Property Name="IsFinanced" Type="Boolean" />
+          <Property Name="MaxRange" Type="Int32" />
+          <Property Name="MinRange" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PVP" Type="Double" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UnitDiscountPrice" Type="Double" />
+          <Property Name="Position" Type="Int32" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsValidated" Type="Boolean" />
+          <NavigationProperty Name="BB_Proposal" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal_OPSImplement" ToRole="BB_Proposal" />
+        </EntityType>
+        <Association Name="FK_BB_Proposal_OPSImplement_BB_Proposal">
+          <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
+          <End Type="BB_DB_DEVModel.BB_Proposal_OPSImplement" Role="BB_Proposal_OPSImplement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BB_Proposal">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BB_Proposal_OPSImplement">
+              <PropertyRef Name="ProposalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5320,28 +5320,6 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does no
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_OPSImplement">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_OPSImplement">
-              <MappingFragment StoreEntitySet="BB_Proposal_OPSImplement">
-                <ScalarProperty Name="IsValidated" ColumnName="IsValidated" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Position" ColumnName="Position" />
-                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="PVP" ColumnName="PVP" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="MinRange" ColumnName="MinRange" />
-                <ScalarProperty Name="MaxRange" ColumnName="MaxRange" />
-                <ScalarProperty Name="IsFinanced" ColumnName="IsFinanced" />
-                <ScalarProperty Name="InCatalog" ColumnName="InCatalog" />
-                <ScalarProperty Name="Family" ColumnName="Family" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_RD_WFA_BU">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_RD_WFA_BU">
               <MappingFragment StoreEntitySet="BB_RD_WFA_BU">
@@ -5833,6 +5811,28 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="Level" ColumnName="Level" />
                 <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_OPSImplement">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_OPSImplement">
+              <MappingFragment StoreEntitySet="BB_Proposal_OPSImplement">
+                <ScalarProperty Name="IsValidated" ColumnName="IsValidated" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MinRange" ColumnName="MinRange" />
+                <ScalarProperty Name="MaxRange" ColumnName="MaxRange" />
+                <ScalarProperty Name="IsFinanced" ColumnName="IsFinanced" />
+                <ScalarProperty Name="InCatalog" ColumnName="InCatalog" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -19,7 +19,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Observacoes_Motivos" Width="1.5" PointX="5.375" PointY="10.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Devolucao_Motivo" Width="1.5" PointX="7.375" PointY="10.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Contrato_Facturacao" Width="1.5" PointX="9.375" PointY="10.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Contrato" Width="1.5" PointX="11.375" PointY="10.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Documents_Type" Width="1.5" PointX="12.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_PA5_DocumentProposal" Width="1.5" PointX="12.375" PointY="3.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_PA5_DocumentType" Width="1.5" PointX="12.375" PointY="6.75" />
@@ -33,6 +32,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Proposal" Width="1.5" PointX="0.75" PointY="11.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Proposal_Client" Width="1.5" PointX="15.375" PointY="9.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_FinancingContractType" Width="1.5" PointX="15.375" PointY="12.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Contrato" Width="1.5" PointX="9.375" PointY="13.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
