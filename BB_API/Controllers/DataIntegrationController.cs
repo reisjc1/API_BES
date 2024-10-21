@@ -200,6 +200,11 @@ namespace WebApplication1.Controllers
                 .Where(x => x.UserName == Owner.Owner)
                 .Select(x => x.Id)
                 .FirstOrDefault();
+            
+            var userDisplayName = usersDB.AspNetUsers
+                .Where(x => x.UserName == Owner.Owner)
+                .Select(x => x.DisplayName)
+                .FirstOrDefault();
 
             var lst_useroleKM = userId != null
                 ? usersDB.AspNetUserRoles_KM.Where(x => x.UserId == userId).ToList()
@@ -221,7 +226,7 @@ namespace WebApplication1.Controllers
                             SqlCommand cmd = new SqlCommand("SP_Get_Clients", conn);
                             cmd.CommandTimeout = 180;
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@UserName", Owner.Owner);
+                            cmd.Parameters.AddWithValue("@UserName", userDisplayName);
                             cmd.Parameters.AddWithValue("@Role", item.RoleId);
                             SqlDataReader rdr = cmd.ExecuteReader();
 
