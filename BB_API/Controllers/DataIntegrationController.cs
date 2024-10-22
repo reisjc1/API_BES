@@ -196,23 +196,59 @@ namespace WebApplication1.Controllers
         [ActionName("Clientes")]
         public List<BB_Clientes_> Clientes([FromBody] Owner_ Owner)
         {
-            var userId = usersDB.AspNetUsers
+            var _userId = usersDB.AspNetUsers
                 .Where(x => x.UserName == Owner.Owner)
-                .Select(x => x.Id)
-                .FirstOrDefault();
-            
-            var userDisplayName = usersDB.AspNetUsers
-                .Where(x => x.UserName == Owner.Owner)
-                .Select(x => x.DisplayName)
                 .FirstOrDefault();
 
-            var lst_useroleKM = userId != null
-                ? usersDB.AspNetUserRoles_KM.Where(x => x.UserId == userId).ToList()
+            var lst_useroleKM = _userId != null
+                ? usersDB.AspNetUserRoles_KM.Where(x => x.UserId == _userId.Id).ToList()
                 : new List<AspNetUserRoles_KM>();
 
             List<BB_Clientes_> lst_Clients = new List<BB_Clientes_>();
 
-            if(lst_useroleKM != null)
+            if (lst_useroleKM.Count == 0)
+            {
+                try
+                {
+                    string bdConnect = @AppSettingsGet.BasedadosConnect;
+                    using (SqlConnection conn = new SqlConnection(bdConnect))
+                    {
+                        conn.Open();
+
+                        SqlCommand cmd = new SqlCommand("SP_Get_Clients", conn);
+                        cmd.CommandTimeout = 180;
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@UserName", _userId.DisplayName);
+                        cmd.Parameters.AddWithValue("@Role", 0.ToString());
+                        SqlDataReader rdr = cmd.ExecuteReader();
+
+                        while (rdr.Read())
+                        {
+                            BB_Clientes_ client = new BB_Clientes_
+                            {
+                                accountnumber = rdr["accountnumber"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("accountnumber")) : "",
+                                Name = rdr["Name"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Name")) : "",
+                                NIF = rdr["NIF"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("NIF")) : "",
+                                Owner = rdr["Owner"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Owner")) : "",
+                                PostalCode = rdr["PostalCode"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("PostalCode")) : "",
+                                address1_line1 = rdr["address1_line1"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("address1_line1")) : "",
+                                Segment = rdr["Segment"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Segment")) : "",
+                                GMA = rdr["GMA"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("GMA")) : "",
+                                Holding = rdr["Holding"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Holding")) : "",
+                                Blocked = rdr["Blocked"] != DBNull.Value ? (bool?)rdr["Blocked"] : null
+                            };
+
+                            lst_Clients.Add(client);
+                        }
+                        rdr.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else
             {
                 foreach (var item in lst_useroleKM)
                 {
@@ -226,7 +262,7 @@ namespace WebApplication1.Controllers
                             SqlCommand cmd = new SqlCommand("SP_Get_Clients", conn);
                             cmd.CommandTimeout = 180;
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@UserName", userDisplayName);
+                            cmd.Parameters.AddWithValue("@UserName", _userId.DisplayName);
                             cmd.Parameters.AddWithValue("@Role", item.RoleId);
                             SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -256,10 +292,10 @@ namespace WebApplication1.Controllers
                         Console.WriteLine(ex.Message);
                     }
                 }
+
             }
             return lst_Clients;
         }
-
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("Clientes_DSO")]
