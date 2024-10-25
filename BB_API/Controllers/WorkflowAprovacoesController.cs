@@ -647,9 +647,9 @@ namespace WebApplication1.Controllers
                             Condition_ID = newLine.Level1_Condition,
                             Condition_Value = newLine.Percentage_1,
                             Type_ID = newLine.Level1_Type,
-                            //Condition2_ID = newLine.Level1_Condition2,
-                            //Condition2_Value = newLine.Percentage2_1,
-                            //Type2_ID = newLine.Level1_Type2,
+                            Condition2_ID = newLine.Level1_Condition2,
+                            Condition2_Value = newLine.Percentage2_1,
+                            Type2_ID = newLine.Level1_Type2
                         };
 
                         BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
@@ -659,7 +659,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level2_Approver,
                             Condition_ID = newLine.Level2_Condition,
                             Condition_Value = newLine.Percentage_2,
-                            Type_ID = newLine.Level2_Type
+                            Type_ID = newLine.Level2_Type,
+                            Condition2_ID = newLine.Level2_Condition2,
+                            Condition2_Value = newLine.Percentage2_2,
+                            Type2_ID = newLine.Level2_Type2
                         };
 
                         BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
@@ -669,7 +672,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level3_Approver,
                             Condition_ID = newLine.Level3_Condition,
                             Condition_Value = newLine.Percentage_3,
-                            Type_ID = newLine.Level3_Type
+                            Type_ID = newLine.Level3_Type,
+                            Condition2_ID = newLine.Level3_Condition2,
+                            Condition2_Value = newLine.Percentage2_3,
+                            Type2_ID = newLine.Level3_Type2
                         };
 
                         BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
@@ -679,7 +685,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level4_Approver,
                             Condition_ID = newLine.Level4_Condition,
                             Condition_Value = newLine.Percentage_4,
-                            Type_ID = newLine.Level4_Type
+                            Type_ID = newLine.Level4_Type,
+                            Condition2_ID = newLine.Level4_Condition2,
+                            Condition2_Value = newLine.Percentage2_4,
+                            Type2_ID = newLine.Level4_Type2
                         };
 
                         BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
@@ -689,7 +698,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level5_Approver,
                             Condition_ID = newLine.Level5_Condition,
                             Condition_Value = newLine.Percentage_5,
-                            Type_ID = newLine.Level5_Type
+                            Type_ID = newLine.Level5_Type,
+                            Condition2_ID = newLine.Level5_Condition2,
+                            Condition2_Value = newLine.Percentage2_5,
+                            Type2_ID = newLine.Level5_Type2
                         };
 
 
@@ -771,30 +783,45 @@ namespace WebApplication1.Controllers
                                         wfa_obj.Level1_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level1_Type = bb_wfa_levels[i].Type_ID;
                                         wfa_obj.Percentage_1 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Level1_Condition2 = bb_wfa_levels[i].Condition2_ID;
+                                        wfa_obj.Level1_Type2 = bb_wfa_levels[i].Type2_ID;
+                                        wfa_obj.Percentage2_1 = (int?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                     case 1:
                                         wfa_obj.Level2_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level2_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level2_Type = bb_wfa_levels[i].Type_ID;
                                         wfa_obj.Percentage_2 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Level2_Condition2 = bb_wfa_levels[i].Condition2_ID;
+                                        wfa_obj.Level2_Type2 = bb_wfa_levels[i].Type2_ID;
+                                        wfa_obj.Percentage2_2 = (int?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                     case 2:
                                         wfa_obj.Level3_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level3_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level3_Type = bb_wfa_levels[i].Type_ID;
                                         wfa_obj.Percentage_3 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Level3_Condition2 = bb_wfa_levels[i].Condition2_ID;
+                                        wfa_obj.Level3_Type2 = bb_wfa_levels[i].Type2_ID;
+                                        wfa_obj.Percentage2_3 = (int?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                     case 3:
                                         wfa_obj.Level4_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level4_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level4_Type = bb_wfa_levels[i].Type_ID;
                                         wfa_obj.Percentage_4 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Level4_Condition2 = bb_wfa_levels[i].Condition2_ID;
+                                        wfa_obj.Level4_Type2 = bb_wfa_levels[i].Type2_ID;
+                                        wfa_obj.Percentage2_4 = (int?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                     case 4:
                                         wfa_obj.Level5_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level5_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level5_Type = bb_wfa_levels[i].Type_ID;
                                         wfa_obj.Percentage_5 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Level5_Condition2 = bb_wfa_levels[i].Condition2_ID;
+                                        wfa_obj.Level5_Type2 = bb_wfa_levels[i].Type2_ID;
+                                        wfa_obj.Percentage2_5 = (int?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                 }
                             }
@@ -2067,23 +2094,35 @@ namespace WebApplication1.Controllers
             public int? Level1_Condition { get; set; }
             public int? Level1_Condition2 { get; set; }
             public int? Level2_Condition { get; set; }
+            public int? Level2_Condition2 { get; set; }
             public int? Level3_Condition { get; set; }
+            public int? Level3_Condition2 { get; set; }
             public int? Level4_Condition { get; set; }
+            public int? Level4_Condition2 { get; set; }
             public int? Level5_Condition { get; set; }
+            public int? Level5_Condition2 { get; set; }
 
             public int? Percentage_1 { get; set; }
             public int? Percentage2_1 { get; set; }
             public int? Percentage_2 { get; set; }
+            public int? Percentage2_2 { get; set; }
             public int? Percentage_3 { get; set; }
+            public int? Percentage2_3 { get; set; }
             public int? Percentage_4 { get; set; }
+            public int? Percentage2_4 { get; set; }
             public int? Percentage_5 { get; set; }
+            public int? Percentage2_5 { get; set; }
 
             public int? Level1_Type { get; set; }
             public int? Level1_Type2 { get; set; }
             public int? Level2_Type { get; set; }
+            public int? Level2_Type2 { get; set; }
             public int? Level3_Type { get; set; }
+            public int? Level3_Type2 { get; set; }
             public int? Level4_Type { get; set; }
+            public int? Level4_Type2 { get; set; }
             public int? Level5_Type { get; set; }
+            public int? Level5_Type2 { get; set; }
         }
 
         public partial class WFA_Approvers

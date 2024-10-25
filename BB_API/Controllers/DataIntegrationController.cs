@@ -290,9 +290,8 @@ namespace WebApplication1.Controllers
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                    }
-                }
-
+                    }           
+                    }              
             }
             return lst_Clients;
         }
