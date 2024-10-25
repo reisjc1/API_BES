@@ -201,17 +201,18 @@ namespace WebApplication1.Models.SetupXML.XML
                             }
                             //if (financing == "AL")
                             //{
+                            
+                            collectionOrdersFinance.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE
+                            {
+                                SD_DOC = orderDoc,
+                                FINANCE_TYPE = financing,
+                                LEAS_KUNNR = ct.CompanyCode,
+                                LEAS_LVTNR = pf.AgreementNumber,
+                                LEAS_LFAKT = "1",
+                                LEAS_ZTERM = "E60D",
+                                LEAS_LEABG = String.Format("{0:yyyyMMdd}",pf.DateApproval)
 
-                                collectionOrdersFinance.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE
-                                {
-                                    SD_DOC = orderDoc,
-                                    FINANCE_TYPE = financing,
-                                    LEAS_KUNNR = ct.CompanyCode,
-                                    LEAS_LVTNR = pf.AgreementNumber,
-                                    LEAS_LFAKT = "1",
-                                    LEAS_ZTERM = "E60D"
-
-                                });
+                            }) ;
                             //}
                             DateTime currentDate = DateTime.Now;
                             string formattedCurrentDate = currentDate.ToString("yyyyMMdd");

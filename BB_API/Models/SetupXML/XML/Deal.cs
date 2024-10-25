@@ -139,6 +139,8 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     BB_FinancingType ft = db.BB_FinancingType.Where(x => x.Code == pf.FinancingTypeCode).FirstOrDefault();
 
+                    BB_Clientes client = db.BB_Clientes.Where(x => x.accountnumber == d.ClientAccountNumber).FirstOrDefault();
+
                     contractoID = c.ID;
                     if(contractId == 3472)
                     {
@@ -182,7 +184,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     }
                     using (var dbuUser = new masterEntities())
                     {
-                        user = dbuUser.AspNetUsers.Where(x => x.Email == d.CreatedBy).FirstOrDefault();
+                        user = dbuUser.AspNetUsers.Where(x => x.DisplayName == client.Owner).FirstOrDefault();
                     }
 
 

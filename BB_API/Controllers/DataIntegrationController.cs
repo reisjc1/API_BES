@@ -197,7 +197,7 @@ namespace WebApplication1.Controllers
         public List<BB_Clientes_> Clientes([FromBody] Owner_ Owner)
         {
             var _userId = usersDB.AspNetUsers
-                .Where(x => x.UserName == Owner.Owner)              
+                .Where(x => x.UserName == Owner.Owner)
                 .FirstOrDefault();
 
             var lst_useroleKM = _userId != null
@@ -290,13 +290,11 @@ namespace WebApplication1.Controllers
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                    }
-                }           
-
+                    }           
+                    }              
             }
             return lst_Clients;
         }
-
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("Clientes_DSO")]
