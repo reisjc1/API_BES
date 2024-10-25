@@ -224,7 +224,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             ConditionPVP condPvp = new ConditionPVP();
                             condPvp.PVP = Math.Round((opsPvpLine2 / contratoMeses) ?? 0.0, 2);
                             condPvp.ConditionCode = "ZVBM";
-                            conditionsPvp.Add(condPvp);
+                            //conditionsPvp.Add(condPvp);
                         }
                     }
 

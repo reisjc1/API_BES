@@ -184,7 +184,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     }
                     using (var dbuUser = new masterEntities())
                     {
-                        user = dbuUser.AspNetUsers.Where(x => x.DisplayName == client.Owner).FirstOrDefault();
+                       user = dbuUser.AspNetUsers.Where(x => x.DisplayName == client.Owner).FirstOrDefault();
                     }
 
 
@@ -225,6 +225,28 @@ namespace WebApplication1.Models.SetupXML.XML
                     //CONDITIONS
                     Conditions conditionsConfig = new Conditions();
                     var collectionConditions = conditionsConfig.ConfigConditions(collectionOrders, collectionContracts, d.ID, ft.Code);
+
+                    //SET FIELD MISSING IN FINANCE COLLECTION
+                    foreach(var financePart in sDocOrder.z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERs)
+                    {
+                        foreach(var conditionPart in collectionConditions)
+                        {
+                            if (financePart.SD_DOC == conditionPart.DOC)
+                            {
+                                if(conditionPart.KSCHL == "ZPD4")
+                                {
+                                    financePart.Z1ZVOE_FINANCE[0].KBETR1 = conditionPart.KBETR;
+                                }
+
+                                if(conditionPart.KSCHL == "ZSW4")
+                                {
+                                    financePart.Z1ZVOE_FINANCE[0].KBETR2 = conditionPart.KBETR;
+                                }
+
+                                financePart.Z1ZVOE_FINANCE[0].LEAS_LEPER = pf.Months.ToString();
+                            }
+                        }
+                    }
 
                     //Config SAP 
                     string mescod = @AppSettingsGet.SapConfigMESCOD;

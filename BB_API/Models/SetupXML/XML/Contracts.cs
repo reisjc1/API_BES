@@ -38,6 +38,7 @@ namespace WebApplication1.Models.SetupXML.XML
                 }
                 if (ft.Code == 2) //|| ft.Code == 4
                 {
+                    //contractType = "008";
                     contractType = "002"; //Renting por enquanto enviar 002 e o ideal é enviar 008
                 }
                 if (ft.Code == 3)

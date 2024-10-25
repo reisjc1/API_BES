@@ -201,7 +201,15 @@ namespace WebApplication1.Models.SetupXML.XML
                             }
                             //if (financing == "AL")
                             //{
-                            
+                            var LEAS_ZTERM = "";
+                            if (pf.Months == 60)
+                            {
+                                LEAS_ZTERM = "E30D";
+                            }else if(pf.Months == 48)
+                            {
+                                LEAS_ZTERM = "E60D";
+
+                            }
                             collectionOrdersFinance.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE
                             {
                                 SD_DOC = orderDoc,
@@ -209,9 +217,13 @@ namespace WebApplication1.Models.SetupXML.XML
                                 LEAS_KUNNR = ct.CompanyCode,
                                 LEAS_LVTNR = pf.AgreementNumber,
                                 LEAS_LFAKT = "1",
-                                LEAS_ZTERM = "E60D",
-                                LEAS_LEABG = String.Format("{0:yyyyMMdd}",pf.DateApproval)
-
+                                LEAS_ZTERM = LEAS_ZTERM,
+                                LEAS_LEABG = String.Format("{0:yyyyMMdd}",pf.DateApproval),
+                                KBETR1 = "",
+                                KBETR2 = "",
+                                LEAS_LEPER = "",
+                                LEAS_LRYTH = "1",
+                                LEAS_LKAUP = "2.5"
                             }) ;
                             //}
                             DateTime currentDate = DateTime.Now;
@@ -222,7 +234,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
                                 REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
                                 REF_1 = order.Name, //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
-                                PURCH_NO_C = d.Name,  //Nome interno da oferta
+                                PURCH_NO_C = d.CRM_QUOTE_ID,  //Nome interno da oferta
                                 SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
                                 PMNTTRMS = "303E", //TODO: manter  || FinancingPaymentMethods.
                                 CONTRACT_DOC = $"C_D3924_1_{randomLetterNunber}",   //contractDoc,
@@ -268,8 +280,12 @@ namespace WebApplication1.Models.SetupXML.XML
                 string kBETR = null;
                 var collectionOrderCLickPrices = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES>();
 
+
                 using (var db = new BB_DB_DEVEntities2())
                 {
+                    DateTime FirstDayofThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                    DateTime FirstDayofTheNextMonth = FirstDayofThisMonth.AddMonths(1);
+                    string FirstDayNextMonthString = FirstDayofTheNextMonth.ToString("yyyyMMdd");
                     BB_Proposal_PrintingServices2 printingServices2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_PrintingServices printingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingServices2.ID).FirstOrDefault();
 
@@ -277,7 +293,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     BB_PrintingServices_NoVolume noVolume = db.BB_PrintingServices_NoVolume.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
                     BB_PrintingServices_ClickPerModel clickPerModel = db.BB_PrintingServices_ClickPerModel.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
                     BB_VVA vVA = db.BB_VVA.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
-
+                    int? copiasIncludias = 0;
                     if (printingServices != null)
                     {
                         if (printingServices.BWVolume > 0 && printingServices.CVolume > 0)
@@ -301,6 +317,53 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 kBETR = vVA.PVP.ToString().Replace(",", ".");
                             }
+                            copiasIncludias = printingServices.BWVolume + printingServices.CVolume;
+                            kSTBM = copiasIncludias.ToString();
+
+                            collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                            {
+                                SD_DOC = orderDoc,
+                                MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                DATBI = "99991231", // data de até quando é válido -- deixar default
+                                //KSTBM = kSTBM, //copias incluidas 
+                                KBETR = kBETR //preço do excedente 
+                            });
+
+                            mATNR = "TOBW";
+                            kLFN = "1";
+                            if (noVolume != null)
+                            {
+                                kBETR = noVolume.GlobalClickBW.ToString().Replace(",", ".");
+                            }
+                            else if (clickPerModel != null)
+                            {
+                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == printingServices.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                if (pSM != null)
+                                {
+                                    kBETR = pSM.ApprovedBW.ToString().Replace(",", ".");
+                                }
+                            }
+                            else if (vVA != null)
+                            {
+                                kBETR = vVA.PVP.ToString().Replace(",", ".");
+                            }
+
+                            copiasIncludias = printingServices.BWVolume + printingServices.CVolume;
+                            kSTBM = copiasIncludias.ToString();
+
+                            collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                            {
+                                SD_DOC = orderDoc,
+                                MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                DATBI = "99991231", // data de até quando é válido -- deixar default
+                                //KSTBM = kSTBM, //copias incluidas 
+                                KBETR = kBETR //preço do excedente 
+                            });
+
                         }
                         if (printingServices.BWVolume > 0 && printingServices.CVolume == 0)
                         {
@@ -322,28 +385,22 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 kBETR = vVA.PVP.ToString().Replace(",", ".");
                             }
+
+                            copiasIncludias = printingServices.BWVolume + printingServices.CVolume;
+                            kSTBM = copiasIncludias.ToString();
+
+                            collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                            {
+                                SD_DOC = orderDoc,
+                                MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                DATBI = "99991231", // data de até quando é válido -- deixar default
+                                //KSTBM = kSTBM, //copias incluidas 
+                                KBETR = kBETR //preço do excedente 
+                            });
                         }
-                        int? copiasIncludias = printingServices.BWVolume + printingServices.CVolume;
-                        kSTBM = copiasIncludias.ToString();
-                    }
-
-
-
-
-                    DateTime FirstDayofThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                    DateTime FirstDayofTheNextMonth = FirstDayofThisMonth.AddMonths(1);
-                    string FirstDayNextMonthString = FirstDayofTheNextMonth.ToString("yyyyMMdd");
-
-                    collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
-                    {
-                        SD_DOC = orderDoc,
-                        MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
-                        KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
-                        DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
-                        DATBI = "99991231", // data de até quando é válido -- deixar default
-                        KSTBM = kSTBM, //copias incluidas 
-                        KBETR = kBETR //preço do excedente 
-                    });
+                    }                    
                 }
                 return collectionOrderCLickPrices;
             }
