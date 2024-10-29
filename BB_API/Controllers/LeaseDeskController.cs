@@ -2627,13 +2627,13 @@ namespace WebApplication1.Controllers
                                 {
                                     BB_Proposal_DeliveryLocationResumoModel resumo = new BB_Proposal_DeliveryLocationResumoModel();
                                     resumo.Group = p.Key;
-                                    resumo.Adress1 = currentLocal.Adress1;
+                                    resumo.Adress1 = i.Adress1;
                                     resumo.Adress2 = i.Adress2;
                                     resumo.PostalCode = i.PostalCode;
                                     resumo.City = i.City;
-                                    resumo.Contacto = contact.Name + " " + contact.Surname;
-                                    resumo.Phone = contact.Movil.ToString();
-                                    resumo.Email = contact.Email;
+                                    resumo.Contacto = contact != null ? contact.Name + " " + contact.Surname : "";
+                                    resumo.Phone = contact != null ? contact.Movil.ToString(): "";
+                                    resumo.Email = contact != null ? contact.Email: "";
                                     resumo.AddressType = i.AccountType;
                                     resumo.CodeRef = it.CodeRef;
                                     resumo.Qty = it.Qty;
@@ -3735,11 +3735,12 @@ namespace WebApplication1.Controllers
                                 int? deliverLocationID = Int32.Parse(deliverLocation.ID);
 
                                 BB_LocaisEnvio bb_local_envio = dbX.BB_LocaisEnvio.Where(x => x.ID == deliverLocationID).FirstOrDefault();
+                                BB_Clientes bb_cliente = dbX.BB_Clientes.Where(x => x.accountnumber == bb_local_envio.AccountNumber).FirstOrDefault();
                                 if (bb_local_envio != null)
                                 {
                                     dl_info.CIF = bb_local_envio.NIF_CIF;
                                     dl_info.SAP_Nr = bb_local_envio.SAPCustomerNr;
-                                    dl_info.CompanyName = bb_local_envio.NomeCliente;
+                                    dl_info.CompanyName = bb_cliente.Name;
                                     dl_info.SAP_Company = bb_local_envio.NomeCliente;
                                 }
 
