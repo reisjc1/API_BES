@@ -1293,11 +1293,24 @@ namespace WebApplication1.Controllers
 
                     cmd.Parameters.AddWithValue("@Proposal_ID", ProposalID);
                     cmd.Parameters.AddWithValue("@WFA_ID", WFA_ID);
-                    SqlDataReader rdr = cmd.ExecuteReader();
 
-                    bool result = rdr.Read();
+                    var returnParameter = cmd.Parameters.Add("@Return_Value", SqlDbType.Bit);
+                    returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                    SqlDataReader rdr = cmd.ExecuteReader();
                     rdr.Close();
-                    return result;
+
+                    var result = returnParameter.Value;
+
+                    if(result.ToString() == "1")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
 
                 }
             }
