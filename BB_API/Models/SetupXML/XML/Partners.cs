@@ -55,6 +55,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 partnerInfo.STREET = reader["STREET"].ToString();
                                 partnerInfo.FLOOR = reader["FLOOR"].ToString();
                                 partnerInfo.ROOMNUMBER = reader["ROOMNUMBER"].ToString();
+                                partnerInfo.BUSINESSCODE = reader["BusinessCode"].ToString();
                                 partnerInfo.COUNTRY = reader["COUNTRY"].ToString();
                                 partnerInfo.LANGU = reader["LANGU"].ToString();
                                 partnerInfo.REGION = reader["REGION"].ToString();
@@ -90,16 +91,24 @@ namespace WebApplication1.Models.SetupXML.XML
                     //partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
                     if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
                     {
-
-                        collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                        using(var bdCliente =  new BB_DB_DEVEntities2())
                         {
-                            SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
-                            PARTN_ROLE = partnerInfo.PARTN_ROLE, //"WE",
-                            CUSTOMER = partnerInfo.CUSTOMER,
-                            CP_NAMEV = nameParts[nameParts.Length - 1],     //"ALVAREZ",
-                            CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1)),
-                            CP_PHONE = partnerInfo.CP_PHONE//"66666666"
-                        });
+                            string idLocaisEnvio = bdCliente.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId && x.AccountType == "Ship To").Select(x => x.ID).FirstOrDefault();
+
+                            int IDLOCAISENVIO = Int32.Parse(idLocaisEnvio);
+
+                            string sapNumber = bdCliente.BB_LocaisEnvio.Where(x => x.ID == IDLOCAISENVIO).Select(x => x.SAPCustomerNr).FirstOrDefault();
+
+                            collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                            {
+                                SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
+                                PARTN_ROLE = partnerInfo.PARTN_ROLE, //"WE",
+                                CUSTOMER = sapNumber,
+                                CP_NAMEV = nameParts[nameParts.Length - 1],     //"ALVAREZ",
+                                CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1)),
+                                CP_PHONE = partnerInfo.CP_PHONE//"66666666"
+                            });
+                        }
 
 
                     }
@@ -203,7 +212,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         {
                                             SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
                                             PARTN_ROLE = "RE", 
-                                            CUSTOMER = "1137222",       //lEnvio.SAPCustomerNr.ToString(),             // partnerInfo.CUSTOMER, //
+                                            CUSTOMER = lEnvio.SAPCustomerNr.ToString(),       //"1137222",             // partnerInfo.CUSTOMER, //
                                             CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
                                             CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
                                             CP_PHONE = c.telephone1//"66666666"
@@ -220,7 +229,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         {
                                             SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
                                             PARTN_ROLE = "RG",
-                                            CUSTOMER = "1132367",       //lEnvio.SAPCustomerNr.ToString(),             // partnerInfo.CUSTOMER, //
+                                            CUSTOMER = lEnvio.SAPCustomerNr.ToString(),      //lEnvio.SAPCustomerNr.ToString(),             // partnerInfo.CUSTOMER, //
                                             CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
                                             CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
                                             CP_PHONE = c.telephone1//"66666666"

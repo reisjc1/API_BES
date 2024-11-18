@@ -19,6 +19,7 @@ namespace WebApplication1.Models.SetupXML
         public string STREET { get; set; }
         public string FLOOR { get; set; }
         public string ROOMNUMBER { get; set; }
+        public string BUSINESSCODE { get; set; }
         public string COUNTRY { get; set; }
         public string LANGU { get; set; }
         public string REGION { get; set; }

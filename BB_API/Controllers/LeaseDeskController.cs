@@ -2529,6 +2529,7 @@ namespace WebApplication1.Controllers
 
 
 
+
             return Ok(a.ProposalObj);
         }
 
@@ -2577,7 +2578,7 @@ namespace WebApplication1.Controllers
                     foreach (var deliveryLocation in deliverLocationList)
                     {
                         int id = Int32.Parse(deliveryLocation.ID);
-                        BB_LocaisEnvio localEnvio = db.BB_LocaisEnvio.Where(x => x.ID == id).FirstOrDefault();
+                        BB_LocaisEnvio localEnvio = db.BB_LocaisEnvio.Where(x => x.ID == id && x.BusinessCode == ti.CompanyName).FirstOrDefault();
 
                         if (localEnvio != null)
                         {
@@ -3740,7 +3741,7 @@ namespace WebApplication1.Controllers
                                 {
                                     dl_info.CIF = bb_local_envio.NIF_CIF;
                                     dl_info.SAP_Nr = bb_local_envio.SAPCustomerNr;
-                                    dl_info.CompanyName = bb_cliente.Name;
+                                    dl_info.CompanyName = bb_local_envio.BusinessCode;
                                     dl_info.SAP_Company = bb_local_envio.NomeCliente;
                                 }
 
@@ -3843,6 +3844,27 @@ namespace WebApplication1.Controllers
                             LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractID).FirstOrDefault();
 
                             lD_Contrato.InvoiceList = invoiceList;
+
+                            using( var db2 = new BB_DB_DEVEntities2())
+                            {
+
+                                List<BB_Proposal_DeliveryLocation> deliverLocationList = db2.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == bb_proposal.ID).DistinctBy(x => x.ID).ToList();
+
+                                foreach (var deliveryLocation in deliverLocationList)
+                                {
+                                    int id = Int32.Parse(deliveryLocation.ID);
+                                    BB_LocaisEnvio localEnvio = db2.BB_LocaisEnvio.Where(x => x.ID == id).FirstOrDefault();
+
+                                    if (localEnvio != null)
+                                    {
+                                        localEnvio.SAPCustomerNr = soldTo;
+                                        db.Entry(localEnvio).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+                                }
+
+
+                            }
 
                             db.Entry(bb_proposal).State = EntityState.Modified;
                             db.Entry(lD_Contrato).State = EntityState.Modified;

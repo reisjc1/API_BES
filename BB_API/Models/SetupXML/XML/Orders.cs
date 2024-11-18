@@ -7,6 +7,9 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using WebApplication1.BLL;
+using WebApplication1.Controllers;
+using WebApplication1.Models.ViewModels;
 using static WebApplication1.Models.SetupXML.XSD;
 
 
@@ -47,8 +50,6 @@ namespace WebApplication1.Models.SetupXML.XML
                     int index = 1;
                     var collectionOrders = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS>();
 
-
-
                     foreach (var deliveryLocation in dl)
                     {
                         int? groupNumber = null;
@@ -69,9 +70,9 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
 
                             var collectionOrderItems = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>();
-                            var collectionOrdersFinance = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE>();
                             var collectionOrdersContact = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT>(); //Informação igual 
-                            var collectionOrderCLickPrices = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES>(); ;
+                            var collectionOrdersFinance = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE>();
+                            var collectionOrderCLickPrices = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES>(); 
                             string contractIndexString = index.ToString();
                             string bundelCodeRef = "";
 
@@ -140,33 +141,33 @@ namespace WebApplication1.Models.SetupXML.XML
                                     itm_number = itm_number + 10;
                                 }
                             }
-                            BB_Proposal_OPSManage ops = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                            if(ops != null)
-                            {
-                                string line1 = ops.CodeRef;
-                                string line2 = "9960DRC-HTTP ";
-                                BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line2).FirstOrDefault();
-                                double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
-                                double? opsPvpLine2 = opsPack.PVP;
-                                collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
-                                {
-                                    SD_DOC = orderDoc,
-                                    ITM_NUMBER = itm_number.ToString(), // contractItm,
-                                    MATERIAL = line1, //"A6DR021",//order.CodeRef,
-                                    REQ_QTY = "1",
-                                    MODEL_YN = "Y" // Perguntar ao Luis
-                                });
-                                itm_number += 10;
-                                collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
-                                {
-                                    SD_DOC = orderDoc,
-                                    ITM_NUMBER = itm_number.ToString(), // contractItm,
-                                    MATERIAL = line2, //"A6DR021",//order.CodeRef,
-                                    REQ_QTY = "1",
-                                    MODEL_YN = "Y" // Perguntar ao Luis
-                                });
+                            //BB_Proposal_OPSManage ops = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                            //if(ops != null)
+                            //{
+                            //    string line1 = ops.CodeRef;
+                            //    string line2 = "9960DRC-HTTP ";
+                            //    BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line2).FirstOrDefault();
+                            //    double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
+                            //    double? opsPvpLine2 = opsPack.PVP;
+                            //    collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                            //    {
+                            //        SD_DOC = orderDoc,
+                            //        ITM_NUMBER = itm_number.ToString(), // contractItm,
+                            //        MATERIAL = line1, //"A6DR021",//order.CodeRef,
+                            //        REQ_QTY = "1",
+                            //        MODEL_YN = "Y" // Perguntar ao Luis
+                            //    });
+                            //    itm_number += 10;
+                            //    collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                            //    {
+                            //        SD_DOC = orderDoc,
+                            //        ITM_NUMBER = itm_number.ToString(), // contractItm,
+                            //        MATERIAL = line2, //"A6DR021",//order.CodeRef,
+                            //        REQ_QTY = "1",
+                            //        MODEL_YN = "Y" // Perguntar ao Luis
+                            //    });
 
-                            }
+                            //}
 
                             BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliveryLocation.DeliveryContact).FirstOrDefault();
 
@@ -205,7 +206,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             if (pf.Months == 60)
                             {
                                 LEAS_ZTERM = "E30D";
-                            }else if(pf.Months == 48)
+                            }else if(pf.Months == 48 || pf.Months == 0)
                             {
                                 LEAS_ZTERM = "E60D";
 
@@ -223,7 +224,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 KBETR2 = "",
                                 LEAS_LEPER = "",
                                 LEAS_LRYTH = "1",
-                                LEAS_LKAUP = "2.5"
+                                LEAS_LKAUP = "2.5",
+                                BILL_TO = d.ClientAccountNumber
                             }) ;
                             //}
                             DateTime currentDate = DateTime.Now;
@@ -241,6 +243,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 CONTRACT_ITM = contractItm, // add +10 no foreach de orders  
                                 MACHINE = bundelCodeRef, //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
                                 ORDER_FLAG = "O1", //TODO: MANTER ESTE VALOR;
+                                LINKING_PIN = proposalId.ToString(),
                                 Z1ZVOE_ORDER_CONTACT = collectionOrdersContact,
                                 Z1ZVOE_ORDER_ITEMS = collectionOrderItems,
                                 Z1ZVOE_CLICK_PRICES = collectionOrderCLickPrices,
@@ -249,13 +252,84 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             });
 
+
                             index++;
                         }
 
-
-
-
                     }
+
+                    var collectionOrderItemsRetiradas = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>();
+                    var collectionOrdersContactRetiradas = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT>(); //Informação igual 
+
+                    BB_Proposal_Upturn bB_Proposal_Upturn = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+
+                    if(bB_Proposal_Upturn != null)
+                    {
+                        if((bool)bB_Proposal_Upturn.Retirada)
+                    {
+                        Random randomRetirada = new Random();
+                        int randomNumberOrderDocRetirada = random.Next(1000000, 10000000);
+                        string randomNumberOrderRetiradaString = randomNumberOrderDoc.ToString();
+
+                        string orderRetiradaDoc = $"O_R{randomNumberOrderString}_{randomLetterNunber}";
+                        collectionOrderItemsRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                        {
+                            SD_DOC = orderRetiradaDoc,
+                            ITM_NUMBER = "10", // contractItm,
+                            MATERIAL = "9960DX00058", //"A6DR021",//order.CodeRef,
+                            REQ_QTY = "1"
+                        });
+
+                        //if (dLClient != null)
+                        //{
+                        collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                            {
+                                SD_DOC = orderRetiradaDoc,
+                                APLF_NAME = "M. GEMMA BELLUDA VENTURA", //"M. LUIS ALVAREZ",
+                                APLF_PHON = "934870301",       //"66666666",
+                                APLF_OPEN = "8-17H",//"9h 17h",
+                                APLF_INFO = "",//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                APLF_INFO2 = "Marque/Modèle: Konica Minolta / bizhub 36 -N°: 1818459123",//"Asc: Oui -Connexion: PRINTFLEET",
+                                APLF_INFO3 = "2024431493"
+
+                            });
+                        //}
+                        //else
+                        //{
+                        //    collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                        //    {
+                        //        SD_DOC = orderRetiradaDoc,
+                        //        APLF_NAME = "M. LUIS ALVAREZ",
+                        //        APLF_PHON = "66666666",
+                        //        APLF_OPEN = "9h 17h",
+                        //        APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                        //        APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
+                        //        APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
+                        //    });
+                        //}
+                        DateTime currentDate = DateTime.Now;
+                        string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
+                        collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
+                        {
+                            SD_DOC = orderRetiradaDoc,
+                            DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
+                            REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
+                            REF_1 = "SDR252146", //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
+                            PURCH_NO_C = "RETIRAR bizhub 36",  //Nome interno da oferta
+                            SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
+                            PMNTTRMS = "E6CD", //TODO: manter  || FinancingPaymentMethods.
+                            MACHINE = "5R", //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
+                            ORDER_FLAG = "5R", //TODO: MANTER ESTE VALOR;
+                            EQUIPMENT_NO = "1818459123",
+                            DWERK = "5300",
+                            LINKING_PIN = proposalId.ToString(),
+                            Z1ZVOE_ORDER_CONTACT = collectionOrdersContactRetiradas,
+                            Z1ZVOE_ORDER_ITEMS = collectionOrderItemsRetiradas
+                        });
+                    }
+                    }
+
+
                     OrdersPartnersList sdocOrders = new OrdersPartnersList();
                     sdocOrders.z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERs = collectionOrders;
                     sdocOrders.SdDocOrderPartner = sdDocOrdersPartners;
@@ -280,44 +354,57 @@ namespace WebApplication1.Models.SetupXML.XML
                 string kBETR = null;
                 var collectionOrderCLickPrices = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES>();
 
+                ProposalBLL p1 = new ProposalBLL();
+                LoadProposalInfo i = new LoadProposalInfo();
+                i.ProposalId = proposalId;
+                ActionResponse a = p1.LoadProposal(i);
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     DateTime FirstDayofThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                     DateTime FirstDayofTheNextMonth = FirstDayofThisMonth.AddMonths(1);
                     string FirstDayNextMonthString = FirstDayofTheNextMonth.ToString("yyyyMMdd");
-                    BB_Proposal_PrintingServices2 printingServices2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                    BB_PrintingServices printingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingServices2.ID).FirstOrDefault();
+                    //BB_Proposal_PrintingServices2 printingServices2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    //BB_PrintingServices printingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingServices2.ID).FirstOrDefault();
 
-                    //BB_Proposal_Quote_RS quoteRs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                    BB_PrintingServices_NoVolume noVolume = db.BB_PrintingServices_NoVolume.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
-                    BB_PrintingServices_ClickPerModel clickPerModel = db.BB_PrintingServices_ClickPerModel.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
-                    BB_VVA vVA = db.BB_VVA.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
+                    //BB_Proposal_PrintingServiceValidationRequest bB_Proposal_PrintingServiceValidationRequest = db.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == printingServices.ID && x.IsApproved == true).FirstOrDefault();
+
+                    ////BB_Proposal_Quote_RS quoteRs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    //BB_PrintingServices_NoVolume noVolume = db.BB_PrintingServices_NoVolume.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
+                    //BB_PrintingServices_ClickPerModel clickPerModel = db.BB_PrintingServices_ClickPerModel.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
+                    //BB_VVA vVA = db.BB_VVA.Where(x => x.PrintingServiceID == printingServices.ID).FirstOrDefault();
                     int? copiasIncludias = 0;
-                    if (printingServices != null)
+                    ApprovedPrintingService activePS = null;
+
+                    if(a.ProposalObj.Draft.printingServices2.ActivePrintingService != null)
                     {
-                        if (printingServices.BWVolume > 0 && printingServices.CVolume > 0)
+                        activePS = a.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[a.ProposalObj.Draft.printingServices2.ActivePrintingService.Value - 1];
+
+                        if(activePS != null)
+                        {
+
+                            if (activePS.BWVolume > 0 && activePS.CVolume > 0)
                         {
                             mATNR = "TOCO";
                             kLFN = "2";
-                            if (noVolume != null)
+                            if (activePS.GlobalClickNoVolume != null)
                             {
-                                kBETR = noVolume.GlobalClickC.ToString().Replace(",", ".");
+                                kBETR = activePS.GlobalClickNoVolume.GlobalClickC.ToString().Replace(",", ".");
                             }
-                            else if (clickPerModel != null)
+                            else if (activePS.ClickPerModel != null)
                             {
-                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == printingServices.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
                                 if (pSM != null)
                                 {
                                     kBETR = pSM.ApprovedC.ToString().Replace(",", ".");
                                 }
                                 //kBETR = clickPerModel
                             }
-                            else if (vVA != null)
+                            else if (activePS.GlobalClickVVA != null)
                             {
-                                kBETR = vVA.PVP.ToString().Replace(",", ".");
+                                kBETR = activePS.GlobalClickVVA.PVP.ToString().Replace(",", ".");
                             }
-                            copiasIncludias = printingServices.BWVolume + printingServices.CVolume;
+                            copiasIncludias = activePS.BWVolume + activePS.CVolume;
                             kSTBM = copiasIncludias.ToString();
 
                             collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
@@ -333,24 +420,24 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             mATNR = "TOBW";
                             kLFN = "1";
-                            if (noVolume != null)
+                            if (activePS.GlobalClickNoVolume != null)
                             {
-                                kBETR = noVolume.GlobalClickBW.ToString().Replace(",", ".");
+                                kBETR = activePS.GlobalClickNoVolume.GlobalClickBW.ToString().Replace(",", ".");
                             }
-                            else if (clickPerModel != null)
+                            else if (activePS.ClickPerModel != null)
                             {
-                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == printingServices.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
                                 if (pSM != null)
                                 {
                                     kBETR = pSM.ApprovedBW.ToString().Replace(",", ".");
                                 }
                             }
-                            else if (vVA != null)
+                            else if (activePS.GlobalClickVVA != null)
                             {
-                                kBETR = vVA.PVP.ToString().Replace(",", ".");
+                                kBETR = activePS.GlobalClickVVA.PVP.ToString().Replace(",", ".");
                             }
 
-                            copiasIncludias = printingServices.BWVolume + printingServices.CVolume;
+                            copiasIncludias = activePS.BWVolume + activePS.CVolume;
                             kSTBM = copiasIncludias.ToString();
 
                             collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
@@ -365,28 +452,28 @@ namespace WebApplication1.Models.SetupXML.XML
                             });
 
                         }
-                        if (printingServices.BWVolume > 0 && printingServices.CVolume == 0)
+                            if (activePS.BWVolume > 0 && activePS.CVolume == 0)
                         {
                             mATNR = "TOBW";
                             kLFN = "1";
-                            if (noVolume != null)
+                            if (activePS.GlobalClickNoVolume != null)
                             {
-                                kBETR = noVolume.GlobalClickBW.ToString().Replace(",", ".");
+                                kBETR = activePS.GlobalClickNoVolume.GlobalClickBW.ToString().Replace(",", ".");
                             }
-                            else if (clickPerModel != null)
+                            else if (activePS.ClickPerModel != null)
                             {
-                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == printingServices.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
                                 if (pSM != null)
                                 {
                                     kBETR = pSM.ApprovedBW.ToString().Replace(",", ".");
                                 }
                             }
-                            else if (vVA != null)
+                            else if (activePS.GlobalClickVVA != null)
                             {
-                                kBETR = vVA.PVP.ToString().Replace(",", ".");
+                                kBETR = activePS.GlobalClickVVA.PVP.ToString().Replace(",", ".");
                             }
 
-                            copiasIncludias = printingServices.BWVolume + printingServices.CVolume;
+                            copiasIncludias = activePS.BWVolume + activePS.CVolume;
                             kSTBM = copiasIncludias.ToString();
 
                             collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
@@ -400,7 +487,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                 KBETR = kBETR //preço do excedente 
                             });
                         }
-                    }                    
+
+                        }
+
+                    }
+                    
+                                       
                 }
                 return collectionOrderCLickPrices;
             }

@@ -229,21 +229,24 @@ namespace WebApplication1.Models.SetupXML.XML
                     //SET FIELD MISSING IN FINANCE COLLECTION
                     foreach(var financePart in sDocOrder.z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERs)
                     {
-                        foreach(var conditionPart in collectionConditions)
+                        if(financePart.Z1ZVOE_FINANCE.Count > 0)
                         {
-                            if (financePart.SD_DOC == conditionPart.DOC)
+                            foreach(var conditionPart in collectionConditions)
                             {
-                                if(conditionPart.KSCHL == "ZPD4")
+                                if (financePart.SD_DOC == conditionPart.DOC)
                                 {
-                                    financePart.Z1ZVOE_FINANCE[0].KBETR1 = conditionPart.KBETR;
-                                }
+                                    if(conditionPart.KSCHL == "ZPD4")
+                                    {
+                                        financePart.Z1ZVOE_FINANCE[0].KBETR1 = conditionPart.KBETR;
+                                    }
 
-                                if(conditionPart.KSCHL == "ZSW4")
-                                {
-                                    financePart.Z1ZVOE_FINANCE[0].KBETR2 = conditionPart.KBETR;
-                                }
+                                    if(conditionPart.KSCHL == "ZSW4")
+                                    {
+                                        financePart.Z1ZVOE_FINANCE[0].KBETR2 = conditionPart.KBETR;
+                                    }
 
-                                financePart.Z1ZVOE_FINANCE[0].LEAS_LEPER = pf.Months.ToString();
+                                    financePart.Z1ZVOE_FINANCE[0].LEAS_LEPER = pf.Months.ToString();
+                                }
                             }
                         }
                     }
