@@ -1548,7 +1548,7 @@ namespace WebApplication1.BLL
                             };
                             newPS.Machines.Add(psMachine);
                         }
-                        BB_Proposal_PrintingServiceValidationRequest validationRequest = ps.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.ToDelete == false).FirstOrDefault();
+                        BB_Proposal_PrintingServiceValidationRequest validationRequest = ps.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == ps.ID &&  x.ToDelete == false).FirstOrDefault();
                         if (validationRequest != null)
                         {
                             newPS.RequestedAt = validationRequest.RequestedAt;
