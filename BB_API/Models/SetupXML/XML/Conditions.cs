@@ -481,11 +481,18 @@ namespace WebApplication1.Models.SetupXML.XML
                                     cond.PVP = cond.PVP + (opsPvpRounded);
                                 }
                             }
-                            if (condExists == false)
+                            if (condExists == false && contractMonths > 0)
                             {
                                 ConditionPVP condPvp = new ConditionPVP();
                                 double opsPvpRounded  = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
                                 condPvp.PVP = opsPvpRounded;
+                                condPvp.ConditionCode = "ZVBM";
+                                conditionsPvp.Add(condPvp);
+                            }
+                            else
+                            {
+                                ConditionPVP condPvp = new ConditionPVP();
+                                condPvp.PVP = 0;
                                 condPvp.ConditionCode = "ZVBM";
                                 conditionsPvp.Add(condPvp);
                             }

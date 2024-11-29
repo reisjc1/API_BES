@@ -108,7 +108,9 @@ namespace WebApplication1.Models.SetupXML.XML
         {
             try
             {
-                AspNetUsers user = new AspNetUsers();
+                AspNetUsers userOwner = new AspNetUsers();
+                AspNetUsers userCreatedBy = new AspNetUsers();
+
 
                 int? contractoID = null;
                 using (var db = new BB_DB_DEVEntities2())
@@ -184,7 +186,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     }
                     using (var dbuUser = new masterEntities())
                     {
-                       user = dbuUser.AspNetUsers.Where(x => x.DisplayName == client.Owner).FirstOrDefault();
+                       userOwner = dbuUser.AspNetUsers.Where(x => x.DisplayName == client.Owner).FirstOrDefault();
+                        userCreatedBy = dbuUser.AspNetUsers.Where(x => x.Email == d.CreatedBy).FirstOrDefault();
                     }
 
 
@@ -289,7 +292,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             PRREL = "X",
                             PRRDAT = formattedDtDeal,
                             BNL_RLIST = c.InvoiceList == true ? "X" : "", //Falar com a BEU
-                            SALESP = user != null && !string.IsNullOrEmpty(user.ErpNumber) ? user.ErpNumber : "" //"50004700"               //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
+                            SALESP = userCreatedBy != null && !string.IsNullOrEmpty(userCreatedBy.ErpNumber) ? userCreatedBy.ErpNumber : "" //"50004700"               //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
 
 
 

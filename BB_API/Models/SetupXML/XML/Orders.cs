@@ -215,7 +215,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 SD_DOC = orderDoc,
                                 FINANCE_TYPE = financing,
-                                LEAS_KUNNR = ct.CompanyCode,
+                                LEAS_KUNNR = d.ClientAccountNumber,
                                 LEAS_LVTNR = pf.AgreementNumber,
                                 LEAS_LFAKT = "1",
                                 LEAS_ZTERM = LEAS_ZTERM,
