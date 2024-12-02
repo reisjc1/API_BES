@@ -480,7 +480,7 @@ namespace WebApplication1.Controllers
                         le.Contacto = rdr["Contacto"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Contacto")) : "";
                         le.PostalCode = rdr["PostalCode"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("PostalCode")) : "";
                         le.County = rdr["County"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("County")) : "";
-                        le.AddressType = rdr["AddressType"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("AddressType")) : "";
+                        le.AddressType = rdr["AddressType"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("AddressType")) : rdr.GetString(rdr.GetOrdinal("TypeAccount"));
                         le.SAPCustomerNr = rdr["SAPCustomerNr"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SAPCustomerNr")) : "";
                         le.NIF_CIF = rdr["NIF_CIF"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("NIF_CIF")) : "";
                         le.BusinessCode = rdr["BusinessCode"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("BusinessCode")) : "";

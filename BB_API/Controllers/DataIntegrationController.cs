@@ -235,7 +235,8 @@ namespace WebApplication1.Controllers
                                 Segment = rdr["Segment"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Segment")) : "",
                                 GMA = rdr["GMA"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("GMA")) : "",
                                 Holding = rdr["Holding"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Holding")) : "",
-                                Blocked = rdr["Blocked"] != DBNull.Value ? (bool?)rdr["Blocked"] : null
+                                Blocked = rdr["Blocked"] != DBNull.Value ? (bool?)rdr["Blocked"] : null,
+                                City = rdr["City"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("City")) : "",
                             };
 
                             lst_Clients.Add(client);
@@ -279,7 +280,8 @@ namespace WebApplication1.Controllers
                                     Segment = rdr["Segment"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Segment")) : "",
                                     GMA = rdr["GMA"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("GMA")) : "",
                                     Holding = rdr["Holding"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Holding")) : "",
-                                    Blocked = rdr["Blocked"] != DBNull.Value ? (bool?)rdr["Blocked"] : null
+                                    Blocked = rdr["Blocked"] != DBNull.Value ? (bool?)rdr["Blocked"] : null,
+                                    City = rdr["City"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("City")) : "",
                                 };
 
                                 lst_Clients.Add(client);

@@ -673,6 +673,8 @@ namespace WebApplication1.Models
 
         public bool? Blocked { get; set; }
 
+        public string City { get; set; }
+
     }
     public class Campanhas
     {
