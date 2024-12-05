@@ -140,5 +140,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
         public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
+        public virtual DbSet<WFA_FullDetails> WFA_FullDetails { get; set; }
     }
 }
