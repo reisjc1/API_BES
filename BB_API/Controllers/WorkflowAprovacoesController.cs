@@ -470,57 +470,71 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    List<BB_WFA_Control> WFA_Control_lst = db.BB_WFA_Control.Where(x => x.WFA_ID == WFA_ID).ToList();
+                    var query = db.WFA_FullDetails
+                                  .Where(x => x.WFA_ID == WFA_ID)
+                                  .ToList();
 
-                    foreach (var item in WFA_Control_lst)
+                    var groupedData = query
+                        .GroupBy(x => x.WFA_Control_ID)
+                        .ToList();
+
+                    Dictionary<string, string> approverCache = new Dictionary<string, string>();
+
+                    foreach (var group in groupedData)
                     {
-                        List<BB_WFA_Levels> wfa_levels_lst = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == item.ID).ToList();
-
+                        var firstItem = group.First();
 
                         WFA_Listagem wfa = new WFA_Listagem()
                         {
-                            Line = item.Line_ID ?? 1,
-                            BU = db.BB_RD_WFA_BU.Where(x => x.ID == item.BU_ID).Select(x => x.Description).FirstOrDefault(),
-                            DealElements = db.BB_RD_WFA_Elements.Where(x => x.ID == item.Elements_ID).Select(x => x.Description).FirstOrDefault(),
-                            TypeOfCustomer = db.BB_RD_WFA_Customer_Type.Where(x => x.ID == item.Customer_ID).Select(x => x.Customer).FirstOrDefault(),
+                            Line = firstItem.Line_ID ?? 1,
+                            BU = firstItem.BU_Description,
+                            DealElements = firstItem.Element_Description,
+                            TypeOfCustomer = firstItem.Customer_Type,
                             lstLevel = new List<Level>()
                         };
 
-                        foreach (BB_WFA_Levels level in wfa_levels_lst)
+                        foreach (var item in group)
                         {
-                            using (var dbX = new masterEntities())
+                            string approverID = item.WFA_Approver_ID;
+                            string userName;
+
+                            if (!approverCache.TryGetValue(approverID, out userName))
                             {
-                                List<AspNetRoles> roles = (from r in dbX.AspNetRoles
-                                                           join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
-                                                           select r)
-                                                  .DistinctBy(x => x.Id)
-                                                  .ToList();
-
-                                string approverID = db.BB_WFA_Levels
-                                                    .Where(x => x.WFA_Control_ID == item.ID && x.Level == level.Level)
-                                                    .Select(x => x.WFA_Approver_ID).FirstOrDefault();
-
-                                
-                                string userName = dbX.AspNetUsers.Where(x => x.Id == approverID).Select(x => x.DisplayName).FirstOrDefault();
-                                if (userName is null && roles.Where(r => r.Name == approverID).FirstOrDefault() != null)
+                                using (var dbX = new masterEntities())
                                 {
-                                        userName = approverID;
-                                    
+                                    userName = dbX.AspNetUsers
+                                                  .Where(x => x.Id == approverID)
+                                                  .Select(x => x.DisplayName)
+                                                  .FirstOrDefault();
                                 }
 
-                                Level levelX = new Level()
+                                if (userName == null)
                                 {
-                                    Approver = userName,
-                                    Condition = db.BB_RD_WFA_Condition.Where(x => x.ID == level.Condition_ID).Select(x => x.Condition).FirstOrDefault() + " " + level.Condition_Value,
-                                    Type = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == level.Type_ID).Select(x => x.Description).FirstOrDefault(),
-                                    Condition2 = db.BB_RD_WFA_Condition.Where(x => x.ID == level.Condition2_ID).Select(x => x.Condition).FirstOrDefault() + " " + level.Condition2_Value,
-                                    Type2 = db.BB_RD_WFA_Condition_Type.Where(x => x.ID == level.Type2_ID).Select(x => x.Description).FirstOrDefault()
-                                };
+                                    using (var dbX = new masterEntities())
+                                    {
+                                        bool isRole = dbX.AspNetRoles.Any(r => r.Name == approverID);
+                                        if (isRole)
+                                        {
+                                            userName = approverID;
+                                        }
+                                    }
+                                }
 
-                                wfa.lstLevel.Add(levelX);
+                                approverCache[approverID] = userName;
                             }
 
+                            Level levelX = new Level()
+                            {
+                                Approver = userName,
+                                Condition = $"{item.Condition_Description} {item.Condition_Value}",
+                                Type = item.Condition_Type_Description,
+                                Condition2 = $"{item.Condition2_Description} {item.Condition2_Value}",
+                                Type2 = item.Condition2_Type_Description
+                            };
+
+                            wfa.lstLevel.Add(levelX);
                         }
+
                         WFA_lst.Add(wfa);
                     }
                 }
@@ -782,46 +796,46 @@ namespace WebApplication1.Controllers
                                         wfa_obj.Level1_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level1_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level1_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_1 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Percentage_1 = (double?)bb_wfa_levels[i].Condition_Value;
                                         wfa_obj.Level1_Condition2 = bb_wfa_levels[i].Condition2_ID;
                                         wfa_obj.Level1_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_1 = (int?)bb_wfa_levels[i].Condition2_Value;
+                                        wfa_obj.Percentage2_1 = (double?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                     case 1:
                                         wfa_obj.Level2_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level2_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level2_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_2 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Percentage_2 = (double?)bb_wfa_levels[i].Condition_Value;
                                         wfa_obj.Level2_Condition2 = bb_wfa_levels[i].Condition2_ID;
                                         wfa_obj.Level2_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_2 = (int?)bb_wfa_levels[i].Condition2_Value;
+                                        wfa_obj.Percentage2_2 = (double?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                     case 2:
                                         wfa_obj.Level3_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level3_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level3_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_3 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Percentage_3 = (double?)bb_wfa_levels[i].Condition_Value;
                                         wfa_obj.Level3_Condition2 = bb_wfa_levels[i].Condition2_ID;
                                         wfa_obj.Level3_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_3 = (int?)bb_wfa_levels[i].Condition2_Value;
+                                        wfa_obj.Percentage2_3 = (double?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                     case 3:
                                         wfa_obj.Level4_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level4_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level4_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_4 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Percentage_4 = (double?)bb_wfa_levels[i].Condition_Value;
                                         wfa_obj.Level4_Condition2 = bb_wfa_levels[i].Condition2_ID;
                                         wfa_obj.Level4_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_4 = (int?)bb_wfa_levels[i].Condition2_Value;
+                                        wfa_obj.Percentage2_4 = (double?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                     case 4:
                                         wfa_obj.Level5_Approver = bb_wfa_levels[i].WFA_Approver_ID;
                                         wfa_obj.Level5_Condition = bb_wfa_levels[i].Condition_ID;
                                         wfa_obj.Level5_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_5 = (int?)bb_wfa_levels[i].Condition_Value;
+                                        wfa_obj.Percentage_5 = (double?)bb_wfa_levels[i].Condition_Value;
                                         wfa_obj.Level5_Condition2 = bb_wfa_levels[i].Condition2_ID;
                                         wfa_obj.Level5_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_5 = (int?)bb_wfa_levels[i].Condition2_Value;
+                                        wfa_obj.Percentage2_5 = (double?)bb_wfa_levels[i].Condition2_Value;
                                         break;
                                 }
                             }
@@ -1874,6 +1888,38 @@ namespace WebApplication1.Controllers
 
             deleteIfPassedValidation(wrp);
 
+            List<string> pendingApprovers = new List<string>();
+
+            using (var db = new BB_DB_DEVEntities2())
+            {
+                int? WFA_ID = db.BB_WFA_Workflow_Proposal
+                    .Where(x => x.Proposal_ID == proposalID)
+                    .Select(x => x.ID)
+                    .FirstOrDefault();
+
+                if (WFA_ID != null)
+                {
+                    var approvers = db.BB_WFA_Approvers_Control
+                        .Where(a => a.WFA_Workflow_Proposal_ID == WFA_ID && a.IsApproved == null)
+                        .ToList();
+
+                    using (var dbU = new masterEntities())
+                    {
+                        var users = dbU.AspNetUsers.ToList();
+
+                        pendingApprovers = (
+                            from approver in approvers
+                            join user in users on approver.Approver_ID equals user.Id
+                            select user.DisplayName
+                        ).ToList();
+                    }
+                }
+            }
+
+
+            wrp.Pending_Approvers_Lst = pendingApprovers;
+
+
             return Ok(wrp);
         }
 
@@ -2115,16 +2161,16 @@ namespace WebApplication1.Controllers
             public int? Level5_Condition { get; set; }
             public int? Level5_Condition2 { get; set; }
 
-            public int? Percentage_1 { get; set; }
-            public int? Percentage2_1 { get; set; }
-            public int? Percentage_2 { get; set; }
-            public int? Percentage2_2 { get; set; }
-            public int? Percentage_3 { get; set; }
-            public int? Percentage2_3 { get; set; }
-            public int? Percentage_4 { get; set; }
-            public int? Percentage2_4 { get; set; }
-            public int? Percentage_5 { get; set; }
-            public int? Percentage2_5 { get; set; }
+            public double? Percentage_1 { get; set; }
+            public double? Percentage2_1 { get; set; }
+            public double? Percentage_2 { get; set; }
+            public double? Percentage2_2 { get; set; }
+            public double? Percentage_3 { get; set; }
+            public double? Percentage2_3 { get; set; }
+            public double? Percentage_4 { get; set; }
+            public double? Percentage2_4 { get; set; }
+            public double? Percentage_5 { get; set; }
+            public double? Percentage2_5 { get; set; }
 
             public int? Level1_Type { get; set; }
             public int? Level1_Type2 { get; set; }
@@ -2187,6 +2233,7 @@ namespace WebApplication1.Controllers
         {
             public List<BB_Proposal_Quote_WFA> Lst_BBP_Quote { get; set; }
             public List<BB_Proposal_Quote_RS_WFA> Lst_BBP_RS_Quote { get; set; }
+            public List<string> Pending_Approvers_Lst { get; set; }
         }
 
 

@@ -1250,7 +1250,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CN_WPH = basket.Where(x => x.Family.Contains("WPH")).Sum(x => x.TotalNetsale);
                     bb_commission_general.Margen_WPH = profit_WPH.GPTotal;
 
-                    bb_commission_general.CN_Mobotix = basket.Where(x => x.Family.Contains("Mobotix")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
                     bb_commission_general.Margen_Mobotix = profit_MOBOTIX.GPTotal;
 
                     bb_commission_general.Pagado = null;

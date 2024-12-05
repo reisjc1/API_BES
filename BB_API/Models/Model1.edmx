@@ -1731,6 +1731,36 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="MarginBEU" Type="float" />
           <Property Name="BOM" Type="nvarchar(max)" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="WFA_FullDetails">
+          <Key>
+            <PropertyRef Name="WFA_Control_ID" />
+            <PropertyRef Name="WFA_Level_ID" />
+          </Key>
+          <Property Name="WFA_Control_ID" Type="int" Nullable="false" />
+          <Property Name="WFA_ID" Type="int" />
+          <Property Name="Line_ID" Type="int" />
+          <Property Name="Customer_ID" Type="int" />
+          <Property Name="BU_ID" Type="int" />
+          <Property Name="Elements_ID" Type="int" />
+          <Property Name="WFA_Level_ID" Type="int" Nullable="false" />
+          <Property Name="Level" Type="int" />
+          <Property Name="WFA_Approver_ID" Type="varchar" MaxLength="128" />
+          <Property Name="Condition_ID" Type="int" />
+          <Property Name="Condition_Value" Type="float" />
+          <Property Name="Type_ID" Type="int" />
+          <Property Name="Condition2_ID" Type="int" />
+          <Property Name="Condition2_Value" Type="float" />
+          <Property Name="Type2_ID" Type="int" />
+          <Property Name="BU_Description" Type="varchar" MaxLength="150" />
+          <Property Name="Element_Description" Type="varchar" MaxLength="150" />
+          <Property Name="Customer_Type" Type="varchar" MaxLength="15" />
+          <Property Name="Condition_Description" Type="varchar" MaxLength="10" />
+          <Property Name="Condition_Type_Description" Type="varchar" MaxLength="50" />
+          <Property Name="Condition2_Description" Type="varchar" MaxLength="10" />
+          <Property Name="Condition2_Type_Description" Type="varchar" MaxLength="50" />
+        </EntityType>
         <Association Name="FK_BB_PrintingService_Machines_BB_PrintingServices">
           <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="1" />
           <End Role="BB_PrintingService_Machines" Type="Self.BB_PrintingService_Machines" Multiplicity="*" />
@@ -2003,6 +2033,32 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
     [vw_get_DataIntegration].[BOM] AS [BOM]
     FROM [dbo].[vw_get_DataIntegration] AS [vw_get_DataIntegration]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="WFA_FullDetails" EntityType="Self.WFA_FullDetails" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [WFA_FullDetails].[WFA_Control_ID] AS [WFA_Control_ID], 
+    [WFA_FullDetails].[WFA_ID] AS [WFA_ID], 
+    [WFA_FullDetails].[Line_ID] AS [Line_ID], 
+    [WFA_FullDetails].[Customer_ID] AS [Customer_ID], 
+    [WFA_FullDetails].[BU_ID] AS [BU_ID], 
+    [WFA_FullDetails].[Elements_ID] AS [Elements_ID], 
+    [WFA_FullDetails].[WFA_Level_ID] AS [WFA_Level_ID], 
+    [WFA_FullDetails].[Level] AS [Level], 
+    [WFA_FullDetails].[WFA_Approver_ID] AS [WFA_Approver_ID], 
+    [WFA_FullDetails].[Condition_ID] AS [Condition_ID], 
+    [WFA_FullDetails].[Condition_Value] AS [Condition_Value], 
+    [WFA_FullDetails].[Type_ID] AS [Type_ID], 
+    [WFA_FullDetails].[Condition2_ID] AS [Condition2_ID], 
+    [WFA_FullDetails].[Condition2_Value] AS [Condition2_Value], 
+    [WFA_FullDetails].[Type2_ID] AS [Type2_ID], 
+    [WFA_FullDetails].[BU_Description] AS [BU_Description], 
+    [WFA_FullDetails].[Element_Description] AS [Element_Description], 
+    [WFA_FullDetails].[Customer_Type] AS [Customer_Type], 
+    [WFA_FullDetails].[Condition_Description] AS [Condition_Description], 
+    [WFA_FullDetails].[Condition_Type_Description] AS [Condition_Type_Description], 
+    [WFA_FullDetails].[Condition2_Description] AS [Condition2_Description], 
+    [WFA_FullDetails].[Condition2_Type_Description] AS [Condition2_Type_Description]
+    FROM [dbo].[WFA_FullDetails] AS [WFA_FullDetails]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_BB_PrintingService_Machines_BB_PrintingServices" Association="Self.FK_BB_PrintingService_Machines_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingService_Machines" EntitySet="BB_PrintingService_Machines" />
@@ -2188,6 +2244,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
             <End Role="BB_Proposal" EntitySet="BB_Proposal" />
             <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
           </AssociationSet>
+          <EntitySet Name="WFA_FullDetails" EntityType="BB_DB_DEVModel.WFA_FullDetails" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -4008,6 +4065,34 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="WFA_FullDetails">
+          <Key>
+            <PropertyRef Name="WFA_Control_ID" />
+            <PropertyRef Name="WFA_Level_ID" />
+          </Key>
+          <Property Name="WFA_Control_ID" Type="Int32" Nullable="false" />
+          <Property Name="WFA_ID" Type="Int32" />
+          <Property Name="Line_ID" Type="Int32" />
+          <Property Name="Customer_ID" Type="Int32" />
+          <Property Name="BU_ID" Type="Int32" />
+          <Property Name="Elements_ID" Type="Int32" />
+          <Property Name="WFA_Level_ID" Type="Int32" Nullable="false" />
+          <Property Name="Level" Type="Int32" />
+          <Property Name="WFA_Approver_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Condition_ID" Type="Int32" />
+          <Property Name="Condition_Value" Type="Double" />
+          <Property Name="Type_ID" Type="Int32" />
+          <Property Name="BU_Description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Element_Description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Customer_Type" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Condition_Description" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Condition_Type_Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Condition2_ID" Type="Int32" />
+          <Property Name="Condition2_Value" Type="Double" />
+          <Property Name="Type2_ID" Type="Int32" />
+          <Property Name="Condition2_Description" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Condition2_Type_Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5833,6 +5918,34 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WFA_FullDetails">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.WFA_FullDetails">
+              <MappingFragment StoreEntitySet="WFA_FullDetails">
+                <ScalarProperty Name="Condition2_Type_Description" ColumnName="Condition2_Type_Description" />
+                <ScalarProperty Name="Condition2_Description" ColumnName="Condition2_Description" />
+                <ScalarProperty Name="Type2_ID" ColumnName="Type2_ID" />
+                <ScalarProperty Name="Condition2_Value" ColumnName="Condition2_Value" />
+                <ScalarProperty Name="Condition2_ID" ColumnName="Condition2_ID" />
+                <ScalarProperty Name="Condition_Type_Description" ColumnName="Condition_Type_Description" />
+                <ScalarProperty Name="Condition_Description" ColumnName="Condition_Description" />
+                <ScalarProperty Name="Customer_Type" ColumnName="Customer_Type" />
+                <ScalarProperty Name="Element_Description" ColumnName="Element_Description" />
+                <ScalarProperty Name="BU_Description" ColumnName="BU_Description" />
+                <ScalarProperty Name="Type_ID" ColumnName="Type_ID" />
+                <ScalarProperty Name="Condition_Value" ColumnName="Condition_Value" />
+                <ScalarProperty Name="Condition_ID" ColumnName="Condition_ID" />
+                <ScalarProperty Name="WFA_Approver_ID" ColumnName="WFA_Approver_ID" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="WFA_Level_ID" ColumnName="WFA_Level_ID" />
+                <ScalarProperty Name="Elements_ID" ColumnName="Elements_ID" />
+                <ScalarProperty Name="BU_ID" ColumnName="BU_ID" />
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+                <ScalarProperty Name="Line_ID" ColumnName="Line_ID" />
+                <ScalarProperty Name="WFA_ID" ColumnName="WFA_ID" />
+                <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
