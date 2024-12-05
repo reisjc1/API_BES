@@ -2642,8 +2642,8 @@ namespace WebApplication1.Controllers
                                 {
                                     BB_Proposal_DeliveryLocationResumoModel resumo = new BB_Proposal_DeliveryLocationResumoModel();
                                     resumo.Group = p.Key;
-                                    resumo.Adress1 = i.Adress1;
-                                    resumo.Adress2 = i.Adress2;
+                                    resumo.Adress1 = currentLocal.Adress1;
+                                    resumo.Adress2 = currentLocal.Adress2;
                                     resumo.PostalCode = i.PostalCode;
                                     resumo.City = i.City;
                                     resumo.Contacto = contact != null ? contact.Name + " " + contact.Surname : "";
@@ -3741,9 +3741,11 @@ namespace WebApplication1.Controllers
 
                             foreach (var deliverLocation in bb_pp_dl_lst)
                             {
+
                                 DL_Table_Info dl_info = new DL_Table_Info();
 
                                 dl_info.ProposalID = (int)proposalID;
+
                                 dl_info.Tipo = deliverLocation.AccountType;
                                 dl_info.DeliveryLocation = deliverLocation.Adress1 + " " + deliverLocation.PostalCode;
                                 dl_info.IDX = deliverLocation.IDX;
@@ -3757,9 +3759,46 @@ namespace WebApplication1.Controllers
                                     dl_info.SAP_Nr = bb_local_envio.SAPCustomerNr;
                                     dl_info.CompanyName = bb_local_envio.BusinessCode;
                                     dl_info.SAP_Company = bb_local_envio.NomeCliente;
+                                    dl_info.Address = bb_local_envio.Adress1;
+                                }
+
+                                BB_Proposal_DL_ClientContacts bb_dl_contact = dbX.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliverLocation.DeliveryContact).FirstOrDefault();
+
+                                if(bb_dl_contact != null)
+                                {
+                                    dl_info.Contacto = bb_dl_contact.Name + bb_dl_contact.Surname;
+                                    dl_info.Phone = bb_dl_contact.Movil.ToString();
+                                    dl_info.Email = bb_dl_contact.Email;
+                                }
+
+                                if(deliverLocation.AccountType == "Ship To")
+                                {
+                                    dl_info.Payer = "-";
+                                    dl_info.BillReceiver = "-";
+                                }
+                                else
+                                {
+                                    if(deliverLocation.Payer == false)
+                                    {
+                                        dl_info.Payer = "No";
+                                    }
+                                    else
+                                    {
+                                        dl_info.Payer = "Si";
+                                    }
+
+                                    if (deliverLocation.BillReceiver == false)
+                                    {
+                                        dl_info.BillReceiver = "No";
+                                    }
+                                    else
+                                    {
+                                        dl_info.BillReceiver = "Si";
+                                    }
                                 }
 
                                 data.DL_Table_Info_Lst.Add(dl_info);
+
                             }
                         }
                     }
@@ -3821,14 +3860,20 @@ namespace WebApplication1.Controllers
         {
             public int ProposalID { get; set; }
             public string Tipo { get; set; }
+            public string Address { get; set; }
             public string CompanyName { get; set; }
             public string CIF { get; set; }
             public string DeliveryLocation { get; set; }
             public string SAP_Nr { get; set; }
             public string SAP_Company { get; set; }
-            public int IDX { get; set; } 
+            public int IDX { get; set; }
+            public string Contacto { get; set; }
+            public string Email { get; set; }
+            public string Phone { get; set; }
+            public string Payer { get; set; }
+            public string BillReceiver { get; set; }
 
-        }
+            }
 
 
         [AcceptVerbs("GET", "POST")]

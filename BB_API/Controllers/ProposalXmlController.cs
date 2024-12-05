@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using WebApplication1.Models;
 using WebApplication1.Models.SetupXML.XML;
 
 namespace WebApplication1.Controllers
@@ -15,10 +17,36 @@ namespace WebApplication1.Controllers
         [System.Web.Http.ActionName("GetProposalId")]
         public IHttpActionResult GetProposalId(int contractId)
         {
+
             Deal deal = new Deal();
             deal.DealXML(contractId);
+           
 
             return Ok();
         }
+
+
+        //[System.Web.Http.AcceptVerbs("GET", "POST")]
+        //[System.Web.Http.ActionName("GetProposalId")]
+        //public IHttpActionResult UpdateProposalByID(int contractId, bool result, string name)
+        //{
+
+        //    using (var db = new BB_DB_DEVEntities2())
+        //    {
+        //        LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractId).FirstOrDefault();
+
+        //        if (result != null)
+        //        {
+        //            lD_Contrato.StatusID = 9;
+        //            lD_Contrato.ModifiedBy = name;
+
+        //            db.Entry(lD_Contrato).State = EntityState.Modified;
+        //            db.SaveChanges();
+        //        }
+
+        //    }
+
+        //    return Ok();
+        //}
     }
 }
