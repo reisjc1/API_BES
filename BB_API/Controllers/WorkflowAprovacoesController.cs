@@ -1406,8 +1406,7 @@ namespace WebApplication1.Controllers
                         Customer_ID = newLine.TypeOfCustomer
                     };
 
-                        db.BB_WFA_Control.Add(bb_wfa_control);
-                        db.SaveChanges();
+                        db.BB_WFA_Control.Add(bb_wfa_control);                        
 
                         //ADICIONAR LEVELS.....
 
