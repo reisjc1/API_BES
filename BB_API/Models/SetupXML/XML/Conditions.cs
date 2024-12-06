@@ -38,7 +38,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             if (quote != null)
                             {
-                                if (quote.Family.Contains("HW"))
+                                if (quote.Family.Contains("HW") || quote.Family.Contains("CS"))
                                 {
                                     ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZPD4");
                                     if (cond == null)
@@ -213,10 +213,13 @@ namespace WebApplication1.Models.SetupXML.XML
                         bool condExists = false;
                         foreach (var cond in conditionsPvp)
                         {
-                            if (cond.ConditionCode == "ZVBM")
+                            if (cond.ConditionCode == "ZPD4")
                             {
-                                condExists = true;
-                                cond.PVP =  Math.Round(((cond.PVP + (opsPvpLine2 / contratoMeses))) ?? 0.0, 2);
+                                if(contracts[0].VT_VTART == "002" || contracts[0].VT_VTART == "008")
+                                {
+                                    condExists = true;
+                                    cond.PVP =  Math.Round(((cond.PVP + (opsPvpLine2 / contratoMeses))) ?? 0.0, 2);
+                                }
                             }
                         }
                         if(condExists == false)
@@ -335,7 +338,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 if (quote != null)
                                 {
-                                    if (quote.Family.Contains("HW"))
+                                    if (quote.Family.Contains("HW") || quote.Family.Contains("CS"))
                                     {
                                         ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZPD4");
                                         if (cond == null)
@@ -474,11 +477,14 @@ namespace WebApplication1.Models.SetupXML.XML
                             bool condExists = false;
                             foreach (var cond in conditionsPvp)
                             {
-                                if (cond.ConditionCode == "ZVBM")
+                                if (cond.ConditionCode == "ZPD4")
                                 {
-                                    condExists = true;
-                                    double opsPvpRounded = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
-                                    cond.PVP = cond.PVP + (opsPvpRounded);
+                                    if(financingType == "002" || financingType == "008")
+                                    {
+                                        condExists = true;
+                                        double opsPvpRounded = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
+                                        cond.PVP = cond.PVP + (opsPvpRounded);
+                                    }
                                 }
                             }
                             if (condExists == false && contractMonths > 0)

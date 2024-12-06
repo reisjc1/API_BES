@@ -258,6 +258,35 @@ namespace WebApplication1.Models.SetupXML.XML
                     string mescod = @AppSettingsGet.SapConfigMESCOD;
                     string rcvprn = @AppSettingsGet.RCVPRN;
 
+                    string erpNumber = "";
+
+                    if(userOwner == null)
+                    {
+                        if(userCreatedBy != null)
+                        {
+                            if(userCreatedBy.ErpNumber != null)
+                            {
+                                erpNumber = userCreatedBy.ErpNumber;
+                            }
+                        }
+                        else
+                        {
+                            erpNumber = "50004700";
+                        }
+                    }
+                    else
+                    {
+                        if(userOwner.ErpNumber != null)
+                        {
+                            erpNumber = userOwner.ErpNumber;
+                        }
+                        else
+                        {
+                            erpNumber = "50004700";
+
+                        }
+                    }
+
                     //DEAL
                     Z1ZVOE_DEAL_1 myObject = new Z1ZVOE_DEAL_1();
                     myObject.IDOC = new Z1ZVOE_DEAL_1IDOC
@@ -292,7 +321,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             PRREL = "X",
                             PRRDAT = formattedDtDeal,
                             BNL_RLIST = c.InvoiceList == true ? "X" : "", //Falar com a BEU
-                            SALESP = userCreatedBy != null && !string.IsNullOrEmpty(userCreatedBy.ErpNumber) ? userCreatedBy.ErpNumber : "" //"50004700"               //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
+                            SALESP = erpNumber//userOwner != null && !string.IsNullOrEmpty(userCreatedBy.ErpNumber) ? userCreatedBy.ErpNumber : "" //"50004700"               //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
 
 
 
