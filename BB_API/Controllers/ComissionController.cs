@@ -804,7 +804,6 @@ namespace WebApplication1.Controllers
                 ActionResponse loadProposal = p1.LoadProposal(i);
 
 
-
                 // --------------- PONTO 1 -------------->
 
                 List<BB_Proposal_Quote> oneShot = new List<BB_Proposal_Quote>();
@@ -894,11 +893,6 @@ namespace WebApplication1.Controllers
                         {
                             profitDictionary["IMS_EXCLUDING"].GPTotal += amount ?? 0;
                         }
-
-                        if (family.Contains("Mobotix"))
-                        {
-                            profitDictionary["MOBOTIX"].GPTotal += amount ?? 0;
-                        }
                     }
                     
                     // Cálculo do GPTotal para cada familia de cada maquina
@@ -906,6 +900,12 @@ namespace WebApplication1.Controllers
                     foreach (var oneShot_Item in oneShot)
                     {
                         AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
+
+                        if(oneShot_Item.Description.Contains("MOBOTIX"))
+                        {
+                            profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
+
+                        }
                     }
 
                     foreach (var servRecor_Item in servicosRecorrentes)
@@ -1143,7 +1143,7 @@ namespace WebApplication1.Controllers
                                                                     .FirstOrDefault();
 
                             bb_commission_general.Agencia = user.Location;
-                            bb_commission_general.Codigo_Agencia = "NAO TEMOS";
+                            bb_commission_general.Codigo_Agencia = loadProposal.ProposalObj.Draft.details.CRM_QUOTE_ID;
                             bb_commission_general.Sales_Group = "540"; // hardcoded
                         }
 
@@ -1327,20 +1327,25 @@ namespace WebApplication1.Controllers
 
                     // ----------------------------------------------------------------------------------------------------
 
-                    // Saving General Commission to Data Base
+                    List<BB_Commission_General> lastCommission = db.BB_Commission_General.Where(x => x.BB_Numero == proposalID.ToString()).ToList();
+                    if (lastCommission.Any())
+                    {
+                        db.BB_Commission_General.RemoveRange(lastCommission);
+                    }
+
                     db.BB_Commission_General.Add(bb_commission_general);
                     db.SaveChanges();
 
                 }
 
-                // ---------------------------------------------
-                // TESTS MYLENE --------------------------------
-                //                                            --
-                var obj_Mylene = bb_commission_general;      //-
-                //                                            --
-                // ---------------------------------------------
-                // ---------------------------------------------
-               
+                // ---------------------------------------------------------------------
+                // TESTS ---------------------------------------------------------------
+                //                                                                  ----
+                var obj_To_Check_Info_When_Breakpoint = bb_commission_general;      //--
+                //                                                                  ----
+                // ---------------------------------------------------------------------
+                // ---------------------------------------------------------------------
+
 
             }
             catch (Exception ex)
