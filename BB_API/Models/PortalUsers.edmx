@@ -11,6 +11,7 @@
           </Key>
           <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'master.dbo.AspNetUserRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -155,8 +156,8 @@ warning 6002: The table/view 'master.dbo.AspNetUserRoles' does not have a primar
           <EntitySet Name="AspNetUserRoles_KM" EntityType="masterModel.AspNetUserRoles_KM" />
           <EntitySet Name="AspNetRoles" EntityType="masterModel.AspNetRoles" />
           <AssociationSet Name="AspNetUserRoles" Association="masterModel.AspNetUserRoles">
-            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End EntitySet="AspNetRoles" Role="AspNetRoles" />
+            <End EntitySet="AspNetUsers" Role="AspNetUsers" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="KM_UserRole">
@@ -179,13 +180,14 @@ warning 6002: The table/view 'master.dbo.AspNetUserRoles' does not have a primar
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" Type="String" />
+          <Property Name="Name" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" Type="String" />
           <NavigationProperty Name="AspNetUsers" Relationship="masterModel.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+          <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="AspNetUserRoles">
-          <End Type="masterModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
-          <End Type="masterModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
+          <End Type="masterModel.AspNetRoles" Multiplicity="*" Role="AspNetRoles" />
+          <End Type="masterModel.AspNetUsers" Multiplicity="*" Role="AspNetUsers" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -244,6 +246,7 @@ warning 6002: The table/view 'master.dbo.AspNetUserRoles' does not have a primar
           <EntitySetMapping Name="AspNetRoles">
             <EntityTypeMapping TypeName="masterModel.AspNetRoles">
               <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

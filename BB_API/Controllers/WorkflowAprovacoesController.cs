@@ -556,6 +556,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
+
                 WFA_Create wfa_create_obj = new WFA_Create();
                 List<BB_RD_WFA_Approvers> approversList = new List<BB_RD_WFA_Approvers>();
 
@@ -578,12 +579,13 @@ namespace WebApplication1.Controllers
                     using (var dbX = new masterEntities())
                     {
                         List<AspNetRoles> roles = (from r in dbX.AspNetRoles
-                                                  join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
-                                                  select r)
-                                                  .DistinctBy(x => x.Id)
-                                                  .ToList();
+                                                   join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
+                                                   where r.Country == "BES"
+                                                   select r)
+                                                   .DistinctBy(x => x.Id)
+                                                   .ToList();
 
-                        foreach(var r in roles)
+                        foreach (var r in roles)
                         {
                             wfa_create_obj.Lst_Approver.Add(new WFA_Approvers
                             {
