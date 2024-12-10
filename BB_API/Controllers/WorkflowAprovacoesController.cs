@@ -21,6 +21,7 @@ using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using DocumentFormat.OpenXml.Drawing;
 using Microsoft.Ajax.Utilities;
+using Microsoft.Win32;
 
 namespace WebApplication1.Controllers
 {
@@ -1385,8 +1386,7 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    // apagar os registos anteriores
-
+                    // registo anterior
                     BB_WFA_Control savedWFA = db.BB_WFA_Control.Where(x => x.ID == newLine.ID && x.WFA_ID == newLine.WFA_ID).FirstOrDefault();
 
                     int savedLineNr = (int)savedWFA.Line_ID;
@@ -1408,7 +1408,8 @@ namespace WebApplication1.Controllers
                         Customer_ID = newLine.TypeOfCustomer
                     };
 
-                        db.BB_WFA_Control.Add(bb_wfa_control);                        
+                        db.BB_WFA_Control.Add(bb_wfa_control);
+                        db.SaveChanges();
 
                         //ADICIONAR LEVELS.....
 
