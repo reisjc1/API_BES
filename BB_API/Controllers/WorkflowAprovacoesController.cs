@@ -1092,6 +1092,18 @@ namespace WebApplication1.Controllers
                     db.BB_WFA_Exception.RemoveRange(aggregatedExceptions);
                     db.BB_WFA_Control.Remove(bb_wfa);
                     db.SaveChanges();
+
+
+                    List<BB_WFA_Control> LineToUpdateLst = new List<BB_WFA_Control>();
+
+                    LineToUpdateLst = db.BB_WFA_Control.Where(x => x.Line_ID > lineNr && x.WFA_ID == WFA_ID).ToList();
+
+                    foreach (var line in LineToUpdateLst)
+                    {
+                        line.Line_ID -= 1;
+                        db.Entry(line).State = EntityState.Modified;
+                    }
+                    db.SaveChanges();
                 }
 
                 return Ok();
