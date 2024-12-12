@@ -2132,6 +2132,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_Campanha_Financing" EntityType="BB_DB_DEVModel.BB_Campanha_Financing" />
           <EntitySet Name="BB_Campanhas_Printing" EntityType="BB_DB_DEVModel.BB_Campanhas_Printing" />
           <EntitySet Name="BB_Financing_Documentos" EntityType="BB_DB_DEVModel.BB_Financing_Documentos" />
+			
           <EntitySet Name="LD_DocumentClassification" EntityType="BB_DB_DEVModel.LD_DocumentClassification" />
           <EntitySet Name="BB_Proposal_PrintingServices" EntityType="BB_DB_DEVModel.BB_Proposal_PrintingServices" />
           <EntitySet Name="LD_FinancingDocument" EntityType="BB_DB_DEVModel.LD_FinancingDocument" />
@@ -2225,7 +2226,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_WFA_Exception" EntityType="BB_DB_DEVModel.BB_WFA_Exception" />
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
           <EntitySet Name="BB_TypeOfClient" EntityType="BB_DB_DEVModel.BB_TypeOfClient" />
-          <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="vw_get_DataIntegration" EntityType="BB_DB_DEVModel.vw_get_DataIntegration" />
           <EntitySet Name="BB_RD_Estados_Fecho_CRM" EntityType="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
@@ -2244,8 +2244,10 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
           </AssociationSet>
           <EntitySet Name="WFA_FullDetails" EntityType="BB_DB_DEVModel.WFA_FullDetails" />
+          <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
+          
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3735,81 +3737,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="DocumentIsValid" Type="Boolean" />
           <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="BB_Commission_General">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Agencia" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Codigo_Agencia" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Sales_Group" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Numero_Vendedor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Vendedor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Numero_Manager" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Manager" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Ano_Mes_CN" Type="Int32" />
-          <Property Name="Periodo_Solicitado" Type="Int32" />
-          <Property Name="HR_Comentario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Invoice_List" Type="Boolean" />
-          <Property Name="BB_Numero" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="BB_Numero_Entero" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="SAP_Numero" Type="Int32" />
-          <Property Name="Numero_Cliente" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Cliente" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Facturación" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Cifra_Negocio" Type="Double" />
-          <Property Name="Margen_Total" Type="Double" />
-          <Property Name="Margen_Total_Nueva" Type="Double" />
-          <Property Name="Comision_Sobre_Margen" Type="Double" />
-          <Property Name="Comision_Mantenimiento" Type="Double" />
-          <Property Name="Comisiones" Type="Double" />
-          <Property Name="Margen" Type="Double" />
-          <Property Name="CN_HW" Type="Double" />
-          <Property Name="Margen_HW" Type="Double" />
-          <Property Name="Margen_HW_Nuevo" Type="Double" />
-          <Property Name="CN_Office_HW" Type="Double" />
-          <Property Name="Margen_Office_HW" Type="Double" />
-          <Property Name="CN_PP_HW" Type="Double" />
-          <Property Name="Margen_PP_HW" Type="Double" />
-          <Property Name="CN_IP_HW" Type="Double" />
-          <Property Name="Margen_IP_HW" Type="Double" />
-          <Property Name="CN_ITS" Type="Double" />
-          <Property Name="Margen_ITS" Type="Double" />
-          <Property Name="CN_PRS" Type="Double" />
-          <Property Name="Margen_PRS" Type="Double" />
-          <Property Name="CN_MCS" Type="Double" />
-          <Property Name="Margen_MCS" Type="Double" />
-          <Property Name="CN_BPS" Type="Double" />
-          <Property Name="Margen_BPS" Type="Double" />
-          <Property Name="CN_IMS" Type="Double" />
-          <Property Name="Margen_IMS" Type="Double" />
-          <Property Name="CN_WPH" Type="Double" />
-          <Property Name="Margen_WPH" Type="Double" />
-          <Property Name="CN_Mobotix" Type="Double" />
-          <Property Name="Margen_Mobotix" Type="Double" />
-          <Property Name="Logs" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Pagado" Type="Boolean" />
-          <Property Name="Controlado" Type="Boolean" />
-          <Property Name="Comisionado" Type="Boolean" />
-          <Property Name="Incidencia" Type="Boolean" />
-          <Property Name="Excluido" Type="Boolean" />
-          <Property Name="Es_Segunda_Mano" Type="Boolean" />
-          <Property Name="Es_Doc_Share" Type="Boolean" />
-          <Property Name="Es_GMA" Type="Boolean" />
-          <Property Name="Es_Invoice_List" Type="Boolean" />
-          <Property Name="Support_BEU" Type="Boolean" />
-          <Property Name="CBB" Type="Boolean" />
-          <Property Name="Numero_Cliente_SAP" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Es_Prospecto" Type="Boolean" />
-          <Property Name="Tipo_Operacion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Tipo_Financiacion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Metodo_Pago_Productos" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Metodo_Pago_Mantenimiento" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="BB_TypeOfClient">
           <Key>
             <PropertyRef Name="ID" />
@@ -4028,6 +3955,81 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Condition2_Description" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Condition2_Type_Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="BB_Commission_General">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Agencia" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Codigo_Agencia" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Sales_Group" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Numero_Vendedor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Vendedor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Numero_Manager" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Manager" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Ano_Mes_CN" Type="Int32" />
+          <Property Name="Periodo_Solicitado" Type="Int32" />
+          <Property Name="HR_Comentario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Invoice_List" Type="Boolean" />
+          <Property Name="BB_Numero" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BB_Numero_Entero" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SAP_Numero" Type="Int32" />
+          <Property Name="Numero_Cliente" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Cliente" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Facturación" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Cifra_Negocio" Type="Double" />
+          <Property Name="Margen_Total" Type="Double" />
+          <Property Name="Margen_Total_Nueva" Type="Double" />
+          <Property Name="Comision_Sobre_Margen" Type="Double" />
+          <Property Name="Comision_Mantenimiento" Type="Double" />
+          <Property Name="Comisiones" Type="Double" />
+          <Property Name="Margen" Type="Double" />
+          <Property Name="CN_HW" Type="Double" />
+          <Property Name="Margen_HW" Type="Double" />
+          <Property Name="Margen_HW_Nuevo" Type="Double" />
+          <Property Name="CN_Office_HW" Type="Double" />
+          <Property Name="Margen_Office_HW" Type="Double" />
+          <Property Name="CN_PP_HW" Type="Double" />
+          <Property Name="Margen_PP_HW" Type="Double" />
+          <Property Name="CN_IP_HW" Type="Double" />
+          <Property Name="Margen_IP_HW" Type="Double" />
+          <Property Name="CN_ITS" Type="Double" />
+          <Property Name="Margen_ITS" Type="Double" />
+          <Property Name="CN_PRS" Type="Double" />
+          <Property Name="Margen_PRS" Type="Double" />
+          <Property Name="CN_MCS" Type="Double" />
+          <Property Name="Margen_MCS" Type="Double" />
+          <Property Name="CN_BPS" Type="Double" />
+          <Property Name="Margen_BPS" Type="Double" />
+          <Property Name="CN_IMS" Type="Double" />
+          <Property Name="Margen_IMS" Type="Double" />
+          <Property Name="CN_WPH" Type="Double" />
+          <Property Name="Margen_WPH" Type="Double" />
+          <Property Name="CN_Mobotix" Type="Double" />
+          <Property Name="Margen_Mobotix" Type="Double" />
+          <Property Name="Logs" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Pagado" Type="Boolean" />
+          <Property Name="Controlado" Type="Boolean" />
+          <Property Name="Comisionado" Type="Boolean" />
+          <Property Name="Incidencia" Type="Boolean" />
+          <Property Name="Excluido" Type="Boolean" />
+          <Property Name="Es_Segunda_Mano" Type="Boolean" />
+          <Property Name="Es_Doc_Share" Type="Boolean" />
+          <Property Name="Es_GMA" Type="Boolean" />
+          <Property Name="Es_Invoice_List" Type="Boolean" />
+          <Property Name="Support_BEU" Type="Boolean" />
+          <Property Name="CBB" Type="Boolean" />
+          <Property Name="Numero_Cliente_SAP" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Es_Prospecto" Type="Boolean" />
+          <Property Name="Tipo_Operacion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Tipo_Financiacion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Metodo_Pago_Productos" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Metodo_Pago_Mantenimiento" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="BB_LocaisEnvio">
           <Key>
             <PropertyRef Name="ID" />
@@ -4095,6 +4097,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="DupPosition" Type="Int32" />
           <Property Name="SAPCustomerNr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5605,82 +5608,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_Commission_General">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Commission_General">
-              <MappingFragment StoreEntitySet="BB_Commission_General">
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Metodo_Pago_Mantenimiento" ColumnName="Metodo_Pago_Mantenimiento" />
-                <ScalarProperty Name="Metodo_Pago_Productos" ColumnName="Metodo_Pago_Productos" />
-                <ScalarProperty Name="Tipo_Financiacion" ColumnName="Tipo_Financiacion" />
-                <ScalarProperty Name="Tipo_Operacion" ColumnName="Tipo_Operacion" />
-                <ScalarProperty Name="Es_Prospecto" ColumnName="Es_Prospecto" />
-                <ScalarProperty Name="Numero_Cliente_SAP" ColumnName="Numero_Cliente_SAP" />
-                <ScalarProperty Name="CBB" ColumnName="CBB" />
-                <ScalarProperty Name="Support_BEU" ColumnName="Support_BEU" />
-                <ScalarProperty Name="Es_Invoice_List" ColumnName="Es_Invoice_List" />
-                <ScalarProperty Name="Es_GMA" ColumnName="Es_GMA" />
-                <ScalarProperty Name="Es_Doc_Share" ColumnName="Es_Doc_Share" />
-                <ScalarProperty Name="Es_Segunda_Mano" ColumnName="Es_Segunda_Mano" />
-                <ScalarProperty Name="Excluido" ColumnName="Excluido" />
-                <ScalarProperty Name="Incidencia" ColumnName="Incidencia" />
-                <ScalarProperty Name="Comisionado" ColumnName="Comisionado" />
-                <ScalarProperty Name="Controlado" ColumnName="Controlado" />
-                <ScalarProperty Name="Pagado" ColumnName="Pagado" />
-                <ScalarProperty Name="Logs" ColumnName="Logs" />
-                <ScalarProperty Name="Margen_Mobotix" ColumnName="Margen_Mobotix" />
-                <ScalarProperty Name="CN_Mobotix" ColumnName="CN_Mobotix" />
-                <ScalarProperty Name="Margen_WPH" ColumnName="Margen_WPH" />
-                <ScalarProperty Name="CN_WPH" ColumnName="CN_WPH" />
-                <ScalarProperty Name="Margen_IMS" ColumnName="Margen_IMS" />
-                <ScalarProperty Name="CN_IMS" ColumnName="CN_IMS" />
-                <ScalarProperty Name="Margen_BPS" ColumnName="Margen_BPS" />
-                <ScalarProperty Name="CN_BPS" ColumnName="CN_BPS" />
-                <ScalarProperty Name="Margen_MCS" ColumnName="Margen_MCS" />
-                <ScalarProperty Name="CN_MCS" ColumnName="CN_MCS" />
-                <ScalarProperty Name="Margen_PRS" ColumnName="Margen_PRS" />
-                <ScalarProperty Name="CN_PRS" ColumnName="CN_PRS" />
-                <ScalarProperty Name="Margen_ITS" ColumnName="Margen_ITS" />
-                <ScalarProperty Name="CN_ITS" ColumnName="CN_ITS" />
-                <ScalarProperty Name="Margen_IP_HW" ColumnName="Margen_IP_HW" />
-                <ScalarProperty Name="CN_IP_HW" ColumnName="CN_IP_HW" />
-                <ScalarProperty Name="Margen_PP_HW" ColumnName="Margen_PP_HW" />
-                <ScalarProperty Name="CN_PP_HW" ColumnName="CN_PP_HW" />
-                <ScalarProperty Name="Margen_Office_HW" ColumnName="Margen_Office_HW" />
-                <ScalarProperty Name="CN_Office_HW" ColumnName="CN_Office_HW" />
-                <ScalarProperty Name="Margen_HW_Nuevo" ColumnName="Margen_HW_Nuevo" />
-                <ScalarProperty Name="Margen_HW" ColumnName="Margen_HW" />
-                <ScalarProperty Name="CN_HW" ColumnName="CN_HW" />
-                <ScalarProperty Name="Margen" ColumnName="Margen" />
-                <ScalarProperty Name="Comisiones" ColumnName="Comisiones" />
-                <ScalarProperty Name="Comision_Mantenimiento" ColumnName="Comision_Mantenimiento" />
-                <ScalarProperty Name="Comision_Sobre_Margen" ColumnName="Comision_Sobre_Margen" />
-                <ScalarProperty Name="Margen_Total_Nueva" ColumnName="Margen_Total_Nueva" />
-                <ScalarProperty Name="Margen_Total" ColumnName="Margen_Total" />
-                <ScalarProperty Name="Cifra_Negocio" ColumnName="Cifra_Negocio" />
-                <ScalarProperty Name="Facturación" ColumnName="Facturación" />
-                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
-                <ScalarProperty Name="Numero_Cliente" ColumnName="Numero_Cliente" />
-                <ScalarProperty Name="SAP_Numero" ColumnName="SAP_Numero" />
-                <ScalarProperty Name="BB_Numero_Entero" ColumnName="BB_Numero_Entero" />
-                <ScalarProperty Name="BB_Numero" ColumnName="BB_Numero" />
-                <ScalarProperty Name="Invoice_List" ColumnName="Invoice_List" />
-                <ScalarProperty Name="HR_Comentario" ColumnName="HR_Comentario" />
-                <ScalarProperty Name="Periodo_Solicitado" ColumnName="Periodo_Solicitado" />
-                <ScalarProperty Name="Ano_Mes_CN" ColumnName="Ano_Mes_CN" />
-                <ScalarProperty Name="Manager" ColumnName="Manager" />
-                <ScalarProperty Name="Numero_Manager" ColumnName="Numero_Manager" />
-                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
-                <ScalarProperty Name="Numero_Vendedor" ColumnName="Numero_Vendedor" />
-                <ScalarProperty Name="Sales_Group" ColumnName="Sales_Group" />
-                <ScalarProperty Name="Codigo_Agencia" ColumnName="Codigo_Agencia" />
-                <ScalarProperty Name="Agencia" ColumnName="Agencia" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_TypeOfClient">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_TypeOfClient">
               <MappingFragment StoreEntitySet="BB_TypeOfClient">
@@ -5883,6 +5810,82 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BB_Commission_General">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Commission_General">
+              <MappingFragment StoreEntitySet="BB_Commission_General">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Metodo_Pago_Mantenimiento" ColumnName="Metodo_Pago_Mantenimiento" />
+                <ScalarProperty Name="Metodo_Pago_Productos" ColumnName="Metodo_Pago_Productos" />
+                <ScalarProperty Name="Tipo_Financiacion" ColumnName="Tipo_Financiacion" />
+                <ScalarProperty Name="Tipo_Operacion" ColumnName="Tipo_Operacion" />
+                <ScalarProperty Name="Es_Prospecto" ColumnName="Es_Prospecto" />
+                <ScalarProperty Name="Numero_Cliente_SAP" ColumnName="Numero_Cliente_SAP" />
+                <ScalarProperty Name="CBB" ColumnName="CBB" />
+                <ScalarProperty Name="Support_BEU" ColumnName="Support_BEU" />
+                <ScalarProperty Name="Es_Invoice_List" ColumnName="Es_Invoice_List" />
+                <ScalarProperty Name="Es_GMA" ColumnName="Es_GMA" />
+                <ScalarProperty Name="Es_Doc_Share" ColumnName="Es_Doc_Share" />
+                <ScalarProperty Name="Es_Segunda_Mano" ColumnName="Es_Segunda_Mano" />
+                <ScalarProperty Name="Excluido" ColumnName="Excluido" />
+                <ScalarProperty Name="Incidencia" ColumnName="Incidencia" />
+                <ScalarProperty Name="Comisionado" ColumnName="Comisionado" />
+                <ScalarProperty Name="Controlado" ColumnName="Controlado" />
+                <ScalarProperty Name="Pagado" ColumnName="Pagado" />
+                <ScalarProperty Name="Logs" ColumnName="Logs" />
+                <ScalarProperty Name="Margen_Mobotix" ColumnName="Margen_Mobotix" />
+                <ScalarProperty Name="CN_Mobotix" ColumnName="CN_Mobotix" />
+                <ScalarProperty Name="Margen_WPH" ColumnName="Margen_WPH" />
+                <ScalarProperty Name="CN_WPH" ColumnName="CN_WPH" />
+                <ScalarProperty Name="Margen_IMS" ColumnName="Margen_IMS" />
+                <ScalarProperty Name="CN_IMS" ColumnName="CN_IMS" />
+                <ScalarProperty Name="Margen_BPS" ColumnName="Margen_BPS" />
+                <ScalarProperty Name="CN_BPS" ColumnName="CN_BPS" />
+                <ScalarProperty Name="Margen_MCS" ColumnName="Margen_MCS" />
+                <ScalarProperty Name="CN_MCS" ColumnName="CN_MCS" />
+                <ScalarProperty Name="Margen_PRS" ColumnName="Margen_PRS" />
+                <ScalarProperty Name="CN_PRS" ColumnName="CN_PRS" />
+                <ScalarProperty Name="Margen_ITS" ColumnName="Margen_ITS" />
+                <ScalarProperty Name="CN_ITS" ColumnName="CN_ITS" />
+                <ScalarProperty Name="Margen_IP_HW" ColumnName="Margen_IP_HW" />
+                <ScalarProperty Name="CN_IP_HW" ColumnName="CN_IP_HW" />
+                <ScalarProperty Name="Margen_PP_HW" ColumnName="Margen_PP_HW" />
+                <ScalarProperty Name="CN_PP_HW" ColumnName="CN_PP_HW" />
+                <ScalarProperty Name="Margen_Office_HW" ColumnName="Margen_Office_HW" />
+                <ScalarProperty Name="CN_Office_HW" ColumnName="CN_Office_HW" />
+                <ScalarProperty Name="Margen_HW_Nuevo" ColumnName="Margen_HW_Nuevo" />
+                <ScalarProperty Name="Margen_HW" ColumnName="Margen_HW" />
+                <ScalarProperty Name="CN_HW" ColumnName="CN_HW" />
+                <ScalarProperty Name="Margen" ColumnName="Margen" />
+                <ScalarProperty Name="Comisiones" ColumnName="Comisiones" />
+                <ScalarProperty Name="Comision_Mantenimiento" ColumnName="Comision_Mantenimiento" />
+                <ScalarProperty Name="Comision_Sobre_Margen" ColumnName="Comision_Sobre_Margen" />
+                <ScalarProperty Name="Margen_Total_Nueva" ColumnName="Margen_Total_Nueva" />
+                <ScalarProperty Name="Margen_Total" ColumnName="Margen_Total" />
+                <ScalarProperty Name="Cifra_Negocio" ColumnName="Cifra_Negocio" />
+                <ScalarProperty Name="Facturación" ColumnName="Facturación" />
+                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
+                <ScalarProperty Name="Numero_Cliente" ColumnName="Numero_Cliente" />
+                <ScalarProperty Name="SAP_Numero" ColumnName="SAP_Numero" />
+                <ScalarProperty Name="BB_Numero_Entero" ColumnName="BB_Numero_Entero" />
+                <ScalarProperty Name="BB_Numero" ColumnName="BB_Numero" />
+                <ScalarProperty Name="Invoice_List" ColumnName="Invoice_List" />
+                <ScalarProperty Name="HR_Comentario" ColumnName="HR_Comentario" />
+                <ScalarProperty Name="Periodo_Solicitado" ColumnName="Periodo_Solicitado" />
+                <ScalarProperty Name="Ano_Mes_CN" ColumnName="Ano_Mes_CN" />
+                <ScalarProperty Name="Manager" ColumnName="Manager" />
+                <ScalarProperty Name="Numero_Manager" ColumnName="Numero_Manager" />
+                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
+                <ScalarProperty Name="Numero_Vendedor" ColumnName="Numero_Vendedor" />
+                <ScalarProperty Name="Sales_Group" ColumnName="Sales_Group" />
+                <ScalarProperty Name="Codigo_Agencia" ColumnName="Codigo_Agencia" />
+                <ScalarProperty Name="Agencia" ColumnName="Agencia" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BB_LocaisEnvio">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
               <MappingFragment StoreEntitySet="BB_LocaisEnvio">
@@ -5952,6 +5955,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -21,6 +21,7 @@ using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using DocumentFormat.OpenXml.Drawing;
 using Microsoft.Ajax.Utilities;
+using Microsoft.Win32;
 
 namespace WebApplication1.Controllers
 {
@@ -556,6 +557,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
+
                 WFA_Create wfa_create_obj = new WFA_Create();
                 List<BB_RD_WFA_Approvers> approversList = new List<BB_RD_WFA_Approvers>();
 
@@ -578,12 +580,13 @@ namespace WebApplication1.Controllers
                     using (var dbX = new masterEntities())
                     {
                         List<AspNetRoles> roles = (from r in dbX.AspNetRoles
-                                                  join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
-                                                  select r)
-                                                  .DistinctBy(x => x.Id)
-                                                  .ToList();
+                                                   join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
+                                                   where r.Country == "BES"
+                                                   select r)
+                                                   .DistinctBy(x => x.Id)
+                                                   .ToList();
 
-                        foreach(var r in roles)
+                        foreach (var r in roles)
                         {
                             wfa_create_obj.Lst_Approver.Add(new WFA_Approvers
                             {
@@ -773,84 +776,102 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    BB_WFA_Control bb_wfa_control = db.BB_WFA_Control.Where(x => x.Line_ID == lineNr && x.WFA_ID == WFA_ID).FirstOrDefault();
-
-                    if(bb_wfa_control != null)
-                    {
-                        // procurar toda a info sobre o objeto
-                        wfa_obj.ID = bb_wfa_control.ID;
-                        wfa_obj.BU = bb_wfa_control.BU_ID;
-                        wfa_obj.DealElement = bb_wfa_control.Elements_ID;
-                        wfa_obj.TypeOfCustomer = bb_wfa_control.Customer_ID;
-                        wfa_obj.WFA_ID = WFA_ID;
-
-                        List<BB_WFA_Levels> bb_wfa_levels = db.BB_WFA_Levels.Where(x => x.WFA_Control_ID == bb_wfa_control.ID).ToList();
-
-                        for (int i = 0; i < bb_wfa_levels.Count(); i++)
+                    // Carregar BB_WFA_Control e BB_WFA_Levels relacionados
+                    var bb_wfa_control = db.BB_WFA_Control
+                        .Where(x => x.Line_ID == lineNr && x.WFA_ID == WFA_ID)
+                        .Select(control => new
                         {
-                            if (bb_wfa_levels[i].WFA_Control_ID != null)
-                            {
-                                switch (i)
-                                {
-                                    case 0:
-                                        wfa_obj.Level1_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                        wfa_obj.Level1_Condition = bb_wfa_levels[i].Condition_ID;
-                                        wfa_obj.Level1_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_1 = (double?)bb_wfa_levels[i].Condition_Value;
-                                        wfa_obj.Level1_Condition2 = bb_wfa_levels[i].Condition2_ID;
-                                        wfa_obj.Level1_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_1 = (double?)bb_wfa_levels[i].Condition2_Value;
-                                        break;
-                                    case 1:
-                                        wfa_obj.Level2_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                        wfa_obj.Level2_Condition = bb_wfa_levels[i].Condition_ID;
-                                        wfa_obj.Level2_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_2 = (double?)bb_wfa_levels[i].Condition_Value;
-                                        wfa_obj.Level2_Condition2 = bb_wfa_levels[i].Condition2_ID;
-                                        wfa_obj.Level2_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_2 = (double?)bb_wfa_levels[i].Condition2_Value;
-                                        break;
-                                    case 2:
-                                        wfa_obj.Level3_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                        wfa_obj.Level3_Condition = bb_wfa_levels[i].Condition_ID;
-                                        wfa_obj.Level3_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_3 = (double?)bb_wfa_levels[i].Condition_Value;
-                                        wfa_obj.Level3_Condition2 = bb_wfa_levels[i].Condition2_ID;
-                                        wfa_obj.Level3_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_3 = (double?)bb_wfa_levels[i].Condition2_Value;
-                                        break;
-                                    case 3:
-                                        wfa_obj.Level4_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                        wfa_obj.Level4_Condition = bb_wfa_levels[i].Condition_ID;
-                                        wfa_obj.Level4_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_4 = (double?)bb_wfa_levels[i].Condition_Value;
-                                        wfa_obj.Level4_Condition2 = bb_wfa_levels[i].Condition2_ID;
-                                        wfa_obj.Level4_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_4 = (double?)bb_wfa_levels[i].Condition2_Value;
-                                        break;
-                                    case 4:
-                                        wfa_obj.Level5_Approver = bb_wfa_levels[i].WFA_Approver_ID;
-                                        wfa_obj.Level5_Condition = bb_wfa_levels[i].Condition_ID;
-                                        wfa_obj.Level5_Type = bb_wfa_levels[i].Type_ID;
-                                        wfa_obj.Percentage_5 = (double?)bb_wfa_levels[i].Condition_Value;
-                                        wfa_obj.Level5_Condition2 = bb_wfa_levels[i].Condition2_ID;
-                                        wfa_obj.Level5_Type2 = bb_wfa_levels[i].Type2_ID;
-                                        wfa_obj.Percentage2_5 = (double?)bb_wfa_levels[i].Condition2_Value;
-                                        break;
-                                }
-                            }
-                        }
+                            control.ID,
+                            control.BU_ID,
+                            control.Elements_ID,
+                            control.Customer_ID,
+                            Levels = db.BB_WFA_Levels
+                                .Where(level => level.WFA_Control_ID == control.ID)
+                                .OrderBy(level => level.ID)
+                                .ToList()
+                        })
+                        .FirstOrDefault();
 
+                    if (bb_wfa_control == null)
+                        return NotFound(); // Retorna 404 se não encontrado
+
+                    // Mapear dados principais
+                    wfa_obj.ID = bb_wfa_control.ID;
+                    wfa_obj.BU = bb_wfa_control.BU_ID;
+                    wfa_obj.DealElement = bb_wfa_control.Elements_ID;
+                    wfa_obj.TypeOfCustomer = bb_wfa_control.Customer_ID;
+                    wfa_obj.WFA_ID = WFA_ID;
+
+                    // Mapear níveis
+                    for (int i = 0; i < bb_wfa_control.Levels.Count; i++)
+                    {
+                        var level = bb_wfa_control.Levels[i];
+                        MapLevelData(wfa_obj, i + 1, level);
                     }
                 }
+
                 return Ok(wfa_obj);
             }
             catch (Exception ex)
             {
-                string message = ex.Message;
-                return null;
+                return InternalServerError(ex); // Retorna erro 500 com detalhes
             }
         }
+
+        // Método auxiliar para mapear os dados dos níveis
+        private void MapLevelData(WFA_Create wfa_obj, int levelNumber, BB_WFA_Levels level)
+        {
+            // Mapear dinamicamente as propriedades dos níveis
+            switch (levelNumber)
+            {
+                case 1:
+                    wfa_obj.Level1_Approver = level.WFA_Approver_ID;
+                    wfa_obj.Level1_Condition = level.Condition_ID;
+                    wfa_obj.Level1_Type = level.Type_ID;
+                    wfa_obj.Percentage_1 = (double?)level.Condition_Value;
+                    wfa_obj.Level1_Condition2 = level.Condition2_ID;
+                    wfa_obj.Level1_Type2 = level.Type2_ID;
+                    wfa_obj.Percentage2_1 = (double?)level.Condition2_Value;
+                    break;
+                case 2:
+                    wfa_obj.Level2_Approver = level.WFA_Approver_ID;
+                    wfa_obj.Level2_Condition = level.Condition_ID;
+                    wfa_obj.Level2_Type = level.Type_ID;
+                    wfa_obj.Percentage_2 = (double?)level.Condition_Value;
+                    wfa_obj.Level2_Condition2 = level.Condition2_ID;
+                    wfa_obj.Level2_Type2 = level.Type2_ID;
+                    wfa_obj.Percentage2_2 = (double?)level.Condition2_Value;
+                    break;
+                case 3:
+                    wfa_obj.Level3_Approver = level.WFA_Approver_ID;
+                    wfa_obj.Level3_Condition = level.Condition_ID;
+                    wfa_obj.Level3_Type = level.Type_ID;
+                    wfa_obj.Percentage_3 = (double?)level.Condition_Value;
+                    wfa_obj.Level3_Condition2 = level.Condition2_ID;
+                    wfa_obj.Level3_Type2 = level.Type2_ID;
+                    wfa_obj.Percentage2_3 = (double?)level.Condition2_Value;
+                    break;
+                case 4:
+                    wfa_obj.Level4_Approver = level.WFA_Approver_ID;
+                    wfa_obj.Level4_Condition = level.Condition_ID;
+                    wfa_obj.Level4_Type = level.Type_ID;
+                    wfa_obj.Percentage_4 = (double?)level.Condition_Value;
+                    wfa_obj.Level4_Condition2 = level.Condition2_ID;
+                    wfa_obj.Level4_Type2 = level.Type2_ID;
+                    wfa_obj.Percentage2_4 = (double?)level.Condition2_Value;
+                    break;
+                case 5:
+                    wfa_obj.Level5_Approver = level.WFA_Approver_ID;
+                    wfa_obj.Level5_Condition = level.Condition_ID;
+                    wfa_obj.Level5_Type = level.Type_ID;
+                    wfa_obj.Percentage_5 = (double?)level.Condition_Value;
+                    wfa_obj.Level5_Condition2 = level.Condition2_ID;
+                    wfa_obj.Level5_Type2 = level.Type2_ID;
+                    wfa_obj.Percentage2_5 = (double?)level.Condition2_Value;
+                    break;
+            }
+        }
+
 
         // #######################################################################################
 
@@ -1071,6 +1092,18 @@ namespace WebApplication1.Controllers
                     db.BB_WFA_Exception.RemoveRange(aggregatedExceptions);
                     db.BB_WFA_Control.Remove(bb_wfa);
                     db.SaveChanges();
+
+
+                    List<BB_WFA_Control> LineToUpdateLst = new List<BB_WFA_Control>();
+
+                    LineToUpdateLst = db.BB_WFA_Control.Where(x => x.Line_ID > lineNr && x.WFA_ID == WFA_ID).ToList();
+
+                    foreach (var line in LineToUpdateLst)
+                    {
+                        line.Line_ID -= 1;
+                        db.Entry(line).State = EntityState.Modified;
+                    }
+                    db.SaveChanges();
                 }
 
                 return Ok();
@@ -1229,60 +1262,57 @@ namespace WebApplication1.Controllers
             try
             {
                 WFA_Create wfa_obj = new WFA_Create();
-                List<BB_RD_WFA_Approvers> approversList = new List<BB_RD_WFA_Approvers>();
 
-                using (var db = new BB_DB_DEVEntities2())
+                string bdConnect = @AppSettingsGet.BasedadosConnect;
+                using (SqlConnection conn = new SqlConnection(bdConnect))
                 {
-                    // Popular a lista dos approvers do objeto WFA_Create
-                    approversList = db.BB_RD_WFA_Approvers.ToList();
 
+                    conn.Open();
 
-                    // Popular o resto das dropdowns
-                    wfa_obj.Lst_Condition = db.BB_RD_WFA_Condition.ToList();
-                    wfa_obj.Lst_Type = db.BB_RD_WFA_Condition_Type.ToList();
-                    wfa_obj.Lst_BU = db.BB_RD_WFA_BU.ToList();
-                    wfa_obj.Lst_DealElements = db.BB_RD_WFA_Elements.ToList();
-                    wfa_obj.Lst_TypeOfCustomer = db.BB_RD_WFA_Customer_Type.ToList();
-
-
-                    wfa_obj.Lst_Approver = new List<WFA_Approvers>();
-                    
-                    using (var dbX = new masterEntities())
+                    // Executar a Stored Procedure para obter os dados
+                    using (var cmd = new SqlCommand("GetWFAWithDropdowns", conn))
                     {
-                        List<AspNetRoles> roles = (from r in dbX.AspNetRoles
-                                                   join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
-                                                   select r)
-                                                  .DistinctBy(x => x.Id)
-                                                  .ToList();
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        foreach (var r in roles)
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            wfa_obj.Lst_Approver.Add(new WFA_Approvers
-                            {
-                                ID = r.Name,
-                                Name = r.Name
-                            });
-                        }
+                            // Carregar as listas relacionadas ao objeto WFA_Create
+                            wfa_obj.Lst_Condition = ReadList<BB_RD_WFA_Condition>(reader);
+                            reader.NextResult(); // Move para a próxima consulta
 
-                        List<AspNetUsers> approverLst = dbX.AspNetUsers
-                            .Where(a => a.IsEnabled == true && a.Country == "BES")
-                            .OrderBy(a=>a.DisplayName)
-                            .ToList();
+                            wfa_obj.Lst_Type = ReadList<BB_RD_WFA_Condition_Type>(reader);
+                            reader.NextResult(); // Move para a próxima consulta
 
-                        foreach (var approver in approverLst)
-                        {
-                            WFA_Approvers approverX = new WFA_Approvers()
-                            {
-                                ID = approver.Id,
-                                Name = approver.UserName
-                            };
-                            // Popular a lista dos approvers do objeto WFA_Create
-                            wfa_obj.Lst_Approver.Add(approverX);
+                            wfa_obj.Lst_BU = ReadList<BB_RD_WFA_BU>(reader);
+                            reader.NextResult(); // Move para a próxima consulta
+
+                            wfa_obj.Lst_DealElements = ReadList<BB_RD_WFA_Elements>(reader);
+                            reader.NextResult(); // Move para a próxima consulta
+
+                            wfa_obj.Lst_TypeOfCustomer = ReadList<BB_RD_WFA_Customer_Type>(reader);
+                            reader.NextResult(); // Move para a próxima consulta
+
                         }
                     }
-
-                    return wfa_obj;
                 }
+                using (var dbX = new BB_DB_DEVEntities2())
+                {
+                    // Parâmetro para a stored procedure
+                    var countryParam = "BES";
+
+                        // Executar a stored procedure
+                        var approvers = dbX.Database.SqlQuery<WFA_Approvers>(
+                            "EXEC GetApprovers @Country = {0}", countryParam).ToList();
+
+                    if (wfa_obj.Lst_Approver == null)
+                    {
+                        wfa_obj.Lst_Approver = new List<WFA_Approvers>();
+                    }
+
+                    wfa_obj.Lst_Approver.AddRange(approvers);
+                }
+
+                return wfa_obj;
             }
             catch (Exception ex)
             {
@@ -1290,6 +1320,27 @@ namespace WebApplication1.Controllers
                 return null;
             }
         }
+
+        // Método auxiliar para ler listas do DataReader
+        private List<T> ReadList<T>(SqlDataReader reader)
+        {
+            var list = new List<T>();
+            while (reader.Read())
+            {
+                var item = Activator.CreateInstance<T>();
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    var property = item.GetType().GetProperty(reader.GetName(i));
+                    if (property != null && reader[i] != DBNull.Value)
+                    {
+                        property.SetValue(item, reader[i]);
+                    }
+                }
+                list.Add(item);
+            }
+            return list;
+        }
+
         // #######################################################################################
         private bool CallWFASP(int ProposalID, int WFA_ID)
         {
@@ -1347,8 +1398,7 @@ namespace WebApplication1.Controllers
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    // apagar os registos anteriores
-
+                    // registo anterior
                     BB_WFA_Control savedWFA = db.BB_WFA_Control.Where(x => x.ID == newLine.ID && x.WFA_ID == newLine.WFA_ID).FirstOrDefault();
 
                     int savedLineNr = (int)savedWFA.Line_ID;
