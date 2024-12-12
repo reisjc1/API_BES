@@ -93,17 +93,17 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
                         using(var bdCliente =  new BB_DB_DEVEntities2())
                         {
-                            string idLocaisEnvio = bdCliente.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId && x.AccountType == "Ship To").Select(x => x.ID).FirstOrDefault();
+                            BB_Proposal_DeliveryLocation idLocaisEnvio = bdCliente.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId && x.AccountType == "Ship To").FirstOrDefault();
 
-                            int IDLOCAISENVIO = Int32.Parse(idLocaisEnvio);
+                            //int IDLOCAISENVIO = Int32.Parse(idLocaisEnvio);
 
-                            string sapNumber = bdCliente.BB_LocaisEnvio.Where(x => x.ID == IDLOCAISENVIO).Select(x => x.SAPCustomerNr).FirstOrDefault();
+                            //string sapNumber = bdCliente.BB_LocaisEnvio.Where(x => x.ID == IDLOCAISENVIO).Select(x => x.SAPCustomerNr).FirstOrDefault();
 
                             collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
                             {
                                 SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
                                 PARTN_ROLE = partnerInfo.PARTN_ROLE, //"WE",
-                                CUSTOMER = sapNumber,
+                                CUSTOMER = idLocaisEnvio.SAPCustomerNr,
                                 CP_NAMEV = nameParts[nameParts.Length - 1],     //"ALVAREZ",
                                 CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1)),
                                 CP_PHONE = partnerInfo.CP_PHONE//"66666666"
@@ -206,13 +206,13 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 if (dLocation.Payer == false)
                                 {
-                                    if (lEnvio.SAPCustomerNr != null)
+                                    if (dLocation.SAPCustomerNr != null)
                                     {
                                         collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
                                         {
                                             SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
                                             PARTN_ROLE = "RE", 
-                                            CUSTOMER = lEnvio.SAPCustomerNr.ToString(),       //"1137222",             // partnerInfo.CUSTOMER, //
+                                            CUSTOMER = dLocation.SAPCustomerNr,       //"1137222",             // partnerInfo.CUSTOMER, //
                                             CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
                                             CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
                                             CP_PHONE = c.telephone1//"66666666"
@@ -223,13 +223,13 @@ namespace WebApplication1.Models.SetupXML.XML
                                 if (dLocation.Payer == true)
                                 {
 
-                                    if (lEnvio.SAPCustomerNr != null)
+                                    if (dLocation.SAPCustomerNr != null)
                                     {
                                         collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
                                         {
                                             SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
                                             PARTN_ROLE = "RG",
-                                            CUSTOMER = lEnvio.SAPCustomerNr.ToString(),      //lEnvio.SAPCustomerNr.ToString(),             // partnerInfo.CUSTOMER, //
+                                            CUSTOMER = dLocation.SAPCustomerNr,      //lEnvio.SAPCustomerNr.ToString(),             // partnerInfo.CUSTOMER, //
                                             CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
                                             CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
                                             CP_PHONE = c.telephone1//"66666666"

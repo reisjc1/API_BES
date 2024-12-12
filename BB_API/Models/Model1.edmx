@@ -961,6 +961,7 @@
           <Property Name="ContractNumber" Type="int" />
           <Property Name="Comments" Type="varchar(max)" />
           <Property Name="DupPosition" Type="int" />
+          <Property Name="SAPCustomerNr" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="BB_Proposal_DL_ClientContacts">
           <Key>
@@ -2227,8 +2228,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="vw_get_DataIntegration" EntityType="BB_DB_DEVModel.vw_get_DataIntegration" />
           <EntitySet Name="BB_RD_Estados_Fecho_CRM" EntityType="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM" />
-          <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
-          <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
           <EntitySet Name="BB_Proposal_DL_ClientContacts" EntityType="BB_DB_DEVModel.BB_Proposal_DL_ClientContacts" />
           <EntitySet Name="BB_Proposal_Condition_Type" EntityType="BB_DB_DEVModel.BB_Proposal_Condition_Type" />
@@ -2245,6 +2244,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             <End Role="BB_Proposal_OPSImplement" EntitySet="BB_Proposal_OPSImplement" />
           </AssociationSet>
           <EntitySet Name="WFA_FullDetails" EntityType="BB_DB_DEVModel.WFA_FullDetails" />
+          <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
+          <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
           </EntityContainer>
         <EntityType Name="BB_Acessories">
           <Key>
@@ -3843,72 +3844,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Percentagem" Type="Int32" />
           <Property Name="Estado" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="BB_Proposal_DeliveryLocation">
-          <Key>
-            <PropertyRef Name="IDX" />
-          </Key>
-          <Property Name="IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
-          <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Floor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Building" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Room" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Schedule" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Payer" Type="Boolean" />
-          <Property Name="BillReceiver" Type="Boolean" />
-          <Property Name="DeliveryContact" Type="Int32" />
-          <Property Name="ITContact" Type="Int32" />
-          <Property Name="ServiceContact" Type="Int32" />
-          <Property Name="CopiesContact" Type="Int32" />
-          <Property Name="DeliveryDelegation" Type="Int32" />
-          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ContractNumber" Type="Int32" />
-          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="DupPosition" Type="Int32" />
-        </EntityType>
-        <EntityType Name="BB_LocaisEnvio">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Documento" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CodRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="AccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="NomeCliente" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Quote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ShipCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="AddressType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="SAPCustomerNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="NIF_CIF" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="BusinessCode" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Customer1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Customer2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RoadType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="RoadName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="RoadNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="ParentAccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="TypeAccount" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsNewAddress" Type="Boolean" />
-        </EntityType>
         <EntityType Name="BB_Proposal_Financing">
           <Key>
             <PropertyRef Name="ID" />
@@ -4092,6 +4027,73 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Type2_ID" Type="Int32" />
           <Property Name="Condition2_Description" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Condition2_Type_Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BB_LocaisEnvio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Documento" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CodRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NomeCliente" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Quote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ShipCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddressType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="SAPCustomerNr" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NIF_CIF" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessCode" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Customer1" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Customer2" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RoadType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="RoadName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="RoadNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ParentAccountNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TypeAccount" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsNewAddress" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_DeliveryLocation">
+          <Key>
+            <PropertyRef Name="IDX" />
+          </Key>
+          <Property Name="IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Adress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Adress2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="County" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Contacto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
+          <Property Name="Department" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Floor" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Building" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Room" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Schedule" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Payer" Type="Boolean" />
+          <Property Name="BillReceiver" Type="Boolean" />
+          <Property Name="DeliveryContact" Type="Int32" />
+          <Property Name="ITContact" Type="Int32" />
+          <Property Name="ServiceContact" Type="Int32" />
+          <Property Name="CopiesContact" Type="Int32" />
+          <Property Name="DeliveryDelegation" Type="Int32" />
+          <Property Name="AccountType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ContractNumber" Type="Int32" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DupPosition" Type="Int32" />
+          <Property Name="SAPCustomerNr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5716,74 +5718,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
-              <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
-                <ScalarProperty Name="DupPosition" ColumnName="DupPosition" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
-                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
-                <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
-                <ScalarProperty Name="CopiesContact" ColumnName="CopiesContact" />
-                <ScalarProperty Name="ServiceContact" ColumnName="ServiceContact" />
-                <ScalarProperty Name="ITContact" ColumnName="ITContact" />
-                <ScalarProperty Name="DeliveryContact" ColumnName="DeliveryContact" />
-                <ScalarProperty Name="BillReceiver" ColumnName="BillReceiver" />
-                <ScalarProperty Name="Payer" ColumnName="Payer" />
-                <ScalarProperty Name="Schedule" ColumnName="Schedule" />
-                <ScalarProperty Name="Room" ColumnName="Room" />
-                <ScalarProperty Name="Building" ColumnName="Building" />
-                <ScalarProperty Name="Floor" ColumnName="Floor" />
-                <ScalarProperty Name="Department" ColumnName="Department" />
-                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Contacto" ColumnName="Contacto" />
-                <ScalarProperty Name="County" ColumnName="County" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
-                <ScalarProperty Name="Adress2" ColumnName="Adress2" />
-                <ScalarProperty Name="Adress1" ColumnName="Adress1" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="IDX" ColumnName="IDX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_LocaisEnvio">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
-              <MappingFragment StoreEntitySet="BB_LocaisEnvio">
-                <ScalarProperty Name="IsNewAddress" ColumnName="IsNewAddress" />
-                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
-                <ScalarProperty Name="TypeAccount" ColumnName="TypeAccount" />
-                <ScalarProperty Name="ParentAccountNumber" ColumnName="ParentAccountNumber" />
-                <ScalarProperty Name="RoadNumber" ColumnName="RoadNumber" />
-                <ScalarProperty Name="RoadName" ColumnName="RoadName" />
-                <ScalarProperty Name="RoadType" ColumnName="RoadType" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="Customer2" ColumnName="Customer2" />
-                <ScalarProperty Name="Customer1" ColumnName="Customer1" />
-                <ScalarProperty Name="BusinessCode" ColumnName="BusinessCode" />
-                <ScalarProperty Name="NIF_CIF" ColumnName="NIF_CIF" />
-                <ScalarProperty Name="SAPCustomerNr" ColumnName="SAPCustomerNr" />
-                <ScalarProperty Name="AddressType" ColumnName="AddressType" />
-                <ScalarProperty Name="County" ColumnName="County" />
-                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
-                <ScalarProperty Name="Contacto" ColumnName="Contacto" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="Adress2" ColumnName="Adress2" />
-                <ScalarProperty Name="Adress1" ColumnName="Adress1" />
-                <ScalarProperty Name="ShipCode" ColumnName="ShipCode" />
-                <ScalarProperty Name="Quote" ColumnName="Quote" />
-                <ScalarProperty Name="NomeCliente" ColumnName="NomeCliente" />
-                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CodRef" ColumnName="CodRef" />
-                <ScalarProperty Name="Documento" ColumnName="Documento" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_Proposal_Financing">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
               <MappingFragment StoreEntitySet="BB_Proposal_Financing">
@@ -5946,6 +5880,75 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="Line_ID" ColumnName="Line_ID" />
                 <ScalarProperty Name="WFA_ID" ColumnName="WFA_ID" />
                 <ScalarProperty Name="WFA_Control_ID" ColumnName="WFA_Control_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_LocaisEnvio">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_LocaisEnvio">
+              <MappingFragment StoreEntitySet="BB_LocaisEnvio">
+                <ScalarProperty Name="IsNewAddress" ColumnName="IsNewAddress" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="TypeAccount" ColumnName="TypeAccount" />
+                <ScalarProperty Name="ParentAccountNumber" ColumnName="ParentAccountNumber" />
+                <ScalarProperty Name="RoadNumber" ColumnName="RoadNumber" />
+                <ScalarProperty Name="RoadName" ColumnName="RoadName" />
+                <ScalarProperty Name="RoadType" ColumnName="RoadType" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Customer2" ColumnName="Customer2" />
+                <ScalarProperty Name="Customer1" ColumnName="Customer1" />
+                <ScalarProperty Name="BusinessCode" ColumnName="BusinessCode" />
+                <ScalarProperty Name="NIF_CIF" ColumnName="NIF_CIF" />
+                <ScalarProperty Name="SAPCustomerNr" ColumnName="SAPCustomerNr" />
+                <ScalarProperty Name="AddressType" ColumnName="AddressType" />
+                <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Contacto" ColumnName="Contacto" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Adress2" ColumnName="Adress2" />
+                <ScalarProperty Name="Adress1" ColumnName="Adress1" />
+                <ScalarProperty Name="ShipCode" ColumnName="ShipCode" />
+                <ScalarProperty Name="Quote" ColumnName="Quote" />
+                <ScalarProperty Name="NomeCliente" ColumnName="NomeCliente" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CodRef" ColumnName="CodRef" />
+                <ScalarProperty Name="Documento" ColumnName="Documento" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_DeliveryLocation">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_DeliveryLocation">
+              <MappingFragment StoreEntitySet="BB_Proposal_DeliveryLocation">
+                <ScalarProperty Name="SAPCustomerNr" ColumnName="SAPCustomerNr" />
+                <ScalarProperty Name="DupPosition" ColumnName="DupPosition" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+                <ScalarProperty Name="DeliveryDelegation" ColumnName="DeliveryDelegation" />
+                <ScalarProperty Name="CopiesContact" ColumnName="CopiesContact" />
+                <ScalarProperty Name="ServiceContact" ColumnName="ServiceContact" />
+                <ScalarProperty Name="ITContact" ColumnName="ITContact" />
+                <ScalarProperty Name="DeliveryContact" ColumnName="DeliveryContact" />
+                <ScalarProperty Name="BillReceiver" ColumnName="BillReceiver" />
+                <ScalarProperty Name="Payer" ColumnName="Payer" />
+                <ScalarProperty Name="Schedule" ColumnName="Schedule" />
+                <ScalarProperty Name="Room" ColumnName="Room" />
+                <ScalarProperty Name="Building" ColumnName="Building" />
+                <ScalarProperty Name="Floor" ColumnName="Floor" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Contacto" ColumnName="Contacto" />
+                <ScalarProperty Name="County" ColumnName="County" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Adress2" ColumnName="Adress2" />
+                <ScalarProperty Name="Adress1" ColumnName="Adress1" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="IDX" ColumnName="IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

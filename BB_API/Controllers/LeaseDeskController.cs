@@ -2570,37 +2570,12 @@ namespace WebApplication1.Controllers
                 try
                 {
                     BB_Proposal_DeliveryLocation dlToEdit = db.BB_Proposal_DeliveryLocation.Where(x => x.IDX == ti.IDX).FirstOrDefault();
-
-                    int id = Int32.Parse(dlToEdit.ID);
-                    BB_LocaisEnvio localEnvio = db.BB_LocaisEnvio.Where(x => x.ID == id).FirstOrDefault();
-
-                    if (localEnvio != null)
+                    if(dlToEdit != null)
                     {
-                        localEnvio.SAPCustomerNr = ti.SAP_Nr;
-                        db.Entry(localEnvio).State = EntityState.Modified;
+                        dlToEdit.SAPCustomerNr = ti.SAP_Nr;
                         db.SaveChanges();
+
                     }
-
-
-                    //List<BB_Proposal_DeliveryLocation> deliverLocationList =
-                    //    db.BB_Proposal_DeliveryLocation
-                    //       .Where(x => x.ProposalID == ti.ProposalID)
-                    //       .DistinctBy(x => x.ID)
-                    //       .ToList();
-
-                    //foreach (var deliveryLocation in deliverLocationList)
-                    //{
-                    //    int id = Int32.Parse(deliveryLocation.ID);
-                    //    BB_LocaisEnvio localEnvio = db.BB_LocaisEnvio.Where(x => x.ID == id && x.BusinessCode == ti.CompanyName).FirstOrDefault();
-
-                    //    if (localEnvio != null)
-                    //    {
-                    //        localEnvio.SAPCustomerNr = ti.SAP_Nr;
-                    //        db.Entry(localEnvio).State = EntityState.Modified;
-                    //        db.SaveChanges();
-                    //    }
-
-                    //}
 
 
                     return Ok();
@@ -3756,7 +3731,7 @@ namespace WebApplication1.Controllers
                                 if (bb_local_envio != null)
                                 {
                                     dl_info.CIF = bb_local_envio.NIF_CIF;
-                                    dl_info.SAP_Nr = bb_local_envio.SAPCustomerNr;
+                                    dl_info.SAP_Nr = deliverLocation.SAPCustomerNr;
                                     dl_info.CompanyName = bb_local_envio.BusinessCode;
                                     dl_info.SAP_Company = bb_local_envio.NomeCliente;
                                     dl_info.Address = bb_local_envio.Adress1;

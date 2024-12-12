@@ -42,5 +42,6 @@ namespace WebApplication1.Models
         public Nullable<int> ContractNumber { get; set; }
         public string Comments { get; set; }
         public Nullable<int> DupPosition { get; set; }
+        public string SAPCustomerNr { get; set; }
     }
 }

@@ -15,14 +15,55 @@ namespace WebApplication1.Controllers
         // GET: ProposalXml
         [System.Web.Http.AcceptVerbs("GET", "POST")]
         [System.Web.Http.ActionName("GetProposalId")]
-        public IHttpActionResult GetProposalId(int contractId)
+        public IHttpActionResult GetProposalId(int contractId, string name)
         {
+            try
+            {
+                bool statusMessage = true;
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractId).FirstOrDefault();
 
-            Deal deal = new Deal();
-            deal.DealXML(contractId);
-           
+                    List<BB_Proposal_DeliveryLocation> locaisEnvioIds = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == lD_Contrato.ProposalID).ToList();
 
-            return Ok();
+                    bool isMissingSAPNumber = false;
+
+                    foreach(var localEnvio in locaisEnvioIds)
+                    {
+                        //BB_LocaisEnvio le = db.BB_LocaisEnvio.Where(x => x.ID.ToString() == localEnvio).FirstOrDefault();
+               
+                        if(localEnvio != null && localEnvio.SAPCustomerNr == null)
+                        {
+                            isMissingSAPNumber = true;
+                            break;
+                        }
+                    }
+
+                    Deal deal = new Deal();
+                    if (!isMissingSAPNumber)
+                    {
+                        deal.DealXML(contractId);
+
+                        lD_Contrato.StatusID = 9;
+                        lD_Contrato.ModifiedBy = name;
+
+                        db.Entry(lD_Contrato).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        statusMessage = false;
+                    }
+
+                }
+
+                return Ok(statusMessage);
+            }catch(Exception ex)
+            {
+                return Ok(ex);
+            }
+
+
         }
 
 
