@@ -131,8 +131,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
 
 
-                        //CONTR_DOC = $"C_D{contract.ID}_{contractIndexString}_{randomLetterNunber}",
-                        CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
+                        CONTR_DOC = $"C_D{contract.ID}_{contractIndexString}_{randomLetterNunber}",
+                        //CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
                         VT_AUART = "ZWV1",
                         VT_BEGDA = formattedDtCont,
                         VT_ABNDA = "",

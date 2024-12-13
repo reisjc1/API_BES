@@ -268,10 +268,10 @@ namespace WebApplication1.Models.SetupXML.XML
                         if((bool)bB_Proposal_Upturn.Retirada)
                     {
                         Random randomRetirada = new Random();
-                        int randomNumberOrderDocRetirada = random.Next(1000000, 10000000);
-                        string randomNumberOrderRetiradaString = randomNumberOrderDoc.ToString();
+                        int randomNumberOrderDocRetirada = randomRetirada.Next(1000000, 10000000);
+                        string randomNumberOrderRetiradaString = randomNumberOrderDocRetirada.ToString();
 
-                        string orderRetiradaDoc = $"O_R{randomNumberOrderString}_{randomLetterNunber}";
+                        string orderRetiradaDoc = $"O_R{randomNumberOrderRetiradaString}_{randomLetterNunber}";
                         collectionOrderItemsRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                         {
                             SD_DOC = orderRetiradaDoc,

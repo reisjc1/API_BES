@@ -210,7 +210,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         //BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line2).FirstOrDefault();
                         BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line1).FirstOrDefault();
                         //Get ops package from configurator
-                        BB_Proposal_Quote OPSPack = db.BB_Proposal_Quote.Where(x => x.CodeRef == line1).FirstOrDefault();
+                        BB_Proposal_Quote OPSPack = db.BB_Proposal_Quote.Where(x => x.CodeRef == line1 && x.Proposal_ID == proposalId).FirstOrDefault();
 
                         if(OPSPack == null && ops.UnitDiscountPrice != 0)
                         {
@@ -501,7 +501,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line1).FirstOrDefault();
 
                             //Get ops package from configurator
-                            BB_Proposal_Quote OPSPack = db.BB_Proposal_Quote.Where(x => x.CodeRef == line1).FirstOrDefault();
+                            BB_Proposal_Quote OPSPack = db.BB_Proposal_Quote.Where(x => x.CodeRef == line1 && x.Proposal_ID == proposalId).FirstOrDefault();
 
                             if(OPSPack == null && ops.UnitDiscountPrice != 0)
                             {
