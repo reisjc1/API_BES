@@ -18,18 +18,18 @@ namespace WebApplication1.Models.SetupXML.XML
     public class Orders
     {
         //public System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS> ConfigOrders(int proposalId, string randomLetterNunber)
-        public OrdersPartnersList ConfigOrders(int proposalId, string randomLetterNunber, string financing)
+        public OrdersPartnersList ConfigOrders(int proposalId, string randomLetterNunber, string financing, string contractDoc)
         {
             try
             {
 
-                string contractDoc = "";
+                //string contractDoc = "";
                 List<OrdersPartners> sdDocOrdersPartners = new List<OrdersPartners>();
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
 
-                    LD_Contrato c = db.LD_Contrato.Where(x => x.ID == proposalId).FirstOrDefault();
+                    LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal d = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault();
                     //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal_PrazoDiferenciado pd = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID != d.ID).FirstOrDefault();
@@ -239,7 +239,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 PURCH_NO_C = d.CRM_QUOTE_ID,  //Nome interno da oferta
                                 SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
                                 PMNTTRMS = "303E", //TODO: manter  || FinancingPaymentMethods.
-                                CONTRACT_DOC = $"C_D3924_1_{randomLetterNunber}",   //contractDoc,
+                                CONTRACT_DOC = contractDoc, //$"C_{c.ID}_1_{randomLetterNunber}",   //contractDoc,
                                 CONTRACT_ITM = contractItm, // add +10 no foreach de orders  
                                 MACHINE = bundelCodeRef, //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
                                 ORDER_FLAG = "O1", //TODO: MANTER ESTE VALOR;
@@ -280,33 +280,35 @@ namespace WebApplication1.Models.SetupXML.XML
                             REQ_QTY = "1"
                         });
 
-                        //if (dLClient != null)
-                        //{
-                        collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                            if (bB_Proposal_Upturn.Contact != null)
                             {
-                                SD_DOC = orderRetiradaDoc,
-                                APLF_NAME = "M. GEMMA BELLUDA VENTURA", //"M. LUIS ALVAREZ",
-                                APLF_PHON = "934870301",       //"66666666",
-                                APLF_OPEN = "8-17H",//"9h 17h",
-                                APLF_INFO = "",//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                APLF_INFO2 = "Marque/Modèle: Konica Minolta / bizhub 36 -N°: 1818459123",//"Asc: Oui -Connexion: PRINTFLEET",
-                                APLF_INFO3 = "2024431493"
+                                string[] splitContact = bB_Proposal_Upturn.Contact.Split(';');
 
-                            });
-                        //}
-                        //else
-                        //{
-                        //    collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
-                        //    {
-                        //        SD_DOC = orderRetiradaDoc,
-                        //        APLF_NAME = "M. LUIS ALVAREZ",
-                        //        APLF_PHON = "66666666",
-                        //        APLF_OPEN = "9h 17h",
-                        //        APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                        //        APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
-                        //        APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
-                        //    });
-                        //}
+                                collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                {
+                                    SD_DOC = orderRetiradaDoc,
+                                    APLF_NAME = (splitContact != null && !string.IsNullOrEmpty(splitContact[0]) ? splitContact[0] : ""), //"M. LUIS ALVAREZ",
+                                    APLF_PHON = (splitContact != null && !string.IsNullOrEmpty(splitContact[1]) ? splitContact[1] : ""),       //"66666666",
+                                    APLF_OPEN = (splitContact != null && !string.IsNullOrEmpty(splitContact[3]) ? splitContact[3] : ""),//"9h 17h",
+                                    APLF_INFO = "",//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                    APLF_INFO2 = "Marque/Modèle: Konica Minolta / " + (splitContact != null && !string.IsNullOrEmpty(splitContact[2]) ? splitContact[2] : "") + "-N°:" +  bB_Proposal_Upturn.Description,//"Asc: Oui -Connexion: PRINTFLEET",
+                                    APLF_INFO3 = "2024431493"
+
+                                });
+                            }
+                            else
+                            {
+                                collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                {
+                                    SD_DOC = orderRetiradaDoc,
+                                    APLF_NAME = "M. LUIS ALVAREZ",
+                                    APLF_PHON = "66666666",
+                                    APLF_OPEN = "9h 17h",
+                                    APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                    APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
+                                    APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
+                                });
+                            }
                         DateTime currentDate = DateTime.Now;
                         string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
                         collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
@@ -320,7 +322,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             PMNTTRMS = "E6CD", //TODO: manter  || FinancingPaymentMethods.
                             MACHINE = "5R", //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
                             ORDER_FLAG = "5R", //TODO: MANTER ESTE VALOR;
-                            EQUIPMENT_NO = "1818459123",
+                            EQUIPMENT_NO = bB_Proposal_Upturn.Description,
                             DWERK = "5300",
                             LINKING_PIN = proposalId.ToString(),
                             Z1ZVOE_ORDER_CONTACT = collectionOrdersContactRetiradas,

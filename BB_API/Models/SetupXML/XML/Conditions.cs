@@ -342,10 +342,8 @@ namespace WebApplication1.Models.SetupXML.XML
 
             double? pvpItems = 0;
             double? totalPvp = 0;
-            foreach (var order in orders)
-            {
-
-
+            //foreach (var order in orders)
+            //{
 
                 using (var db = new BB_DB_DEVEntities2())
                 {
@@ -390,26 +388,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     //    }
                                     //}
                                 }
-                            //if (ops != null)
-                            //{
-                            //    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
-                            //    if (cond == null)
-                            //    {
-                            //        conditionPVP.ConditionCode = "ZSW4";
-                            //        conditionPVP.PVP = ops.PVP * ops.Quantity;
-                            //        conditionsPvp.Add(conditionPVP);
-                            //    }
-                            //    else
-                            //    {
-                            //        cond.PVP = cond.PVP + (ops.PVP * ops.Quantity);
-                            //    }
-                            //}
-
-                            //}
-                            //else
-                            //{
-
-                            //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                            
 
                             if (financingType != "002")
                             {
@@ -491,75 +470,76 @@ namespace WebApplication1.Models.SetupXML.XML
 
                         }
 
-                        //conditionsPvpAux = conditionsPvp;
-                        BB_Proposal_OPSManage ops = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                        if (ops != null)
+                    }
+                    //conditionsPvpAux = conditionsPvp;
+                    BB_Proposal_OPSManage ops = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    if (ops != null)
+                    {
+                        string line1 = ops.CodeRef;
+                        string line2 = "9960DRC-HTTP ";
+                        //BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line2).FirstOrDefault();
+                        BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line1).FirstOrDefault();
+
+                        //Get ops package from configurator
+                        BB_Proposal_Quote OPSPack = db.BB_Proposal_Quote.Where(x => x.CodeRef == line1 && x.Proposal_ID == proposalId).FirstOrDefault();
+
+                        if(OPSPack == null && ops.UnitDiscountPrice != 0)
                         {
-                            string line1 = ops.CodeRef;
-                            string line2 = "9960DRC-HTTP ";
-                            //BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line2).FirstOrDefault();
-                            BB_OPS_Manage_Packs opsPack = db.BB_OPS_Manage_Packs.Where(x => x.CodeRef == line1).FirstOrDefault();
-
-                            //Get ops package from configurator
-                            BB_Proposal_Quote OPSPack = db.BB_Proposal_Quote.Where(x => x.CodeRef == line1 && x.Proposal_ID == proposalId).FirstOrDefault();
-
-                            if(OPSPack == null && ops.UnitDiscountPrice != 0)
+                            double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
+                            double? opsPvpLine2 = opsPack.PVP;
+                            bool condExists = false;
+                            foreach (var cond in conditionsPvp)
                             {
-                                double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
-                                double? opsPvpLine2 = opsPack.PVP;
-                                bool condExists = false;
-                                foreach (var cond in conditionsPvp)
+                                if (cond.ConditionCode == "ZPD4")
                                 {
-                                    if (cond.ConditionCode == "ZPD4")
-                                    {
-                                        //    if(financingType == "002" || financingType == "008")
-                                        //    {
-                                            //condExists = true;
-                                            double opsPvpRounded = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
-                                            cond.PVP = cond.PVP + (opsPvpRounded);
-
-                                        //    }
-                                    }else if(cond.ConditionCode == "ZVBM")
-                                    {
-                                        condExists = true;
+                                    //    if(financingType == "002" || financingType == "008")
+                                    //    {
+                                        //condExists = true;
                                         double opsPvpRounded = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
                                         cond.PVP = cond.PVP + (opsPvpRounded);
-                                    }
+
+                                    //    }
+                                }else if(cond.ConditionCode == "ZVBM")
+                                {
+                                    condExists = true;
+                                    double opsPvpRounded = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
+                                    cond.PVP = cond.PVP + (opsPvpRounded);
+                                }
                                     
-                                }
-                                if (condExists == false && contractMonths > 0)
-                                {
-                                    ConditionPVP condPvp = new ConditionPVP();
-                                    double opsPvpRounded  = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
-                                    condPvp.PVP = opsPvpRounded;
-                                    condPvp.ConditionCode = "ZVBM";
-                                    conditionsPvp.Add(condPvp);
-                                }
-                                else
-                                {
-                                    ConditionPVP condPvp = new ConditionPVP();
-                                    condPvp.PVP = 0;
-                                    condPvp.ConditionCode = "ZVBM";
-                                    conditionsPvp.Add(condPvp);
-                                }
+                            }
+                            if (condExists == false && contractMonths > 0)
+                            {
+                                ConditionPVP condPvp = new ConditionPVP();
+                                double opsPvpRounded  = Math.Round((opsPvpLine2 / contractMonths) ?? 0.0, 2);
+                                condPvp.PVP = opsPvpRounded;
+                                condPvp.ConditionCode = "ZVBM";
+                                conditionsPvp.Add(condPvp);
                             }
                             else
                             {
                                 ConditionPVP condPvp = new ConditionPVP();
-                                condPvp.PVP = OPSPack.PVP;
+                                condPvp.PVP = 0;
                                 condPvp.ConditionCode = "ZVBM";
                                 conditionsPvp.Add(condPvp);
                             }
                         }
-
-                        //pvpItems = pvpItems + itemDoBasket.TotalPVP;
+                        else
+                        {
+                            ConditionPVP condPvp = new ConditionPVP();
+                            condPvp.PVP = OPSPack.PVP;
+                            condPvp.ConditionCode = "ZVBM";
+                            conditionsPvp.Add(condPvp);
+                        }
                     }
+
+                    //pvpItems = pvpItems + itemDoBasket.TotalPVP;
                    
 
 
                 }
 
-            }
+            //}
+
             return conditionsPvp;
         }
 

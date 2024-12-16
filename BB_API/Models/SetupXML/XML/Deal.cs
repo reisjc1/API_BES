@@ -209,7 +209,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     var sDocOrder = new OrdersPartnersList();
                     var collectionOrders = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS>();
 
-                    sDocOrder = ordersConfig.ConfigOrders(d.ID, randomLetterNumber, VTTYPFinancingType);
+                    sDocOrder = ordersConfig.ConfigOrders(d.ID, randomLetterNumber, VTTYPFinancingType, collectionContracts[0].CONTR_DOC);
                     foreach (var sDocPartner in sDocOrder.SdDocOrderPartner)
                     {
                         sD_DocOrdersPartners.Add(sDocPartner);

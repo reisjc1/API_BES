@@ -3969,6 +3969,41 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("ValidateIsSAPNumberMissing")]
+        public IHttpActionResult ValidateIsSAPNumberMissing(int contractId)
+        {
+            try
+            {
+
+                bool isMissingSAPNumber = false;
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractId).FirstOrDefault();
+
+                    List<BB_Proposal_DeliveryLocation> locaisEnvioIds = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == lD_Contrato.ProposalID).ToList();
+
+
+                    foreach (var localEnvio in locaisEnvioIds)
+                    {
+
+                        if (localEnvio != null && localEnvio.SAPCustomerNr == null)
+                        {
+                            isMissingSAPNumber = true;
+                            break;
+                        }
+                    }
+
+                }
+
+                return Ok(isMissingSAPNumber);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex); // Retorna erro 500 com detalhes
+            }
+        }
+
         public class GravarObser
         {
 
