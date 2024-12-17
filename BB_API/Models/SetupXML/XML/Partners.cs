@@ -204,7 +204,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 BB_Clientes c = db.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).FirstOrDefault();
                                 string[] namePartsBT = c.Owner.Split(' ');
 
-                                if (dLocation.Payer == false)
+                                if (dLocation.BillReceiver == true)
                                 {
                                     if (dLocation.SAPCustomerNr != null)
                                     {
