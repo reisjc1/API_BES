@@ -391,20 +391,20 @@ namespace WebApplication1.Models.SetupXML.XML
                             kLFN = "2";
                             if (activePS.GlobalClickNoVolume != null)
                             {
-                                kBETR = activePS.GlobalClickNoVolume.GlobalClickC.ToString().Replace(",", ".");
+                                kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickC, 5).ToString().Replace(",", ".");
                             }
                             else if (activePS.ClickPerModel != null)
                             {
                                 BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
                                 if (pSM != null)
                                 {
-                                    kBETR = pSM.ApprovedC.ToString().Replace(",", ".");
+                                    kBETR = Math.Round((double)pSM.ApprovedC, 5).ToString().Replace(",", ".");
                                 }
                                 //kBETR = clickPerModel
                             }
                             else if (activePS.GlobalClickVVA != null)
                             {
-                                kBETR = activePS.GlobalClickVVA.PVP.ToString().Replace(",", ".");
+                                kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
                             }
                             copiasIncludias = activePS.BWVolume + activePS.CVolume;
                             kSTBM = copiasIncludias.ToString();
@@ -424,19 +424,19 @@ namespace WebApplication1.Models.SetupXML.XML
                             kLFN = "1";
                             if (activePS.GlobalClickNoVolume != null)
                             {
-                                kBETR = activePS.GlobalClickNoVolume.GlobalClickBW.ToString().Replace(",", ".");
+                                kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickBW, 5).ToString().Replace(",", ".");
                             }
                             else if (activePS.ClickPerModel != null)
                             {
                                 BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
                                 if (pSM != null)
                                 {
-                                    kBETR = pSM.ApprovedBW.ToString().Replace(",", ".");
+                                    kBETR = Math.Round((double)pSM.ApprovedBW, 5).ToString().Replace(",", ".");
                                 }
                             }
                             else if (activePS.GlobalClickVVA != null)
                             {
-                                kBETR = activePS.GlobalClickVVA.PVP.ToString().Replace(",", ".");
+                                kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
                             }
 
                             copiasIncludias = activePS.BWVolume + activePS.CVolume;
@@ -460,19 +460,19 @@ namespace WebApplication1.Models.SetupXML.XML
                             kLFN = "1";
                             if (activePS.GlobalClickNoVolume != null)
                             {
-                                kBETR = activePS.GlobalClickNoVolume.GlobalClickBW.ToString().Replace(",", ".");
+                                kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickBW,5).ToString().Replace(",", ".");
                             }
                             else if (activePS.ClickPerModel != null)
                             {
                                 BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
                                 if (pSM != null)
                                 {
-                                    kBETR = pSM.ApprovedBW.ToString().Replace(",", ".");
+                                    kBETR = Math.Round((double)pSM.ApprovedBW, 5).ToString().Replace(",", ".");
                                 }
                             }
                             else if (activePS.GlobalClickVVA != null)
                             {
-                                kBETR = activePS.GlobalClickVVA.PVP.ToString().Replace(",", ".");
+                                kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
                             }
 
                             copiasIncludias = activePS.BWVolume + activePS.CVolume;
