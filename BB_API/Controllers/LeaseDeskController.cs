@@ -3720,8 +3720,9 @@ namespace WebApplication1.Controllers
                                 DL_Table_Info dl_info = new DL_Table_Info();
 
                                 dl_info.ProposalID = (int)proposalID;
-
+                                
                                 dl_info.Tipo = deliverLocation.AccountType;
+
                                 dl_info.DeliveryLocation = deliverLocation.Adress1 + " " + deliverLocation.PostalCode;
                                 dl_info.IDX = deliverLocation.IDX;
                                 int? deliverLocationID = Int32.Parse(deliverLocation.ID);
@@ -3746,33 +3747,68 @@ namespace WebApplication1.Controllers
                                     dl_info.Email = bb_dl_contact.Email;
                                 }
 
-                                if(deliverLocation.AccountType == "Ship To")
-                                {
-                                    dl_info.Payer = "-";
-                                    dl_info.BillReceiver = "-";
-                                }
-                                else
-                                {
-                                    if(deliverLocation.Payer == false)
-                                    {
-                                        dl_info.Payer = "No";
-                                    }
-                                    else
-                                    {
-                                        dl_info.Payer = "Si";
-                                    }
+                                //if(deliverLocation.AccountType == "Ship To")
+                                //{
+                                //    dl_info.Payer = "-";
+                                //    dl_info.BillReceiver = "-";
+                                //}
+                                //else
+                                //{
+                                //    if(deliverLocation.Payer == false)
+                                //    {
+                                //        dl_info.Payer = "No";
+                                //    }
+                                //    else
+                                //    {
+                                //        dl_info.Payer = "Si";
+                                //    }
 
-                                    if (deliverLocation.BillReceiver == false)
-                                    {
-                                        dl_info.BillReceiver = "No";
-                                    }
-                                    else
-                                    {
-                                        dl_info.BillReceiver = "Si";
-                                    }
-                                }
+                                //    if (deliverLocation.BillReceiver == false)
+                                //    {
+                                //        dl_info.BillReceiver = "No";
+                                //    }
+                                //    else
+                                //    {
+                                //        dl_info.BillReceiver = "Si";
+                                //    }
+                                //}
 
                                 data.DL_Table_Info_Lst.Add(dl_info);
+
+                                if (deliverLocation.AccountType == "Bill To")
+                                {
+                                    if (deliverLocation.BillReceiver != null && deliverLocation.Payer != null)
+                                    {
+                                        if (!deliverLocation.BillReceiver.Value && deliverLocation.Payer.Value)
+                                        {
+                                            dl_info.Tipo = "Payer";
+                                        }
+                                        else if (deliverLocation.BillReceiver.Value && deliverLocation.Payer.Value)
+                                        {
+                                            DL_Table_Info dl_Info_Payer = new DL_Table_Info
+                                            {
+                                                ProposalID = dl_info.ProposalID,
+                                                Address = dl_info.Address,
+                                                CIF = dl_info.CIF,
+                                                CompanyName = dl_info.CompanyName,
+                                                Contacto = dl_info.Contacto,
+                                                DeliveryLocation = dl_info.DeliveryLocation,
+                                                Email = dl_info.Email,
+                                                IDX = dl_info.IDX,
+                                                Phone = dl_info.Phone,
+                                                SAP_Company = dl_info.SAP_Company,
+                                                SAP_Nr = dl_info.SAP_Nr,
+                                                Tipo = "Payer"
+                                            };
+                                            
+
+                                            data.DL_Table_Info_Lst.Add(dl_Info_Payer);
+
+
+
+                                        }
+                                    }
+                                }
 
                             }
                         }

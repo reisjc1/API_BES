@@ -56,6 +56,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 partnerInfo.FLOOR = reader["FLOOR"].ToString();
                                 partnerInfo.ROOMNUMBER = reader["ROOMNUMBER"].ToString();
                                 partnerInfo.BUSINESSCODE = reader["BusinessCode"].ToString();
+                                partnerInfo.ISNEWADDRESS = reader["IsNewAddress"].ToString();
                                 partnerInfo.COUNTRY = reader["COUNTRY"].ToString();
                                 partnerInfo.LANGU = reader["LANGU"].ToString();
                                 partnerInfo.REGION = reader["REGION"].ToString();
@@ -89,7 +90,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     }
                     string[] nameParts = partnerInfo.CP_NAME.Split(' ');
                     //partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
-                    if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
+                    //if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
+                    if (string.IsNullOrEmpty(partnerInfo.ISNEWADDRESS))
                     {
                         using(var bdCliente =  new BB_DB_DEVEntities2())
                         {

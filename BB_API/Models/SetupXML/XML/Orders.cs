@@ -2,6 +2,7 @@
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -228,6 +229,9 @@ namespace WebApplication1.Models.SetupXML.XML
                                 BILL_TO = d.ClientAccountNumber
                             }) ;
                             //}
+
+                            collectionOrderItems = new Collection<WebApplication1.Models.SetupXML.XSD.Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>(collectionOrderItems.OrderBy(x => x.ITM_NUMBER).ToList());
+
                             DateTime currentDate = DateTime.Now;
                             string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
                             collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
@@ -405,9 +409,9 @@ namespace WebApplication1.Models.SetupXML.XML
                             else if (activePS.GlobalClickVVA != null)
                             {
                                 kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
+                                copiasIncludias = activePS.CVolume;
+                                kSTBM = copiasIncludias.ToString();
                             }
-                            copiasIncludias = activePS.BWVolume + activePS.CVolume;
-                            kSTBM = copiasIncludias.ToString();
 
                             collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
                             {
@@ -416,12 +420,13 @@ namespace WebApplication1.Models.SetupXML.XML
                                 KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
                                 DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
                                 DATBI = "99991231", // data de até quando é válido -- deixar default
-                                //KSTBM = kSTBM, //copias incluidas 
+                                KSTBM = kSTBM, //copias incluidas 
                                 KBETR = kBETR //preço do excedente 
                             });
 
                             mATNR = "TOBW";
                             kLFN = "1";
+                            
                             if (activePS.GlobalClickNoVolume != null)
                             {
                                 kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickBW, 5).ToString().Replace(",", ".");
@@ -437,10 +442,10 @@ namespace WebApplication1.Models.SetupXML.XML
                             else if (activePS.GlobalClickVVA != null)
                             {
                                 kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
+                                copiasIncludias = activePS.BWVolume;
+                                kSTBM = copiasIncludias.ToString();
                             }
 
-                            copiasIncludias = activePS.BWVolume + activePS.CVolume;
-                            kSTBM = copiasIncludias.ToString();
 
                             collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
                             {
@@ -449,7 +454,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
                                 DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
                                 DATBI = "99991231", // data de até quando é válido -- deixar default
-                                //KSTBM = kSTBM, //copias incluidas 
+                                KSTBM = kSTBM, //copias incluidas 
                                 KBETR = kBETR //preço do excedente 
                             });
 
