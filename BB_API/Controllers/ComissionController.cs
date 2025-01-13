@@ -15,6 +15,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Results;
 using System.Web.UI.WebControls;
 using WebApplication1.App_Start;
 using WebApplication1.BLL;
@@ -894,17 +895,49 @@ namespace WebApplication1.Controllers
                             profitDictionary["IMS_EXCLUDING"].GPTotal += amount ?? 0;
                         }
                     }
-                    
+
+                    // Fatores a ter em conta para o cálculo do GPTotal
+
+                    var clientGMA = loadProposal.ProposalObj.Draft.client.GMA;
+                    var financingTypeCode = loadProposal.ProposalObj.Draft.financing.FinancingTypeCode;
+                    var actionCampaignId = loadProposal.ProposalObj.Draft.details.CampaignID;
+
                     // Cálculo do GPTotal para cada familia de cada maquina
 
                     foreach (var oneShot_Item in oneShot)
                     {
-                        AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
-
-                        if(oneShot_Item.Description.Contains("MOBOTIX"))
+                        if (clientGMA  != null || clientGMA != "")
                         {
-                            profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
+                            var totalNetSale = oneShot_Item.TotalNetsale * 0.1;
 
+                            AddProfit(oneShot_Item.Family, totalNetSale, oneShot_Item.CodeRef);
+                        }
+                        else if (financingTypeCode != 0)
+                        {
+                            var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
+
+                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef);
+                        }
+                        else if (oneShot_Item.IsUsed == true)
+                        {
+                            AddProfit(oneShot_Item.Family, oneShot_Item.TotalCost, oneShot_Item.CodeRef);
+                        }
+                        else if (actionCampaignId == 3)
+                        {
+                            var result = oneShot_Item.TotalNetsale * 0.75;
+
+                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef);
+                        }
+                        else
+                        {
+                            // conta default
+                            AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
+
+                            if(oneShot_Item.Description.Contains("MOBOTIX"))
+                            {
+                                profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
+
+                            }
                         }
                     }
 
@@ -912,6 +945,8 @@ namespace WebApplication1.Controllers
                     {
                         AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal, servRecor_Item.CodeRef);
                     }
+
+
 
                     var profit_Hard = profitDictionary["HW"];
                     var profit_IMS = profitDictionary["IMS"];
