@@ -231,6 +231,25 @@ namespace WebApplication1.Models.SetupXML.XML
                             }
 
                         }
+                        else if (OPSPack == null && ops.UnitDiscountPrice == 0)
+                        {
+                            //double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
+                            //double? opsPvpLine2 = opsPack.PVP;
+                            double? opsPvp = (ops.PVP * ops.TotalMonths);
+
+                            //bool condExists = false;
+                            foreach (var cond in conditionsPvp)
+                            {
+                                if (cond.ConditionCode == "ZPD4")
+                                {
+                                    //condExists = true;
+                                    //double opsPvpRounded = Math.Round((opsPvp / contractMonths) ?? 0.0, 2);
+                                    cond.PVP = cond.PVP + (opsPvp);
+                                }
+
+                            }
+
+                        }
                         else
                         {
                             
@@ -518,7 +537,26 @@ namespace WebApplication1.Models.SetupXML.XML
                                 //    conditionsPvp.Add(condPvp);
                                 //}
                             }
-                            else
+                        else if (OPSPack == null && ops.UnitDiscountPrice == 0)
+                        {
+                            //double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
+                            //double? opsPvpLine2 = opsPack.PVP;
+                            double? opsPvp = (ops.PVP * ops.TotalMonths);
+
+                            //bool condExists = false;
+                            foreach (var cond in conditionsPvp)
+                            {
+                                if (cond.ConditionCode == "ZPD4")
+                                {
+                                    //condExists = true;
+                                    //double opsPvpRounded = Math.Round((opsPvp / contractMonths) ?? 0.0, 2);
+                                    cond.PVP = cond.PVP + (opsPvp);
+                                }
+
+                            }
+                            
+                        }
+                        else
                             {
                                 double? opsPvpLine2 = OPSPack.TotalNetsale;
                                 foreach (var cond in conditionsPvp)
