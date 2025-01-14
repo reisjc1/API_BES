@@ -427,14 +427,30 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                         if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                         {
-                                            if (ftCode == 5)
-                                            {
-                                                totalPvp = (quote1.UnitDiscountPrice * (pf.Factor / 100)) + totalPvp;
-                                            }
-                                            else
-                                            {
-                                                totalPvp = ((quote1.UnitDiscountPrice / contractMonths) * (pf.Factor / 100)) + totalPvp;
-                                            }
+                                            //if (ftCode == 5)
+                                            //{
+                                                if (pf.Factor > 0)
+                                                {
+                                                    totalPvp = (quote1.UnitDiscountPrice) * (pf.Factor / 100) + totalPvp;
+                                                }
+                                                else
+                                                {
+                                                    totalPvp = (quote1.UnitDiscountPrice) * (pf.Factor) + totalPvp;
+                                                }
+
+                                            //}
+                                            //else
+                                            //{
+                                            //    if (pf.Factor > 0)
+                                            //    {
+                                            //        totalPvp = (quote1.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
+                                            //    }
+                                            //    else
+                                            //    {
+                                            //        totalPvp = (quote1.UnitDiscountPrice / contractMonths) * (pf.Factor);
+                                            //    }
+
+                                            //}
                                         }
                                         else
                                         {
@@ -451,34 +467,34 @@ namespace WebApplication1.Models.SetupXML.XML
                                         totalPvp = 0;
                                         if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                         {
-                                            if (ftCode == 5)
-                                            {
+                                            //if (ftCode == 5)
+                                            //{
                                                 if (pf.Factor > 0)
                                                 {
-                                                    totalPvp = (quote1.UnitDiscountPrice) * (pf.Factor / 100);
+                                                    totalPvp = (quote1.UnitDiscountPrice) * (pf.Factor / 100) + totalPvp;
                                                 }
                                                 else
                                                 {
-                                                    totalPvp = (quote1.UnitDiscountPrice) * (pf.Factor);
+                                                    totalPvp = (quote1.UnitDiscountPrice) * (pf.Factor) + totalPvp;
                                                 }
 
-                                            }
-                                            else
-                                            {
-                                                if(pf.Factor > 0)
-                                                {
-                                                    totalPvp = (quote1.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
-                                                }
-                                                else
-                                                {
-                                                    totalPvp = (quote1.UnitDiscountPrice / contractMonths) * (pf.Factor);
-                                                }
+                                            //}
+                                            //else
+                                            //{
+                                            //    if(pf.Factor > 0)
+                                            //    {
+                                            //        totalPvp = (quote1.UnitDiscountPrice / contractMonths) * (pf.Factor / 100);
+                                            //    }
+                                            //    else
+                                            //    {
+                                            //        totalPvp = (quote1.UnitDiscountPrice / contractMonths) * (pf.Factor);
+                                            //    }
                                                 
-                                            }
+                                            //}
                                         }
                                         else
                                         {
-                                            totalPvp = quote1.UnitDiscountPrice / contractMonths;
+                                            totalPvp = (quote1.UnitDiscountPrice / contractMonths) + +totalPvp;
                                         }
 
                                         condPvp.PVP = Double.Parse(Math.Round(totalPvp ?? 0.0, 2).ToString("F2"));;
@@ -508,7 +524,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 //double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
                                 //double? opsPvpLine2 = opsPack.PVP;
-                                double? opsPvp = (ops.PVP * ops.TotalMonths);
+                                double? opsPvp = (ops.PVP * ops.TotalMonths) * ops.Quantity;
 
                             //bool condExists = false;
                                 foreach (var cond in conditionsPvp)
@@ -541,7 +557,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             //double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
                             //double? opsPvpLine2 = opsPack.PVP;
-                            double? opsPvp = (ops.PVP * ops.TotalMonths);
+                            double? opsPvp = (ops.PVP * ops.TotalMonths) * ops.Quantity;
 
                             //bool condExists = false;
                             foreach (var cond in conditionsPvp)

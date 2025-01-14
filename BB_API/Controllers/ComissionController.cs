@@ -846,7 +846,7 @@ namespace WebApplication1.Controllers
                         {
                             // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
                             // assim, nunca vai cair no else
-                            if (clientGMA != null || clientGMA != "" || isGMA == true)
+                            if (clientGMA != null && clientGMA != "" && isGMA == true)
                             {
                                 var GMA_Amout = amount * 0.1;
                                 profitDictionary["HW"].GPTotal += GMA_Amout ?? 0;
@@ -919,7 +919,7 @@ namespace WebApplication1.Controllers
 
                     foreach (var oneShot_Item in oneShot)
                     {
-                        if (financingTypeCode != 0)
+                        if (financingTypeCode == 3)
                         {
                             var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
 
