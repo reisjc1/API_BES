@@ -899,6 +899,7 @@ namespace WebApplication1.Controllers
                     // Fatores a ter em conta para o cálculo do GPTotal
 
                     var clientGMA = loadProposal.ProposalObj.Draft.client.GMA;
+                    var isGMA = loadProposal.ProposalObj.Draft.client.isGMA;
                     var financingTypeCode = loadProposal.ProposalObj.Draft.financing.FinancingTypeCode;
                     var actionCampaignId = loadProposal.ProposalObj.Draft.details.CampaignID;
 
@@ -906,7 +907,7 @@ namespace WebApplication1.Controllers
 
                     foreach (var oneShot_Item in oneShot)
                     {
-                        if (clientGMA  != null || clientGMA != "")
+                        if (clientGMA  != null || clientGMA != "" || isGMA == true)
                         {
                             var totalNetSale = oneShot_Item.TotalNetsale * 0.1;
 
