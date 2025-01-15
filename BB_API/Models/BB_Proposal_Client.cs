@@ -20,5 +20,6 @@ namespace WebApplication1.Models
         public Nullable<int> ProposalID { get; set; }
         public string Name { get; set; }
         public Nullable<bool> IsPublicSector { get; set; }
+        public Nullable<bool> IsGMA { get; set; }
     }
 }

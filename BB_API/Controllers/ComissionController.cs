@@ -15,6 +15,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Results;
 using System.Web.UI.WebControls;
 using WebApplication1.App_Start;
 using WebApplication1.BLL;
@@ -835,12 +836,26 @@ namespace WebApplication1.Controllers
 
                     List<string> mobotixCodRefs = db.BB_Data_Integration.Where(x => x.Description_Portuguese.Contains("MOBOTIX")).Select(x => x.CodeRef).ToList();
 
+                    var clientGMA = loadProposal.ProposalObj.Draft.client.GMA;
+                    var isGMA = loadProposal.ProposalObj.Draft.client.isGMA;
+
                     // função interna a ser chamada para fazer o somatório do GPTotal para cada família
                     void AddProfit(string family, double? amount, string codeRef)
                     {
                         if (family.EndsWith("HW") || family.EndsWith("CS"))
                         {
-                            profitDictionary["HW"].GPTotal += amount ?? 0;
+                            // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
+                            // assim, nunca vai cair no else
+                            if (clientGMA != null && clientGMA != "" && isGMA == true)
+                            {
+                                var GMA_Amout = amount * 0.1;
+                                profitDictionary["HW"].GPTotal += GMA_Amout ?? 0;
+                            }
+                            // se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
+                            else
+                            {
+                                profitDictionary["HW"].GPTotal += amount ?? 0;
+                            }
                         }
 
                         if (family.StartsWith("IMS"))
@@ -894,17 +909,42 @@ namespace WebApplication1.Controllers
                             profitDictionary["IMS_EXCLUDING"].GPTotal += amount ?? 0;
                         }
                     }
-                    
+
+                    // Fatores a ter em conta para o cálculo do GPTotal
+
+                    var financingTypeCode = loadProposal.ProposalObj.Draft.financing.FinancingTypeCode;
+                    var actionCampaignId = loadProposal.ProposalObj.Draft.details.CampaignID;
+
                     // Cálculo do GPTotal para cada familia de cada maquina
 
                     foreach (var oneShot_Item in oneShot)
                     {
-                        AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
-
-                        if(oneShot_Item.Description.Contains("MOBOTIX"))
+                        if (financingTypeCode == 3)
                         {
-                            profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
+                            var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
 
+                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef);
+                        }
+                        else if (oneShot_Item.IsUsed == true)
+                        {
+                            AddProfit(oneShot_Item.Family, oneShot_Item.TotalCost, oneShot_Item.CodeRef);
+                        }
+                        else if (actionCampaignId == 3)
+                        {
+                            var result = oneShot_Item.TotalNetsale * 0.75;
+
+                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef);
+                        }
+                        else
+                        {
+                            // conta default
+                            AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
+
+                            if(oneShot_Item.Description.Contains("MOBOTIX"))
+                            {
+                                profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
+
+                            }
                         }
                     }
 
@@ -912,6 +952,8 @@ namespace WebApplication1.Controllers
                     {
                         AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal, servRecor_Item.CodeRef);
                     }
+
+
 
                     var profit_Hard = profitDictionary["HW"];
                     var profit_IMS = profitDictionary["IMS"];

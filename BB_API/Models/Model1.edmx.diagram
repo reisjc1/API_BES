@@ -64,7 +64,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Consignments" Width="2" PointX="26.5" PointY="16.875" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_PrintingServiceValidationRequest" Width="2.5" PointX="21.375" PointY="33.375" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_PrintingServiceValidationRequest_BB_PrintingServices" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Client" Width="1.875" PointX="3.375" PointY="11.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_VVA" Width="1.5" PointX="21.375" PointY="25.5" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_VVA_BB_PrintingServices" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_PrintingServices_NoVolume" Width="1.5" PointX="21.375" PointY="29.875" />
@@ -129,6 +128,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_LocaisEnvio" Width="1.5" PointX="33.375" PointY="25.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" Width="1.5" PointX="24.375" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="34.375" PointY="4.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Client" Width="1.5" PointX="34.375" PointY="20.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

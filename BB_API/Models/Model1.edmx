@@ -858,6 +858,7 @@
           <Property Name="ProposalID" Type="int" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="IsPublicSector" Type="bit" />
+          <Property Name="IsGMA" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_Commission">
           <Key>
@@ -1366,7 +1367,7 @@
           <Property Name="CExcess" Type="float" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_Estados_Fecho_CRM">
           <Key>
             <PropertyRef Name="ID" />
@@ -1398,7 +1399,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_Estados_Fecho_CRM' does n
           <Property Name="State" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA">
           <Key>
             <PropertyRef Name="ID" />
@@ -1407,7 +1408,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA' does not have a prim
           <Property Name="Name" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Approvers">
           <Key>
             <PropertyRef Name="ID" />
@@ -1417,7 +1418,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Approvers' does not h
           <Property Name="Department" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_BU">
           <Key>
             <PropertyRef Name="ID" />
@@ -1428,7 +1429,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_BU' does not have a p
           <Property Name="IsEnabled" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Condition">
           <Key>
             <PropertyRef Name="ID" />
@@ -1437,7 +1438,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition' does not h
           <Property Name="Condition" Type="varchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Condition_Type">
           <Key>
             <PropertyRef Name="ID" />
@@ -1447,7 +1448,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition_Type' does 
           <Property Name="Description" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Customer_Type">
           <Key>
             <PropertyRef Name="ID" />
@@ -1456,7 +1457,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Customer_Type' does n
           <Property Name="Customer" Type="varchar" MaxLength="15" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Elements">
           <Key>
             <PropertyRef Name="ID" />
@@ -1716,7 +1717,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Street" Type="text" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_get_DataIntegration">
           <Key>
             <PropertyRef Name="ID" />
@@ -1733,7 +1734,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="BOM" Type="nvarchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DB_PROD_BES.dbo.WFA_FullDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="WFA_FullDetails">
           <Key>
             <PropertyRef Name="WFA_Control_ID" />
@@ -2164,7 +2165,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_Proposal_PrintingServiceValidationRequest" EntitySet="BB_Proposal_PrintingServiceValidationRequest" />
           </AssociationSet>
-          <EntitySet Name="BB_Proposal_Client" EntityType="BB_DB_DEVModel.BB_Proposal_Client" />
           <EntitySet Name="BB_VVA" EntityType="BB_DB_DEVModel.BB_VVA" />
           <AssociationSet Name="FK_BB_VVA_BB_PrintingServices" Association="BB_DB_DEVModel.FK_BB_VVA_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
@@ -2247,6 +2247,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="BB_LocaisEnvio" EntityType="BB_DB_DEVModel.BB_LocaisEnvio" />
           <EntitySet Name="BB_Proposal_DeliveryLocation" EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" />
+          <EntitySet Name="BB_Proposal_Client" EntityType="BB_DB_DEVModel.BB_Proposal_Client" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -2995,17 +2996,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="BB_Proposal_Client">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsNewClient" Type="Boolean" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsPublicSector" Type="Boolean" />
-        </EntityType>
         <EntityType Name="BB_VVA">
           <Key>
             <PropertyRef Name="PrintingServiceID" />
@@ -4097,6 +4087,18 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="DupPosition" Type="Int32" />
           <Property Name="SAPCustomerNr" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="BB_Proposal_Client">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsNewClient" Type="Boolean" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsPublicSector" Type="Boolean" />
+          <Property Name="IsGMA" Type="Boolean" />
+        </EntityType>
         
         </Schema>
     </edmx:ConceptualModels>
@@ -4872,18 +4874,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
                 <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
                 <ScalarProperty Name="PrintingServiceID" ColumnName="PrintingServiceID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_Client">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Client">
-              <MappingFragment StoreEntitySet="BB_Proposal_Client">
-                <ScalarProperty Name="IsPublicSector" ColumnName="IsPublicSector" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="IsNewClient" ColumnName="IsNewClient" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5952,6 +5942,19 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="IDX" ColumnName="IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Client">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Client">
+              <MappingFragment StoreEntitySet="BB_Proposal_Client">
+                <ScalarProperty Name="IsGMA" ColumnName="IsGMA" />
+                <ScalarProperty Name="IsPublicSector" ColumnName="IsPublicSector" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="IsNewClient" ColumnName="IsNewClient" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

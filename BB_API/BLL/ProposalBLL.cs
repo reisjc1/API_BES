@@ -937,6 +937,7 @@ namespace WebApplication1.BLL
                     cliente1.ProposalID = ProposalID;
                     cliente1.Name = p.Draft.client.Name;
                     cliente1.IsPublicSector = p.Draft.client.isPublicSector;
+                    cliente1.IsGMA = p.Draft.client.isGMA;
                     db.BB_Proposal_Client.Add(cliente1);
                     try
                     {
@@ -1416,12 +1417,14 @@ namespace WebApplication1.BLL
                     err.ProposalObj.Draft.client = c;
                     err.ProposalObj.Draft.client.isNewClient = cli.IsNewClient;
                     err.ProposalObj.Draft.client.isPublicSector = cli.IsPublicSector;
+                    err.ProposalObj.Draft.client.isGMA = cli.IsGMA;
                 }
                 else
                 {
                     err.ProposalObj.Draft.client.accountnumber = "";
                     err.ProposalObj.Draft.client.isNewClient = false;
                     err.ProposalObj.Draft.client.isPublicSector = false;
+                    err.ProposalObj.Draft.client.isGMA = false;
                 }
 
                 //PRINTING SERVICES 
@@ -2461,6 +2464,7 @@ namespace WebApplication1.BLL
                     cliente1.ProposalID = ProposalID;
                     cliente1.Name = p.Draft.client.Name;
                     cliente1.IsPublicSector = p.Draft.client.isPublicSector;
+                    cliente1.IsGMA = p.Draft.client.isGMA;
                     db.BB_Proposal_Client.Add(cliente1);
                     try
                     {

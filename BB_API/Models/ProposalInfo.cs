@@ -262,6 +262,7 @@ namespace WebApplication1.Models
         public string GMA { get; set; }
         public bool? isNewClient { get; set; }
         public bool? isPublicSector { get; set; }
+        public bool? isGMA { get; set; }
         public int? modeId { get; set; }
 
         public string NIF { get; set; }

@@ -82,7 +82,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Product_Unit> BB_Product_Unit { get; set; }
         public virtual DbSet<BB_Proposal_Consignments> BB_Proposal_Consignments { get; set; }
         public virtual DbSet<BB_Proposal_PrintingServiceValidationRequest> BB_Proposal_PrintingServiceValidationRequest { get; set; }
-        public virtual DbSet<BB_Proposal_Client> BB_Proposal_Client { get; set; }
         public virtual DbSet<BB_VVA> BB_VVA { get; set; }
         public virtual DbSet<BB_PrintingServices_NoVolume> BB_PrintingServices_NoVolume { get; set; }
         public virtual DbSet<BB_Proposal_Upturn> BB_Proposal_Upturn { get; set; }
@@ -141,5 +140,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
         public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
+        public virtual DbSet<BB_Proposal_Client> BB_Proposal_Client { get; set; }
     }
 }

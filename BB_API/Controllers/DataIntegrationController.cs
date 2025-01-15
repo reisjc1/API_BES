@@ -335,7 +335,33 @@ namespace WebApplication1.Controllers
             return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
         }
 
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("FilteredClientsAccountNumber")]
+        public List<BB_Clientes_> FilteredClientsAccountNumber(string accountNumber)
+        {
+            //if(accountNumber != null || accountNumber != "")
+            //{
+                return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.accountnumber.Contains(accountNumber)).ToList();
+            //}
 
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("FilteredClientsNIF")]
+        public List<BB_Clientes_> FilteredClientsNIF(string nif)
+        {
+            
+            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.NIF.Contains(nif)).ToList();
+           
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("FilteredClientsClientOwner")]
+        public List<BB_Clientes_> FilteredClientsClientOwner(string clientOwner)
+        {
+            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.Owner.Contains(clientOwner)).ToList();
+
+        }
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("Equipamentos")]
