@@ -28,8 +28,8 @@ namespace WebApplication1.Models.SetupXML.XML
                 List<OrdersPartners> sdDocOrdersPartners = new List<OrdersPartners>();
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
-
+                    //List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
+                    BB_Equipamentos  maquina = new BB_Equipamentos();
                     LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal d = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault();
                     //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
@@ -61,8 +61,13 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             if (itemdoBsket.Group != groupNumber)
                             {
-                                groups.Add(itemdoBsket);
-                                groupNumber = itemdoBsket.Group;
+                                maquina = db.BB_Equipamentos.Where(m => m.CodeRef == itemdoBsket.CodeRef).FirstOrDefault();
+                                
+                                if(maquina != null)
+                                {
+                                    groups.Add(itemdoBsket);
+                                    groupNumber = itemdoBsket.Group;
+                                }
                             }
                         }
 
@@ -390,110 +395,110 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
 
                             if (activePS.BWVolume > 0 && activePS.CVolume > 0)
-                        {
-                            mATNR = "TOCO";
-                            kLFN = "2";
-                            if (activePS.GlobalClickNoVolume != null)
                             {
-                                kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickC, 5).ToString().Replace(",", ".");
-                            }
-                            else if (activePS.ClickPerModel != null)
-                            {
-                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
-                                if (pSM != null)
+                                mATNR = "TOCO";
+                                kLFN = "2";
+                                if (activePS.GlobalClickNoVolume != null)
                                 {
-                                    kBETR = Math.Round((double)pSM.ApprovedC, 5).ToString().Replace(",", ".");
+                                    kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickC, 5).ToString().Replace(",", ".");
                                 }
-                                //kBETR = clickPerModel
-                            }
-                            else if (activePS.GlobalClickVVA != null)
-                            {
-                                kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
-                                copiasIncludias = activePS.CVolume;
-                                kSTBM = copiasIncludias.ToString();
-                            }
+                                else if (activePS.ClickPerModel != null)
+                                {
+                                    BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    if (pSM != null)
+                                    {
+                                        kBETR = Math.Round((double)pSM.ApprovedC, 5).ToString().Replace(",", ".");
+                                    }
+                                    //kBETR = clickPerModel
+                                }
+                                else if (activePS.GlobalClickVVA != null)
+                                {
+                                    kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
+                                    copiasIncludias = activePS.CVolume;
+                                    kSTBM = copiasIncludias.ToString();
+                                }
 
-                            collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
-                            {
-                                SD_DOC = orderDoc,
-                                MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
-                                KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
-                                DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
-                                DATBI = "99991231", // data de até quando é válido -- deixar default
-                                KSTBM = kSTBM, //copias incluidas 
-                                KBETR = kBETR //preço do excedente 
-                            });
+                                collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                                {
+                                    SD_DOC = orderDoc,
+                                    MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                    KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                    DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                    DATBI = "99991231", // data de até quando é válido -- deixar default
+                                    KSTBM = kSTBM, //copias incluidas 
+                                    KBETR = kBETR //preço do excedente 
+                                });
 
-                            mATNR = "TOBW";
-                            kLFN = "1";
+                                mATNR = "TOBW";
+                                kLFN = "1";
                             
-                            if (activePS.GlobalClickNoVolume != null)
-                            {
-                                kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickBW, 5).ToString().Replace(",", ".");
-                            }
-                            else if (activePS.ClickPerModel != null)
-                            {
-                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
-                                if (pSM != null)
+                                if (activePS.GlobalClickNoVolume != null)
                                 {
-                                    kBETR = Math.Round((double)pSM.ApprovedBW, 5).ToString().Replace(",", ".");
+                                    kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickBW, 5).ToString().Replace(",", ".");
                                 }
+                                else if (activePS.ClickPerModel != null)
+                                {
+                                    BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    if (pSM != null)
+                                    {
+                                        kBETR = Math.Round((double)pSM.ApprovedBW, 5).ToString().Replace(",", ".");
+                                    }
+                                }
+                                else if (activePS.GlobalClickVVA != null)
+                                {
+                                    kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
+                                    copiasIncludias = activePS.BWVolume;
+                                    kSTBM = copiasIncludias.ToString();
+                                }
+
+
+                                collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                                {
+                                    SD_DOC = orderDoc,
+                                    MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                    KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                    DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                    DATBI = "99991231", // data de até quando é válido -- deixar default
+                                    KSTBM = kSTBM, //copias incluidas 
+                                    KBETR = kBETR //preço do excedente 
+                                });
+
                             }
-                            else if (activePS.GlobalClickVVA != null)
-                            {
-                                kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
-                                copiasIncludias = activePS.BWVolume;
-                                kSTBM = copiasIncludias.ToString();
-                            }
-
-
-                            collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
-                            {
-                                SD_DOC = orderDoc,
-                                MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
-                                KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
-                                DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
-                                DATBI = "99991231", // data de até quando é válido -- deixar default
-                                KSTBM = kSTBM, //copias incluidas 
-                                KBETR = kBETR //preço do excedente 
-                            });
-
-                        }
                             if (activePS.BWVolume > 0 && activePS.CVolume == 0)
-                        {
-                            mATNR = "TOBW";
-                            kLFN = "1";
-                            if (activePS.GlobalClickNoVolume != null)
                             {
-                                kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickBW,5).ToString().Replace(",", ".");
-                            }
-                            else if (activePS.ClickPerModel != null)
-                            {
-                                BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
-                                if (pSM != null)
+                                mATNR = "TOBW";
+                                kLFN = "1";
+                                if (activePS.GlobalClickNoVolume != null)
                                 {
-                                    kBETR = Math.Round((double)pSM.ApprovedBW, 5).ToString().Replace(",", ".");
+                                    kBETR = Math.Round(activePS.GlobalClickNoVolume.GlobalClickBW,5).ToString().Replace(",", ".");
                                 }
-                            }
-                            else if (activePS.GlobalClickVVA != null)
-                            {
-                                kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
-                            }
+                                else if (activePS.ClickPerModel != null)
+                                {
+                                    BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    if (pSM != null)
+                                    {
+                                        kBETR = Math.Round((double)pSM.ApprovedBW, 5).ToString().Replace(",", ".");
+                                    }
+                                }
+                                else if (activePS.GlobalClickVVA != null)
+                                {
+                                    kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
+                                }
 
-                            copiasIncludias = activePS.BWVolume + activePS.CVolume;
-                            kSTBM = copiasIncludias.ToString();
+                                copiasIncludias = activePS.BWVolume + activePS.CVolume;
+                                kSTBM = copiasIncludias.ToString();
 
-                            collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
-                            {
-                                SD_DOC = orderDoc,
-                                MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
-                                KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
-                                DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
-                                DATBI = "99991231", // data de até quando é válido -- deixar default
-                                //KSTBM = kSTBM, //copias incluidas 
-                                KBETR = kBETR //preço do excedente 
-                            });
-                        }
+                                collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                                {
+                                    SD_DOC = orderDoc,
+                                    MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                    KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                    DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                    DATBI = "99991231", // data de até quando é válido -- deixar default
+                                    KSTBM = activePS.GlobalClickVVA != null ? kSTBM : "0", //copias incluidas 
+                                    KBETR = kBETR //preço do excedente 
+                                });
+                            }
 
                         }
 
