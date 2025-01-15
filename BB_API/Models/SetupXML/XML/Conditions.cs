@@ -216,7 +216,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             //double? opsPvp = (ops.PVP * ops.TotalMonths) - opsPack.PVP;
                             //double? opsPvpLine2 = opsPack.PVP;
-                            double? opsPvp = (ops.PVP * ops.TotalMonths);
+                            double? opsPvp = (ops.PVP * ops.TotalMonths* ops.Quantity);
 
                             //bool condExists = false;
                             foreach (var cond in conditionsPvp)
