@@ -413,7 +413,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                                 else if (activePS.GlobalClickVVA != null)
                                 {
-                                    kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
+                                    kBETR = Math.Round(activePS.GlobalClickVVA.CExcessPVP, 5).ToString().Replace(",", ".");
                                     copiasIncludias = activePS.CVolume;
                                     kSTBM = copiasIncludias.ToString();
                                 }
@@ -446,7 +446,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                                 else if (activePS.GlobalClickVVA != null)
                                 {
-                                    kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
+                                    kBETR = Math.Round(activePS.GlobalClickVVA.BWExcessPVP, 5).ToString().Replace(",", ".");
                                     copiasIncludias = activePS.BWVolume;
                                     kSTBM = copiasIncludias.ToString();
                                 }
@@ -482,7 +482,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                                 else if (activePS.GlobalClickVVA != null)
                                 {
-                                    kBETR = Math.Round(activePS.GlobalClickVVA.PVP, 5).ToString().Replace(",", ".");
+                                    kBETR = Math.Round(activePS.GlobalClickVVA.BWExcessPVP, 5).ToString().Replace(",", ".");
                                 }
 
                                 copiasIncludias = activePS.BWVolume + activePS.CVolume;
