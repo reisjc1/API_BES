@@ -1420,9 +1420,12 @@ namespace WebApplication1.Controllers
                     throw new Exception("No data found.");
                 }
 
+                //obter o Type do primeiro registo da lista
                 Type tipo = commission_lst.FirstOrDefault().GetType();
+                //obter todas as propriedades do Type (por exemplo nomes das colunas da bd)
                 PropertyInfo[] propriedades = tipo.GetProperties();
 
+                //criar uma app Excel
                 excelApp = new Application();
                 workbook = excelApp.Workbooks.Add(XlWBATemplate.xlWBATWorksheet);
                 worksheet = (Worksheet)workbook.Worksheets[1];
