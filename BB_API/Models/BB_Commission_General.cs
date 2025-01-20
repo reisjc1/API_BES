@@ -15,34 +15,34 @@ namespace WebApplication1.Models
     public partial class BB_Commission_General
     {
         public int ID { get; set; }
-        public string Agencia { get; set; }
+        public string Delegacion { get; set; }
         public string Codigo_Agencia { get; set; }
         public string Sales_Group { get; set; }
-        public string Numero_Vendedor { get; set; }
-        public string Vendedor { get; set; }
-        public string Numero_Manager { get; set; }
+        public string N_Trab { get; set; }
+        public string Comercial { get; set; }
         public string Manager { get; set; }
-        public Nullable<int> Ano_Mes_CN { get; set; }
+        public string Manager_Nombre { get; set; }
+        public Nullable<int> Production { get; set; }
         public Nullable<int> Periodo_Solicitado { get; set; }
         public string HR_Comentario { get; set; }
         public Nullable<bool> Invoice_List { get; set; }
         public string BB_Numero { get; set; }
-        public string BB_Numero_Entero { get; set; }
-        public Nullable<int> SAP_Numero { get; set; }
-        public string Numero_Cliente { get; set; }
+        public string Pedido { get; set; }
+        public Nullable<int> Pedido_SAP { get; set; }
         public string Cliente { get; set; }
+        public string Nombre_Cliente { get; set; }
         public string Facturación { get; set; }
-        public Nullable<double> Cifra_Negocio { get; set; }
-        public Nullable<double> Margen_Total { get; set; }
-        public Nullable<double> Margen_Total_Nueva { get; set; }
-        public Nullable<double> Comision_Sobre_Margen { get; set; }
-        public Nullable<double> Comision_Mantenimiento { get; set; }
-        public Nullable<double> Comisiones { get; set; }
+        public Nullable<double> CN_Total { get; set; }
+        public Nullable<double> GP_Hard { get; set; }
+        public Nullable<double> GP_Total { get; set; }
+        public Nullable<double> Comision { get; set; }
+        public Nullable<double> Comision_Copias { get; set; }
+        public Nullable<double> Total_Comision { get; set; }
         public Nullable<double> Margen { get; set; }
         public Nullable<double> CN_HW { get; set; }
         public Nullable<double> Margen_HW { get; set; }
         public Nullable<double> Margen_HW_Nuevo { get; set; }
-        public Nullable<double> CN_Office_HW { get; set; }
+        public Nullable<double> CN_Hard { get; set; }
         public Nullable<double> Margen_Office_HW { get; set; }
         public Nullable<double> CN_PP_HW { get; set; }
         public Nullable<double> Margen_PP_HW { get; set; }
@@ -51,7 +51,7 @@ namespace WebApplication1.Models
         public Nullable<double> CN_ITS { get; set; }
         public Nullable<double> Margen_ITS { get; set; }
         public Nullable<double> CN_PRS { get; set; }
-        public Nullable<double> Margen_PRS { get; set; }
+        public Nullable<double> GP_PRS { get; set; }
         public Nullable<double> CN_MCS { get; set; }
         public Nullable<double> Margen_MCS { get; set; }
         public Nullable<double> CN_BPS { get; set; }
@@ -80,7 +80,7 @@ namespace WebApplication1.Models
         public string Tipo_Financiacion { get; set; }
         public string Metodo_Pago_Productos { get; set; }
         public string Metodo_Pago_Mantenimiento { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> Fecha_Operacion { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
@@ -107,8 +107,8 @@ namespace WebApplication1.Models
         public Nullable<double> GP_Total_Premios { get; set; }
         public string Usuario_Sharepoint { get; set; }
         public string Usuario_Sharepoint_Nombre { get; set; }
-        public string Numero_Manager_2 { get; set; }
         public string Manager_2 { get; set; }
+        public string Manager_Nombre_2 { get; set; }
         public string Calculo { get; set; }
         public string Percentage_GP { get; set; }
         public string Percentage_Comision { get; set; }
