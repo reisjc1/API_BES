@@ -84,5 +84,34 @@ namespace WebApplication1.Models
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
+        public string Area { get; set; }
+        public string Tipo_Cliente { get; set; }
+        public string GMA_10 { get; set; }
+        public string Observacion { get; set; }
+        public string Factura_SAP { get; set; }
+        public Nullable<System.DateTime> Fecha_Factura { get; set; }
+        public string Estado_Factura { get; set; }
+        public Nullable<System.DateTime> Fecha_Pago_Comision { get; set; }
+        public Nullable<System.DateTime> Fecha_Registro { get; set; }
+        public Nullable<double> CN_IMS_VSS { get; set; }
+        public Nullable<double> CN_MCS_BPS { get; set; }
+        public Nullable<double> CN_MRR { get; set; }
+        public Nullable<double> GP_IMS_VSS { get; set; }
+        public Nullable<double> GP_MCS_BPS { get; set; }
+        public Nullable<double> GP_MRR { get; set; }
+        public string Condicion { get; set; }
+        public Nullable<double> GP_HW_Premio { get; set; }
+        public Nullable<double> GP_IMS_VSS_Premio { get; set; }
+        public Nullable<double> GP_PRS_Premio { get; set; }
+        public Nullable<double> GP_MCS_BPS_Premio { get; set; }
+        public Nullable<double> GP_Total_Premios { get; set; }
+        public string Usuario_Sharepoint { get; set; }
+        public string Usuario_Sharepoint_Nombre { get; set; }
+        public string Numero_Manager_2 { get; set; }
+        public string Manager_2 { get; set; }
+        public string Calculo { get; set; }
+        public string Percentage_GP { get; set; }
+        public string Percentage_Comision { get; set; }
+        public string Incidencias { get; set; }
     }
 }

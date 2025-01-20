@@ -1367,6 +1367,37 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Logs = logFinal;
 
+                    // latest fields
+                    bb_commission_general.Area = "";
+                    bb_commission_general.Tipo_Cliente = "";
+                    bb_commission_general.GMA_10 = "";
+                    bb_commission_general.Observacion = "";
+                    bb_commission_general.Factura_SAP = "";
+                    bb_commission_general.Fecha_Factura = DateTime.Now;
+                    bb_commission_general.Estado_Factura = "";
+                    bb_commission_general.Fecha_Pago_Comision = DateTime.Now;
+                    bb_commission_general.Fecha_Registro = DateTime.Now;
+                    bb_commission_general.CN_IMS_VSS = 0;
+                    bb_commission_general.CN_MCS_BPS = 0;
+                    bb_commission_general.CN_MRR = 0;
+                    bb_commission_general.GP_IMS_VSS = 0;
+                    bb_commission_general.GP_MCS_BPS = 0;
+                    bb_commission_general.GP_MRR = 0;
+                    bb_commission_general.Condicion = "";
+                    bb_commission_general.GP_HW_Premio = 0;
+                    bb_commission_general.GP_IMS_VSS_Premio = 0;
+                    bb_commission_general.GP_PRS_Premio = 0;
+                    bb_commission_general.GP_MCS_BPS_Premio = 0;
+                    bb_commission_general.GP_Total_Premios = 0;
+                    bb_commission_general.Usuario_Sharepoint = "";
+                    bb_commission_general.Usuario_Sharepoint_Nombre = "";
+                    bb_commission_general.Numero_Manager_2 = "";
+                    bb_commission_general.Manager_2 = "";
+                    bb_commission_general.Calculo = "";
+                    bb_commission_general.Percentage_GP = "";
+                    bb_commission_general.Percentage_Comision = "";
+                    bb_commission_general.Incidencias = "";
+
                     // ----------------------------------------------------------------------------------------------------
 
                     List<BB_Commission_General> lastCommission = db.BB_Commission_General.Where(x => x.BB_Numero == proposalID.ToString()).ToList();
@@ -1438,7 +1469,7 @@ namespace WebApplication1.Controllers
                     { "SAP_Numero", "PEDIDO SAP" },
                     { "BB_Numero_Entero", "PEDIDO" },
                     { "Agencia", "DELEGACION" },
-                    { "Area", "Area" },
+                    { "Area", "AREA" },
                     { "CreatedDate","FECHA OPERACIÓN" },
                     { "Tipo_Operacion","TIPO OPERACIÓN" },
                     { "Tipo_Cliente","TIPO CLIENTE" },
@@ -1490,6 +1521,10 @@ namespace WebApplication1.Controllers
                     { "Es_GMA","ES GMA" },
                     { "CBB","CBB" },
                     { "Es_Prospecto","ES PROSPECTO" }
+
+
+                    //-----------------------------
+
 
                     //{ "Es_Doc_Share","" },
                     //{ "Es_Invoice_List","" },

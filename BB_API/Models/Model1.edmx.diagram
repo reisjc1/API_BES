@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="92e69cd63c354872a780272c018650b2" Name="Diagram1" ZoomLevel="82">
+      <Diagram DiagramId="92e69cd63c354872a780272c018650b2" Name="Diagram1" ZoomLevel="77">
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Acessories" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Bank_Bnp" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Consumables" Width="1.5" PointX="0.75" PointY="4.75" />
@@ -127,8 +127,8 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.WFA_FullDetails" Width="1.5" PointX="33.375" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_LocaisEnvio" Width="1.5" PointX="33.375" PointY="25.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" Width="1.5" PointX="24.375" PointY="33.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="34.375" PointY="4.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Client" Width="1.5" PointX="34.375" PointY="20.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="29.375" PointY="34.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
