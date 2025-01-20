@@ -1433,27 +1433,154 @@ namespace WebApplication1.Controllers
                 int line = 1;
                 int column = 1;
 
-                // Adicionar Cabeçalhos
-                foreach (PropertyInfo prop in propriedades)
+                var campoParaExcel = new Dictionary<string, string>
                 {
-                    string fieldName = prop.Name;
-                    worksheet.Cells[line, column] = fieldName;
+                    { "SAP_Numero", "PEDIDO SAP" },
+                    { "BB_Numero_Entero", "PEDIDO" },
+                    { "Agencia", "DELEGACION" },
+                    { "Area", "Area" },
+                    { "CreatedDate","FECHA OPERACIÓN" },
+                    { "Tipo_Operacion","TIPO OPERACIÓN" },
+                    { "Tipo_Cliente","TIPO CLIENTE" },
+                    { "GMA_10","GMA 10%" },
+                    { "Numero_Cliente", "CLIENTE" },
+                    { "Cliente", "NOMBRE CLIENTE" },
+                    { "Observacion","OBSERVACION" },
+                    { "Numero_Vendedor", "Nº TRAB" },
+                    { "Vendedor", "COMERCIAL" },
+                    { "Factura_SAP","FACTURA SAP" },
+                    { "Fecha_Factura","FECHA FACTURA" },
+                    { "Comision_Sobre_Margen", "COMISION" },
+                    { "Comision_Mantenimiento", "COMISION COPIAS" },
+                    { "Comisiones", "TOTAL COMISION" },
+                    { "Estado_Factura","ESTADO FACTURA" },
+                    { "Fecha_Pago_Comision","FECHA PAGO COMISION" },
+                    { "Fecha_Registro","FECHA REGISTRO" },
+                    { "Ano_Mes_CN", "PRODUCCION" },
+                    { "CN_Office_HW","CN HARD" },
+                    { "CN_IMS_VSS","CN IMS+VSS" },
+                    { "CN_PRS","CN PRS" },
+                    { "CN_MCS_BPS","CN MCS+BPS" },
+                    { "CN_MRR","CN MRR" },
+                    { "Cifra_Negocio", "CN TOTAL" },
+                    { "Margen_Total", "GP HARD" },
+                    { "GP_IMS_VSS","GP IMS+VSS" },
+                    { "Margen_PRS","GP PRS" },
+                    { "GP_MCS_BPS","GP MCS+BPS" },
+                    { "GP_MRR","GP MRR" },
+                    { "Margen_Total_Nueva", "GP TOTAL" },
+                    { "Condicion","CONDICION" },
+                    { "GP_HW_Premio","GP HW PREMIO" },
+                    { "GP_IMS_VSS_Premio","GP IMS+VSS PREMIO" },
+                    { "GP_PRS_Premio","GP PRS PREMIO" },
+                    { "GP_MCS_BPS_Premio","GP MCS+BPS PREMIO" },
+                    { "GP_Total_Premios","GP TOTAL PREMIOS" },
+                    { "Usuario_Sharepoint","USUARIO SHAREPOINT" },
+                    { "Usuario_Sharepoint_Nombre","USUARIO SHAREPOINT NOMBRE" },
+                    { "Numero_Manager", "MANAGER" },
+                    { "Manager", "MANAGER NOMBRE" },
+                    { "Numero_Manager_2", "MANAGER2" },
+                    { "Manager_2", "MANAGER2 NOMBRE" },
+                    { "Calculo","CALCULO" },
+                    { "Percentage_GP","% GP" },
+                    { "Percentage_Comision","% COMISION" },
+                    { "Incidencias","INCIDENCIAS" },
+                    { "Logs","LOGS" },
+                    { "Es_Segunda_Mano","ES SEGUNDA MANO" },
+                    { "Es_GMA","ES GMA" },
+                    { "CBB","CBB" },
+                    { "Es_Prospecto","ES PROSPECTO" }
+
+                    //{ "Es_Doc_Share","" },
+                    //{ "Es_Invoice_List","" },
+                    //{ "ID", "Identificador" },
+                    //{ "Codigo_Agencia", "Código da Agência" },
+                    //{ "Sales_Group", "Grupo de Vendas" },
+                    //{ "Periodo_Solicitado", "Período Solicitado" },
+                    //{ "HR_Comentario", "Comentário RH" },
+                    //{ "Invoice_List", "Lista de Faturas" },
+                    //{ "BB_Numero", "Número BB" },
+                    //{ "Facturación", "Faturamento" },
+                    //{ "Margen", "Margem" },
+                    //{ "CN_HW","" },
+                    //{ "Margen_HW","" },
+                    //{ "Margen_HW_Nuevo","" },
+                    //{ "Margen_Office_HW","" },
+                    //{ "CN_PP_HW","" },
+                    //{ "Margen_PP_HW","" },
+                    //{ "CN_IP_HW","" },
+                    //{ "Margen_IP_HW","" },
+                    //{ "CN_ITS","" },
+                    //{ "Margen_ITS","" },
+                    //{ "CN_MCS","" },
+                    //{ "Margen_MCS","" },
+                    //{ "CN_BPS","" },
+                    //{ "Margen_BPS","" },
+                    //{ "CN_IMS","" },
+                    //{ "Margen_IMS","" },
+                    //{ "CN_WPH","" },
+                    //{ "Margen_WPH","" },
+                    //{ "CN_Mobotix","" },
+                    //{ "Margen_Mobotix","" },
+                    //{ "Pagado","" },
+                    //{ "Controlado","" },
+                    //{ "Comisionado","" },
+                    //{ "Incidencia","" },
+                    //{ "Excluido","" },
+                    //{ "Support_BEU","" },
+                    //{ "Numero_Cliente_SAP","" },
+                    //{ "Tipo_Financiacion","" },
+                    //{ "Metodo_Pago_Productos","" },
+                    //{ "Metodo_Pago_Mantenimiento","" },
+                    //{ "CreatedBy","" },
+                    //{ "ModifiedDate","" },
+                    //{ "ModifiedBy","" }
+                };
+
+
+                // Adicionar cabeçalhos no Excel a partir do dicionário
+                foreach (var campo in campoParaExcel)
+                {
+                    // campo.Key é o nome original do campo
+                    // campo.Value é o nome que será exibido no Excel
+                    worksheet.Cells[line, column] = campo.Value;
                     column++;
                 }
 
+
                 // Adicionar dados
                 line++;
+
                 foreach (var commission in commission_lst)
                 {
                     column = 1;
-                    foreach (PropertyInfo prop in propriedades)
+                    foreach (var campo in campoParaExcel) // Itera sobre o dicionário
                     {
-                        object value = prop.GetValue(commission);
-                        worksheet.Cells[line, column] = value;
+                        // Obtém a propriedade correspondente à chave do dicionário
+                        var prop = propriedades.FirstOrDefault(p => p.Name == campo.Key);
+
+                        if (prop != null)
+                        {
+                            // Obtém o valor da propriedade para o objeto atual
+                            object value = prop.GetValue(commission);
+                            worksheet.Cells[line, column] = value;
+                        }
                         column++;
                     }
                     line++;
                 }
+
+                //foreach (var commission in commission_lst)
+                //{
+                //    column = 1;
+                //    foreach (PropertyInfo prop in propriedades)
+                //    {
+                //        object value = prop.GetValue(commission);
+                //        worksheet.Cells[line, column] = value;
+                //        column++;
+                //    }
+                //    line++;
+                //}
 
                 // Definir altura padrão para todas as linhas
                 worksheet.Rows.RowHeight = worksheet.StandardHeight;
