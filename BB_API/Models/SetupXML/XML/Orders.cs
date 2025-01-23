@@ -54,7 +54,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     foreach (var deliveryLocation in dl)
                     {
                         int? groupNumber = null;
-                        List<BB_Proposal_ItemDoBasket> groups = new List<BB_Proposal_ItemDoBasket>();
+                        Dictionary<BB_Proposal_ItemDoBasket, int> groups = new Dictionary<BB_Proposal_ItemDoBasket, int>();
+                        //List<BB_Proposal_ItemDoBasket> groups = new List<BB_Proposal_ItemDoBasket>();
                         List<BB_Proposal_ItemDoBasket> itemsDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliveryLocation.IDX).OrderBy(x => x.Group).ToList();
                      
                         foreach (var itemdoBsket in itemsDoBasket)
@@ -65,14 +66,26 @@ namespace WebApplication1.Models.SetupXML.XML
                                 
                                 if(maquina != null)
                                 {
-                                    groups.Add(itemdoBsket);
+
+                                    groups.Add(itemdoBsket,1);
                                     groupNumber = itemdoBsket.Group;
                                 }
+                                else
+                                {
+
+                                    if(itemdoBsket.Description.Contains("MAIN MATERIAL"))
+                                    {
+                                        groups.Add(itemdoBsket,2);
+                                        groupNumber = itemdoBsket.Group;
+                                    }
+                                }
+
+
                             }
                         }
 
 
-                        foreach (var order in groups)
+                        foreach (var order in groups.Where(x => x.Value == 1))
                         {
 
                             var collectionOrderItems = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>();
@@ -85,15 +98,16 @@ namespace WebApplication1.Models.SetupXML.XML
                             string orderDoc = $"O_L{randomNumberOrderString}_{contractIndexString}_{randomLetterNunber}";
 
                             OrdersPartners sdDocOrderPartner = new OrdersPartners();
-                            sdDocOrderPartner.OrderId = order.ID;
+                            sdDocOrderPartner.OrderId = order.Key.ID;
                             sdDocOrderPartner.Sd_Doc = orderDoc;
                             sdDocOrdersPartners.Add(sdDocOrderPartner);
                             bool firstItemGroup = true;
 
+                            //Utilizado no Z1ZVOE_ORDERS
                             string contractItm = contractIndexString + "0";
-                            List<BB_Proposal_ItemDoBasket> group = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliveryLocation.IDX && x.Group == order.Group).ToList();
+                            List<BB_Proposal_ItemDoBasket> group = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliveryLocation.IDX && x.Group == order.Key.Group).ToList();
                             
-                            int itm_number = 30;
+                            int itm_number = 10;
                             bool isMachine = false;
                             foreach (var item in group)
                             {
@@ -108,14 +122,15 @@ namespace WebApplication1.Models.SetupXML.XML
                                     collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                                     {
                                         SD_DOC = orderDoc,
-                                        ITM_NUMBER = "20", // contractItm,
+                                        ITM_NUMBER = itm_number.ToString(), // contractItm,
                                         MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
-                                        REQ_QTY = order.Qty.ToString(),
+                                        REQ_QTY = item.Qty.ToString(),
                                         MODEL_YN = "Y" // Perguntar ao Luis
                                     });
 
                                     bundelCodeRef = item.CodeRef;
                                     firstItemGroup = false;
+                                    itm_number = itm_number + 10;
                                 }
                                 else
                                 {
@@ -124,12 +139,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                         collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                                         {
                                             SD_DOC = orderDoc,
-                                            ITM_NUMBER = "20", // contractItm,
+                                            ITM_NUMBER = itm_number.ToString(), // contractItm,
                                             MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
-                                            REQ_QTY = order.Qty.ToString(),
+                                            REQ_QTY = item.Qty.ToString(),
                                             MODEL_YN = "Y" // Perguntar ao Luis
                                         });
-
+                                        bundelCodeRef = item.CodeRef;
                                     }
                                     else
                                     {
@@ -138,7 +153,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             SD_DOC = orderDoc,
                                             ITM_NUMBER = itm_number.ToString(), // contractItm,
                                             MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
-                                            REQ_QTY = order.Qty.ToString(),
+                                            REQ_QTY = item.Qty.ToString(),
                                             MODEL_YN = "Y" // Perguntar ao Luis
                                         });
 
@@ -177,7 +192,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliveryLocation.DeliveryContact).FirstOrDefault();
 
-                            collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.CodeRef);
+                            collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.Key.CodeRef);
 
                             //List<Accessories> accessories = GetAcesseries("A63R021");
                             if (dLClient != null)
@@ -244,7 +259,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 SD_DOC = orderDoc,
                                 DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
                                 REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
-                                REF_1 = order.Name, //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
+                                REF_1 = order.Key.Name, //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
                                 PURCH_NO_C = d.CRM_QUOTE_ID,  //Nome interno da oferta
                                 SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
                                 PMNTTRMS = "303E", //TODO: manter  || FinancingPaymentMethods.
@@ -256,6 +271,158 @@ namespace WebApplication1.Models.SetupXML.XML
                                 Z1ZVOE_ORDER_CONTACT = collectionOrdersContact,
                                 Z1ZVOE_ORDER_ITEMS = collectionOrderItems,
                                 Z1ZVOE_CLICK_PRICES = collectionOrderCLickPrices,
+                                Z1ZVOE_FINANCE = collectionOrdersFinance
+
+
+                            });
+
+
+                            index++;
+                        }
+
+                        foreach (var order in groups.Where(x => x.Value == 2))
+                        {
+
+                            var collectionOrderItems = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>();
+                            var collectionOrdersContact = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT>(); //Informação igual 
+                            var collectionOrdersFinance = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE>();
+                            //var collectionOrderCLickPrices = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES>();
+                            string contractIndexString = index.ToString();
+                            string bundelCodeRef = "";
+
+                            string orderDoc = $"O_L{randomNumberOrderString}_{contractIndexString}_{randomLetterNunber}";
+
+                            OrdersPartners sdDocOrderPartner = new OrdersPartners();
+                            sdDocOrderPartner.OrderId = order.Key.ID;
+                            sdDocOrderPartner.Sd_Doc = orderDoc;
+                            sdDocOrdersPartners.Add(sdDocOrderPartner);
+                            bool firstItemGroup = true;
+
+                            //Utilizado no Z1ZVOE_ORDERS
+                            string contractItm = contractIndexString + "0";
+                            List<BB_Proposal_ItemDoBasket> group = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliveryLocation.IDX && x.Group == order.Key.Group).ToList();
+
+                            int itm_number = 20;
+                            bool isMachine = false;
+                            foreach (var item in group)
+                            {
+                                //BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+
+
+                                //BB_Proposal_ItemDoBasket lastItemGroup = group.Last();
+
+                                if (item.Description.Contains("MAIN MATERIAL"))
+                                {
+                                    collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                    {
+                                        SD_DOC = orderDoc,
+                                        ITM_NUMBER = "10", // contractItm,
+                                        MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
+                                        REQ_QTY = item.Qty.ToString(),
+                                        MODEL_YN = "Y" // Perguntar ao Luis
+                                    });
+
+                                    bundelCodeRef = item.CodeRef;
+                                    itm_number = itm_number + 10;
+                                }
+                                else
+                                {
+                                    collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                    {
+                                        SD_DOC = orderDoc,
+                                        ITM_NUMBER = itm_number.ToString(), // contractItm,
+                                        MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
+                                        REQ_QTY = item.Qty.ToString(),
+                                        MODEL_YN = "Y" // Perguntar ao Luis
+                                    });
+
+                                    itm_number = itm_number + 10;
+                                }
+                            }
+                            
+
+                            BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliveryLocation.DeliveryContact).FirstOrDefault();
+
+                            //collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.Key.CodeRef);
+
+                            //List<Accessories> accessories = GetAcesseries("A63R021");
+                            if (dLClient != null)
+                            {
+                                collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                {
+                                    SD_DOC = orderDoc,
+                                    APLF_NAME = dLClient.Name + "" + dLClient.Surname, //"M. LUIS ALVAREZ",
+                                    APLF_PHON = dLClient.Tel.ToString(),       //"66666666",
+                                    APLF_OPEN = deliveryLocation.Schedule,//"9h 17h",
+                                    APLF_INFO = deliveryLocation.Floor + "" + deliveryLocation.Department + "" + deliveryLocation.Building + "" + deliveryLocation.Room,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                    APLF_INFO2 = deliveryLocation.City,//"Asc: Oui -Connexion: PRINTFLEET",
+
+                                });
+                            }
+                            else
+                            {
+                                collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                {
+                                    SD_DOC = orderDoc,
+                                    APLF_NAME = "M. LUIS ALVAREZ",
+                                    APLF_PHON = "66666666",
+                                    APLF_OPEN = "9h 17h",
+                                    APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                    APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
+                                    APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
+                                });
+                            }
+                            //if (financing == "AL")
+                            //{
+                            var LEAS_ZTERM = "";
+                            if (pf.Months == 60)
+                            {
+                                LEAS_ZTERM = "E30D";
+                            }
+                            else if (pf.Months == 48 || pf.Months == 0)
+                            {
+                                LEAS_ZTERM = "E60D";
+
+                            }
+                            collectionOrdersFinance.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE
+                            {
+                                SD_DOC = orderDoc,
+                                FINANCE_TYPE = financing,
+                                LEAS_KUNNR = ct.CompanyCode,
+                                LEAS_LVTNR = pf.AgreementNumber,
+                                LEAS_LFAKT = "1",
+                                LEAS_ZTERM = LEAS_ZTERM,
+                                LEAS_LEABG = String.Format("{0:yyyyMMdd}", pf.DateApproval),
+                                KBETR1 = "",
+                                KBETR2 = "",
+                                LEAS_LEPER = "",
+                                LEAS_LRYTH = "1",
+                                LEAS_LKAUP = "2.5",
+                                BILL_TO = d.ClientAccountNumber
+                            });
+                            //}
+
+                            collectionOrderItems = new Collection<WebApplication1.Models.SetupXML.XSD.Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>(collectionOrderItems.OrderBy(x => x.ITM_NUMBER).ToList());
+
+                            DateTime currentDate = DateTime.Now;
+                            string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
+                            collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
+                            {
+                                SD_DOC = orderDoc,
+                                DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
+                                REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
+                                REF_1 = order.Key.Name, //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
+                                PURCH_NO_C = d.CRM_QUOTE_ID,  //Nome interno da oferta
+                                SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
+                                PMNTTRMS = "303E", //TODO: manter  || FinancingPaymentMethods.
+                                CONTRACT_DOC = contractDoc, //$"C_{c.ID}_1_{randomLetterNunber}",   //contractDoc,
+                                CONTRACT_ITM = contractItm, // add +10 no foreach de orders  
+                                MACHINE = bundelCodeRef, //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
+                                ORDER_FLAG = "O1", //TODO: MANTER ESTE VALOR;
+                                LINKING_PIN = proposalId.ToString(),
+                                Z1ZVOE_ORDER_CONTACT = collectionOrdersContact,
+                                Z1ZVOE_ORDER_ITEMS = collectionOrderItems,
+                                //Z1ZVOE_CLICK_PRICES = collectionOrderCLickPrices,
                                 Z1ZVOE_FINANCE = collectionOrdersFinance
 
 

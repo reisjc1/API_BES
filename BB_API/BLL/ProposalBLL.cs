@@ -2410,7 +2410,7 @@ namespace WebApplication1.BLL
                                             Description = m.Description,
                                             PrintingServiceID = newPS.ID,
                                             Quantity = m.Qty,
-                                            ApprovedBW = m.ClickPriceC,
+                                            ApprovedBW = m.ClickPriceBW,
                                             ApprovedC = m.ClickPriceC,
                                         };
                                         db.BB_PrintingService_Machines.Add(machine);

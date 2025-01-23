@@ -98,6 +98,7 @@ namespace WebApplication1.BLL
                                     ItemGroup group1 = new ItemGroup();
                                     group1.CodeRef = item.CodeRef;
                                     group1.BundleRef = true;
+                                    group1.Qty = item.Qty;
 
                                     Bundles.Items.Add(group1);
 
@@ -109,6 +110,7 @@ namespace WebApplication1.BLL
                                     ItemGroup group2 = new ItemGroup();
                                     group2.CodeRef = item.CodeRef;
                                     group2.BundleRef = false;
+                                    group2.Qty = item.Qty;
                                     Bundles.Items.Add(group2);
                                 }
 
@@ -133,6 +135,8 @@ namespace WebApplication1.BLL
         {
             public string CodeRef { get; set; }
             public bool BundleRef { get; set; }
+            public int? Qty { get; set; }
         }
+        
     }
 }
