@@ -17,8 +17,8 @@ namespace WebApplication1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public BB_Proposal()
         {
-            this.BB_Proposal_OPSManage = new HashSet<BB_Proposal_OPSManage>();
             this.BB_Proposal_OPSImplement = new HashSet<BB_Proposal_OPSImplement>();
+            this.BB_Proposal_OPSManage = new HashSet<BB_Proposal_OPSManage>();
         }
     
         public int ID { get; set; }
@@ -51,10 +51,11 @@ namespace WebApplication1.Models
         public string AccordNumber { get; set; }
         public string ContractNumberPai { get; set; }
         public Nullable<System.DateTime> DataFechoContracto { get; set; }
+        public Nullable<int> Pedido_SAP { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BB_Proposal_OPSManage> BB_Proposal_OPSManage { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BB_Proposal_OPSManage> BB_Proposal_OPSManage { get; set; }
     }
 }

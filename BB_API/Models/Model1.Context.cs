@@ -108,7 +108,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_DeliveryContactsInfo> BB_DeliveryContactsInfo { get; set; }
         public virtual DbSet<RD_AddressAcronyms> RD_AddressAcronyms { get; set; }
         public virtual DbSet<BB_Proposal_ItemDoBasket> BB_Proposal_ItemDoBasket { get; set; }
-        public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
         public virtual DbSet<BB_RD_WFA_BU> BB_RD_WFA_BU { get; set; }
         public virtual DbSet<BB_RD_WFA_Condition> BB_RD_WFA_Condition { get; set; }
         public virtual DbSet<BB_RD_WFA_Condition_Type> BB_RD_WFA_Condition_Type { get; set; }
@@ -141,5 +140,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_Client> BB_Proposal_Client { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
+        public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
     }
 }

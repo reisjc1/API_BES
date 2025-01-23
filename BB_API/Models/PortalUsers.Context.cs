@@ -25,9 +25,9 @@ namespace WebApplication1.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<KM_UserRole> KM_UserRole { get; set; }
         public virtual DbSet<AspNetUserRoles_KM> AspNetUserRoles_KM { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
     }
 }
