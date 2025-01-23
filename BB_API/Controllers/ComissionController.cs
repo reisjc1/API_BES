@@ -22,6 +22,7 @@ using WebApplication1.BLL;
 using WebApplication1.Models;
 using WebApplication1.Models.ViewModels;
 using WebGrease.Css.Ast;
+using static Microsoft.Exchange.WebServices.Data.SearchFilter;
 
 namespace WebApplication1.Controllers
 {
@@ -804,6 +805,7 @@ namespace WebApplication1.Controllers
                 i.ProposalId = proposalID;
                 ActionResponse loadProposal = p1.LoadProposal(i);
 
+                var basket = loadProposal.ProposalObj.Draft.baskets.os_basket;
 
                 // --------------- PONTO 1 -------------->
 
@@ -818,16 +820,9 @@ namespace WebApplication1.Controllers
                     var profitDictionary = new Dictionary<string, GrossProfit>
                     {
                         { "HW", new GrossProfit(){ GPTotal = 0,} },
-                        { "IMS", new GrossProfit(){ GPTotal = 0,} },                   
-                        { "PRS", new GrossProfit(){ GPTotal = 0,} },                    
-                        { "OfficeHW", new GrossProfit(){ GPTotal = 0,} },
-                        { "PPHW", new GrossProfit(){ GPTotal = 0,} },
-                        { "IPHW", new GrossProfit(){ GPTotal = 0,} },
-                        { "ITS_MCS_BPS_IMS", new GrossProfit(){ GPTotal = 0,} },
-                        { "MCS", new GrossProfit(){ GPTotal = 0,} },
-                        { "BPS", new GrossProfit(){ GPTotal = 0,} },
-                        { "IMS_EXCLUDING", new GrossProfit(){ GPTotal = 0,} },
-                        { "WPH", new GrossProfit(){ GPTotal = 0,} },
+                        { "IMS_VSS", new GrossProfit(){ GPTotal = 0,} },
+                        { "PRS", new GrossProfit(){ GPTotal = 0,} },
+                        { "MCS_BPS", new GrossProfit(){ GPTotal = 0,} },                     
                         { "MOBOTIX", new GrossProfit(){ GPTotal = 0,} },
                     };
 
@@ -858,60 +853,23 @@ namespace WebApplication1.Controllers
                             }
                         }
 
-                        if (family.StartsWith("IMS"))
+                        if (family.Contains("IMS") || family.Contains("WPH"))
                         {
-                            profitDictionary["IMS"].GPTotal += amount ?? 0;
+                            profitDictionary["IMS_VSS"].GPTotal += amount ?? 0;
                         }
 
-                        if (family.StartsWith("PRS"))
+                        if (family.Contains("PRS"))
                         {
                             profitDictionary["PRS"].GPTotal += amount ?? 0;
                         }
 
-                        if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
+                        if (family.Contains("MCS") || family.Contains("BPS"))
                         {
-                            profitDictionary["OfficeHW"].GPTotal += amount ?? 0;
-                        }
-
-                        if (family.Contains("PPHW"))
-                        {
-                            profitDictionary["PPHW"].GPTotal += amount ?? 0;
-                        }
-
-                        if (family.Contains("IPHW"))
-                        {
-                            profitDictionary["IPHW"].GPTotal += amount ?? 0;
-                        }
-
-                        if (family.Contains("ITS") || family.Contains("MCS") || family.Contains("BPS") || family.Contains("IMS"))
-                        {
-                            profitDictionary["ITS_MCS_BPS_IMS"].GPTotal += amount ?? 0;
-                        }
-
-                        if (family.Contains("MCS"))
-                        {
-                            profitDictionary["MCS"].GPTotal += amount ?? 0;
-                        }
-
-                        if (family.Contains("BPS"))
-                        {
-                            profitDictionary["BPS"].GPTotal += amount ?? 0;
-                        }
-
-                        if (family.Contains("WPH"))
-                        {
-                            profitDictionary["WPH"].GPTotal += amount ?? 0;
-                        }
-
-                        // Familias IMS com o exclude da lista de codRefs Mobotix
-                        if (family.Contains("IMS") && !mobotixCodRefs.Contains(codeRef))
-                        {
-                            profitDictionary["IMS_EXCLUDING"].GPTotal += amount ?? 0;
+                            profitDictionary["MCS_BPS"].GPTotal += amount ?? 0;
                         }
                     }
 
                     // Fatores a ter em conta para o cálculo do GPTotal
-
                     var financingTypeCode = loadProposal.ProposalObj.Draft.financing.FinancingTypeCode;
                     var actionCampaignId = loadProposal.ProposalObj.Draft.details.CampaignID;
 
@@ -948,27 +906,18 @@ namespace WebApplication1.Controllers
                         }
                     }
 
+                    // servicos recorrentes
                     foreach (var servRecor_Item in servicosRecorrentes)
                     {
                         AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal, servRecor_Item.CodeRef);
                     }
 
 
-
-                    var profit_Hard = profitDictionary["HW"];
-                    var profit_IMS = profitDictionary["IMS"];
-                    var profit_PRS = profitDictionary["PRS"];
                     var profit_OfficeHW = profitDictionary["OfficeHW"];
-                    var profit_PPHW = profitDictionary["PPHW"];
-                    var profit_IPHW = profitDictionary["IPHW"];
-                    var profit_ITS_MCS_BPS_IMS = profitDictionary["ITS_MCS_BPS_IMS"];
-                    var profit_MCS = profitDictionary["MCS"];
-                    var profit_BPS = profitDictionary["BPS"];
-                    var profit_WPH = profitDictionary["WPH"];
-
-                    var profit_IMS_EXCLUDING = profitDictionary["IMS_EXCLUDING"];
+                    var profit_IMS_VSS = profitDictionary["IMS_VSS"];
+                    var profit_PRS = profitDictionary["PRS"];
+                    var profit_MCS_BPS = profitDictionary["MCS_BPS"];
                     var profit_MOBOTIX = profitDictionary["MOBOTIX"];
-
 
                     // --------------- PONTO 3 -------------->
 
@@ -980,47 +929,26 @@ namespace WebApplication1.Controllers
                     // Definicao da percentagem de comissao a aplicar a cada familia
                     if (!isNewClient)
                     {
-                        profit_Hard.ComissionPercentage = 9;
-                        profit_IMS.ComissionPercentage = 9;
-                        profit_PRS.ComissionPercentage = 9;
                         profit_OfficeHW.ComissionPercentage = 9;
-                        profit_PPHW.ComissionPercentage = 9;
-                        profit_IPHW.ComissionPercentage = 9;
-                        profit_ITS_MCS_BPS_IMS.ComissionPercentage = 9;
-                        profit_MCS.ComissionPercentage = 9;
-                        profit_BPS.ComissionPercentage = 9;
-                        profit_IMS_EXCLUDING.ComissionPercentage = 9;
-                        profit_WPH.ComissionPercentage = 9;
+                        profit_IMS_VSS.ComissionPercentage = 9;
+                        profit_PRS.ComissionPercentage = 9;
+                        profit_MCS_BPS.ComissionPercentage = 9;
                         profit_MOBOTIX.ComissionPercentage = 9;
                     }
                     else if (isNewBusinessLine)
                     {
-                        profit_Hard.ComissionPercentage = 12.5;
-                        profit_IMS.ComissionPercentage = 12.5;
-                        profit_PRS.ComissionPercentage = 12.5;
                         profit_OfficeHW.ComissionPercentage = 12.5;
-                        profit_PPHW.ComissionPercentage = 12.5;
-                        profit_IPHW.ComissionPercentage = 12.5;
-                        profit_ITS_MCS_BPS_IMS.ComissionPercentage = 12.5;
-                        profit_MCS.ComissionPercentage = 12.5;
-                        profit_BPS.ComissionPercentage = 12.5;
-                        profit_IMS_EXCLUDING.ComissionPercentage = 12.5;
-                        profit_WPH.ComissionPercentage = 12.5;
+                        profit_IMS_VSS.ComissionPercentage = 12.5;
+                        profit_PRS.ComissionPercentage = 12.5;
+                        profit_MCS_BPS.ComissionPercentage = 12.5;
                         profit_MOBOTIX.ComissionPercentage = 12.5;
                     }
                     else
                     {
-                        profit_Hard.ComissionPercentage = 15.5;
-                        profit_IMS.ComissionPercentage = 15.5;
-                        profit_PRS.ComissionPercentage = 15.5;
                         profit_OfficeHW.ComissionPercentage = 15.5;
-                        profit_PPHW.ComissionPercentage = 15.5;
-                        profit_IPHW.ComissionPercentage = 15.5;
-                        profit_ITS_MCS_BPS_IMS.ComissionPercentage = 15.5;
-                        profit_MCS.ComissionPercentage = 15.5;
-                        profit_BPS.ComissionPercentage = 15.5;
-                        profit_IMS_EXCLUDING.ComissionPercentage = 15.5;
-                        profit_WPH.ComissionPercentage = 15.5;
+                        profit_IMS_VSS.ComissionPercentage = 15.5;
+                        profit_PRS.ComissionPercentage = 15.5;
+                        profit_MCS_BPS.ComissionPercentage = 15.5;
                         profit_MOBOTIX.ComissionPercentage = 15.5;
                     }
 
@@ -1028,18 +956,11 @@ namespace WebApplication1.Controllers
                     // Valor do GPTotal acrescido da comissao definida acima
                     // Exemplo: CalculatedCommission = GPTotal * 0.09
 
-                    profit_Hard.CalculatedCommission = profit_Hard.GPTotal * (profit_Hard.ComissionPercentage / 100);
-                    profit_IMS.CalculatedCommission = profit_IMS.GPTotal * (profit_IMS.ComissionPercentage / 100);
                     profit_PRS.CalculatedCommission = profit_PRS.GPTotal * (profit_PRS.ComissionPercentage / 100);
                     profit_OfficeHW.CalculatedCommission = profit_OfficeHW.GPTotal * (profit_OfficeHW.ComissionPercentage / 100);
-                    profit_PPHW.CalculatedCommission = profit_PPHW.GPTotal * (profit_PPHW.ComissionPercentage / 100);
-                    profit_IPHW.CalculatedCommission = profit_IPHW.GPTotal * (profit_IPHW.ComissionPercentage / 100);
-                    profit_ITS_MCS_BPS_IMS.CalculatedCommission = profit_ITS_MCS_BPS_IMS.GPTotal * (profit_ITS_MCS_BPS_IMS.ComissionPercentage / 100);
-                    profit_MCS.CalculatedCommission = profit_MCS.GPTotal * (profit_MCS.ComissionPercentage / 100);
-                    profit_BPS.CalculatedCommission = profit_BPS.GPTotal * (profit_BPS.ComissionPercentage / 100);
-                    profit_IMS_EXCLUDING.CalculatedCommission = profit_IMS_EXCLUDING.GPTotal * (profit_IMS_EXCLUDING.ComissionPercentage / 100);
-                    profit_WPH.CalculatedCommission = profit_WPH.GPTotal * (profit_WPH.ComissionPercentage / 100);
                     profit_MOBOTIX.CalculatedCommission = profit_MOBOTIX.GPTotal * (profit_MOBOTIX.ComissionPercentage / 100);
+                    profit_IMS_VSS.CalculatedCommission = profit_IMS_VSS.GPTotal * (profit_IMS_VSS.ComissionPercentage / 100);
+                    profit_MCS_BPS.CalculatedCommission = profit_MCS_BPS.GPTotal * (profit_MCS_BPS.ComissionPercentage / 100);
 
 
                     // --------------- PONTO 4 -------------->
@@ -1186,8 +1107,7 @@ namespace WebApplication1.Controllers
                            
 
                         bb_commission_general.Delegacion = user.Location;
-                            //bb_commission_general.Codigo_Agencia = loadProposal.ProposalObj.Draft.details.CRM_QUOTE_ID;
-                            //bb_commission_general.Sales_Group = "540"; // hardcoded
+                            
                         }
 
                     DateTime? modifiedDate = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ModifiedTime).FirstOrDefault();
@@ -1196,9 +1116,7 @@ namespace WebApplication1.Controllers
                     {
                         // exemplo:  01-02-2023 => 2302
                         bb_commission_general.Production = ((modifiedDate.Value.Year % 100) * 100) + modifiedDate.Value.Month;
-                    }
-                     
-                    //bb_commission_general.Periodo_Solicitado = bb_commission_general.Ano_Mes_CN;
+                    }                  
 
                     var HRCommentsList = db.BB_WFA_Comments_Business.Where(x => x.ProposalID == proposalID && x.CommentType == "RRHH").ToList();
                     string HRComments = "";
@@ -1210,35 +1128,18 @@ namespace WebApplication1.Controllers
                         } 
                     }
 
-
-                    //bb_commission_general.HR_Comentario = HRComments;
-                    //bb_commission_general.Invoice_List = null;
-                    //bb_commission_general.BB_Numero = proposalID.ToString();
                     bb_commission_general.Pedido = proposal.CreatedTime.Value.Year + proposalID.ToString();
                     bb_commission_general.Pedido_SAP = null;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
                     bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
-                    //bb_commission_general.Facturación = null;
                     bb_commission_general.CN_Total = proposal.SubTotal;
-
-                    // Soma de todos os GP daquele proposalID (incluindo RS)
-                    bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key != "HW" && d.Key != "IMS_EXCLUDING" && d.Key != "MOBOTIX" && d.Key != "PPHW" && d.Key != "MCS" && d.Key != "IMS" && d.Key != "BPS").Sum(x => x.Value.GPTotal);
-
-                    // Same as above
-                    bb_commission_general.GP_Total = bb_commission_general.GP_Hard;
 
                     // Soma da CalculatedCommission todas as familias
                     bb_commission_general.Comision = profit_OfficeHW.CalculatedCommission +
-                                                                 profit_IMS.CalculatedCommission +
                                                                  profit_PRS.CalculatedCommission +
-                                                                 profit_PPHW.CalculatedCommission +
-                                                                 profit_IPHW.CalculatedCommission +
-                                                                 profit_ITS_MCS_BPS_IMS.CalculatedCommission +
-                                                                 profit_MCS.CalculatedCommission +
-                                                                 profit_BPS.CalculatedCommission +
-                                                                 profit_IMS_EXCLUDING.CalculatedCommission +
-                                                                 profit_WPH.CalculatedCommission +
-                                                                 profit_MOBOTIX.CalculatedCommission;
+                                                                 profit_MOBOTIX.CalculatedCommission +
+                                                                 profit_IMS_VSS.CalculatedCommission +
+                                                                 profit_MCS_BPS.CalculatedCommission;
 
                     bb_commission_general.Comision_Copias = protocolDictionary.Values
                         .Where(cd => cd.Machines != null)
@@ -1246,70 +1147,29 @@ namespace WebApplication1.Controllers
                         .Sum(m => m.AppliedCommission ?? 0);
 
 
-                    bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
-                    //bb_commission_general.Margen = null;
+                    bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;                
 
-                    var basket = loadProposal.ProposalObj.Draft.baskets.os_basket;
+                    // TotalNetSalte dos mobotix
+                    bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
 
-                    //bb_commission_general.CN_HW = basket.Where(x => x.Family.Contains("HW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_HW = profit_Hard.GPTotal;
-                    //bb_commission_general.Margen_HW_Nuevo = bb_commission_general.Margen_HW;
-
-                    bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_Office_HW = profit_OfficeHW.GPTotal;
-
-                    //bb_commission_general.CN_PP_HW = basket.Where(x => x.Family.Contains("PPHW")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_PP_HW = profit_PPHW.GPTotal;
-
-                    //bb_commission_general.CN_IP_HW = basket.Where(x => x.Family.Contains("IPHW")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_IP_HW = profit_IPHW.GPTotal;
-
-                    //bb_commission_general.CN_ITS = basket.Where(x => x.Family.Contains("ITS") || x.Family.Contains("MCS") || x.Family.Contains("BPS") || x.Family.Contains("IMS")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_ITS = profit_ITS_MCS_BPS_IMS.GPTotal;
-
+                    bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("HW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + bb_commission_general.CN_Mobotix;
                     bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_MCS_BPS = basket.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
+
+                    bb_commission_general.GP_Total = bb_commission_general.GP_Hard;
+
+                    // Soma de todos os GP daquele proposalID (incluindo RS)
+                    bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key != "HW" && d.Key != "MOBOTIX" && d.Key != "PPHW" && d.Key != "MCS" && d.Key != "IMS" && d.Key != "BPS").Sum(x => x.Value.GPTotal);
+                    bb_commission_general.GP_IMS_VSS = profit_IMS_VSS.GPTotal + profit_MOBOTIX.GPTotal;
                     bb_commission_general.GP_PRS = profit_PRS.GPTotal;
-
-                    //bb_commission_general.CN_MCS = basket.Where(x => x.Family.Contains("MCS")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_MCS = profit_MCS.GPTotal;
-
-                    //bb_commission_general.CN_BPS = basket.Where(x => x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_BPS = profit_BPS.GPTotal;
-
-                    //bb_commission_general.CN_IMS = 0;
-                    
-                    // Familias IMS com o exclude dos mobotix
-                    foreach(var b in basket)
-                    {
-                        if(b.Family.Contains("IMS") && !mobotixCodRefs.Contains(b.CodeRef))
-                        {
-                            bb_commission_general.CN_IMS += b.TotalNetsale;
-                        }
-                        //bb_commission_general.CN_IMS += basket.Where(x => x.Family.Contains("IMS") && !mobotixCodRefs.Contains(b.CodeRef)).Select(x => x.TotalNetsale).FirstOrDefault();
-                    }
-
-                    //bb_commission_general.Margen_IMS = profit_IMS.GPTotal;
-
-                    //bb_commission_general.CN_WPH = basket.Where(x => x.Family.Contains("WPH")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_WPH = profit_WPH.GPTotal;
-
-                    //bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
-                    //bb_commission_general.Margen_Mobotix = profit_MOBOTIX.GPTotal;
+                    bb_commission_general.GP_MCS_BPS = profit_MCS_BPS.GPTotal;
 
                     bb_commission_general.Incidencias = null;
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
                     bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.baskets.GMA;
                     bb_commission_general.CBB = bb_commission_general.Es_GMA;
-                    bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;
-
-                    bb_commission_general.Pagado = null;
-                    bb_commission_general.Controlado = null;
-                    bb_commission_general.Comisionado = null;
-                    bb_commission_general.Excluido = null;
-                    bb_commission_general.Es_Doc_Share = null;
-                    bb_commission_general.Es_Invoice_List = bb_commission_general.Invoice_List;
-                    bb_commission_general.Support_BEU = loadProposal.ProposalObj.Draft.baskets.BEUSupport;
-                    //bb_commission_general.Numero_Cliente_SAP = bb_commission_general.Numero_Cliente;
+                    bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;            
 
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
                     if (campaignID == 0)
@@ -1323,15 +1183,111 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Tipo_Financiacion = db.BB_FinancingType.Where(x => x.Code == loadProposal.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
 
-                    //bb_commission_general.Metodo_Pago_Productos = db.BB_FinancingPaymentMethod.Where(x => x.ID == loadProposal.ProposalObj.Draft.financing.PaymentMethodId).Select(x => x.Type).FirstOrDefault();
-
-                    // Perguntar ao Luis?
-                    //bb_commission_general.Metodo_Pago_Mantenimiento = "ADEUDO DIRECTO";
-
                     bb_commission_general.Fecha_Operacion = DateTime.Now;
                     bb_commission_general.CreatedBy = null;
                     bb_commission_general.ModifiedDate = null;
                     bb_commission_general.ModifiedBy = null;
+
+
+                    // latest fields
+                    bb_commission_general.Area = "";
+                    if (isNewClient)
+                    {
+                        bb_commission_general.Tipo_Cliente = "PROSPECTO";
+                    }
+                    else
+                    {
+                        bb_commission_general.Tipo_Cliente = "CLIENTE";
+                    }
+
+                    if(bb_commission_general.Es_GMA == true)
+                    {
+                        bb_commission_general.GMA_10 = "GMA";
+                    }
+                    else
+                    {
+                        bb_commission_general.GMA_10 = "X"; 
+                    }
+
+                    bb_commission_general.Observacion = "";
+
+                    // Definicao da Condicion para o calculo dos premios ---------------------
+
+                    int? campaignID_Cond = db.BB_Proposal.Where(x => x.ID == proposalID).Select(x => x.CampaignID).FirstOrDefault();
+                    bool extensionAlq = false;
+
+                    var equipamentosX = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+                    var isPPMachine = equipamentosX.Where(x => x.Family.StartsWith("PP")).Any();
+
+                    if (campaignID_Cond == 3 || campaignID_Cond == 5)
+                    {
+                        extensionAlq = true;
+
+                    }
+
+                    if (isSecondHand == true)
+                    {
+                        bb_commission_general.Condicion = "1";
+                    }else if (extensionAlq == true)
+                    {
+                        bb_commission_general.Condicion = "2";
+                    }else if (isPPMachine == true)
+                    {
+                        bb_commission_general.Condicion = "4";
+                    }
+                    else
+                    {
+                        bb_commission_general.Condicion = "0";
+                    }
+
+                    
+
+                    // Calculo de Premios ----------------------------------------------------
+                    bb_commission_general.GP_HW_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
+                    bb_commission_general.GP_IMS_VSS_Premio = CalculatePremio((double)bb_commission_general.GP_IMS_VSS, bb_commission_general.Condicion);
+                    bb_commission_general.GP_PRS_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
+                    bb_commission_general.GP_MCS_BPS_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
+
+                    bb_commission_general.GP_Total_Premios = bb_commission_general.GP_HW_Premio +
+                                                                bb_commission_general.GP_IMS_VSS_Premio +
+                                                                bb_commission_general.GP_PRS_Premio +
+                                                                bb_commission_general.GP_MCS_BPS_Premio;
+
+                    // Calculo do Percentage_GP ----------------------------------------------
+                    if (bb_commission_general.CN_Total > 0)
+                    {
+                        bb_commission_general.Percentage_GP = ((bb_commission_general.GP_Total / bb_commission_general.CN_Total) * 100).ToString() + "%";
+                    }
+                    else
+                    {
+                        bb_commission_general.Percentage_GP = "0%";
+                    }
+
+                    // Calculo do Percentage_Comision ----------------------------------------
+                    if (bb_commission_general.GP_Total > 0)
+                    {
+                        bb_commission_general.Percentage_Comision = ((bb_commission_general.Comision / bb_commission_general.GP_Total) * 100).ToString() + "%";
+                    }
+                    else
+                    {
+                        bb_commission_general.Percentage_Comision = "0%";
+                    }
+
+                    bb_commission_general.Calculo = "Bsine Bilfer";
+                    bb_commission_general.Estado_Factura = "PENDIENTE";
+
+                    // Empty Info ON PURPOSE -------------------------------------------------
+                    bb_commission_general.Factura_SAP = "";
+                    bb_commission_general.Fecha_Factura = null;
+                    bb_commission_general.Fecha_Pago_Comision = null;
+                    bb_commission_general.Fecha_Registro = null;
+                    bb_commission_general.CN_MRR = null;
+                    bb_commission_general.GP_MRR = null;
+                    bb_commission_general.Usuario_Sharepoint = "";
+                    bb_commission_general.Usuario_Sharepoint_Nombre = "";
+                    bb_commission_general.Manager_Nombre_2 = "";
+                    bb_commission_general.Manager_2 = "";
+                    bb_commission_general.Incidencias = "";
 
 
                     // ----------------------------------------------------------------------------------------------------
@@ -1343,7 +1299,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Margen_HW,  // {1}
                     bb_commission_general.Margen_ITS, // {2}
                     bb_commission_general.Margen_IMS, // {3}
-                    profit_Hard.ComissionPercentage,  // {4}
+                    profit_OfficeHW.ComissionPercentage,  // {4}
                     0,                                // {5}
                     bb_commission_general.Comision // {6}
                     );
@@ -1364,43 +1320,71 @@ namespace WebApplication1.Controllers
 
                     string logFinal = logPhase_1 + newLine + logPhase_2 + newLine + "\n";
 
-                    //string logPhase_3 = string.Format("({0})"
-                    //);
-
                     bb_commission_general.Logs = logFinal;
 
-                    // latest fields
-                    bb_commission_general.Area = "";
-                    bb_commission_general.Tipo_Cliente = "";
-                    bb_commission_general.GMA_10 = "";
-                    bb_commission_general.Observacion = "";
-                    bb_commission_general.CN_IMS_VSS = 0;
-                    bb_commission_general.CN_MCS_BPS = 0;
-                    bb_commission_general.GP_IMS_VSS = 0;
-                    bb_commission_general.GP_MCS_BPS = 0;
-                    bb_commission_general.Condicion = "";
-                    bb_commission_general.GP_HW_Premio = 0;
-                    bb_commission_general.GP_IMS_VSS_Premio = 0;
-                    bb_commission_general.GP_PRS_Premio = 0;
-                    bb_commission_general.GP_MCS_BPS_Premio = 0;
-                    bb_commission_general.GP_Total_Premios = 0;
-                    bb_commission_general.Calculo = "Bsine Bilfer";
-                    bb_commission_general.Percentage_GP = "";
-                    bb_commission_general.Percentage_Comision = "";
-                    bb_commission_general.Estado_Factura = "PENDIENTE";
+                    // ----- OLD INFO -------------------------------------------------------------------------------------
 
-                    // Empty Info ON PURPOSE
-                    bb_commission_general.Factura_SAP = "";
-                    bb_commission_general.Fecha_Factura = null;
-                    bb_commission_general.Fecha_Pago_Comision = null;
-                    bb_commission_general.Fecha_Registro = null;
-                    bb_commission_general.CN_MRR = null;
-                    bb_commission_general.GP_MRR = null;
-                    bb_commission_general.Usuario_Sharepoint = "";
-                    bb_commission_general.Usuario_Sharepoint_Nombre = "";
-                    bb_commission_general.Manager_Nombre_2 = "";
-                    bb_commission_general.Manager_2 = "";
-                    bb_commission_general.Incidencias = "";
+                    //bb_commission_general.Codigo_Agencia = loadProposal.ProposalObj.Draft.details.CRM_QUOTE_ID;
+                    //bb_commission_general.Sales_Group = "540"; // hardcoded
+
+
+                    //bb_commission_general.HR_Comentario = HRComments;
+                    //bb_commission_general.Invoice_List = null;
+                    //bb_commission_general.BB_Numero = proposalID.ToString();
+                    //bb_commission_general.Margen = null;
+
+                    //bb_commission_general.CN_HW = basket.Where(x => x.Family.Contains("HW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
+                    //bb_commission_general.Margen_HW = profit_Hard.GPTotal;
+                    //bb_commission_general.Margen_HW_Nuevo = bb_commission_general.Margen_HW;
+
+                    //bb_commission_general.Margen_Office_HW = profit_OfficeHW.GPTotal;
+
+                    //bb_commission_general.CN_PP_HW = basket.Where(x => x.Family.Contains("PPHW")).Sum(x => x.TotalNetsale);
+                    //bb_commission_general.Margen_PP_HW = profit_PPHW.GPTotal;
+
+                    //bb_commission_general.CN_IP_HW = basket.Where(x => x.Family.Contains("IPHW")).Sum(x => x.TotalNetsale);
+                    //bb_commission_general.Margen_IP_HW = profit_IPHW.GPTotal;
+
+                    //bb_commission_general.CN_ITS = basket.Where(x => x.Family.Contains("ITS") || x.Family.Contains("MCS") || x.Family.Contains("BPS") || x.Family.Contains("IMS")).Sum(x => x.TotalNetsale);
+                    //bb_commission_general.Margen_ITS = profit_ITS_MCS_BPS_IMS.GPTotal;
+
+                    //bb_commission_general.CN_MCS = basket.Where(x => x.Family.Contains("MCS")).Sum(x => x.TotalNetsale);
+                    //bb_commission_general.Margen_MCS = profit_MCS.GPTotal;
+
+                    //bb_commission_general.CN_BPS = basket.Where(x => x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
+                    //bb_commission_general.Margen_BPS = profit_BPS.GPTotal;
+
+                    //bb_commission_general.CN_IMS = 0;
+
+                    //bb_commission_general.Margen_IMS = profit_IMS.GPTotal;
+
+                    //bb_commission_general.CN_WPH = basket.Where(x => x.Family.Contains("WPH")).Sum(x => x.TotalNetsale);
+                    //bb_commission_general.Margen_WPH = profit_WPH.GPTotal;
+
+                    //bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
+                    //bb_commission_general.Margen_Mobotix = profit_MOBOTIX.GPTotal;
+
+                    //bb_commission_general.Numero_Cliente_SAP = bb_commission_general.Numero_Cliente;
+
+                    //bb_commission_general.Metodo_Pago_Productos = db.BB_FinancingPaymentMethod.Where(x => x.ID == loadProposal.ProposalObj.Draft.financing.PaymentMethodId).Select(x => x.Type).FirstOrDefault();
+
+                    // Perguntar ao Luis?
+                    //bb_commission_general.Metodo_Pago_Mantenimiento = "ADEUDO DIRECTO";
+
+                    //bb_commission_general.Periodo_Solicitado = bb_commission_general.Ano_Mes_CN;
+
+                    //bb_commission_general.Facturación = null;
+
+                    //bb_commission_general.CN_IMS += basket.Where(x => x.Family.Contains("IMS") && !mobotixCodRefs.Contains(b.CodeRef)).Select(x => x.TotalNetsale).FirstOrDefault();
+
+                    //bb_commission_general.Pagado = null;
+                    //bb_commission_general.Controlado = null;
+                    //bb_commission_general.Comisionado = null;
+                    //bb_commission_general.Excluido = null;
+                    //bb_commission_general.Es_Doc_Share = null;
+                    //bb_commission_general.Es_Invoice_List = bb_commission_general.Invoice_List;
+                    //bb_commission_general.Support_BEU = loadProposal.ProposalObj.Draft.baskets.BEUSupport;
+
 
                     // ----------------------------------------------------------------------------------------------------
 
@@ -1718,6 +1702,33 @@ namespace WebApplication1.Controllers
         }
 
         // ######################################################################################
+
+        // ---------------------------------------------------------------------------------------------------------------------
+        // HELPERS -------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------
+
+        private double CalculatePremio(double value, string condicion)
+        {
+            switch (condicion)
+            {
+                case "4":
+                case "3":
+                case "0":
+                    return value;
+
+                case "1":
+                    return value * 0.5;
+
+                case "2":
+                    return value * 0.25;
+
+                default:
+                    return 0;
+            }
+        }
+
+
+
 
 
         // ---------------------------------------------------------------------------------------------------------------------
