@@ -137,9 +137,9 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
         public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
         public virtual DbSet<WFA_FullDetails> WFA_FullDetails { get; set; }
-        public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
         public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_Client> BB_Proposal_Client { get; set; }
+        public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
     }
 }

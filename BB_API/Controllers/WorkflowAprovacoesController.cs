@@ -1199,17 +1199,17 @@ namespace WebApplication1.Controllers
                         "Poderá verificar o mesmo no menu Área Comercial > Oportunidades. {0} " +
                         "Muito Obrigado,{0}Bom trabalho", Environment.NewLine, (bool)IsApproved ? "aprovado" : "rejeitado");
 
-                    approvers.ForEach(a =>
-                    {
-                        EmailMesage email = new EmailMesage() {
-                            Body = body,
-                            Subject = subject,
-                            //Destination = IsNewProcess ? a.Email : a.CreatedBy
-                            Destination = "antonio.simoes@konicaminolta.pt", //TESTES
-                            CC = "tiago.simoes@konicaminolta.pt" //TESTES
-                        };
-                        emailService.SendEmailaync(email);
-                    });
+                    //approvers.ForEach(a =>
+                    //{
+                    //    EmailMesage email = new EmailMesage() {
+                    //        Body = body,
+                    //        Subject = subject,
+                    //        //Destination = IsNewProcess ? a.Email : a.CreatedBy
+                    //        Destination = "antonio.simoes@konicaminolta.pt", //TESTES
+                    //        CC = "tiago.simoes@konicaminolta.pt" //TESTES
+                    //    };
+                    //    emailService.SendEmailaync(email);
+                    //});
                 }
 
                 }
