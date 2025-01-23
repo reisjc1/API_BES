@@ -142,6 +142,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             ITM_NUMBER = itm_number.ToString(), // contractItm,
                                             MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                             REQ_QTY = item.Qty.ToString(),
+                                            HG_LV_ITEM = "10",
                                             MODEL_YN = "Y" // Perguntar ao Luis
                                         });
                                         bundelCodeRef = item.CodeRef;
@@ -154,6 +155,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             ITM_NUMBER = itm_number.ToString(), // contractItm,
                                             MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                             REQ_QTY = item.Qty.ToString(),
+                                            HG_LV_ITEM = "10",
                                             MODEL_YN = "Y" // Perguntar ao Luis
                                         });
 
@@ -333,6 +335,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         ITM_NUMBER = itm_number.ToString(), // contractItm,
                                         MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                         REQ_QTY = item.Qty.ToString(),
+                                        HG_LV_ITEM = "10",
                                         MODEL_YN = "Y" // Perguntar ao Luis
                                     });
 

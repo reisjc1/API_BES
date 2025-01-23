@@ -347,7 +347,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     string filepath = $"{path}\\{arckey}.xml";
                     SerializeToXml(myObject, filepath);
-                    UploadFileToSftp(filepath);
+                    //UploadFileToSftp(filepath);
 
                     return filepath;
                 }
