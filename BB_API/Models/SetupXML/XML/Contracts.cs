@@ -109,6 +109,14 @@ namespace WebApplication1.Models.SetupXML.XML
                                     bb_itemsDoBasket.Add(items);
                                 }
                             }
+                            else
+                            {
+
+                                if (items.Description.Contains("MAIN MATERIAL"))
+                                {
+                                    bb_itemsDoBasket.Add(items);
+                                }
+                            }
 
                         }
 
