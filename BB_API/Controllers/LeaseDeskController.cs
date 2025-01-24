@@ -666,6 +666,16 @@ namespace WebApplication1.Controllers
             LD_Contrato l = new LD_Contrato();
             try
             {
+                using (var dbB = new BB_DB_DEVEntities2())
+                {
+                    var LDproposalID = dbB.LD_Contrato.Where(x => x.ID == a.id).Select(x => x.ProposalID).FirstOrDefault();
+
+                    var BB_Proposal_ToUpdate = dbB.BB_Proposal.Where(x => x.ID == LDproposalID).FirstOrDefault();
+
+                    dbB.Entry(BB_Proposal_ToUpdate).State = EntityState.Modified;
+                    dbB.SaveChanges();
+                }
+
                 using (var db = new BB_DB_DEV_LeaseDesk())
                 {
                     l = db.LD_Contrato.Where(x => x.ID == a.id).FirstOrDefault();

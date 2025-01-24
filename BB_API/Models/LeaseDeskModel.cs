@@ -38,6 +38,7 @@ namespace WebApplication1.Models
     {
         public int? id { get; set; }
         public string ModifiedBy { get; set; }
+        public Nullable<int> Pedido_SAP { get; set; }
     }
 
     public class DevolverProcessoModel
