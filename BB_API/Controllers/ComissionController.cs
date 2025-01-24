@@ -1107,8 +1107,11 @@ namespace WebApplication1.Controllers
                            
 
                         bb_commission_general.Delegacion = user.Location;
-                            
-                        }
+                        bb_commission_general.Area = user.AreaComercial;
+                        bb_commission_general.Usuario_Sharepoint = user.USUARIO_Sharepoint_Email;
+                        bb_commission_general.Usuario_Sharepoint_Nombre = user.USUARIO_Sharepoint_Nome;
+
+                    }
 
                     DateTime? modifiedDate = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ModifiedTime).FirstOrDefault();
 
@@ -1129,7 +1132,7 @@ namespace WebApplication1.Controllers
                     }
 
                     bb_commission_general.Pedido = proposal.CreatedTime.Value.Year + proposalID.ToString();
-                    bb_commission_general.Pedido_SAP = null;
+                    bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
                     bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
                     bb_commission_general.CN_Total = proposal.SubTotal;
@@ -1188,10 +1191,12 @@ namespace WebApplication1.Controllers
                     bb_commission_general.ModifiedDate = null;
                     bb_commission_general.ModifiedBy = null;
 
-
-                    // latest fields
-                    bb_commission_general.Area = "";
-                    if (isNewClient)
+                    // Definir o tipo de cliente
+                    if (isNewBusinessLine == true)
+                    {
+                        bb_commission_general.Tipo_Cliente = "NLN";
+                    }
+                    else if(isNewClient == true)
                     {
                         bb_commission_general.Tipo_Cliente = "PROSPECTO";
                     }
@@ -1200,6 +1205,7 @@ namespace WebApplication1.Controllers
                         bb_commission_general.Tipo_Cliente = "CLIENTE";
                     }
 
+                    // Definir o campo GMA
                     if(bb_commission_general.Es_GMA == true)
                     {
                         bb_commission_general.GMA_10 = "GMA";
@@ -1218,23 +1224,29 @@ namespace WebApplication1.Controllers
 
                     var equipamentosX = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
                     var isPPMachine = equipamentosX.Where(x => x.Family.StartsWith("PP")).Any();
+                    var isAditamento = db.BB_Proposal.Where(x => x.ID == proposalID).Select(x => x.ContractNumberPai).FirstOrDefault();
 
                     if (campaignID_Cond == 3 || campaignID_Cond == 5)
                     {
                         extensionAlq = true;
-
                     }
 
                     if (isSecondHand == true)
                     {
                         bb_commission_general.Condicion = "1";
-                    }else if (extensionAlq == true)
+                    }                 
+                    else if (extensionAlq == true)
                     {
                         bb_commission_general.Condicion = "2";
-                    }else if (isPPMachine == true)
+                    }
+                    else if (isAditamento != null || isAditamento != "")
+                    {
+                        bb_commission_general.Condicion = "3";
+                    }
+                    else if (isPPMachine == true)
                     {
                         bb_commission_general.Condicion = "4";
-                    }
+                    }               
                     else
                     {
                         bb_commission_general.Condicion = "0";
@@ -1283,8 +1295,6 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Fecha_Registro = null;
                     bb_commission_general.CN_MRR = null;
                     bb_commission_general.GP_MRR = null;
-                    bb_commission_general.Usuario_Sharepoint = "";
-                    bb_commission_general.Usuario_Sharepoint_Nombre = "";
                     bb_commission_general.Manager_Nombre_2 = "";
                     bb_commission_general.Manager_2 = "";
                     bb_commission_general.Incidencias = "";
