@@ -913,7 +913,7 @@ namespace WebApplication1.Controllers
                     }
 
 
-                    var profit_OfficeHW = profitDictionary["OfficeHW"];
+                    var profit_OfficeHW = profitDictionary["HW"];
                     var profit_IMS_VSS = profitDictionary["IMS_VSS"];
                     var profit_PRS = profitDictionary["PRS"];
                     var profit_MCS_BPS = profitDictionary["MCS_BPS"];

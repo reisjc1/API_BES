@@ -672,6 +672,7 @@ namespace WebApplication1.Controllers
 
                     var BB_Proposal_ToUpdate = dbB.BB_Proposal.Where(x => x.ID == LDproposalID).FirstOrDefault();
 
+                    BB_Proposal_ToUpdate.Pedido_SAP = a.Pedido_SAP;
                     dbB.Entry(BB_Proposal_ToUpdate).State = EntityState.Modified;
                     dbB.SaveChanges();
                 }

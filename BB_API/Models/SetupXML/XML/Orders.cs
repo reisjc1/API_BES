@@ -315,6 +315,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 if (item.Description.Contains("MAIN MATERIAL"))
                                 {
+                                    string bomMM = db.BB_Data_Integration.Where(M => M.CodeRef == item.CodeRef).Select(x => x.BOM).FirstOrDefault();
                                     collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                                     {
                                         SD_DOC = orderDoc,
@@ -324,7 +325,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         MODEL_YN = "Y" // Perguntar ao Luis
                                     });
 
-                                    bundelCodeRef = item.CodeRef;
+                                    bundelCodeRef = bomMM;
                                     itm_number = itm_number + 10;
                                 }
                                 else
