@@ -1121,16 +1121,6 @@ namespace WebApplication1.Controllers
                         bb_commission_general.Production = ((modifiedDate.Value.Year % 100) * 100) + modifiedDate.Value.Month;
                     }                  
 
-                    var HRCommentsList = db.BB_WFA_Comments_Business.Where(x => x.ProposalID == proposalID && x.CommentType == "RRHH").ToList();
-                    string HRComments = "";
-                    if (HRCommentsList.Count() >= 1)
-                    {
-                        foreach( var comment in HRCommentsList)
-                        {
-                            HRComments += comment.Comment;
-                        } 
-                    }
-
                     bb_commission_general.Pedido = proposal.CreatedTime.Value.Year + proposalID.ToString();
                     bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
@@ -1215,7 +1205,7 @@ namespace WebApplication1.Controllers
                         bb_commission_general.GMA_10 = "X"; 
                     }
 
-                    bb_commission_general.Observacion = "";
+                    bb_commission_general.Observacion = null;
 
                     // Definicao da Condicion para o calculo dos premios ---------------------
 
@@ -1289,15 +1279,15 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Estado_Factura = "PENDIENTE";
 
                     // Empty Info ON PURPOSE -------------------------------------------------
-                    bb_commission_general.Factura_SAP = "";
+                    bb_commission_general.Factura_SAP = null;
                     bb_commission_general.Fecha_Factura = null;
                     bb_commission_general.Fecha_Pago_Comision = null;
                     bb_commission_general.Fecha_Registro = null;
                     bb_commission_general.CN_MRR = null;
                     bb_commission_general.GP_MRR = null;
-                    bb_commission_general.Manager_Nombre_2 = "";
-                    bb_commission_general.Manager_2 = "";
-                    bb_commission_general.Incidencias = "";
+                    bb_commission_general.Manager_Nombre_2 = null;
+                    bb_commission_general.Manager_2 = null;
+                    bb_commission_general.Incidencias = null;
 
 
                     // ----------------------------------------------------------------------------------------------------
@@ -1394,6 +1384,15 @@ namespace WebApplication1.Controllers
                     //bb_commission_general.Es_Doc_Share = null;
                     //bb_commission_general.Es_Invoice_List = bb_commission_general.Invoice_List;
                     //bb_commission_general.Support_BEU = loadProposal.ProposalObj.Draft.baskets.BEUSupport;
+
+                    //var HRCommentsList = db.BB_WFA_Comments_Business.Where(x => x.ProposalID == proposalID && x.CommentType == "RRHH").ToList();
+                    //if (HRCommentsList.Count() >= 1)
+                    //{
+                    //    foreach( var comment in HRCommentsList)
+                    //    {
+                    //        HRComments += comment.Comment;
+                    //    } 
+                    //}
 
 
                     // ----------------------------------------------------------------------------------------------------
