@@ -1121,16 +1121,6 @@ namespace WebApplication1.Controllers
                         bb_commission_general.Production = ((modifiedDate.Value.Year % 100) * 100) + modifiedDate.Value.Month;
                     }                  
 
-                    var HRCommentsList = db.BB_WFA_Comments_Business.Where(x => x.ProposalID == proposalID && x.CommentType == "RRHH").ToList();
-                    string HRComments = "";
-                    if (HRCommentsList.Count() >= 1)
-                    {
-                        foreach( var comment in HRCommentsList)
-                        {
-                            HRComments += comment.Comment;
-                        } 
-                    }
-
                     bb_commission_general.Pedido = proposal.CreatedTime.Value.Year + proposalID.ToString();
                     bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
@@ -1160,13 +1150,12 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS")).Sum(x => x.TotalNetsale);
                     bb_commission_general.CN_MCS_BPS = basket.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
 
-                    bb_commission_general.GP_Total = bb_commission_general.GP_Hard;
-
                     // Soma de todos os GP daquele proposalID (incluindo RS)
                     bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key != "HW" && d.Key != "MOBOTIX" && d.Key != "PPHW" && d.Key != "MCS" && d.Key != "IMS" && d.Key != "BPS").Sum(x => x.Value.GPTotal);
                     bb_commission_general.GP_IMS_VSS = profit_IMS_VSS.GPTotal + profit_MOBOTIX.GPTotal;
                     bb_commission_general.GP_PRS = profit_PRS.GPTotal;
                     bb_commission_general.GP_MCS_BPS = profit_MCS_BPS.GPTotal;
+                    bb_commission_general.GP_Total = bb_commission_general.GP_Hard;
 
                     bb_commission_general.Incidencias = null;
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
@@ -1215,7 +1204,7 @@ namespace WebApplication1.Controllers
                         bb_commission_general.GMA_10 = "X"; 
                     }
 
-                    bb_commission_general.Observacion = "";
+                    bb_commission_general.Observacion = null;
 
                     // Definicao da Condicion para o calculo dos premios ---------------------
 
@@ -1268,7 +1257,15 @@ namespace WebApplication1.Controllers
                     // Calculo do Percentage_GP ----------------------------------------------
                     if (bb_commission_general.CN_Total > 0)
                     {
-                        bb_commission_general.Percentage_GP = ((bb_commission_general.GP_Total / bb_commission_general.CN_Total) * 100).ToString() + "%";
+                        var percentage_GP = ((bb_commission_general.GP_Total / bb_commission_general.CN_Total) * 100);
+                        if(percentage_GP != null)
+                        {
+                            bb_commission_general.Percentage_GP = percentage_GP.ToString() + '%';
+                        }
+                        else
+                        {
+                            bb_commission_general.Percentage_GP = "-";
+                        }
                     }
                     else
                     {
@@ -1278,7 +1275,15 @@ namespace WebApplication1.Controllers
                     // Calculo do Percentage_Comision ----------------------------------------
                     if (bb_commission_general.GP_Total > 0)
                     {
-                        bb_commission_general.Percentage_Comision = ((bb_commission_general.Comision / bb_commission_general.GP_Total) * 100).ToString() + "%";
+                        var percentage_Comision = ((bb_commission_general.Comision / bb_commission_general.GP_Total) * 100);
+                        if (percentage_Comision != null)
+                        {
+                            bb_commission_general.Percentage_Comision = percentage_Comision.ToString() + '%';
+                        }
+                        else
+                        {
+                            bb_commission_general.Percentage_Comision = "-";
+                        }
                     }
                     else
                     {
@@ -1289,15 +1294,15 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Estado_Factura = "PENDIENTE";
 
                     // Empty Info ON PURPOSE -------------------------------------------------
-                    bb_commission_general.Factura_SAP = "";
+                    bb_commission_general.Factura_SAP = null;
                     bb_commission_general.Fecha_Factura = null;
                     bb_commission_general.Fecha_Pago_Comision = null;
                     bb_commission_general.Fecha_Registro = null;
                     bb_commission_general.CN_MRR = null;
                     bb_commission_general.GP_MRR = null;
-                    bb_commission_general.Manager_Nombre_2 = "";
-                    bb_commission_general.Manager_2 = "";
-                    bb_commission_general.Incidencias = "";
+                    bb_commission_general.Manager_Nombre_2 = null;
+                    bb_commission_general.Manager_2 = null;
+                    bb_commission_general.Incidencias = null;
 
 
                     // ----------------------------------------------------------------------------------------------------
@@ -1394,6 +1399,15 @@ namespace WebApplication1.Controllers
                     //bb_commission_general.Es_Doc_Share = null;
                     //bb_commission_general.Es_Invoice_List = bb_commission_general.Invoice_List;
                     //bb_commission_general.Support_BEU = loadProposal.ProposalObj.Draft.baskets.BEUSupport;
+
+                    //var HRCommentsList = db.BB_WFA_Comments_Business.Where(x => x.ProposalID == proposalID && x.CommentType == "RRHH").ToList();
+                    //if (HRCommentsList.Count() >= 1)
+                    //{
+                    //    foreach( var comment in HRCommentsList)
+                    //    {
+                    //        HRComments += comment.Comment;
+                    //    } 
+                    //}
 
 
                     // ----------------------------------------------------------------------------------------------------
