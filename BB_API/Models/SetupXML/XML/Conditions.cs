@@ -83,7 +83,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         //    }
                         //}
                         //}
-                        if (contracts[0].VT_VTART != "002")
+                        if (contracts[0].VT_VTART == "003" || contracts[0].VT_VTART == "005")
                         {
                             //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
 
@@ -126,7 +126,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                     else
                                     {
-                                        conditionPvp.PVP = Math.Round((((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) / contratoMeses) + conditionPvp.PVP) ?? 0.0, 2);
+                                        conditionPvp.PVP = Math.Round((((quote1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) / pf.Months) + conditionPvp.PVP) ?? 0.0, 2);
                                     }
                                     //totalPvp = Math.Round(totalPvp ?? 0.0, 2);
                                     //conditionPvp.PVP = totalPvp;
@@ -166,7 +166,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                     else
                                     {
-                                        condPvp.PVP = Math.Round(((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) / contratoMeses)) ?? 0.0, 2);
+                                        condPvp.PVP = Math.Round(((quote1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months)) ?? 0.0, 2);
                                     }
 
                                     //condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
