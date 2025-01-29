@@ -580,7 +580,7 @@ namespace WebApplication1.Controllers
                     using (var dbX = new masterEntities())
                     {
                         List<AspNetRoles> roles = (from r in dbX.AspNetRoles
-                                                   join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
+                                                   //join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
                                                    where r.Country == "BES"
                                                    select r)
                                                    .DistinctBy(x => x.Id)
@@ -596,21 +596,21 @@ namespace WebApplication1.Controllers
                         }
 
 
-                        List<AspNetUsers> approverLst = dbX.AspNetUsers
-                                .Where(a=> a.IsEnabled == true && a.Country == "BES")
-                                .OrderBy(a=>a.DisplayName)
-                                .ToList();
+                        //List<AspNetUsers> approverLst = dbX.AspNetUsers
+                        //        .Where(a=> a.IsEnabled == true && a.Country == "BES")
+                        //        .OrderBy(a=>a.DisplayName)
+                        //        .ToList();
 
-                        foreach(var approver in approverLst)
-                        {
-                            WFA_Approvers approverX = new WFA_Approvers()
-                            {
-                                ID = approver.Id,
-                                Name = approver.DisplayName
-                            };
-                            // Popular a lista dos approvers do objeto WFA_Create
-                            wfa_create_obj.Lst_Approver.Add(approverX);
-                        }
+                        //foreach(var approver in approverLst)
+                        //{
+                        //    WFA_Approvers approverX = new WFA_Approvers()
+                        //    {
+                        //        ID = approver.Id,
+                        //        Name = approver.DisplayName
+                        //    };
+                        //    // Popular a lista dos approvers do objeto WFA_Create
+                        //    wfa_create_obj.Lst_Approver.Add(approverX);
+                        //}
                     }
 
                     return Ok(wfa_create_obj);
