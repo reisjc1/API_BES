@@ -291,18 +291,21 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     BB_PrintingServices bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID).FirstOrDefault();
 
-                    BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
-
-                    if (bB_VVA != null)
+                    if(bB_PrintingServices != null)
                     {
-                        BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                        collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                        BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
+
+                        if (bB_VVA != null)
                         {
-                            DOC = order.SD_DOC,
-                            COND_FLAG = "A",
-                            KSCHL = zvbs != null ? zvbs.ConditionType : "ZVBS",
-                            KBETR = zvbs != null ? Math.Round(zvbs.ConditionValue ?? 0.0, 2).ToString("F2").Replace(",", ".") : "0.00"
-                        });
+                            BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                            collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                            {
+                                DOC = order.SD_DOC,
+                                COND_FLAG = "A",
+                                KSCHL = zvbs != null ? zvbs.ConditionType : "ZVBS",
+                                KBETR = zvbs != null ? Math.Round(zvbs.ConditionValue ?? 0.0, 2).ToString("F2").Replace(",", ".") : "0.00"
+                            });
+                        }
                     }
 
                 }
@@ -645,19 +648,20 @@ namespace WebApplication1.Models.SetupXML.XML
 
                 BB_PrintingServices bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID).FirstOrDefault();
 
-                BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
-
-                if (bB_VVA != null)
+                if(bB_PrintingServices != null)
                 {
-                    BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
 
-                    ConditionPVP condPvp = new ConditionPVP();
-                    condPvp.PVP = zvbs != null ? zvbs.ConditionValue : 0;
-                    condPvp.ConditionCode = "ZVBS";
-                    conditionsPvp.Add(condPvp);
+                    if (bB_VVA != null)
+                    {
+                        BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+
+                        ConditionPVP condPvp = new ConditionPVP();
+                        condPvp.PVP = zvbs != null ? zvbs.ConditionValue : 0;
+                        condPvp.ConditionCode = "ZVBS";
+                        conditionsPvp.Add(condPvp);
+                    }
                 }
-
-
 
             }
 
