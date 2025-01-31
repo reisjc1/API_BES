@@ -42,7 +42,7 @@ namespace WebApplication1.Controllers
                     Deal deal = new Deal();
                     if (!isMissingSAPNumber)
                     {
-                        deal.DealXML(contractId);
+                        deal.DealXML(contractId, true);
 
                         lD_Contrato.StatusID = 9;
                         lD_Contrato.ModifiedBy = name;

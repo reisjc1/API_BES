@@ -104,7 +104,7 @@ namespace WebApplication1.Models.SetupXML.XML
         }
 
 
-        public string DealXML(int contractId)
+        public string DealXML(int contractId, bool isInjecting = false)
         {
             try
             {
@@ -347,7 +347,10 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     string filepath = $"{path}\\{arckey}.xml";
                     SerializeToXml(myObject, filepath);
-                    //UploadFileToSftp(filepath);
+                    if (isInjecting)
+                    {
+                        UploadFileToSftp(filepath);
+                    }
 
                     return filepath;
                 }
