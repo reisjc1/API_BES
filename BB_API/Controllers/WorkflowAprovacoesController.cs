@@ -1876,59 +1876,69 @@ namespace WebApplication1.Controllers
                         rdr.Close();
                 }
 
-                // LISTA BB_PROPOSAL_RS_QUOTE ---------------------------------------------------------------------
-                using (SqlConnection conn = new SqlConnection(bdConnect))
+                List<BB_Proposal_Quote_RS> lst_SR = new List<BB_Proposal_Quote_RS>();
+
+                using (var db = new BB_DB_DEVEntities2())
                 {
+                    lst_SR = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+                }
 
-                    conn.Open();
-
-                    SqlCommand cmd = new SqlCommand("SP_Workflow_Aprovacoes_OneShot_Validation", conn);
-                    cmd.CommandTimeout = 180;
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Proposal_ID", proposalID);
-                    cmd.Parameters.AddWithValue("@WFA_ID", 1);
-                    cmd.Parameters.AddWithValue("@is_RS", 1);
-                    SqlDataReader rdr = cmd.ExecuteReader();
-
-
-                    while (rdr.Read())
+                if (lst_SR.Count > 0)
+                {                
+                    // LISTA BB_PROPOSAL_RS_QUOTE ---------------------------------------------------------------------
+                    using (SqlConnection conn = new SqlConnection(bdConnect))
                     {
-                        BB_Proposal_Quote_RS_WFA bbp_rs_quote = new BB_Proposal_Quote_RS_WFA
-                        {
-                            ID = (int)rdr["ID"],
-                            CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
-                            Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
-                            DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
-                            Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
-                            GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
-                            GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
-                            Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
-                            Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
-                            MonthlyFee = rdr["MonthlyFee"] != DBNull.Value ? (double?)rdr["MonthlyFee"] : null,
-                            MonthlyGP = rdr["MonthlyGP"] != DBNull.Value ? (double?)rdr["MonthlyGP"] : null,
-                            PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
-                            Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
-                            TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
-                            MonthlyFeeCost = rdr["MonthlyFeeCost"] != DBNull.Value ? (double?)rdr["MonthlyFeeCost"] : null,
-                            TotalMonths = rdr["TotalMonths"] != DBNull.Value ? (int?)rdr["TotalMonths"] : null,
-                            TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
-                            TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
-                            UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
-                            UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
-                            ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
-                            IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
-                            passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
-                            alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
-                        };
 
-                        if (bbp_rs_quote.passedValidation == false && (bbp_rs_quote.alertMessage == "" || bbp_rs_quote.alertMessage == null))
+                        conn.Open();
+
+                        SqlCommand cmd = new SqlCommand("SP_Workflow_Aprovacoes_OneShot_Validation", conn);
+                        cmd.CommandTimeout = 180;
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Proposal_ID", proposalID);
+                        cmd.Parameters.AddWithValue("@WFA_ID", 1);
+                        cmd.Parameters.AddWithValue("@is_RS", 1);
+                        SqlDataReader rdr = cmd.ExecuteReader();
+
+
+                        while (rdr.Read())
                         {
-                            bbp_rs_quote.alertMessage = "pendingApproval";
+                            BB_Proposal_Quote_RS_WFA bbp_rs_quote = new BB_Proposal_Quote_RS_WFA
+                            {
+                                ID = (int)rdr["ID"],
+                                CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
+                                Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
+                                DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
+                                Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
+                                GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
+                                GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
+                                Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
+                                Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
+                                MonthlyFee = rdr["MonthlyFee"] != DBNull.Value ? (double?)rdr["MonthlyFee"] : null,
+                                MonthlyGP = rdr["MonthlyGP"] != DBNull.Value ? (double?)rdr["MonthlyGP"] : null,
+                                PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
+                                Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
+                                TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
+                                MonthlyFeeCost = rdr["MonthlyFeeCost"] != DBNull.Value ? (double?)rdr["MonthlyFeeCost"] : null,
+                                TotalMonths = rdr["TotalMonths"] != DBNull.Value ? (int?)rdr["TotalMonths"] : null,
+                                TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
+                                TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
+                                UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
+                                UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
+                                ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
+                                IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
+                                passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
+                                alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
+                            };
+
+                            if (bbp_rs_quote.passedValidation == false && (bbp_rs_quote.alertMessage == "" || bbp_rs_quote.alertMessage == null))
+                            {
+                                bbp_rs_quote.alertMessage = "pendingApproval";
+                            }
+
+                            wrp.Lst_BBP_RS_Quote.Add(bbp_rs_quote);
                         }
-
-                        wrp.Lst_BBP_RS_Quote.Add(bbp_rs_quote);
+                        rdr.Close();
                     }
-                    rdr.Close();
                 }
             }
             catch (Exception ex)
