@@ -903,6 +903,12 @@ namespace WebApplication1.Controllers
                                 profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
 
                             }
+
+                            if (oneShot_Item.Description.Contains("BPS"))
+                            {
+                                profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal ?? 0;
+
+                            }
                         }
                     }
 
