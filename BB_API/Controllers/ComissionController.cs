@@ -896,19 +896,21 @@ namespace WebApplication1.Controllers
                         else
                         {
                             // conta default
-                            AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
 
                             if(oneShot_Item.Description.Contains("MOBOTIX"))
                             {
                                 profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
 
                             }
-
-                            if (oneShot_Item.Description.Contains("BPS"))
+                            else if(oneShot_Item.Description.Contains("BPS"))
                             {
                                 profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal ?? 0;
 
                             }
+                            else { 
+                                AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
+                            }
+                            
                         }
                     }
 
