@@ -858,7 +858,7 @@ namespace WebApplication1.Controllers
                             profitDictionary["IMS_VSS"].GPTotal += amount ?? 0;
                         }
 
-                        if (family.Contains("PRS"))
+                        if (family.Contains("PRS") || family.Contains("OPSSV"))
                         {
                             profitDictionary["PRS"].GPTotal += amount ?? 0;
                         }
@@ -896,13 +896,21 @@ namespace WebApplication1.Controllers
                         else
                         {
                             // conta default
-                            AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
 
                             if(oneShot_Item.Description.Contains("MOBOTIX"))
                             {
                                 profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
 
                             }
+                            else if(oneShot_Item.Description.Contains("BPS"))
+                            {
+                                profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal ?? 0;
+
+                            }
+                            else { 
+                                AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
+                            }
+                            
                         }
                     }
 
@@ -1147,11 +1155,11 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("HW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
                     bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + bb_commission_general.CN_Mobotix;
-                    bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS") || x.Family.Contains("OPSSV")).Sum(x => x.TotalNetsale);
                     bb_commission_general.CN_MCS_BPS = basket.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
 
                     // Soma de todos os GP daquele proposalID (incluindo RS)
-                    bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key != "HW" && d.Key != "MOBOTIX" && d.Key != "PPHW" && d.Key != "MCS" && d.Key != "IMS" && d.Key != "BPS").Sum(x => x.Value.GPTotal);
+                    bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key == "HW").Sum(x => x.Value.GPTotal);
                     bb_commission_general.GP_IMS_VSS = profit_IMS_VSS.GPTotal + profit_MOBOTIX.GPTotal;
                     bb_commission_general.GP_PRS = profit_PRS.GPTotal;
                     bb_commission_general.GP_MCS_BPS = profit_MCS_BPS.GPTotal;
