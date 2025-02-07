@@ -356,10 +356,10 @@ namespace WebApplication1.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
-        [ActionName("FilteredClientsClientOwner")]
-        public List<BB_Clientes_> FilteredClientsClientOwner(string clientOwner)
+        [ActionName("FilteredClientsClientName")]
+        public List<BB_Clientes_> FilteredClientsClientName(string clientName)
         {
-            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.Owner.Contains(clientOwner)).ToList();
+            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.Name.Contains(clientName)).ToList();
 
         }
 

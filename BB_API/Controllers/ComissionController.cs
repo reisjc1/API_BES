@@ -1336,6 +1336,7 @@ namespace WebApplication1.Controllers
                     string logFinal = logPhase_1 + newLine + logPhase_2 + newLine + "\n";
 
                     bb_commission_general.Logs = logFinal;
+                    bb_commission_general.BB_Numero = proposalID.ToString();
 
                     // ----- OLD INFO -------------------------------------------------------------------------------------
 
@@ -1345,7 +1346,6 @@ namespace WebApplication1.Controllers
 
                     //bb_commission_general.HR_Comentario = HRComments;
                     //bb_commission_general.Invoice_List = null;
-                    //bb_commission_general.BB_Numero = proposalID.ToString();
                     //bb_commission_general.Margen = null;
 
                     //bb_commission_general.CN_HW = basket.Where(x => x.Family.Contains("HW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);

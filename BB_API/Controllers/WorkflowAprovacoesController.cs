@@ -2072,11 +2072,18 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("WFAProcessValidation")]
-        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, bool lowerLevels, string user_ID, int control_ID, int level_ID)
+        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, bool lowerLevels, string user_ID, int control_ID, int level_ID, ProposalRootObject draft)
         {
             try
             {
-                 // TODO possiveis inner joins
+
+                ProposalBLL proposalBLL = new ProposalBLL();
+
+                if (draft != null)
+                {
+                    proposalBLL.ProposalDraftSave(draft);
+                }
+                // TODO possiveis inner joins
                 using (var db = new BB_DB_DEVEntities2())
                 {
 
