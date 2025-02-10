@@ -85,6 +85,7 @@
           <Property Name="AccordNumber" Type="varchar" MaxLength="100" />
           <Property Name="ContractNumberPai" Type="varchar" MaxLength="100" />
           <Property Name="DataFechoContracto" Type="datetime" />
+          <Property Name="Pedido_SAP" Type="int" />
         </EntityType>
         <EntityType Name="BB_Proposal_Client">
           <Key>
@@ -96,6 +97,7 @@
           <Property Name="ProposalID" Type="int" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="IsPublicSector" Type="bit" />
+          <Property Name="IsGMA" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_Contacts_Documentation">
           <Key>
@@ -295,6 +297,7 @@
           <Property Name="DocumentIsProcess" Type="bit" />
           <Property Name="DocumentIsValid" Type="bit" />
           <Property Name="Comments" Type="nvarchar(max)" />
+          <Property Name="ProposalID" Type="int" />
         </EntityType>
         <EntityType Name="LD_Email_Log">
           <Key>
@@ -441,7 +444,6 @@
           <EntitySet Name="LD_DocumentClassification" EntityType="BB_DB_DEVModel1.LD_DocumentClassification" />
           <EntitySet Name="LD_System" EntityType="BB_DB_DEVModel1.LD_System" />
           <EntitySet Name="LD_Assinatura_System" EntityType="BB_DB_DEVModel1.LD_Assinatura_System" />
-          <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel1.LD_DocumentProposal" />
           <EntitySet Name="LD_Status" EntityType="BB_DB_DEVModel1.LD_Status" />
           <EntitySet Name="BB_Proposal_FinancingApproval" EntityType="BB_DB_DEVModel1.BB_Proposal_FinancingApproval" />
           <EntitySet Name="LD_Logs" EntityType="BB_DB_DEVModel1.LD_Logs" />
@@ -466,6 +468,7 @@
           <EntitySet Name="BB_Proposal_Client" EntityType="BB_DB_DEVModel1.BB_Proposal_Client" />
           <EntitySet Name="BB_FinancingContractType" EntityType="BB_DB_DEVModel1.BB_FinancingContractType" />
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel1.LD_Contrato" />
+          <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel1.LD_DocumentProposal" />
         </EntityContainer>
         <EntityType Name="LD_DocumentClassification">
           <Key>
@@ -488,29 +491,6 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="System" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="LD_DocumentProposal">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ContratoID" Type="Int32" />
-          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Drive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Folder" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FileExtension" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FileFullPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ClassificationID" Type="Int32" />
-          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
-          <Property Name="SystemID" Type="Int32" />
-          <Property Name="DocumentIsProcess" Type="Boolean" />
-          <Property Name="DocumentIsValid" Type="Boolean" />
-          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="LD_Status">
           <Key>
@@ -813,6 +793,7 @@
           <Property Name="AccordNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ContractNumberPai" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="DataFechoContracto" Type="DateTime" Precision="3" />
+          <Property Name="Pedido_SAP" Type="Int32" />
         </EntityType>
         <EntityType Name="BB_Proposal_Client">
           <Key>
@@ -824,6 +805,7 @@
           <Property Name="ProposalID" Type="Int32" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsPublicSector" Type="Boolean" />
+          <Property Name="IsGMA" Type="Boolean" />
         </EntityType>
         <EntityType Name="BB_FinancingContractType">
           <Key>
@@ -865,6 +847,30 @@
           <Property Name="SapVersion" Type="Int32" />
           <Property Name="InvoiceList" Type="Boolean" />
         </EntityType>
+        <EntityType Name="LD_DocumentProposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContratoID" Type="Int32" />
+          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Drive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Folder" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileExtension" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileFullPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClassificationID" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="SystemID" Type="Int32" />
+          <Property Name="DocumentIsProcess" Type="Boolean" />
+          <Property Name="DocumentIsValid" Type="Boolean" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProposalID" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -892,30 +898,6 @@
             <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_Assinatura_System">
               <MappingFragment StoreEntitySet="LD_Assinatura_System">
                 <ScalarProperty Name="System" ColumnName="System" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LD_DocumentProposal">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_DocumentProposal">
-              <MappingFragment StoreEntitySet="LD_DocumentProposal">
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="DocumentIsValid" ColumnName="DocumentIsValid" />
-                <ScalarProperty Name="DocumentIsProcess" ColumnName="DocumentIsProcess" />
-                <ScalarProperty Name="SystemID" ColumnName="SystemID" />
-                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="ClassificationID" ColumnName="ClassificationID" />
-                <ScalarProperty Name="FileFullPath" ColumnName="FileFullPath" />
-                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="Folder" ColumnName="Folder" />
-                <ScalarProperty Name="Drive" ColumnName="Drive" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
-                <ScalarProperty Name="ContratoID" ColumnName="ContratoID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1210,6 +1192,7 @@
           <EntitySetMapping Name="BB_Proposal">
             <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal">
               <MappingFragment StoreEntitySet="BB_Proposal">
+                <ScalarProperty Name="Pedido_SAP" ColumnName="Pedido_SAP" />
                 <ScalarProperty Name="DataFechoContracto" ColumnName="DataFechoContracto" />
                 <ScalarProperty Name="ContractNumberPai" ColumnName="ContractNumberPai" />
                 <ScalarProperty Name="AccordNumber" ColumnName="AccordNumber" />
@@ -1246,6 +1229,7 @@
           <EntitySetMapping Name="BB_Proposal_Client">
             <EntityTypeMapping TypeName="BB_DB_DEVModel1.BB_Proposal_Client">
               <MappingFragment StoreEntitySet="BB_Proposal_Client">
+                <ScalarProperty Name="IsGMA" ColumnName="IsGMA" />
                 <ScalarProperty Name="IsPublicSector" ColumnName="IsPublicSector" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
@@ -1293,6 +1277,31 @@
                 <ScalarProperty Name="PathContracto" ColumnName="PathContracto" />
                 <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
                 <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LD_DocumentProposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel1.LD_DocumentProposal">
+              <MappingFragment StoreEntitySet="LD_DocumentProposal">
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="DocumentIsValid" ColumnName="DocumentIsValid" />
+                <ScalarProperty Name="DocumentIsProcess" ColumnName="DocumentIsProcess" />
+                <ScalarProperty Name="SystemID" ColumnName="SystemID" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ClassificationID" ColumnName="ClassificationID" />
+                <ScalarProperty Name="FileFullPath" ColumnName="FileFullPath" />
+                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Folder" ColumnName="Folder" />
+                <ScalarProperty Name="Drive" ColumnName="Drive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
+                <ScalarProperty Name="ContratoID" ColumnName="ContratoID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

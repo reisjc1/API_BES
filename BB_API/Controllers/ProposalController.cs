@@ -950,6 +950,7 @@ namespace WebApplication1.Controllers
                                 contractSave.FileName = Path.GetFileName(filePath);
                                 contractSave.ContratoID = contractID;
                                 contractSave.Comments = contractData != null ? contractData.Comments : "";
+                                contractSave.ProposalID = ProposalID;
                                 db.LD_DocumentProposal.Add(contractSave);
                                 db.SaveChanges();
                             }
@@ -1068,6 +1069,7 @@ namespace WebApplication1.Controllers
                                 contractSave.FileName = Path.GetFileName(filePath);
                                 contractSave.ContratoID = contractID;
                                 contractSave.Comments = documentData != null ? documentData.Comments : "";
+                                contractSave.ProposalID = ProposalID;
                                 db.LD_DocumentProposal.Add(contractSave);
                                 db.SaveChanges();
                             }

@@ -32,5 +32,6 @@ namespace WebApplication1.Models
         public Nullable<bool> DocumentIsProcess { get; set; }
         public Nullable<bool> DocumentIsValid { get; set; }
         public string Comments { get; set; }
+        public Nullable<int> ProposalID { get; set; }
     }
 }

@@ -28,7 +28,6 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_DocumentClassification> LD_DocumentClassification { get; set; }
         public virtual DbSet<LD_System> LD_System { get; set; }
         public virtual DbSet<LD_Assinatura_System> LD_Assinatura_System { get; set; }
-        public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
         public virtual DbSet<LD_Status> LD_Status { get; set; }
         public virtual DbSet<BB_Proposal_FinancingApproval> BB_Proposal_FinancingApproval { get; set; }
         public virtual DbSet<LD_Logs> LD_Logs { get; set; }
@@ -53,5 +52,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_Client> BB_Proposal_Client { get; set; }
         public virtual DbSet<BB_FinancingContractType> BB_FinancingContractType { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
+        public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
     }
 }
