@@ -970,6 +970,13 @@ namespace WebApplication1.Controllers
                     profit_IMS_VSS.CalculatedCommission = profit_IMS_VSS.GPTotal * (profit_IMS_VSS.ComissionPercentage / 100);
                     profit_MCS_BPS.CalculatedCommission = profit_MCS_BPS.GPTotal * (profit_MCS_BPS.ComissionPercentage / 100);
 
+                    // Soma da CalculatedCommission todas as familias
+                    bb_commission_general.Comision = profit_OfficeHW.CalculatedCommission +
+                                                     profit_PRS.CalculatedCommission +
+                                                     profit_MOBOTIX.CalculatedCommission +
+                                                     profit_IMS_VSS.CalculatedCommission +
+                                                     profit_MCS_BPS.CalculatedCommission;
+
 
                     // --------------- PONTO 4 -------------->
 
@@ -982,10 +989,10 @@ namespace WebApplication1.Controllers
 
                     var protocolDictionary = new Dictionary<string, CommissionDictionary>()
                     {
-                        { "Printing A3_Colour", new CommissionDictionary(){ Commission = 20, Adjustment = 5} },
-                        { "Printing A3_BW", new CommissionDictionary(){ Commission = 8, Adjustment = 5} },
-                        { "Printing A4_Colour", new CommissionDictionary(){ Commission = 9, Adjustment = 5} },
-                        { "Printing A4_BW", new CommissionDictionary(){ Commission = 4, Adjustment = 5} },
+                        { "A3 Printing_Colour", new CommissionDictionary(){ Commission = 20, Adjustment = 5} },
+                        { "A3 Printing_BW", new CommissionDictionary(){ Commission = 8, Adjustment = 5} },
+                        { "A4 Printing_Colour", new CommissionDictionary(){ Commission = 9, Adjustment = 5} },
+                        { "A4 Printing_BW", new CommissionDictionary(){ Commission = 4, Adjustment = 5} },
                     };
 
                     bool? isSecondHand = false;
@@ -1065,7 +1072,7 @@ namespace WebApplication1.Controllers
                                 Qty = quote.Qty,
                                 DescPerClick = 100 - ((100* vendaClick) / pvpClick),
                                 PHC1 = equipamento.PHC1,
-                                PHC4 = equipamento.PHC2
+                                PHC4 = equipamento.PHC4
                             };
 
                                 // Formulas a aplicar a cada registo do "protocolDictionary" a cada maquina
@@ -1085,7 +1092,7 @@ namespace WebApplication1.Controllers
                                         machine.AppliedCommission = (protocolDictionary[key].Commission * machine.Qty) - (2 * machine.DescPerClick);
                                     }
 
-                                    protocolDictionary[key].Machines.Add(machine);
+                                    machines.Add(machine);
                                 };
 
                             }
@@ -1133,19 +1140,18 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
                     bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
-                    bb_commission_general.CN_Total = proposal.SubTotal;
+                    bb_commission_general.CN_Total = proposal.ValueTotal;
+                    bb_commission_general.Comision_Copias = 0;
 
-                    // Soma da CalculatedCommission todas as familias
-                    bb_commission_general.Comision = profit_OfficeHW.CalculatedCommission +
-                                                                 profit_PRS.CalculatedCommission +
-                                                                 profit_MOBOTIX.CalculatedCommission +
-                                                                 profit_IMS_VSS.CalculatedCommission +
-                                                                 profit_MCS_BPS.CalculatedCommission;
+                    foreach (var machine in machines)
+                    {
+                        bb_commission_general.Comision_Copias = bb_commission_general.Comision_Copias + machine.AppliedCommission;
+                    }
 
-                    bb_commission_general.Comision_Copias = protocolDictionary.Values
-                        .Where(cd => cd.Machines != null)
-                        .SelectMany(cd => cd.Machines)
-                        .Sum(m => m.AppliedCommission ?? 0);
+                    //bb_commission_general.Comision_Copias = protocolDictionary.Values
+                    //    .Where(cd => cd.Machines != null)
+                    //    .SelectMany(cd => cd.Machines)
+                    //    .Sum(m => m.AppliedCommission ?? 0);
 
 
                     bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;                
@@ -1163,7 +1169,10 @@ namespace WebApplication1.Controllers
                     bb_commission_general.GP_IMS_VSS = profit_IMS_VSS.GPTotal + profit_MOBOTIX.GPTotal;
                     bb_commission_general.GP_PRS = profit_PRS.GPTotal;
                     bb_commission_general.GP_MCS_BPS = profit_MCS_BPS.GPTotal;
-                    bb_commission_general.GP_Total = bb_commission_general.GP_Hard;
+                    bb_commission_general.GP_Total = bb_commission_general.GP_Hard +
+                                                     bb_commission_general.GP_IMS_VSS +
+                                                     bb_commission_general.GP_PRS +
+                                                     bb_commission_general.GP_MCS_BPS;
 
                     bb_commission_general.Incidencias = null;
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
