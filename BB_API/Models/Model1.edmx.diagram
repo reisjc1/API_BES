@@ -109,7 +109,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Control" Width="1.5" PointX="32.375" PointY="18.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Approvers_Control" Width="1.5" PointX="31.375" PointY="26.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Exception" Width="1.5" PointX="30.375" PointY="12.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentProposal" Width="1.5" PointX="32.375" PointY="12.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_TypeOfClient" Width="1.5" PointX="0.75" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.vw_get_DataIntegration" Width="1.5" PointX="3.375" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_RD_Estados_Fecho_CRM" Width="1.5" PointX="5.375" PointY="33.75" />
@@ -125,10 +124,11 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_LocaisEnvio" Width="1.5" PointX="33.375" PointY="25.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_DeliveryLocation" Width="1.5" PointX="24.375" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Client" Width="1.5" PointX="34.375" PointY="20.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="29.375" PointY="34.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal" Width="1.5" PointX="9.375" PointY="30.625" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" />
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="29.375" PointY="34.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentProposal" Width="1.5" PointX="32.375" PointY="12.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -8,7 +8,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_DocumentClassification" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_System" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Assinatura_System" Width="1.5" PointX="3.75" PointY="0.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_DocumentProposal" Width="1.5" PointX="5.75" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Status" Width="1.5" PointX="0.75" PointY="6.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Proposal_FinancingApproval" Width="1.5" PointX="6.375" PointY="6.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Logs" Width="1.5" PointX="8.375" PointY="0.75" />
@@ -33,6 +32,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_Proposal_Client" Width="1.5" PointX="15.375" PointY="9.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.BB_FinancingContractType" Width="1.5" PointX="15.375" PointY="12.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_Contrato" Width="1.5" PointX="9.375" PointY="13.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel1.LD_DocumentProposal" Width="1.5" PointX="15.375" PointY="15.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
