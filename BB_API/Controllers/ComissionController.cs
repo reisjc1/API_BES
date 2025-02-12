@@ -835,7 +835,7 @@ namespace WebApplication1.Controllers
                     var isGMA = loadProposal.ProposalObj.Draft.client.isGMA;
 
                     // função interna a ser chamada para fazer o somatório do GPTotal para cada família
-                    void AddProfit(string family, double? amount, string codeRef)
+                    void AddProfit(string family, double? amount, string codeRef, int? quantity)
                     {
                         if (family.EndsWith("HW") || family.EndsWith("CS"))
                         {
@@ -844,29 +844,29 @@ namespace WebApplication1.Controllers
                             if (clientGMA != null && clientGMA != "" && isGMA == true)
                             {
                                 var GMA_Amout = amount * 0.1;
-                                profitDictionary["HW"].GPTotal += GMA_Amout ?? 0;
+                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0) * quantity;
                             }
                             // se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
                             else
                             {
-                                profitDictionary["HW"].GPTotal += amount ?? 0;
-                            }
+                                profitDictionary["HW"].GPTotal += (amount ?? 0) * quantity;
+                }
                         }
 
                         if (family.Contains("IMS") || family.Contains("WPH"))
                         {
-                            profitDictionary["IMS_VSS"].GPTotal += amount ?? 0;
-                        }
+                            profitDictionary["IMS_VSS"].GPTotal += (amount ?? 0) * quantity;
+            }
 
                         if (family.Contains("PRS") || family.Contains("OPSSV"))
                         {
-                            profitDictionary["PRS"].GPTotal += amount ?? 0;
-                        }
+                            profitDictionary["PRS"].GPTotal += (amount ?? 0) * quantity;
+            }
 
                         if (family.Contains("MCS") || family.Contains("BPS"))
                         {
-                            profitDictionary["MCS_BPS"].GPTotal += amount ?? 0;
-                        }
+                            profitDictionary["MCS_BPS"].GPTotal += (amount ?? 0) * quantity;
+            }
                     }
 
                     // Fatores a ter em conta para o cálculo do GPTotal
@@ -881,17 +881,17 @@ namespace WebApplication1.Controllers
                         {
                             var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
 
-                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef);
+                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef, oneShot_Item.Qty);
                         }
                         else if (oneShot_Item.IsUsed == true)
                         {
-                            AddProfit(oneShot_Item.Family, oneShot_Item.TotalCost, oneShot_Item.CodeRef);
+                            AddProfit(oneShot_Item.Family, oneShot_Item.TotalCost, oneShot_Item.CodeRef, oneShot_Item.Qty);
                         }
                         else if (actionCampaignId == 3)
                         {
                             var result = oneShot_Item.TotalNetsale * 0.75;
 
-                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef);
+                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef, oneShot_Item.Qty);
                         }
                         else
                         {
@@ -899,16 +899,16 @@ namespace WebApplication1.Controllers
 
                             if(oneShot_Item.Description.Contains("MOBOTIX"))
                             {
-                                profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal ?? 0;
+                                profitDictionary["MOBOTIX"].GPTotal += (oneShot_Item.GPTotal ?? 0) * oneShot_Item.Qty;
 
                             }
                             else if(oneShot_Item.Description.Contains("BPS"))
                             {
-                                profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal ?? 0;
+                                profitDictionary["MCS_BPS"].GPTotal += (oneShot_Item.GPTotal ?? 0) * oneShot_Item.Qty;
 
                             }
                             else { 
-                                AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef);
+                                AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
                             }
                             
                         }
@@ -917,7 +917,7 @@ namespace WebApplication1.Controllers
                     // servicos recorrentes
                     foreach (var servRecor_Item in servicosRecorrentes)
                     {
-                        AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal, servRecor_Item.CodeRef);
+                        AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal, servRecor_Item.CodeRef, servRecor_Item.Qty);
                     }
 
 
@@ -976,6 +976,8 @@ namespace WebApplication1.Controllers
                                                      profit_MOBOTIX.CalculatedCommission +
                                                      profit_IMS_VSS.CalculatedCommission +
                                                      profit_MCS_BPS.CalculatedCommission;
+
+                    bb_commission_general.Comision = Math.Round((double)bb_commission_general.Comision, 2);
 
 
                     // --------------- PONTO 4 -------------->
@@ -1140,7 +1142,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
                     bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
-                    bb_commission_general.CN_Total = proposal.ValueTotal;
+                    bb_commission_general.CN_Total = Math.Round((double)proposal.ValueTotal, 2);
                     bb_commission_general.Comision_Copias = 0;
 
                     foreach (var machine in machines)
@@ -1154,25 +1156,47 @@ namespace WebApplication1.Controllers
                     //    .Sum(m => m.AppliedCommission ?? 0);
 
 
-                    bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;                
+                    bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
+                    bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
 
                     // TotalNetSalte dos mobotix
                     bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
 
                     bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("HW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
+
                     bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + bb_commission_general.CN_Mobotix;
+
                     bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS") || x.Family.Contains("OPSSV")).Sum(x => x.TotalNetsale);
+
                     bb_commission_general.CN_MCS_BPS = basket.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
+
+
+                    bb_commission_general.CN_Mobotix = Math.Round((double)bb_commission_general.CN_Mobotix, 2);
+                    bb_commission_general.CN_Hard = Math.Round((double)bb_commission_general.CN_Hard, 2);
+                    bb_commission_general.CN_IMS_VSS = Math.Round((double)bb_commission_general.CN_IMS_VSS, 2);
+                    bb_commission_general.CN_PRS = Math.Round((double)bb_commission_general.CN_PRS, 2);
+                    bb_commission_general.CN_MCS_BPS = Math.Round((double)bb_commission_general.CN_MCS_BPS, 2);
+
 
                     // Soma de todos os GP daquele proposalID (incluindo RS)
                     bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key == "HW").Sum(x => x.Value.GPTotal);
+
                     bb_commission_general.GP_IMS_VSS = profit_IMS_VSS.GPTotal + profit_MOBOTIX.GPTotal;
+
                     bb_commission_general.GP_PRS = profit_PRS.GPTotal;
+
                     bb_commission_general.GP_MCS_BPS = profit_MCS_BPS.GPTotal;
+
                     bb_commission_general.GP_Total = bb_commission_general.GP_Hard +
                                                      bb_commission_general.GP_IMS_VSS +
                                                      bb_commission_general.GP_PRS +
                                                      bb_commission_general.GP_MCS_BPS;
+
+                    bb_commission_general.GP_Hard = Math.Round((double)bb_commission_general.GP_Hard, 2);
+                    bb_commission_general.GP_IMS_VSS = Math.Round((double)bb_commission_general.GP_IMS_VSS, 2);
+                    bb_commission_general.GP_PRS = Math.Round((double)bb_commission_general.GP_PRS, 2);
+                    bb_commission_general.GP_MCS_BPS = Math.Round((double)bb_commission_general.GP_MCS_BPS, 2);
+                    bb_commission_general.GP_Total = Math.Round((double)bb_commission_general.GP_Total, 2);
 
                     bb_commission_general.Incidencias = null;
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
@@ -1262,21 +1286,32 @@ namespace WebApplication1.Controllers
 
                     // Calculo de Premios ----------------------------------------------------
                     bb_commission_general.GP_HW_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
+                    bb_commission_general.GP_HW_Premio = Math.Round((double)bb_commission_general.GP_HW_Premio, 2);
+
+
                     bb_commission_general.GP_IMS_VSS_Premio = CalculatePremio((double)bb_commission_general.GP_IMS_VSS, bb_commission_general.Condicion);
-                    bb_commission_general.GP_PRS_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
-                    bb_commission_general.GP_MCS_BPS_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
+                    bb_commission_general.GP_IMS_VSS_Premio = Math.Round((double)bb_commission_general.GP_IMS_VSS_Premio, 2);
+
+                    bb_commission_general.GP_PRS_Premio = CalculatePremio((double)bb_commission_general.GP_PRS, bb_commission_general.Condicion);
+                    bb_commission_general.GP_PRS_Premio = Math.Round((double)bb_commission_general.GP_PRS_Premio, 2);
+
+                    bb_commission_general.GP_MCS_BPS_Premio = CalculatePremio((double)bb_commission_general.GP_MCS_BPS, bb_commission_general.Condicion);
+                    bb_commission_general.GP_MCS_BPS_Premio = Math.Round((double)bb_commission_general.GP_MCS_BPS_Premio, 2);
 
                     bb_commission_general.GP_Total_Premios = bb_commission_general.GP_HW_Premio +
                                                                 bb_commission_general.GP_IMS_VSS_Premio +
                                                                 bb_commission_general.GP_PRS_Premio +
                                                                 bb_commission_general.GP_MCS_BPS_Premio;
 
+                    bb_commission_general.GP_Total_Premios = Math.Round((double)bb_commission_general.GP_Total_Premios, 2);
+
                     // Calculo do Percentage_GP ----------------------------------------------
                     if (bb_commission_general.CN_Total > 0)
                     {
-                        var percentage_GP = ((bb_commission_general.GP_Total / bb_commission_general.CN_Total) * 100);
-                        if(percentage_GP != null)
+                        var percentage_GP = ((bb_commission_general.GP_Total / bb_commission_general.CN_Total) * 100);                
+                        if (percentage_GP != null)
                         {
+                            percentage_GP = Math.Round((double)percentage_GP, 2);
                             bb_commission_general.Percentage_GP = percentage_GP.ToString() + '%';
                         }
                         else
@@ -1292,9 +1327,11 @@ namespace WebApplication1.Controllers
                     // Calculo do Percentage_Comision ----------------------------------------
                     if (bb_commission_general.GP_Total > 0)
                     {
-                        var percentage_Comision = ((bb_commission_general.Comision / bb_commission_general.GP_Total) * 100);
+                        var percentage_Comision = ((bb_commission_general.Comision / bb_commission_general.GP_Total) * 100);                      
+
                         if (percentage_Comision != null)
                         {
+                            percentage_Comision = Math.Round((double)percentage_Comision, 2);
                             bb_commission_general.Percentage_Comision = percentage_Comision.ToString() + '%';
                         }
                         else
