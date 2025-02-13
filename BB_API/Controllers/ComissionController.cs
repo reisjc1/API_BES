@@ -1166,7 +1166,7 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + bb_commission_general.CN_Mobotix;
 
-                    bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS") || x.Family.Contains("OPSSV")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS") || x.Family.EndsWith("SV")).Sum(x => x.TotalNetsale);
 
                     bb_commission_general.CN_MCS_BPS = basket.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
 
