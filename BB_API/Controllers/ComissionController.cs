@@ -858,7 +858,7 @@ namespace WebApplication1.Controllers
                             profitDictionary["IMS_VSS"].GPTotal += (amount ?? 0) * quantity;
             }
 
-                        if (family.Contains("PRS") || family.Contains("OPSSV"))
+                        if (family.Contains("PRS") || family.Contains("SV"))
                         {
                             profitDictionary["PRS"].GPTotal += (amount ?? 0) * quantity;
             }
