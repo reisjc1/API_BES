@@ -22,6 +22,7 @@ using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using DocumentFormat.OpenXml.Drawing;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Win32;
+using Microsoft.Office.Interop.Excel;
 
 namespace WebApplication1.Controllers
 {
@@ -1431,7 +1432,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level1_Approver,
                             Condition_ID = newLine.Level1_Condition,
                             Condition_Value = newLine.Percentage_1,
+                            Condition2_ID = newLine.Level1_Condition2,
+                            Condition2_Value = newLine.Percentage2_1,
                             Type_ID = newLine.Level1_Type,
+                            Type2_ID = newLine.Level1_Type2,
                             Level = 1
                         };
 
@@ -1441,7 +1445,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level2_Approver,
                             Condition_ID = newLine.Level2_Condition,
                             Condition_Value = newLine.Percentage_2,
+                            Condition2_ID = newLine.Level2_Condition2,
+                            Condition2_Value = newLine.Percentage2_2,
                             Type_ID = newLine.Level2_Type,
+                            Type2_ID = newLine.Level2_Type2,
                             Level = 2
                         };
 
@@ -1451,7 +1458,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level3_Approver,
                             Condition_ID = newLine.Level3_Condition,
                             Condition_Value = newLine.Percentage_3,
+                            Condition2_ID = newLine.Level3_Condition2,
+                            Condition2_Value = newLine.Percentage2_3,
                             Type_ID = newLine.Level3_Type,
+                            Type2_ID = newLine.Level3_Type2,
                             Level = 3
                         };
 
@@ -1461,7 +1471,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level4_Approver,
                             Condition_ID = newLine.Level4_Condition,
                             Condition_Value = newLine.Percentage_4,
+                            Condition2_ID = newLine.Level4_Condition2,
+                            Condition2_Value = newLine.Percentage2_4,
                             Type_ID = newLine.Level4_Type,
+                            Type2_ID = newLine.Level4_Type2,
                             Level = 4
                         };
 
@@ -1471,7 +1484,10 @@ namespace WebApplication1.Controllers
                             WFA_Approver_ID = newLine.Level5_Approver,
                             Condition_ID = newLine.Level5_Condition,
                             Condition_Value = newLine.Percentage_5,
+                            Condition2_ID = newLine.Level5_Condition2,
+                            Condition2_Value = newLine.Percentage2_5,
                             Type_ID = newLine.Level5_Type,
+                            Type2_ID = newLine.Level5_Type2,
                             Level = 5
                         };
 

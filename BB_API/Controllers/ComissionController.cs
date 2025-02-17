@@ -837,7 +837,7 @@ namespace WebApplication1.Controllers
                     // função interna a ser chamada para fazer o somatório do GPTotal para cada família
                     void AddProfit(string family, double? amount, string codeRef, int? quantity)
                     {
-                        if (family.EndsWith("HW") || family.EndsWith("CS"))
+                        if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
                         {
                             // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
                             // assim, nunca vai cair no else
@@ -1162,7 +1162,7 @@ namespace WebApplication1.Controllers
                     // TotalNetSalte dos mobotix
                     bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
 
-                    bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("HW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
 
                     bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + bb_commission_general.CN_Mobotix;
 
