@@ -1,5 +1,6 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -934,50 +935,49 @@ namespace WebApplication1.Controllers
                     bool isNewClient = proposal.ClientAccountNumber.StartsWith("P");
                     bool isNewBusinessLine = loadProposal.ProposalObj.Draft.baskets.newBusinessLine ?? false;
 
-                    // Definicao da percentagem de comissao a aplicar a cada familia
-                    if (!isNewClient)
-                    {
-                        profit_OfficeHW.ComissionPercentage = 9;
-                        profit_IMS_VSS.ComissionPercentage = 9;
-                        profit_PRS.ComissionPercentage = 9;
-                        profit_MCS_BPS.ComissionPercentage = 9;
-                        profit_MOBOTIX.ComissionPercentage = 9;
-                    }
-                    else if (isNewBusinessLine)
-                    {
-                        profit_OfficeHW.ComissionPercentage = 12.5;
-                        profit_IMS_VSS.ComissionPercentage = 12.5;
-                        profit_PRS.ComissionPercentage = 12.5;
-                        profit_MCS_BPS.ComissionPercentage = 12.5;
-                        profit_MOBOTIX.ComissionPercentage = 12.5;
-                    }
-                    else
-                    {
-                        profit_OfficeHW.ComissionPercentage = 15.5;
-                        profit_IMS_VSS.ComissionPercentage = 15.5;
-                        profit_PRS.ComissionPercentage = 15.5;
-                        profit_MCS_BPS.ComissionPercentage = 15.5;
-                        profit_MOBOTIX.ComissionPercentage = 15.5;
-                    }
+                    // Definicao da percentagem de comissao a aplicar a cada familia ----> ANTIGO CÁLCULO
+                    //if (!isNewClient)
+                    //{
+                    //    profit_OfficeHW.ComissionPercentage = 9;
+                    //    profit_IMS_VSS.ComissionPercentage = 9;
+                    //    profit_PRS.ComissionPercentage = 9;
+                    //    profit_MCS_BPS.ComissionPercentage = 9;
+                    //    profit_MOBOTIX.ComissionPercentage = 9;
+                    //}
+                    //else if (isNewBusinessLine)
+                    //{
+                    //    profit_OfficeHW.ComissionPercentage = 12.5;
+                    //    profit_IMS_VSS.ComissionPercentage = 12.5;
+                    //    profit_PRS.ComissionPercentage = 12.5;
+                    //    profit_MCS_BPS.ComissionPercentage = 12.5;
+                    //    profit_MOBOTIX.ComissionPercentage = 12.5;
+                    //}
+                    //else
+                    //{
+                    //    profit_OfficeHW.ComissionPercentage = 15.5;
+                    //    profit_IMS_VSS.ComissionPercentage = 15.5;
+                    //    profit_PRS.ComissionPercentage = 15.5;
+                    //    profit_MCS_BPS.ComissionPercentage = 15.5;
+                    //    profit_MOBOTIX.ComissionPercentage = 15.5;
+                    //}
 
 
-                    // Valor do GPTotal acrescido da comissao definida acima
-                    // Exemplo: CalculatedCommission = GPTotal * 0.09
+                    //// Valor do GPTotal acrescido da comissao definida acima
+                    //// Exemplo: CalculatedCommission = GPTotal * 0.09
 
-                    profit_PRS.CalculatedCommission = profit_PRS.GPTotal * (profit_PRS.ComissionPercentage / 100);
-                    profit_OfficeHW.CalculatedCommission = profit_OfficeHW.GPTotal * (profit_OfficeHW.ComissionPercentage / 100);
-                    profit_MOBOTIX.CalculatedCommission = profit_MOBOTIX.GPTotal * (profit_MOBOTIX.ComissionPercentage / 100);
-                    profit_IMS_VSS.CalculatedCommission = profit_IMS_VSS.GPTotal * (profit_IMS_VSS.ComissionPercentage / 100);
-                    profit_MCS_BPS.CalculatedCommission = profit_MCS_BPS.GPTotal * (profit_MCS_BPS.ComissionPercentage / 100);
+                    //profit_PRS.CalculatedCommission = profit_PRS.GPTotal * (profit_PRS.ComissionPercentage / 100);
+                    //profit_OfficeHW.CalculatedCommission = profit_OfficeHW.GPTotal * (profit_OfficeHW.ComissionPercentage / 100);
+                    //profit_MOBOTIX.CalculatedCommission = profit_MOBOTIX.GPTotal * (profit_MOBOTIX.ComissionPercentage / 100);
+                    //profit_IMS_VSS.CalculatedCommission = profit_IMS_VSS.GPTotal * (profit_IMS_VSS.ComissionPercentage / 100);
+                    //profit_MCS_BPS.CalculatedCommission = profit_MCS_BPS.GPTotal * (profit_MCS_BPS.ComissionPercentage / 100);
 
-                    // Soma da CalculatedCommission todas as familias
-                    bb_commission_general.Comision = profit_OfficeHW.CalculatedCommission +
-                                                     profit_PRS.CalculatedCommission +
-                                                     profit_MOBOTIX.CalculatedCommission +
-                                                     profit_IMS_VSS.CalculatedCommission +
-                                                     profit_MCS_BPS.CalculatedCommission;
+                    //// Soma da CalculatedCommission todas as familias
+                    //bb_commission_general.Comision = profit_OfficeHW.CalculatedCommission +
+                    //                                 profit_PRS.CalculatedCommission +
+                    //                                 profit_MOBOTIX.CalculatedCommission +
+                    //                                 profit_IMS_VSS.CalculatedCommission +
+                    //                                 profit_MCS_BPS.CalculatedCommission;
 
-                    bb_commission_general.Comision = Math.Round((double)bb_commission_general.Comision, 2);
 
 
                     // --------------- PONTO 4 -------------->
@@ -1130,6 +1130,16 @@ namespace WebApplication1.Controllers
 
                     }
 
+                    int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
+                    if (campaignID == 0)
+                    {
+                        bb_commission_general.Tipo_Operacion = "Negocio Tradicional";
+                    }
+                    else
+                    {
+                        bb_commission_general.Tipo_Operacion = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
+                    }
+
                     DateTime? modifiedDate = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ModifiedTime).FirstOrDefault();
 
                     if (modifiedDate.HasValue)
@@ -1204,16 +1214,6 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CBB = bb_commission_general.Es_GMA;
                     bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;            
 
-                    int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
-                    if (campaignID == 0)
-                    {
-                        bb_commission_general.Tipo_Operacion = "Negocio Tradicional";
-                    }
-                    else
-                    {
-                        bb_commission_general.Tipo_Operacion = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
-                    }
-
                     bb_commission_general.Tipo_Financiacion = db.BB_FinancingType.Where(x => x.Code == loadProposal.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
 
                     bb_commission_general.Fecha_Operacion = DateTime.Now;
@@ -1226,7 +1226,7 @@ namespace WebApplication1.Controllers
                     {
                         bb_commission_general.Tipo_Cliente = "NLN";
                     }
-                    else if(isNewClient == true)
+                    else if (isNewClient == true)
                     {
                         bb_commission_general.Tipo_Cliente = "PROSPECTO";
                     }
@@ -1234,6 +1234,105 @@ namespace WebApplication1.Controllers
                     {
                         bb_commission_general.Tipo_Cliente = "CLIENTE";
                     }
+
+                    // Calculo da comission -----------------------------------------------------------------------------------------------
+                    double GetCommission(string area, int? campaignIDX, string tipoCliente)
+                    {
+                        var Dict_NO_Alquiler = new Dictionary<string, (double prospecto, double newBusiness, double client)>
+                        {
+                            { "VD", (15.5, 12.5, 9) },
+                            { "GC", (14, 10.75, 7.5) },
+                            { "PP", (14.5, 11.5, 8.5) }
+                        };
+
+                        var Dict_Alquiler = new Dictionary<string, (double prospecto, double newBusiness, double client)>
+                        {
+                            { "VD", (11.625, 9.375, 6.75) },
+                            { "GC", (13, 9.75, 6.5) },
+                            { "PP", (10.875, 8.625, 6.375) }
+                        };
+
+                        // devolver o dicionario com base ca condicao "Alquiler"
+                        var selectedTable = campaignIDX == 5 ? Dict_Alquiler : Dict_NO_Alquiler;
+
+                        string key = "";
+
+                        if (area.Contains("VD") || area.Contains("GC") || area.Contains("PP"))
+                        {
+                            if (area.Contains("VD")){
+                                key = "VD";
+                            }
+                            else if (area.Contains("GC"))
+                            {
+                               key = "GC";
+                            }else if (area.Contains("PP"))
+                            {
+                                key = "PP";
+                            }
+                    
+
+                            if (tipoCliente == "PROSPECTO")
+                            {
+                                return selectedTable[key].prospecto;
+                            }
+                            else if (tipoCliente == "NLN")
+                            {
+                                return selectedTable[key].newBusiness;
+                            }
+                            else if(tipoCliente == "CLIENTE")
+                            {
+                                return selectedTable[key].client;
+                            }
+                            else
+                            {
+                                return 0;
+                            }
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+
+                    }
+
+                    bb_commission_general.Comision = GetCommission(bb_commission_general.Area, campaignID, bb_commission_general.Tipo_Cliente);
+
+                    if(bb_commission_general.Comision != 0)
+                    {
+                        bb_commission_general.Comision = bb_commission_general.Comision * bb_commission_general.GP_Total;
+                        bb_commission_general.Comision = Math.Round((double)bb_commission_general.Comision, 2);
+
+                        bb_commission_general.Percentage_Comision = $"{bb_commission_general.Comision}%";
+                    }
+                    else
+                    {
+                        bb_commission_general.Comision = null;
+                        bb_commission_general.Percentage_Comision = "-";
+                    }
+
+
+                    // Calculo do Percentage_Comision ---------------------------------------- ANTIGO
+                    //if (bb_commission_general.GP_Total > 0)
+                    //{
+                    //    var percentage_Comision = ((bb_commission_general.Comision / bb_commission_general.GP_Total) * 100);
+
+                    //    if (percentage_Comision != null)
+                    //    {
+                    //        percentage_Comision = Math.Round((double)percentage_Comision, 2);
+                    //        bb_commission_general.Percentage_Comision = percentage_Comision.ToString() + '%';
+                    //    }
+                    //    else
+                    //    {
+                    //        bb_commission_general.Percentage_Comision = "-";
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    bb_commission_general.Percentage_Comision = "0%";
+                    //}
+
+                    //----------------------------------------------------------------------------------------------------------------------
+
 
                     // Definir o campo GMA
                     if(bb_commission_general.Es_GMA == true)
@@ -1245,7 +1344,7 @@ namespace WebApplication1.Controllers
                         bb_commission_general.GMA_10 = "X"; 
                     }
 
-                    bb_commission_general.Observacion = null;
+                    bb_commission_general.Observacion = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ComentariosGC).FirstOrDefault();
 
                     // Definicao da Condicion para o calculo dos premios ---------------------
 
@@ -1273,7 +1372,7 @@ namespace WebApplication1.Controllers
                     {
                         bb_commission_general.Condicion = "3";
                     }
-                    else if (isPPMachine == true)
+                    else if (isPPMachine == true && isSecondHand == true)
                     {
                         bb_commission_general.Condicion = "4";
                     }               
@@ -1324,25 +1423,6 @@ namespace WebApplication1.Controllers
                         bb_commission_general.Percentage_GP = "0%";
                     }
 
-                    // Calculo do Percentage_Comision ----------------------------------------
-                    if (bb_commission_general.GP_Total > 0)
-                    {
-                        var percentage_Comision = ((bb_commission_general.Comision / bb_commission_general.GP_Total) * 100);                      
-
-                        if (percentage_Comision != null)
-                        {
-                            percentage_Comision = Math.Round((double)percentage_Comision, 2);
-                            bb_commission_general.Percentage_Comision = percentage_Comision.ToString() + '%';
-                        }
-                        else
-                        {
-                            bb_commission_general.Percentage_Comision = "-";
-                        }
-                    }
-                    else
-                    {
-                        bb_commission_general.Percentage_Comision = "0%";
-                    }
 
                     bb_commission_general.Calculo = "Bsine Bilfer";
                     bb_commission_general.Estado_Factura = "PENDIENTE";
@@ -1788,12 +1868,12 @@ namespace WebApplication1.Controllers
         private double CalculatePremio(double value, string condicion)
         {
             switch (condicion)
-            {
-                case "4":
+            {                
                 case "3":
                 case "0":
                     return value;
-
+                case "4":
+                    return value * 0.65;
                 case "1":
                     return value * 0.5;
 
