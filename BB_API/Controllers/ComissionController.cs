@@ -1200,7 +1200,7 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Incidencias = null;
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
-                    bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.baskets.GMA;
+                    bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.client.isGMA;
                     bb_commission_general.CBB = bb_commission_general.Es_GMA;
                     bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;            
 
