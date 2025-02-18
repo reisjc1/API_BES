@@ -851,23 +851,23 @@ namespace WebApplication1.Controllers
                             else
                             {
                                 profitDictionary["HW"].GPTotal += (amount ?? 0) * quantity;
-                }
+                            }
                         }
 
                         if (family.Contains("IMS") || family.Contains("WPH"))
                         {
                             profitDictionary["IMS_VSS"].GPTotal += (amount ?? 0) * quantity;
-            }
+                        }
 
                         if (family.Contains("PRS") || family.Contains("SV"))
                         {
                             profitDictionary["PRS"].GPTotal += (amount ?? 0) * quantity;
-            }
+                        }
 
                         if (family.Contains("MCS") || family.Contains("BPS"))
                         {
                             profitDictionary["MCS_BPS"].GPTotal += (amount ?? 0) * quantity;
-            }
+                        }
                     }
 
                     // Fatores a ter em conta para o cálculo do GPTotal
@@ -886,13 +886,15 @@ namespace WebApplication1.Controllers
                         }
                         else if (oneShot_Item.IsUsed == true)
                         {
-                            AddProfit(oneShot_Item.Family, oneShot_Item.TotalCost, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            var resultX = oneShot_Item.TotalNetsale * 0.65;
+
+                            AddProfit(oneShot_Item.Family, resultX, oneShot_Item.CodeRef, oneShot_Item.Qty);
                         }
                         else if (actionCampaignId == 3)
                         {
-                            var result = oneShot_Item.TotalNetsale * 0.75;
+                            var resultY = oneShot_Item.TotalNetsale * 0.75;
 
-                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            AddProfit(oneShot_Item.Family, resultY, oneShot_Item.CodeRef, oneShot_Item.Qty);
                         }
                         else
                         {
@@ -1166,9 +1168,6 @@ namespace WebApplication1.Controllers
                     //    .Sum(m => m.AppliedCommission ?? 0);
 
 
-                    bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
-                    bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
-
                     // TotalNetSalte dos mobotix
                     bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
 
@@ -1256,32 +1255,38 @@ namespace WebApplication1.Controllers
                         var selectedTable = campaignIDX == 5 ? Dict_Alquiler : Dict_NO_Alquiler;
 
                         string key = "";
-
-                        if (area.Contains("VD") || area.Contains("GC") || area.Contains("PP"))
+                        if (area != null)
                         {
-                            if (area.Contains("VD")){
-                                key = "VD";
-                            }
-                            else if (area.Contains("GC"))
+                            if (area.Contains("VD") || area.Contains("GC") || area.Contains("PP"))
                             {
-                               key = "GC";
-                            }else if (area.Contains("PP"))
-                            {
-                                key = "PP";
-                            }
-                    
+                                if (area.Contains("VD")){
+                                    key = "VD";
+                                }
+                                else if (area.Contains("GC"))
+                                {
+                                   key = "GC";
+                                }else if (area.Contains("PP"))
+                                {
+                                    key = "PP";
+                                }
 
-                            if (tipoCliente == "PROSPECTO")
-                            {
-                                return selectedTable[key].prospecto;
-                            }
-                            else if (tipoCliente == "NLN")
-                            {
-                                return selectedTable[key].newBusiness;
-                            }
-                            else if(tipoCliente == "CLIENTE")
-                            {
-                                return selectedTable[key].client;
+
+                                if (tipoCliente == "PROSPECTO")
+                                {
+                                    return selectedTable[key].prospecto;
+                                }
+                                else if (tipoCliente == "NLN")
+                                {
+                                    return selectedTable[key].newBusiness;
+                                }
+                                else if(tipoCliente == "CLIENTE")
+                                {
+                                    return selectedTable[key].client;
+                                }
+                                else
+                                {
+                                    return 0;
+                                }
                             }
                             else
                             {
@@ -1292,17 +1297,17 @@ namespace WebApplication1.Controllers
                         {
                             return 0;
                         }
-
                     }
 
                     bb_commission_general.Comision = GetCommission(bb_commission_general.Area, campaignID, bb_commission_general.Tipo_Cliente);
 
-                    if(bb_commission_general.Comision != 0)
-                    {
-                        bb_commission_general.Comision = bb_commission_general.Comision * bb_commission_general.GP_Total;
-                        bb_commission_general.Comision = Math.Round((double)bb_commission_general.Comision, 2);
 
+                    if (bb_commission_general.Comision != 0)
+                    {
                         bb_commission_general.Percentage_Comision = $"{bb_commission_general.Comision}%";
+
+                        bb_commission_general.Comision = (bb_commission_general.Comision * bb_commission_general.GP_Total) / 100;
+                        bb_commission_general.Comision = Math.Round((double)bb_commission_general.Comision, 2);
                     }
                     else
                     {
@@ -1310,6 +1315,8 @@ namespace WebApplication1.Controllers
                         bb_commission_general.Percentage_Comision = "-";
                     }
 
+                    bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
+                    bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
 
                     // Calculo do Percentage_Comision ---------------------------------------- ANTIGO
                     //if (bb_commission_general.GP_Total > 0)
@@ -1589,7 +1596,7 @@ namespace WebApplication1.Controllers
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    commission_lst = db.BB_Commission_General.ToList();
+                    commission_lst = db.BB_Commission_General.OrderByDescending(x => x.ID).ToList();
                 }
 
                 if (!commission_lst.Any())
@@ -1658,15 +1665,17 @@ namespace WebApplication1.Controllers
                     { "Manager_Nombre", "MANAGER NOMBRE" },
                     { "Manager_2", "MANAGER2" },
                     { "Manager_Nombre_2", "MANAGER2 NOMBRE" },
+                    { "A", "A" },
+                    { "Operacion", "OPERACIÓN" },
                     { "Calculo","CALCULO" },
                     { "Percentage_GP","% GP" },
                     { "Percentage_Comision","% COMISION" },
-                    { "Incidencias","INCIDENCIAS" },
-                    { "Logs","LOGS" },
-                    { "Es_Segunda_Mano","ES SEGUNDA MANO" },
-                    { "Es_GMA","ES GMA" },
-                    { "CBB","CBB" },
-                    { "Es_Prospecto","ES PROSPECTO" }
+                    { "Incidencias","INCIDENCIAS" }
+                    //{ "Logs","LOGS" },
+                    //{ "Es_Segunda_Mano","ES SEGUNDA MANO" },
+                    //{ "Es_GMA","ES GMA" },
+                    //{ "CBB","CBB" },
+                    //{ "Es_Prospecto","ES PROSPECTO" }
 
 
                     //-----------------------------
@@ -1742,9 +1751,16 @@ namespace WebApplication1.Controllers
 
                         if (prop != null)
                         {
-                            // Obtém o valor da propriedade para o objeto atual
-                            object value = prop.GetValue(commission);
-                            worksheet.Cells[line, column] = value;
+                            if (campo.Key == "A" || campo.Key== "Operacion")
+                            {
+                                worksheet.Cells[line, column] = string.Empty;
+                            }
+                            else
+                            {
+                                // Obtém o valor da propriedade para o objeto atual
+                                object value = prop.GetValue(commission);
+                                worksheet.Cells[line, column] = value;
+                            }
                         }
                         column++;
                     }
