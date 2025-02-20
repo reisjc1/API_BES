@@ -1352,6 +1352,10 @@ namespace WebApplication1.Controllers
                     }
 
                     bb_commission_general.Observacion = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ComentariosGC).FirstOrDefault();
+                    if(bb_commission_general.Observacion == null)
+                    {
+                        bb_commission_general.Observacion = " ";
+                    }
 
                     // Definicao da Condicion para o calculo dos premios ---------------------
 
@@ -1431,7 +1435,7 @@ namespace WebApplication1.Controllers
                     }
 
 
-                    bb_commission_general.Calculo = "Bsine Bilfer";
+                    bb_commission_general.Calculo = "MOTOR";
                     bb_commission_general.Estado_Factura = "PENDIENTE";
 
                     // Empty Info ON PURPOSE -------------------------------------------------
@@ -1751,9 +1755,15 @@ namespace WebApplication1.Controllers
 
                         if (prop != null)
                         {
-                            if (campo.Key == "A" || campo.Key== "Operacion")
+                            // coluna que serve como divisória
+                            if (campo.Key == "A")
                             {
                                 worksheet.Cells[line, column] = string.Empty;
+                            }
+                            // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
+                            else if(campo.Key == "Operacion")
+                            {
+                                worksheet.Cells[line, column] = "BB";
                             }
                             else
                             {
