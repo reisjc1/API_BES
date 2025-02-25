@@ -30,8 +30,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
                         partnerInfo.PARTN_ROLE = reader["PARTN_ROLE"].ToString();
                         partnerInfo.CUSTOMER = reader["CUSTOMER"].ToString();
-                        partnerInfo.CP_NAME = reader["CP_NAME"].ToString();
-                        partnerInfo.CP_PHONE = reader["CP_PHONE"].ToString();
+                        //partnerInfo.CP_NAME = reader["CP_NAME"].ToString();
+                        //partnerInfo.CP_PHONE = reader["CP_PHONE"].ToString();
                         partnerInfo.NAME1 = reader["NAME1"].ToString();
                         partnerInfo.NAME2 = reader["NAME2"].ToString();
                         partnerInfo.NAME_CO = reader["NAME_CO"].ToString();
@@ -46,7 +46,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         partnerInfo.TEL_NUMBER = reader["TEL_NUMBER"].ToString();
                         partnerInfo.BUILD_LONG = reader["BUILD_LONG"].ToString();
                         partnerInfo.TAX_NO_1 = reader["TAX_NO_1"].ToString();
-                        partnerInfo.TAX_NO_2 = reader["TAX_NO_2"].ToString();
+                        //partnerInfo.TAX_NO_2 = reader["TAX_NO_2"].ToString();
                     }
                 }
                 address.ADDRNUMBER = $"A_{randomNumber}_{randomLetterNumber}";             //$"A_368650_{randomLetterNumber}";      //$"A_3686499_{randomLetterNunber}",
@@ -92,8 +92,8 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 partnerInfo.PARTN_ROLE = reader["PARTN_ROLE"].ToString();
                                 partnerInfo.CUSTOMER = reader["CUSTOMER"].ToString();
-                                partnerInfo.CP_NAME = reader["CP_NAME"].ToString();
-                                partnerInfo.CP_PHONE = reader["CP_PHONE"].ToString();
+                                //partnerInfo.CP_NAME = reader["CP_NAME"].ToString();
+                                //partnerInfo.CP_PHONE = reader["CP_PHONE"].ToString();
                                 partnerInfo.NAME1 = reader["NAME1"].ToString();
                                 partnerInfo.NAME2 = reader["NAME2"].ToString();
                                 partnerInfo.NAME_CO = reader["NAME_CO"].ToString();
@@ -108,7 +108,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 partnerInfo.TEL_NUMBER = reader["TEL_NUMBER"].ToString();
                                 partnerInfo.BUILD_LONG = reader["BUILD_LONG"].ToString();
                                 partnerInfo.TAX_NO_1 = reader["TAX_NO_1"].ToString();
-                                partnerInfo.TAX_NO_2 = reader["TAX_NO_2"].ToString();
+                                //partnerInfo.TAX_NO_2 = reader["TAX_NO_2"].ToString();
                             }
                         }
                     }
