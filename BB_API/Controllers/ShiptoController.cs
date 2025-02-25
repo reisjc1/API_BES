@@ -30,8 +30,11 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     //nunca enviar ambos os parametros != null
-                    lst_Locais = GetDeliveryLocationsFromSP(AccountNumber, null);
-                    string parentAccountNr = lst_Locais.Select(x => x.ParentAccountNumber).FirstOrDefault();
+                    BB_Clientes client = db.BB_Clientes.Where(x => x.accountnumber == AccountNumber).FirstOrDefault();
+
+                    string clientName = client.Name.Split(' ')[0];
+                    lst_Locais = GetDeliveryLocationsFromSP(AccountNumber, null, clientName);
+                    //string parentAccountNr = lst_Locais.Select(x => x.ParentAccountNumber).FirstOrDefault();
                     
                     lst_DeliverLocations = GetDeliveryLocationsByProposalIDFromSP(proposalID);
 
@@ -41,13 +44,13 @@ namespace WebApplication1.Controllers
                     dl.lst_BB_Proposal_DeliveryLocation = new List<BB_Proposal_DeliveryLocation>();
                     dl.lst_BB_Proposal_DeliveryLocation = lst_DeliverLocations;
 
-                    if (parentAccountNr != "")
-                    {
-                        //nunca enviar ambos os parametros != null
-                        List<BB_LocaisEnvio> current_lst_Locais = GetDeliveryLocationsFromSP(null, parentAccountNr);
-                        lst_Locais.AddRange(current_lst_Locais);
-                        dl.lst_LocaisEnvio = lst_Locais;
-                    }
+                    //if (parentAccountNr != "")
+                    //{
+                    //    //nunca enviar ambos os parametros != null
+                    //    List<BB_LocaisEnvio> current_lst_Locais = GetDeliveryLocationsFromSP(null, parentAccountNr);
+                    //    lst_Locais.AddRange(current_lst_Locais);
+                    //    dl.lst_LocaisEnvio = lst_Locais;
+                    //}
 
                     // #############################################################################################
 
@@ -443,7 +446,7 @@ namespace WebApplication1.Controllers
         }
         // ----------------------------- HELPERS -----------------------------
 
-        public List<BB_LocaisEnvio> GetDeliveryLocationsFromSP(string AccountNumber, string ParentAccountNumber)
+        public List<BB_LocaisEnvio> GetDeliveryLocationsFromSP(string AccountNumber, string ParentAccountNumber, string clientName)
         {
             try
             {
@@ -460,6 +463,7 @@ namespace WebApplication1.Controllers
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@AccountNumber", AccountNumber);
                     cmd.Parameters.AddWithValue("@ParentAccountNumber", ParentAccountNumber);
+                    cmd.Parameters.AddWithValue("@ClientName", clientName);
                     SqlDataReader rdr = cmd.ExecuteReader();
 
                     while (rdr.Read())
