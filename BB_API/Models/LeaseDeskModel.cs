@@ -329,6 +329,13 @@ namespace WebApplication1.Models
 
         public Nullable<int> PropostaID { get; set; }
         public string AddressType { get; set; }
+        public Nullable<bool> IsNewAddress { get; set; }
+        public string Department { get; set; }
+        public string Floor { get; set; }
+        public string Building { get; set; }
+        public string Room { get; set; }
+        public string Schedule { get; set; }
+        public Nullable<System.DateTime> DeliveryDate { get; set; }
     }
 
     public class BB_Proposal_DeliveryGroup

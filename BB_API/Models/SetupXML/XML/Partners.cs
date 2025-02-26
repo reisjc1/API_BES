@@ -45,8 +45,8 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 partnerInfo.PARTN_ROLE = reader["PARTN_ROLE"].ToString();
                                 partnerInfo.CUSTOMER = reader["CUSTOMER"].ToString();
-                                partnerInfo.CP_NAME = reader["CP_NAME"].ToString();
-                                partnerInfo.CP_PHONE = reader["CP_PHONE"].ToString();
+                                //partnerInfo.CP_NAME = reader["CP_NAME"].ToString();
+                                //partnerInfo.CP_PHONE = reader["CP_PHONE"].ToString();
                                 partnerInfo.NAME1 = reader["NAME1"].ToString();
                                 partnerInfo.NAME2 = reader["NAME2"].ToString();
                                 partnerInfo.NAME_CO = reader["NAME_CO"].ToString();
@@ -63,7 +63,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 partnerInfo.TEL_NUMBER = reader["TEL_NUMBER"].ToString();
                                 partnerInfo.BUILD_LONG = reader["BUILD_LONG"].ToString();
                                 partnerInfo.TAX_NO_1 = reader["TAX_NO_1"].ToString();
-                                partnerInfo.TAX_NO_2 = reader["TAX_NO_2"].ToString();
+                                //partnerInfo.TAX_NO_2 = reader["TAX_NO_2"].ToString();
                             }
                         }
                     }
@@ -88,13 +88,22 @@ namespace WebApplication1.Models.SetupXML.XML
                         }
 
                     }
-                    string[] nameParts = partnerInfo.CP_NAME.Split(' ');
-                    //partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
-                    //if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
-                    if (string.IsNullOrEmpty(partnerInfo.ISNEWADDRESS))
+                    string[] nameParts = null;
+                    BB_Clientes client = new BB_Clientes();
+                    using (var bdCliente = new BB_DB_DEVEntities2())
+                    {
+                        string clientNumber = bdCliente.BB_Proposal.Where(x => x.ID == proposalId).Select(x => x.ClientAccountNumber).FirstOrDefault();
+                        client = bdCliente.BB_Clientes.Where(x => x.accountnumber == clientNumber).FirstOrDefault();
+
+                        nameParts = client.Owner.Split(' ');
+                    }
+                        //partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
+                        //if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
+                        if (string.IsNullOrEmpty(partnerInfo.ISNEWADDRESS))
                     {
                         using(var bdCliente =  new BB_DB_DEVEntities2())
                         {
+                            
                             BB_Proposal_DeliveryLocation idLocaisEnvio = bdCliente.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId && x.AccountType == "Ship To").FirstOrDefault();
 
                             //int IDLOCAISENVIO = Int32.Parse(idLocaisEnvio);
@@ -108,7 +117,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 CUSTOMER = idLocaisEnvio.SAPCustomerNr,
                                 CP_NAMEV = nameParts[nameParts.Length - 1],     //"ALVAREZ",
                                 CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1)),
-                                CP_PHONE = partnerInfo.CP_PHONE//"66666666"
+                                CP_PHONE = client.telephone1//"66666666"
                             });
                         }
 
@@ -119,7 +128,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         using (var bdCliente = new BB_DB_DEVEntities2())
                         {
                             BB_Proposal_DeliveryLocation idLocaisEnvio = bdCliente.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId && x.AccountType == "Ship To").FirstOrDefault();
-                        
+                      
                             Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES addressObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES();
                             Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD addressAddObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD();
 
@@ -135,7 +144,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             partner.ADDRNUMBER = addressObj.ADDRNUMBER;
                             partner.CP_NAMEV = nameParts[nameParts.Length - 1];
                             partner.CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1));
-                            partner.CP_PHONE = partnerInfo.CP_PHONE;
+                            partner.CP_PHONE = client.telephone1;
 
                             //partnersAdressesList.Partners.Add(partner);
                             collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
@@ -146,12 +155,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                 ADDRNUMBER = addressObj.ADDRNUMBER,      //$"A_3686501_{randomLetterNumber}",  //$"A_3686499_{randomLetterNunber}",
                                 CP_NAMEV = nameParts[nameParts.Length - 1],     //"ALVAREZ",
                                 CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1)),
-                                CP_PHONE = partnerInfo.CP_PHONE//"66666666"
+                                CP_PHONE = client.telephone1//"66666666"
                             });
                             collectionAddresses.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES
                             {
                                 ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
-                                NAME1 = "EUROPEA DE EXPEDICIONES SL", // partnerInfo.NAME1,
+                                NAME1 = partnerInfo.NAME1, // "EUROPEA DE EXPEDICIONES SL",
                                 NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
                                 NAME_CO = "DEPART",
                                 CITY1 = addressObj.CITY1,// "CADIZ",
@@ -168,7 +177,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
                             {
                                 TAX_NO_1 = addressAddObj.TAX_NO_1,
-                                TAX_NO_2 = addressAddObj.TAX_NO_2,
+                                TAX_NO_2 = client.NIF,
                                 ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
                             });
                             i++;
