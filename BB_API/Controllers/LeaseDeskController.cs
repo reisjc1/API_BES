@@ -2002,21 +2002,14 @@ namespace WebApplication1.Controllers
                                     m.Financiamento = db2.BB_FinancingType.Where(x => x.Code == f.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
                                 }
 
-                                if (b.CampaignID == 0)
-                                {
-                                    m.TipoNegocio = "Negócio Tradicional";
-                                }
-                                else
-                                {
                                     m.TipoNegocio = db2.BB_Campanha.Where(x => x.ID == b.CampaignID).Select(x => x.Campanha).FirstOrDefault();
-                                }
 
                                 if (f != null && f.FinancingTypeCode != null && f.FinancingTypeCode == 0)
                                 {
                                     m.Financiamento = "NA";
                                 }
 
-                                if (b.CampaignID == 0 && f != null && f.FinancingTypeCode != null && f.FinancingTypeCode == 0)
+                                if (b.CampaignID == 1 && f != null && f.FinancingTypeCode != null && f.FinancingTypeCode == 0)
                                 {
                                     m.TipoNegocio = "Venda Directa";
                                 }
