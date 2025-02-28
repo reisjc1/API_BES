@@ -902,6 +902,10 @@ namespace WebApplication1.Controllers
 
                                 AddProfit(oneShot_Item.Family, resultY, oneShot_Item.CodeRef, oneShot_Item.Qty);
                             }
+                            else
+                            {
+                                AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            }
                             // Finalización de Renting con venta
                             //else if (financingTypeCode == 2 || )
                             //{
@@ -1400,8 +1404,7 @@ namespace WebApplication1.Controllers
                     {
                         bb_commission_general.Condicion = "0";
                     }
-
-                    
+                  
 
                     // Calculo de Premios ----------------------------------------------------
                     bb_commission_general.GP_HW_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
@@ -1762,42 +1765,50 @@ namespace WebApplication1.Controllers
 
                 foreach (var commission in commission_lst)
                 {
-                    column = 1;
-                    foreach (var campo in campoParaExcel) // Itera sobre o dicionário
+                    if (commission.Area != null)
                     {
-                        // Obtém a propriedade correspondente à chave do dicionário
-                        var prop = propriedades.FirstOrDefault(p => p.Name == campo.Key);
-
-                        if (prop != null)
+                        column = 1;
+                        foreach (var campo in campoParaExcel) // Itera sobre o dicionário
                         {
-                            // coluna que serve como divisória
-                            if (campo.Key == "A")
+                            // Obtém a propriedade correspondente à chave do dicionário
+                            var prop = propriedades.FirstOrDefault(p => p.Name == campo.Key);
+
+                            if (prop != null)
                             {
-                                worksheet.Cells[line, column] = string.Empty;
-                            }
-                            // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
-                            else if(campo.Key == "Operacion")
-                            {
-                                worksheet.Cells[line, column] = "BB";
-                            }else if (campo.Key == "Fecha_Factura")
-                            {
-                                worksheet.Cells[line, column] = todaysDate;
-                            }else if (campo.Key == "Area")
-                            {
-                                object value = prop.GetValue(commission);
-                                if (value.ToString() != "JEFE DE VIENTA" || value.ToString() != "IP" || value.ToString() != "DELEGADO")
+                                // coluna que serve como divisória
+                                if (campo.Key == "A")
                                 {
+                                    worksheet.Cells[line, column] = string.Empty;
+                                }
+                                // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
+                                else if(campo.Key == "Operacion")
+                                {
+                                    worksheet.Cells[line, column] = "BB";
+                                }else if (campo.Key == "Fecha_Factura")
+                                {
+                                    worksheet.Cells[line, column] = todaysDate;
+                                }else if (campo.Key == "Area")
+                                {
+                                    object value = prop.GetValue(commission);
+
+                                    if (value != null)
+                                    {
+                                        if (value.ToString() != "JEFE DE VIENTA" || value.ToString() != "IP" || value.ToString() != "DELEGADO" || value.ToString() != "" || value.ToString() != " ")
+                                        {
+                                            worksheet.Cells[line, column] = value;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // Obtém o valor da propriedade para o objeto atual
+                                    object value = prop.GetValue(commission);
                                     worksheet.Cells[line, column] = value;
                                 }
                             }
-                            else
-                            {
-                                // Obtém o valor da propriedade para o objeto atual
-                                object value = prop.GetValue(commission);
-                                worksheet.Cells[line, column] = value;
-                            }
+                            column++;
                         }
-                        column++;
+
                     }
                     line++;
                 }
