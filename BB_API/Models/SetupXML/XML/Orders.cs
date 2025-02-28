@@ -616,10 +616,14 @@ namespace WebApplication1.Models.SetupXML.XML
                                 else if (activePS.ClickPerModel != null)
                                 {
                                     BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
-                                    if (pSM != null)
+                                    if (pSM != null && pSM.ApprovedC != null)
                                     {
                                         string formatNumber = ((double)pSM.ApprovedC).ToString("F5");
                                         kBETR = formatNumber.Replace(",", ".");
+                                    }
+                                    else
+                                    {
+                                        kBETR = "0.00000";
                                     }
                                     //kBETR = clickPerModel
                                 }
