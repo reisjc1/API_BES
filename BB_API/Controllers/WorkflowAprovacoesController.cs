@@ -2036,6 +2036,14 @@ namespace WebApplication1.Controllers
                             ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
                             ControlID = rdr["ControlID"] != DBNull.Value ? (int?)rdr["ControlID"] : null,
                             LevelID = rdr["LevelID"] != DBNull.Value ? (int?)rdr["LevelID"] : null,
+                            ConditionType = rdr["ConditionType"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ConditionType")) : "",
+                            BU_Name = rdr["BU_Name"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("BU_Name")) : "",
+                            Element = rdr["Element"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Element")) : "",
+                            ConditionValue = rdr["ConditionValue"] != DBNull.Value ? rdr.GetDouble(rdr.GetOrdinal("ConditionValue")) : 0.0,
+                            Condition = rdr["Condition"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Condition")) : "",
+                            ConditionValue2 = rdr["ConditionValue2"] != DBNull.Value ? rdr.GetDouble(rdr.GetOrdinal("ConditionValue2")) : 0.0,
+                            Condition2 = rdr["Condition2"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Condition2")) : "",
+                            ConditionType2 = rdr["ConditionType2"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ConditionType2")) : "",
                         };
 
                         lst_approver_proposal.Add(wfa_approver_proposal);
@@ -2397,6 +2405,14 @@ namespace WebApplication1.Controllers
             public int? ProposalID { get; set; }
             public int? ControlID { get; set; }
             public int? LevelID { get; set; }
+            public string ConditionType { get; set; }
+            public string BU_Name { get; set; }
+            public string Element { get; set; }
+            public double ConditionValue { get; set; }
+            public string Condition { get; set; }
+            public double ConditionValue2 { get; set; }
+            public string Condition2 { get; set; }
+            public string ConditionType2 { get; set; }
         }
 
         public class UserInfo

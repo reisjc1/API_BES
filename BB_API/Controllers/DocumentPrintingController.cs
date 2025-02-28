@@ -2759,7 +2759,7 @@ namespace WebApplication1.Controllers
 
                 if (FinancingType.Code.Value == 0)
                 {
-                    ws.Cells["A43"].Value = p.CampaignID == 0 ? "Venda Directa" : tipoNEgocio;
+                    ws.Cells["A43"].Value = p.CampaignID == 1 ? "Venda Directa" : tipoNEgocio;
                 }
                 else
                 {

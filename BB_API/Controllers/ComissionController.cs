@@ -808,6 +808,7 @@ namespace WebApplication1.Controllers
 
                 var basket = loadProposal.ProposalObj.Draft.baskets.os_basket;
 
+
                 // --------------- PONTO 1 -------------->
 
                 List<BB_Proposal_Quote> oneShot = new List<BB_Proposal_Quote>();
@@ -878,43 +879,59 @@ namespace WebApplication1.Controllers
 
                     foreach (var oneShot_Item in oneShot)
                     {
-                        if (financingTypeCode == 3)
+                        if (oneShot_Item.Family.Contains("HW"))
                         {
-                            var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
+                            // Alquileres (no aplicable a los vendedores de GGCC)
+                            if (actionCampaignId == 5 && financingTypeCode != 3)
+                            {
+                                var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
 
-                            AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                        }
-                        else if (oneShot_Item.IsUsed == true)
-                        {
-                            var resultX = oneShot_Item.TotalNetsale * 0.65;
+                                AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            }
+                            // Máquinas usadas
+                            else if (oneShot_Item.IsUsed == true)
+                            {
+                                var resultX = oneShot_Item.TotalNetsale * 0.65;
 
-                            AddProfit(oneShot_Item.Family, resultX, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                        }
-                        else if (actionCampaignId == 3)
-                        {
-                            var resultY = oneShot_Item.TotalNetsale * 0.75;
+                                AddProfit(oneShot_Item.Family, resultX, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            }
+                            // Ampliación/Transición a Renting
+                            else if (actionCampaignId == 3)
+                            {
+                                var resultY = oneShot_Item.TotalNetsale * 0.75;
 
-                            AddProfit(oneShot_Item.Family, resultY, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                                AddProfit(oneShot_Item.Family, resultY, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            }
+                            else
+                            {
+                                AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            }
+                            // Finalización de Renting con venta
+                            //else if (financingTypeCode == 2 || )
+                            //{
+                            //    // esclarecer com Espanha
+                            //    // Possivelmente nem acontece pelo BB
+                            //}
                         }
                         else
                         {
                             // conta default
 
-                            if(oneShot_Item.Description.Contains("MOBOTIX"))
+                            if (oneShot_Item.Description.Contains("MOBOTIX"))
                             {
                                 profitDictionary["MOBOTIX"].GPTotal += (oneShot_Item.GPTotal ?? 0) * oneShot_Item.Qty;
 
                             }
-                            else if(oneShot_Item.Description.Contains("BPS"))
+                            else if (oneShot_Item.Description.Contains("BPS"))
                             {
                                 profitDictionary["MCS_BPS"].GPTotal += (oneShot_Item.GPTotal ?? 0) * oneShot_Item.Qty;
 
                             }
-                            else { 
+                            else
+                            {
                                 AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
                             }
-                            
-                        }
+                        }                                              
                     }
 
                     // servicos recorrentes
@@ -1112,11 +1129,11 @@ namespace WebApplication1.Controllers
                         {
                             AspNetUsers user = dbUsers.AspNetUsers.Where(x => x.Email == proposal.AccountManager).FirstOrDefault();
                             
-                            bb_commission_general.Comercial = user.DisplayName;
+                            bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;
                             
                             
                             
-                            bb_commission_general.N_Trab = user.ErpNumber;
+                            bb_commission_general.N_Trab = user.N_TRABAJADOR;
                             bb_commission_general.Manager_Nombre = user.Manager;
 
                             bb_commission_general.Manager = dbUsers.AspNetUsers
@@ -1133,14 +1150,7 @@ namespace WebApplication1.Controllers
                     }
 
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
-                    if (campaignID == 0)
-                    {
-                        bb_commission_general.Tipo_Operacion = "Negocio Tradicional";
-                    }
-                    else
-                    {
                         bb_commission_general.Tipo_Operacion = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
-                    }
 
                     DateTime? modifiedDate = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ModifiedTime).FirstOrDefault();
 
@@ -1189,6 +1199,11 @@ namespace WebApplication1.Controllers
 
                     // Soma de todos os GP daquele proposalID (incluindo RS)
                     bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key == "HW").Sum(x => x.Value.GPTotal);
+
+                    if (bb_commission_general.GP_Hard < 10)
+                    {
+                        bb_commission_general.GP_Hard = bb_commission_general.CN_Hard * 0.1;
+                    }
 
                     bb_commission_general.GP_IMS_VSS = profit_IMS_VSS.GPTotal + profit_MOBOTIX.GPTotal;
 
@@ -1257,6 +1272,11 @@ namespace WebApplication1.Controllers
                         string key = "";
                         if (area != null)
                         {
+                            if (area.Contains("IT"))
+                            {
+                                return 0;
+                            }
+
                             if (area.Contains("VD") || area.Contains("GC") || area.Contains("PP"))
                             {
                                 if (area.Contains("VD")){
@@ -1371,18 +1391,11 @@ namespace WebApplication1.Controllers
                         extensionAlq = true;
                     }
 
-                    if (isSecondHand == true)
-                    {
+                    if (isSecondHand == true && (bb_commission_general.Area == "GC" || bb_commission_general.Area == "GC IT" || bb_commission_general.Area == "VD" || bb_commission_general.Area == "VD IT"))
+                    { 
                         bb_commission_general.Condicion = "1";
-                    }                 
-                    else if (extensionAlq == true)
-                    {
-                        bb_commission_general.Condicion = "2";
                     }
-                    else if (isAditamento != null || isAditamento != "")
-                    {
-                        bb_commission_general.Condicion = "3";
-                    }
+
                     else if (isPPMachine == true && isSecondHand == true)
                     {
                         bb_commission_general.Condicion = "4";
@@ -1391,8 +1404,7 @@ namespace WebApplication1.Controllers
                     {
                         bb_commission_general.Condicion = "0";
                     }
-
-                    
+                  
 
                     // Calculo de Premios ----------------------------------------------------
                     bb_commission_general.GP_HW_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
@@ -1554,18 +1566,22 @@ namespace WebApplication1.Controllers
                     //    } 
                     //}
 
+                    int esRetoma = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalID).Count();
 
                     // ----------------------------------------------------------------------------------------------------
+                    // só devo gerar comissões para Negocio tradicional, Aluguer e Nao se deve ter em conta o que seja "Cesion" nem as "Retiradas"
 
-                    List<BB_Commission_General> lastCommission = db.BB_Commission_General.Where(x => x.BB_Numero == proposalID.ToString()).ToList();
-                    if (lastCommission.Any())
+                    if (campaignID == 1 || campaignID == 5 && financingTypeCode != 4 && esRetoma > 0)
                     {
-                        db.BB_Commission_General.RemoveRange(lastCommission);
+                        List<BB_Commission_General> lastCommission = db.BB_Commission_General.Where(x => x.BB_Numero == proposalID.ToString()).ToList();
+                        if (lastCommission.Any())
+                        {
+                            db.BB_Commission_General.RemoveRange(lastCommission);
+                        }
+
+                        db.BB_Commission_General.Add(bb_commission_general);
+                        db.SaveChanges();
                     }
-
-                    db.BB_Commission_General.Add(bb_commission_general);
-                    db.SaveChanges();
-
                 }
 
                 // ---------------------------------------------------------------------
@@ -1595,6 +1611,8 @@ namespace WebApplication1.Controllers
             Application excelApp = null;
             Workbook workbook = null;
             Worksheet worksheet = null;
+
+            DateTime todaysDate = DateTime.Now;
 
             try
             {
@@ -1747,32 +1765,50 @@ namespace WebApplication1.Controllers
 
                 foreach (var commission in commission_lst)
                 {
-                    column = 1;
-                    foreach (var campo in campoParaExcel) // Itera sobre o dicionário
+                    if (commission.Area != null)
                     {
-                        // Obtém a propriedade correspondente à chave do dicionário
-                        var prop = propriedades.FirstOrDefault(p => p.Name == campo.Key);
-
-                        if (prop != null)
+                        column = 1;
+                        foreach (var campo in campoParaExcel) // Itera sobre o dicionário
                         {
-                            // coluna que serve como divisória
-                            if (campo.Key == "A")
+                            // Obtém a propriedade correspondente à chave do dicionário
+                            var prop = propriedades.FirstOrDefault(p => p.Name == campo.Key);
+
+                            if (prop != null)
                             {
-                                worksheet.Cells[line, column] = string.Empty;
+                                // coluna que serve como divisória
+                                if (campo.Key == "A")
+                                {
+                                    worksheet.Cells[line, column] = string.Empty;
+                                }
+                                // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
+                                else if(campo.Key == "Operacion")
+                                {
+                                    worksheet.Cells[line, column] = "BB";
+                                }else if (campo.Key == "Fecha_Factura")
+                                {
+                                    worksheet.Cells[line, column] = todaysDate;
+                                }else if (campo.Key == "Area")
+                                {
+                                    object value = prop.GetValue(commission);
+
+                                    if (value != null)
+                                    {
+                                        if (value.ToString() != "JEFE DE VIENTA" || value.ToString() != "IP" || value.ToString() != "DELEGADO" || value.ToString() != "" || value.ToString() != " ")
+                                        {
+                                            worksheet.Cells[line, column] = value;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // Obtém o valor da propriedade para o objeto atual
+                                    object value = prop.GetValue(commission);
+                                    worksheet.Cells[line, column] = value;
+                                }
                             }
-                            // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
-                            else if(campo.Key == "Operacion")
-                            {
-                                worksheet.Cells[line, column] = "BB";
-                            }
-                            else
-                            {
-                                // Obtém o valor da propriedade para o objeto atual
-                                object value = prop.GetValue(commission);
-                                worksheet.Cells[line, column] = value;
-                            }
+                            column++;
                         }
-                        column++;
+
                     }
                     line++;
                 }
