@@ -1149,6 +1149,8 @@ namespace WebApplication1.Controllers
 
                     }
 
+                    bb_commission_general.ContractID = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ID).FirstOrDefault();
+
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
                         bb_commission_general.Tipo_Operacion = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
 

@@ -113,5 +113,6 @@ namespace WebApplication1.Models
         public string Percentage_GP { get; set; }
         public string Percentage_Comision { get; set; }
         public string Incidencias { get; set; }
+        public Nullable<int> ContractID { get; set; }
     }
 }
