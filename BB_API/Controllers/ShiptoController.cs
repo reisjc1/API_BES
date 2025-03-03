@@ -55,7 +55,7 @@ namespace WebApplication1.Controllers
                     // #############################################################################################
 
                     dl.AssignedItems = new List<AssignedItems>();
-
+                    int assignedID = 0;
                     foreach (var item in dl.lst_BB_Proposal_DeliveryLocation)
                     {
                         List<BB_Proposal_ItemDoBasket> itemsDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == item.IDX).ToList();
@@ -72,8 +72,10 @@ namespace WebApplication1.Controllers
                             AssignedItems assignItem = iMapperDelivery.Map<BB_Proposal_ItemDoBasket, AssignedItems>(itemX);
 
                             assignItem.DeliveryLocationAssociated = item.IDX;
-
+                            assignItem.AssignedID = assignedID;
                             dl.AssignedItems.Add(assignItem);
+
+                            assignedID++;
                         }
                     }
                 }
@@ -680,6 +682,7 @@ namespace WebApplication1.Controllers
         public double? ClickPriceC { get; set; }
         public string CodeRef { get; set; }
         public int DeliveryLocationAssociated { get; set; }
+        public int AssignedID { get; set; }
         public string Description { get; set; }
         public double DiscountPercentage { get; set; }
         public string Family { get; set; }
