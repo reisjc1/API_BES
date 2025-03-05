@@ -619,6 +619,9 @@
     <Compile Include="Models\BB_WFA_Levels.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_WFA_Proposal_OneShot_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_WFA_Workflow_Proposal.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

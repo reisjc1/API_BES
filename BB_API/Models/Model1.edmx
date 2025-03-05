@@ -1636,6 +1636,28 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Condition2_Value" Type="float" />
           <Property Name="Type2_ID" Type="int" />
         </EntityType>
+        <EntityType Name="BB_WFA_Proposal_OneShot_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Proposal_ID" Type="int" />
+          <Property Name="WFA_Workflow_Proposal_ID" Type="int" />
+          <Property Name="Family" Type="varchar" MaxLength="50" />
+          <Property Name="CodeRef" Type="varchar" MaxLength="25" />
+          <Property Name="UnitPriceCost" Type="float" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="TotalCost" Type="float" />
+          <Property Name="Margin" Type="float" />
+          <Property Name="PVP" Type="float" />
+          <Property Name="TotalPVP" Type="float" />
+          <Property Name="DiscountPercentage" Type="float" />
+          <Property Name="UnitDiscountPrice" Type="float" />
+          <Property Name="GPTotal" Type="float" />
+          <Property Name="GPPercentage" Type="float" />
+          <Property Name="TotalNetsale" Type="float" />
+          <Property Name="IsApproved" Type="bit" />
+        </EntityType>
         <EntityType Name="BB_WFA_Workflow_Proposal">
           <Key>
             <PropertyRef Name="ID" />
@@ -1990,6 +2012,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_WFA_Control" EntityType="Self.BB_WFA_Control" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Exception" EntityType="Self.BB_WFA_Exception" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Levels" EntityType="Self.BB_WFA_Levels" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_WFA_Proposal_OneShot_History" EntityType="Self.BB_WFA_Proposal_OneShot_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="Self.BB_WFA_Workflow_Proposal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WorkSheet_Metadata" EntityType="Self.BB_WorkSheet_Metadata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WorkSheet_PT_Metadata" EntityType="Self.BB_WorkSheet_PT_Metadata" Schema="dbo" store:Type="Tables" />
@@ -2280,6 +2303,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           </AssociationSet>
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
+          <EntitySet Name="BB_WFA_Proposal_OneShot_History" EntityType="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -4162,6 +4186,28 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Percentage_Comision" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Incidencias" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ContractID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BB_WFA_Proposal_OneShot_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Proposal_ID" Type="Int32" />
+          <Property Name="WFA_Workflow_Proposal_ID" Type="Int32" />
+          <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CodeRef" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="UnitPriceCost" Type="Double" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="TotalCost" Type="Double" />
+          <Property Name="Margin" Type="Double" />
+          <Property Name="PVP" Type="Double" />
+          <Property Name="TotalPVP" Type="Double" />
+          <Property Name="DiscountPercentage" Type="Double" />
+          <Property Name="UnitDiscountPrice" Type="Double" />
+          <Property Name="GPTotal" Type="Double" />
+          <Property Name="GPPercentage" Type="Double" />
+          <Property Name="TotalNetsale" Type="Double" />
+          <Property Name="IsApproved" Type="Boolean" />
         </EntityType>
         
         </Schema>
@@ -6050,6 +6096,29 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="Sales_Group" ColumnName="Sales_Group" />
                 <ScalarProperty Name="Codigo_Agencia" ColumnName="Codigo_Agencia" />
                 <ScalarProperty Name="Delegacion" ColumnName="Delegacion" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Proposal_OneShot_History">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History">
+              <MappingFragment StoreEntitySet="BB_WFA_Proposal_OneShot_History">
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="TotalNetsale" ColumnName="TotalNetsale" />
+                <ScalarProperty Name="GPPercentage" ColumnName="GPPercentage" />
+                <ScalarProperty Name="GPTotal" ColumnName="GPTotal" />
+                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
+                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+                <ScalarProperty Name="TotalPVP" ColumnName="TotalPVP" />
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="Margin" ColumnName="Margin" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="UnitPriceCost" ColumnName="UnitPriceCost" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="WFA_Workflow_Proposal_ID" ColumnName="WFA_Workflow_Proposal_ID" />
+                <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

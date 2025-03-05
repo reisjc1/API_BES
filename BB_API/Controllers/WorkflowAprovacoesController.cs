@@ -1825,7 +1825,32 @@ namespace WebApplication1.Controllers
             wrp.Lst_BBP_Quote = new List<BB_Proposal_Quote_WFA>();
             wrp.Lst_BBP_RS_Quote = new List<BB_Proposal_Quote_RS_WFA>();
 
-            try { 
+            try {
+
+                bool configDif = checkHistoryConfigurdor_Quote(proposalID);
+                bool configDif_RS = checkHistoryConfigurdor_Quote_RS(proposalID);
+
+                if (configDif || configDif_RS)
+                {
+                    using (var db = new BB_DB_DEVEntities2())
+                    {
+                    
+                        var wfa_proposal_obj = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).FirstOrDefault();
+                        var wfa_history_objs = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
+
+                        var wfa_approvers_objs = db.BB_WFA_Approvers_Control.Where(x => x.WFA_Workflow_Proposal_ID == wfa_proposal_obj.ID).ToList();
+
+                        db.BB_WFA_Workflow_Proposal.Remove(wfa_proposal_obj);
+                        db.BB_WFA_Proposal_OneShot_History.RemoveRange(wfa_history_objs);
+                        db.BB_WFA_Approvers_Control.RemoveRange(wfa_approvers_objs);
+
+                        db.SaveChanges();
+                    }
+                }
+
+                
+
+
 
                 // LISTA BB_PROPOSAL_QUOTE ---------------------------------------------------------------------
                 string bdConnect = @AppSettingsGet.BasedadosConnect;
@@ -2190,6 +2215,84 @@ namespace WebApplication1.Controllers
             }
         }
 
+        public bool checkHistoryConfigurdor_Quote(int proposalID)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    List<BB_Proposal_Quote> config_Quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+
+                    if(config_Quote.Count > 0)
+                    {
+                        List<BB_WFA_Proposal_OneShot_History> history_Quote = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
+
+                        if(history_Quote.Count > 0)
+                        {
+                            foreach (var historyItem in history_Quote)
+                            {
+                                BB_Proposal_Quote configItem = config_Quote.Where(x => x.CodeRef == historyItem.CodeRef).FirstOrDefault();
+
+                                if (configItem.DiscountPercentage != historyItem.DiscountPercentage ||
+                                    configItem.UnitDiscountPrice != historyItem.UnitDiscountPrice ||
+                                    configItem.Qty != historyItem.Qty ||
+                                    configItem.UnitPriceCost != historyItem.UnitPriceCost ||
+                                    configItem.PVP != historyItem.PVP)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+
+                    }
+
+                }              
+            }
+            catch (Exception ex)
+            {
+                string err = ex.Message;
+            }
+            return false;
+        }
+
+
+        public bool checkHistoryConfigurdor_Quote_RS(int proposalID)
+        {
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    List<BB_Proposal_Quote_RS> config_Quote = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+
+                    if(config_Quote.Count > 0)
+                    {
+                        List<BB_WFA_Proposal_OneShot_History> history_Quote = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
+
+                        if(history_Quote.Count > 0)
+                        {
+                            foreach (var historyItem in history_Quote)
+                            {
+                                BB_Proposal_Quote_RS configItem = config_Quote.Where(x => x.CodeRef == historyItem.CodeRef).FirstOrDefault();
+
+                                if (configItem.DiscountPercentage != historyItem.DiscountPercentage ||
+                                    configItem.UnitDiscountPrice != historyItem.UnitDiscountPrice ||
+                                    configItem.Qty != historyItem.Qty ||
+                                    configItem.UnitPriceCost != historyItem.UnitPriceCost ||
+                                    configItem.PVP != historyItem.PVP)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string err = ex.Message;
+            }
+            return false;
+        }
 
         // ---------------------------------------------------------------------------------------------------------------------
         // CLASSES -------------------------------------------------------------------------------------------------------------

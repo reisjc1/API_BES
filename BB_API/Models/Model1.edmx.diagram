@@ -129,6 +129,7 @@
         <AssociationConnector Association="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentProposal" Width="1.5" PointX="32.375" PointY="12.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="29.375" PointY="34.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History" Width="1.5" PointX="34.375" PointY="4.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
