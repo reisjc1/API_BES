@@ -314,7 +314,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Clientes.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Coderef_Generic.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -353,7 +353,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_FinancingContractType.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_FinancingPaymentMethod.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -446,13 +446,13 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Proposal.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Proposal_Aprovacao_Quote.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Proposal_Client.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Proposal_Commission.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -467,10 +467,10 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Proposal_Contacts_Documentation.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Proposal_Contacts_Signing.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BB_Proposal_Counters.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -638,7 +638,7 @@
       <DependentUpon>LeaseDesk.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LD_Contrato.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LD_Contrato_Facturacao.cs">
       <DependentUpon>LeaseDesk.tt</DependentUpon>
@@ -659,10 +659,10 @@
       <DependentUpon>LeaseDesk.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LD_DocumentClassification.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LD_DocumentProposal.cs">
-      <DependentUpon>LeaseDesk.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LD_Email_Log.cs">
       <DependentUpon>LeaseDesk.tt</DependentUpon>
@@ -973,7 +973,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties content_4bootstrap_1min_1css_1map__JsonSchema="" content_4bootstrap-theme_1min_1css_1map__JsonSchema="" />
+      <UserProperties content_4bootstrap-theme_1min_1css_1map__JsonSchema="" content_4bootstrap_1min_1css_1map__JsonSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

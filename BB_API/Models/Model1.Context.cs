@@ -139,7 +139,7 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_DeliveryLocation> BB_Proposal_DeliveryLocation { get; set; }
         public virtual DbSet<BB_Proposal_Client> BB_Proposal_Client { get; set; }
         public virtual DbSet<BB_Proposal> BB_Proposal { get; set; }
-        public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
         public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
+        public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
     }
 }

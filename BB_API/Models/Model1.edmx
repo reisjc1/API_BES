@@ -230,6 +230,7 @@
           <Property Name="Percentage_GP" Type="nvarchar" MaxLength="255" />
           <Property Name="Percentage_Comision" Type="nvarchar" MaxLength="255" />
           <Property Name="Incidencias" Type="nvarchar(max)" />
+          <Property Name="ContractID" Type="int" />
         </EntityType>
         <EntityType Name="BB_Consumables">
           <Key>
@@ -2277,8 +2278,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             <End Role="BB_Proposal" EntitySet="BB_Proposal" />
             <End Role="BB_Proposal_OPSManage" EntitySet="BB_Proposal_OPSManage" />
           </AssociationSet>
-          <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
+          <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -4033,6 +4034,30 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="LD_DocumentProposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContratoID" Type="Int32" />
+          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Drive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Folder" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileExtension" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FileFullPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClassificationID" Type="Int32" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="SystemID" Type="Int32" />
+          <Property Name="DocumentIsProcess" Type="Boolean" />
+          <Property Name="DocumentIsValid" Type="Boolean" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProposalID" Type="Int32" />
+        </EntityType>
         <EntityType Name="BB_Commission_General">
           <Key>
             <PropertyRef Name="ID" />
@@ -4136,30 +4161,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Percentage_GP" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Percentage_Comision" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Incidencias" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="LD_DocumentProposal">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ContratoID" Type="Int32" />
-          <Property Name="QuoteNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Drive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Folder" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FileExtension" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FileFullPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ClassificationID" Type="Int32" />
-          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
-          <Property Name="SystemID" Type="Int32" />
-          <Property Name="DocumentIsProcess" Type="Boolean" />
-          <Property Name="DocumentIsValid" Type="Boolean" />
-          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="ContractID" Type="Int32" />
         </EntityType>
         
         </Schema>
@@ -5921,9 +5923,35 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="LD_DocumentProposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.LD_DocumentProposal">
+              <MappingFragment StoreEntitySet="LD_DocumentProposal">
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="DocumentIsValid" ColumnName="DocumentIsValid" />
+                <ScalarProperty Name="DocumentIsProcess" ColumnName="DocumentIsProcess" />
+                <ScalarProperty Name="SystemID" ColumnName="SystemID" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ClassificationID" ColumnName="ClassificationID" />
+                <ScalarProperty Name="FileFullPath" ColumnName="FileFullPath" />
+                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Folder" ColumnName="Folder" />
+                <ScalarProperty Name="Drive" ColumnName="Drive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
+                <ScalarProperty Name="ContratoID" ColumnName="ContratoID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BB_Commission_General">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Commission_General">
               <MappingFragment StoreEntitySet="BB_Commission_General">
+                <ScalarProperty Name="ContractID" ColumnName="ContractID" />
                 <ScalarProperty Name="Incidencias" ColumnName="Incidencias" />
                 <ScalarProperty Name="Percentage_Comision" ColumnName="Percentage_Comision" />
                 <ScalarProperty Name="Percentage_GP" ColumnName="Percentage_GP" />
@@ -6022,31 +6050,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="Sales_Group" ColumnName="Sales_Group" />
                 <ScalarProperty Name="Codigo_Agencia" ColumnName="Codigo_Agencia" />
                 <ScalarProperty Name="Delegacion" ColumnName="Delegacion" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LD_DocumentProposal">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.LD_DocumentProposal">
-              <MappingFragment StoreEntitySet="LD_DocumentProposal">
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="DocumentIsValid" ColumnName="DocumentIsValid" />
-                <ScalarProperty Name="DocumentIsProcess" ColumnName="DocumentIsProcess" />
-                <ScalarProperty Name="SystemID" ColumnName="SystemID" />
-                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="ClassificationID" ColumnName="ClassificationID" />
-                <ScalarProperty Name="FileFullPath" ColumnName="FileFullPath" />
-                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="Folder" ColumnName="Folder" />
-                <ScalarProperty Name="Drive" ColumnName="Drive" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="QuoteNumber" ColumnName="QuoteNumber" />
-                <ScalarProperty Name="ContratoID" ColumnName="ContratoID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
