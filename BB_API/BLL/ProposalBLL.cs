@@ -1557,13 +1557,16 @@ namespace WebApplication1.BLL
                             newPS.RequestedAt = validationRequest.RequestedAt;
                             newPS.SCObservations = validationRequest.SCObservations;
                             newPS.SEObservations = validationRequest.SEObservations;
-                            if (validationRequest.IsComplete.Value && validationRequest.IsApproved == true)
+                            if (validationRequest.IsComplete.Value && validationRequest.IsApproved.Value)
                             {
                                 proposalPS2.ApprovedPrintingServices.Add(newPS);
                             }
                             else
                             {
-                                proposalPS2.PendingServiceQuoteRequests.Add(newPS);
+                                if (!validationRequest.IsComplete.Value)
+                                {
+                                    proposalPS2.PendingServiceQuoteRequests.Add(newPS);
+                                }
                             }
                         }
                         else //commented the else because it was adding reproved services on the approved services list
