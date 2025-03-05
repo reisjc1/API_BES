@@ -3748,6 +3748,7 @@ namespace WebApplication1.Controllers
                                 if (bb_local_envio != null)
                                 {
                                     dl_info.CIF = bb_local_envio.NIF_CIF;
+                                    //dl_info.SAP_Nr = deliverLocation.SAPCustomerNr == null ? bb_local_envio.AccountNumber : deliverLocation.SAPCustomerNr;
                                     dl_info.SAP_Nr = deliverLocation.SAPCustomerNr;
                                     dl_info.CompanyName = bb_local_envio.BusinessCode;
                                     dl_info.SAP_Company = bb_local_envio.NomeCliente;
