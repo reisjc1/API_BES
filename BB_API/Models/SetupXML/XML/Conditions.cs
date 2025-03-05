@@ -19,16 +19,28 @@ namespace WebApplication1.Models.SetupXML.XML
             {
                 double contratoMeses = double.Parse(contracts[0].VT_VLAUFZ);
                 var collectionConditions = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS>();
-                foreach (var order in orders)
+                using (var db = new BB_DB_DEVEntities2())
                 {
-                    string condFlag = null;
-                    List<ConditionPVP> conditionsPvp = new List<ConditionPVP>();
-                    double? pvpItems = 0;
-                    double? KBETR = 0;
-                    double? totalPvp = 0;
-                    using (var db = new BB_DB_DEVEntities2())
+                    List<BB_Proposal_Quote> quote_lst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
+                    int? numberOfMachines = 0;
+                    foreach(var equip in quote_lst)
                     {
-                        List<BB_Proposal_Quote> quote_lst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
+                        BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == equip.CodeRef).FirstOrDefault();
+
+                        if(bB_Equipamentos != null)
+                        {
+                            numberOfMachines += equip.Qty;
+                        }
+                    }
+
+                    foreach (var order in orders)
+                    {
+                        string condFlag = null;
+                        List<ConditionPVP> conditionsPvp = new List<ConditionPVP>();
+                        double? pvpItems = 0;
+                        double? KBETR = 0;
+                        double? totalPvp = 0;
+
                         foreach (var item in order.Z1ZVOE_ORDER_ITEMS)
                         {
                             //if (contracts[0].VT_VTART == "002" || contracts[0].VT_VTART == "005" || contracts[0].VT_VTART == "008")
@@ -204,12 +216,21 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             }
                         }
-                    
-                        int printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).Select(x => x.ID).FirstOrDefault();
 
-                        BB_PrintingServices bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID).FirstOrDefault();
+                        var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
-                        if(bB_PrintingServices != null)
+                        int index = (int)printingService2ID.ActivePrintingService;
+                        BB_PrintingServices bB_PrintingServices = null;
+                        if (index > 1)
+                        {
+                            bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).Skip(index).FirstOrDefault();
+                        }
+                        else
+                        {
+                            bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
+                        }
+
+                        if (bB_PrintingServices != null)
                         {
                             BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
 
@@ -221,39 +242,33 @@ namespace WebApplication1.Models.SetupXML.XML
                                     DOC = order.SD_DOC,
                                     COND_FLAG = "A",
                                     KSCHL = zvbs != null ? zvbs.ConditionType : "ZVBS",
-                                    KBETR = zvbs != null ? Math.Round(zvbs.ConditionValue ?? 0.0, 2).ToString("F2").Replace(",", ".") : "0.00"
+                                    KBETR = zvbs != null ? Math.Round(zvbs.ConditionValue / numberOfMachines ?? 0.0, 2).ToString("F2").Replace(",", ".") : "0.00"
                                 });
                             }
                         }
 
-                    }
-                    //if (contracts[0].VT_VTART == "003" || contracts[0].VT_VTART == "002") //Renting
-                    //{
-                    //    condFlag = "O";
-                    //}
-                    //if (contracts[0].VT_VTART == "005") //AL
-                    //{
-                    //    condFlag = "A";
-                    //}
-                    foreach (var condition in conditionsPvp)
-                    {
-                        if (condition.ConditionCode == "ZPD4" || condition.ConditionCode == "ZSW4")
-                        {
-                            condFlag = "O";
-                        }
-                        else
-                        {
-                            condFlag = "A";
-                        }
-                        collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
-                        {
-                            DOC = order.SD_DOC,
-                            COND_FLAG = condFlag,
-                            KSCHL = condition.ConditionCode,
-                            KBETR = Math.Round(condition.PVP ?? 0.0, 2).ToString("F2").Replace(",", ".")
-                        });
-                    }
 
+
+                        foreach (var condition in conditionsPvp)
+                        {
+                            if (condition.ConditionCode == "ZPD4" || condition.ConditionCode == "ZSW4")
+                            {
+                                condFlag = "O";
+                            }
+                            else
+                            {
+                                condFlag = "A";
+                            }
+                            collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                            {
+                                DOC = order.SD_DOC,
+                                COND_FLAG = condFlag,
+                                KSCHL = condition.ConditionCode,
+                                KBETR = Math.Round(condition.PVP ?? 0.0, 2).ToString("F2").Replace(",", ".")
+                            });
+                        }
+
+                    }
                 }
                 return collectionConditions;
 
@@ -485,28 +500,33 @@ namespace WebApplication1.Models.SetupXML.XML
 
                         }
 
+                    }
+                    var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
-                        int printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).Select(x => x.ID).FirstOrDefault();
+                    int index = (int)printingService2ID.ActivePrintingService;
+                    BB_PrintingServices bB_PrintingServices = null;
+                    if (index > 1)
+                    {
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).Skip(index).FirstOrDefault();
+                    }
+                    else
+                    {
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
+                    }
 
-                        BB_PrintingServices bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID).FirstOrDefault();
+                    if (bB_PrintingServices != null)
+                    {
+                        BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
 
-                        if (bB_PrintingServices != null)
+                        if (bB_VVA != null)
                         {
-                            BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
+                            BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
-                            if (bB_VVA != null)
-                            {
-                                BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-
-                                ConditionPVP condPvp = new ConditionPVP();
-                                condPvp.PVP = zvbs != null ? zvbs.ConditionValue : 0;
-                                condPvp.ConditionCode = "ZVBS";
-                                conditionsPvp.Add(condPvp);
-                            }
+                            ConditionPVP condPvp = new ConditionPVP();
+                            condPvp.PVP = zvbs != null ? zvbs.ConditionValue : 0;
+                            condPvp.ConditionCode = "ZVBS";
+                            conditionsPvp.Add(condPvp);
                         }
-
-
-
                     }
                 }
             
