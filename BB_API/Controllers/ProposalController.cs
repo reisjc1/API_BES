@@ -1827,7 +1827,26 @@ namespace WebApplication1.Controllers
                 //    a.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[0].GlobalClickVVA.RentBillingFrequency
                 //}
 
+                //Validate if everything is added 
+                int totalQtyInOS = 0;
+                int? totalQtyItemDoBasket = 0;
 
+                foreach(var item in a.ProposalObj.Draft.baskets.os_basket)
+                {
+                    totalQtyInOS += item.Qty;
+                }
+                
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    var dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == a.ProposalObj.Draft.details.ID && x.AccountType == "Ship To").Select(x=> x.IDX).ToHashSet();
+
+                    totalQtyItemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => dl.Contains((int)x.DeliveryLocationID)).Sum(x => x.Qty);
+                }
+
+                if (totalQtyInOS != totalQtyItemDoBasket)
+                {
+                    strErro.AppendFormat("Hay equipos que no están asociados a puntos de expedición. Por favor, revise los puntos de envío para finalizar el proceso.");
+                }
 
             }
             catch (Exception ex)

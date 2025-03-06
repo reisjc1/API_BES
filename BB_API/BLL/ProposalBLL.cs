@@ -981,14 +981,11 @@ namespace WebApplication1.BLL
                             {
                                 bool exists = db.BB_Proposal_DeliveryLocation.Any(x => x.IDX == billTo.IDX && x.ProposalID == p.Draft.details.ID);
                                 // se existe (editar)
-                                if (exists)
-                                {
-                                    db.Entry(billTo).State = EntityState.Modified;
-                                }
-                                else
+                                if (!exists)
                                 {
                                     db.BB_Proposal_DeliveryLocation.Add(billTo);
                                 }
+                                
                                 db.SaveChanges();
 
                             }
