@@ -1827,26 +1827,26 @@ namespace WebApplication1.Controllers
 
             try {
 
-                bool configDif = checkHistoryConfigurdor_Quote(proposalID);
-                bool configDif_RS = checkHistoryConfigurdor_Quote_RS(proposalID);
+                //bool configDif = checkHistoryConfigurdor_Quote(proposalID);
+                //bool configDif_RS = checkHistoryConfigurdor_Quote_RS(proposalID);
 
-                if (configDif || configDif_RS)
-                {
-                    using (var db = new BB_DB_DEVEntities2())
-                    {
+                //if (configDif || configDif_RS)
+                //{
+                //    using (var db = new BB_DB_DEVEntities2())
+                //    {
                     
-                        var wfa_proposal_obj = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).FirstOrDefault();
-                        var wfa_history_objs = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
+                //        var wfa_proposal_obj = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).FirstOrDefault();
+                //        var wfa_history_objs = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
 
-                        var wfa_approvers_objs = db.BB_WFA_Approvers_Control.Where(x => x.WFA_Workflow_Proposal_ID == wfa_proposal_obj.ID).ToList();
+                //        var wfa_approvers_objs = db.BB_WFA_Approvers_Control.Where(x => x.WFA_Workflow_Proposal_ID == wfa_proposal_obj.ID).ToList();
 
-                        db.BB_WFA_Workflow_Proposal.Remove(wfa_proposal_obj);
-                        db.BB_WFA_Proposal_OneShot_History.RemoveRange(wfa_history_objs);
-                        db.BB_WFA_Approvers_Control.RemoveRange(wfa_approvers_objs);
+                //        //db.BB_WFA_Workflow_Proposal.Remove(wfa_proposal_obj);
+                //        db.BB_WFA_Proposal_OneShot_History.RemoveRange(wfa_history_objs);
+                //        db.BB_WFA_Approvers_Control.RemoveRange(wfa_approvers_objs);
 
-                        db.SaveChanges();
-                    }
-                }
+                //        db.SaveChanges();
+                //    }
+                //}
 
                 
 
