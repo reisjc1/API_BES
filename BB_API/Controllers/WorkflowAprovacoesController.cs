@@ -1827,28 +1827,36 @@ namespace WebApplication1.Controllers
 
             try {
 
-                //bool configDif = checkHistoryConfigurdor_Quote(proposalID);
-                //bool configDif_RS = checkHistoryConfigurdor_Quote_RS(proposalID);
+                bool configDif = checkHistoryConfigurator_Quote(proposalID);
+                bool configDif_RS = checkHistoryConfigurator_Quote_RS(proposalID);
 
-                //if (configDif || configDif_RS)
-                //{
-                //    using (var db = new BB_DB_DEVEntities2())
-                //    {
-                    
-                //        var wfa_proposal_obj = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).FirstOrDefault();
-                //        var wfa_history_objs = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
+                if (configDif || configDif_RS)
+                {
+                    using (var db = new BB_DB_DEVEntities2())
+                    {
 
-                //        var wfa_approvers_objs = db.BB_WFA_Approvers_Control.Where(x => x.WFA_Workflow_Proposal_ID == wfa_proposal_obj.ID).ToList();
+                        var wfa_proposal_obj = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).FirstOrDefault();
+                        var wfa_history_objs = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
 
-                //        //db.BB_WFA_Workflow_Proposal.Remove(wfa_proposal_obj);
-                //        db.BB_WFA_Proposal_OneShot_History.RemoveRange(wfa_history_objs);
-                //        db.BB_WFA_Approvers_Control.RemoveRange(wfa_approvers_objs);
+                        var wfa_approvers_objs = db.BB_WFA_Approvers_Control.Where(x => x.WFA_Workflow_Proposal_ID == wfa_proposal_obj.ID).ToList();
 
-                //        db.SaveChanges();
-                //    }
-                //}
 
-                
+                        //BB_WFA_Workflow_Proposal wfa = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).OrderByDescending(x => x.ID).FirstOrDefault();
+
+                        //wfa.Finished_Date = null;
+                        //wfa.Finished = false;
+                        //wfa.IsApproved = false;
+                        //wfa.IsCompleted = false;
+
+                        //db.Entry(wfa).State = EntityState.Modified;
+
+                        db.BB_WFA_Workflow_Proposal.Remove(wfa_proposal_obj);
+                        db.BB_WFA_Proposal_OneShot_History.RemoveRange(wfa_history_objs);
+                        db.BB_WFA_Approvers_Control.RemoveRange(wfa_approvers_objs);
+
+                        db.SaveChanges();
+                    }
+                }
 
 
 
@@ -2215,48 +2223,102 @@ namespace WebApplication1.Controllers
             }
         }
 
-        public bool checkHistoryConfigurdor_Quote(int proposalID)
+        public bool checkHistoryConfigurator_Quote(int proposalID)
         {
             try
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    List<BB_Proposal_Quote> config_Quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+                    string query = $@"
+                SELECT * 
+                FROM BB_Proposal_Quote 
+                WHERE CodeRef IN (
+                    SELECT CodeRef FROM BB_WFA_Proposal_OneShot_History 
+                    WHERE Proposal_ID = {proposalID}
+                ) 
+                AND Proposal_ID = {proposalID}";
 
-                    if(config_Quote.Count > 0)
+                    List<BB_Proposal_Quote> quotesList = new List<BB_Proposal_Quote>();
+                    string bdConnect = @AppSettingsGet.BasedadosConnect;
+
+                    using (SqlConnection conn = new SqlConnection(bdConnect))
                     {
-                        List<BB_WFA_Proposal_OneShot_History> history_Quote = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
+                        SqlCommand command = new SqlCommand(query, conn);
+                        conn.Open();
 
-                        if(history_Quote.Count > 0)
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            foreach (var historyItem in history_Quote)
+                            while (reader.Read())
                             {
-                                BB_Proposal_Quote configItem = config_Quote.Where(x => x.CodeRef == historyItem.CodeRef).FirstOrDefault();
-
-                                if (configItem.DiscountPercentage != historyItem.DiscountPercentage ||
-                                    configItem.UnitDiscountPrice != historyItem.UnitDiscountPrice ||
-                                    configItem.Qty != historyItem.Qty ||
-                                    configItem.UnitPriceCost != historyItem.UnitPriceCost ||
-                                    configItem.PVP != historyItem.PVP)
+                                BB_Proposal_Quote quote = new BB_Proposal_Quote()
                                 {
-                                    return true;
-                                }
+                                    Proposal_ID = reader["Proposal_ID"] != DBNull.Value ? (int)reader["Proposal_ID"] : 0,
+                                    CreatedBy = reader["CreatedBy"] != DBNull.Value ? reader["CreatedBy"].ToString() : string.Empty,
+                                    ModifiedBy = reader["ModifiedBy"] != DBNull.Value ? reader["ModifiedBy"].ToString() : string.Empty,
+                                    CreatedTime = reader["CreatedTime"] != DBNull.Value ? (DateTime)reader["CreatedTime"] : DateTime.MinValue,
+                                    ModifiedTime = reader["ModifiedTime"] != DBNull.Value ? (DateTime)reader["ModifiedTime"] : DateTime.MinValue,
+                                    Locked = reader["Locked"] != DBNull.Value && (bool)reader["Locked"],
+                                    Family = reader["Family"] != DBNull.Value ? reader["Family"].ToString() : string.Empty,
+                                    CodeRef = reader["CodeRef"] != DBNull.Value ? reader["CodeRef"].ToString() : string.Empty,
+                                    Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : string.Empty,
+                                    UnitPriceCost = reader["UnitPriceCost"] != DBNull.Value ? (double)reader["UnitPriceCost"] : 0.0,
+                                    Qty = reader["Qty"] != DBNull.Value ? (int)reader["Qty"] : 0,
+                                    TotalCost = reader["TotalCost"] != DBNull.Value ? (double)reader["TotalCost"] : 0.0,
+                                    Margin = reader["Margin"] != DBNull.Value ? (double)reader["Margin"] : 0.0,
+                                    PVP = reader["PVP"] != DBNull.Value ? (double)reader["PVP"] : 0.0,
+                                    TotalPVP = reader["TotalPVP"] != DBNull.Value ? (double)reader["TotalPVP"] : 0.0,
+                                    DiscountPercentage = reader["DiscountPercentage"] != DBNull.Value ? (double)reader["DiscountPercentage"] : 0.0,
+                                    UnitDiscountPrice = reader["UnitDiscountPrice"] != DBNull.Value ? (double)reader["UnitDiscountPrice"] : 0.0,
+                                    GPTotal = reader["GPTotal"] != DBNull.Value ? (double)reader["GPTotal"] : 0.0,
+                                    GPPercentage = reader["GPPercentage"] != DBNull.Value ? (double)reader["GPPercentage"] : 0.0,
+                                    TotalNetsale = reader["TotalNetsale"] != DBNull.Value ? (double)reader["TotalNetsale"] : 0.0,
+                                    IsFinanced = reader["IsFinanced"] != DBNull.Value && (bool)reader["IsFinanced"],
+                                    TCP = reader["TCP"] != DBNull.Value ? (double)reader["TCP"] : 0.0,
+                                    Name = reader["Name"] != DBNull.Value ? reader["Name"].ToString() : string.Empty,
+                                    ClickPriceC = reader["ClickPriceC"] != DBNull.Value ? (double)reader["ClickPriceC"] : 0.0,
+                                    ClickPriceBW = reader["ClickPriceBW"] != DBNull.Value ? (double)reader["ClickPriceBW"] : 0.0,
+                                    IsMarginBEU = reader["IsMarginBEU"] != DBNull.Value && (bool)reader["IsMarginBEU"],
+                                    IsUsed = reader["IsUsed"] != DBNull.Value && (bool)reader["IsUsed"],
+                                    IsInClient = reader["IsInClient"] != DBNull.Value && (bool)reader["IsInClient"],
+                                    UnitPriceCost_ = reader["UnitPriceCost_"] != DBNull.Value ? (double)reader["UnitPriceCost_"] : 0.0,
+                                    TotalCost_ = reader["TotalCost_"] != DBNull.Value ? (double)reader["TotalCost_"] : 0.0
+                                };
+
+                                quotesList.Add(quote);
                             }
                         }
-
                     }
 
-                }              
+                    List<BB_WFA_Proposal_OneShot_History> historyList = db.BB_WFA_Proposal_OneShot_History
+                        .Where(x => x.Proposal_ID == proposalID)
+                        .ToList();
+
+                    if (quotesList.Count > 0 && historyList.Count > 0)
+                    {
+                        for (int h = 0; h < historyList.Count && h < quotesList.Count; h++)
+                        {
+                            // Comparar os elementos correspondentes de historyList e quotesList no mesmo índice
+                            if (historyList[h].DiscountPercentage != quotesList[h].DiscountPercentage ||
+                                historyList[h].UnitDiscountPrice != quotesList[h].UnitDiscountPrice ||
+                                historyList[h].Qty != quotesList[h].Qty ||
+                                historyList[h].UnitPriceCost != quotesList[h].UnitPriceCost ||
+                                historyList[h].PVP != quotesList[h].PVP)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                string err = ex.Message;
+                Console.WriteLine("Erro: " + ex.Message);
             }
             return false;
         }
 
 
-        public bool checkHistoryConfigurdor_Quote_RS(int proposalID)
+        public bool checkHistoryConfigurator_Quote_RS(int proposalID)
         {
             try
             {

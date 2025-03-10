@@ -1605,7 +1605,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("ExportCommissions")]
-        public HttpResponseMessage ExportCommissions()
+        public HttpResponseMessage ExportCommissions(DateTime ExportInitialDate, DateTime ExportFinalDate)
         {
             List<BB_Commission_General> commission_lst = new List<BB_Commission_General>();
 
@@ -1620,7 +1620,13 @@ namespace WebApplication1.Controllers
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    commission_lst = db.BB_Commission_General.OrderByDescending(x => x.ID).ToList();
+                    if (ExportInitialDate != null && ExportFinalDate != null)
+                    {
+                        commission_lst = db.BB_Commission_General
+                        .Where(x => x.Fecha_Operacion >= ExportInitialDate && x.Fecha_Operacion <= ExportFinalDate) // Filtra pelo intervalo de datas
+                        .OrderByDescending(x => x.ID)
+                        .ToList();
+                    }
                 }
 
                 if (!commission_lst.Any())
