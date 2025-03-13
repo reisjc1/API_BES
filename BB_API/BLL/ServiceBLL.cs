@@ -791,37 +791,60 @@ namespace WebApplication1.BLL
                 {
                     svr = ProcessClickPerModelServiceRequest(validationRequest, svrClient, proposalEquipments, equipments);
                 }
-                List<BB_Proposal_OPSImplement> opsImplement = db.BB_Proposal_OPSImplement.Where(x => x.ProposalID == proposalID).ToList();
-                foreach (BB_Proposal_OPSImplement implementPack in opsImplement)
+                //List<BB_Proposal_OPSImplement> opsImplement = db.BB_Proposal_OPSImplement.Where(x => x.ProposalID == proposalID).ToList();
+                //foreach (BB_Proposal_OPSImplement implementPack in opsImplement)
+                //{
+                //    OPSImplement item = new OPSImplement
+                //    {
+                //        CodeRef = implementPack.CodeRef,
+                //        Description = implementPack.Description,
+                //        ID = implementPack.ID,
+                //        Name = implementPack.Name,
+                //        PVP = implementPack.PVP,
+                //        Quantity = implementPack.Quantity,
+                //        UnitDiscountPrice = implementPack.UnitDiscountPrice,
+                //    };
+                //    svr.OPSImplement.Add(item);
+                //}
+                //List<BB_Proposal_OPSManage> opsManage = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
+                //foreach (BB_Proposal_OPSManage managePack in opsManage)
+                //{
+                //    OPSManage item = new OPSManage
+                //    {
+                //        CodeRef = managePack.CodeRef,
+                //        Description = managePack.Description,
+                //        ID = managePack.ID,
+                //        Name = managePack.Name,
+                //        PVP = managePack.PVP,
+                //        Quantity = managePack.Quantity,
+                //        UnitDiscountPrice = managePack.UnitDiscountPrice,
+                //        TotalMonths = managePack.TotalMonths
+                //    };
+                //    svr.OPSManage.Add(item);
+                //}
+
+                List<BB_Proposal_Quote> quotesList = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+
+                foreach(BB_Proposal_Quote quote in quotesList)
                 {
-                    OPSImplement item = new OPSImplement
+                    BB_OPS_Implement_Packs imp = db.BB_OPS_Implement_Packs.Where(x => x.CodeRef == quote.CodeRef).FirstOrDefault();
+
+                    if(imp != null)
                     {
-                        CodeRef = implementPack.CodeRef,
-                        Description = implementPack.Description,
-                        ID = implementPack.ID,
-                        Name = implementPack.Name,
-                        PVP = implementPack.PVP,
-                        Quantity = implementPack.Quantity,
-                        UnitDiscountPrice = implementPack.UnitDiscountPrice,
-                    };
-                    svr.OPSImplement.Add(item);
+                        OPSImplement item = new OPSImplement
+                        {
+                            CodeRef = quote.CodeRef,
+                            Description = quote.Description,
+                            //ID = implementPack.ID,
+                            Name = quote.Name,
+                            PVP = quote.PVP,
+                            Quantity = quote.Qty,
+                            UnitDiscountPrice = quote.UnitDiscountPrice,
+                        };
+                        svr.OPSImplement.Add(item);
+                    }
                 }
-                List<BB_Proposal_OPSManage> opsManage = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
-                foreach (BB_Proposal_OPSManage managePack in opsManage)
-                {
-                    OPSManage item = new OPSManage
-                    {
-                        CodeRef = managePack.CodeRef,
-                        Description = managePack.Description,
-                        ID = managePack.ID,
-                        Name = managePack.Name,
-                        PVP = managePack.PVP,
-                        Quantity = managePack.Quantity,
-                        UnitDiscountPrice = managePack.UnitDiscountPrice,
-                        TotalMonths = managePack.TotalMonths
-                    };
-                    svr.OPSManage.Add(item);
-                }
+
                 return svr;
             }
             return null;
