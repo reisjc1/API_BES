@@ -165,8 +165,8 @@ namespace WebApplication1.Models.SetupXML.XML
                         case 2:
                             financingType = "L";
                             VTTYPFinancingType = "DL";
-                            //contractType = "008";
-                            contractType = "002";  //Renting por enquanto enviar 002 e o ideal é enviar 008
+                            contractType = "008";
+                            //contractType = "002";  //Renting por enquanto enviar 002 e o ideal é enviar 008
                             break;
 
                         case 3:
@@ -201,7 +201,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     //CONTRACTS
                     Contracts contractsConfig = new Contracts();
-                    var collectionContracts = contractsConfig.ConfigContracts(d.ID, randomLetterNumber);
+                    var collectionContracts = contractsConfig.ConfigContracts(d.ID, randomLetterNumber, c, pf, ft);
 
                     //ORDERS
                     List<OrdersPartners> sD_DocOrdersPartners = new List<OrdersPartners>();
@@ -209,7 +209,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     var sDocOrder = new OrdersPartnersList();
                     var collectionOrders = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS>();
 
-                    sDocOrder = ordersConfig.ConfigOrders(d.ID, randomLetterNumber, VTTYPFinancingType, collectionContracts[0].CONTR_DOC);
+                    sDocOrder = ordersConfig.ConfigOrders(d.ID, randomLetterNumber, VTTYPFinancingType, collectionContracts[0].CONTR_DOC, c, d, pf, ct);
                     foreach (var sDocPartner in sDocOrder.SdDocOrderPartner)
                     {
                         sD_DocOrdersPartners.Add(sDocPartner);
@@ -266,7 +266,20 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             if(userCreatedBy.ErpNumber != null)
                             {
-                                erpNumber = userCreatedBy.ErpNumber;
+                                bool allDigits = userCreatedBy.ErpNumber.All(char.IsDigit);
+
+                                if (allDigits)
+                                {
+                                    erpNumber = userCreatedBy.ErpNumber;
+                                }
+                                else
+                                {
+                                    erpNumber = "50004700";
+                                }
+                            }
+                            else
+                            {
+                                erpNumber = "50004700";
                             }
                         }
                         else
@@ -278,7 +291,16 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
                         if(userOwner.ErpNumber != null)
                         {
-                            erpNumber = userOwner.ErpNumber;
+                            bool allDigits = userOwner.ErpNumber.All(char.IsDigit);
+
+                            if (allDigits)
+                            {
+                                erpNumber = userOwner.ErpNumber;
+                            }
+                            else
+                            {
+                                erpNumber = "50004700";
+                            }
                         }
                         else
                         {

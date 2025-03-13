@@ -22,17 +22,23 @@ namespace WebApplication1.Models.SetupXML.XML
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     List<BB_Proposal_Quote> quote_lst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
-                    int? numberOfMachines = 0;
-                    foreach(var equip in quote_lst)
-                    {
-                        BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == equip.CodeRef).FirstOrDefault();
+                    //int? numberOfMachines = 0;
+                    //foreach(var equip in quote_lst)
+                    //{
+                    //    BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == equip.CodeRef).FirstOrDefault();
 
-                        if(bB_Equipamentos != null)
-                        {
-                            numberOfMachines += equip.Qty;
-                        }
-                    }
-
+                    //    if(bB_Equipamentos != null)
+                    //    {
+                    //        numberOfMachines += equip.Qty;
+                    //    }
+                    //}
+                    int? numberOfMachines = db.BB_Proposal_Quote
+                                            .Where(x => x.Proposal_ID == proposalId)
+                                            .Join(db.BB_Equipamentos,
+                                            quote => quote.CodeRef,
+                                            equip => equip.CodeRef,
+                                            (quote, equip) => new { quote.Qty })
+                                            .Sum(x => (int?)x.Qty) ?? 0;
                     foreach (var order in orders)
                     {
                         string condFlag = null;
@@ -223,7 +229,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         BB_PrintingServices bB_PrintingServices = null;
                         if (index > 1)
                         {
-                            bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).Skip(index).FirstOrDefault();
+                            bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
                         }
                         else
                         {
@@ -236,13 +242,13 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             if (bB_VVA != null)
                             {
-                                BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                                //BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                                 collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
                                 {
                                     DOC = order.SD_DOC,
                                     COND_FLAG = "A",
-                                    KSCHL = zvbs != null ? zvbs.ConditionType : "ZVBS",
-                                    KBETR = zvbs != null ? Math.Round(zvbs.ConditionValue / numberOfMachines ?? 0.0, 2).ToString("F2").Replace(",", ".") : "0.00"
+                                    KSCHL = "ZVBS",
+                                    KBETR = bB_VVA.PVP != 0 ? Math.Round(bB_VVA.PVP / numberOfMachines ?? 0.0, 2).ToString("F2").Replace(",", ".") : "0.00"
                                 });
                             }
                         }
@@ -427,7 +433,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         }
 
 
-                                        conditionPvp.PVP = Convert.ToDouble(Math.Round(conditionPvp.PVP ?? 0.0, 2).ToString("F2")); ;
+                                        conditionPvp.PVP = Convert.ToDouble(Math.Round(conditionPvp.PVP ?? 0.0, 2).ToString("F2"));
                                         //conditionPvp.PVP = totalPvp;
                                     }
                                     else
@@ -507,7 +513,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     BB_PrintingServices bB_PrintingServices = null;
                     if (index > 1)
                     {
-                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).Skip(index).FirstOrDefault();
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
                     }
                     else
                     {
@@ -520,10 +526,10 @@ namespace WebApplication1.Models.SetupXML.XML
 
                         if (bB_VVA != null)
                         {
-                            BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                            //BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
                             ConditionPVP condPvp = new ConditionPVP();
-                            condPvp.PVP = zvbs != null ? zvbs.ConditionValue : 0;
+                            condPvp.PVP = Convert.ToDouble(Math.Round(bB_VVA.PVP ?? 0.0, 2).ToString("F2"));
                             condPvp.ConditionCode = "ZVBS";
                             conditionsPvp.Add(condPvp);
                         }
