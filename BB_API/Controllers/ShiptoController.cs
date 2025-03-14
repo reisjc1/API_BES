@@ -32,8 +32,8 @@ namespace WebApplication1.Controllers
                     //nunca enviar ambos os parametros != null
                     BB_Clientes client = db.BB_Clientes.Where(x => x.accountnumber == AccountNumber).FirstOrDefault();
 
-                    string clientName = client.Name.Split(' ')[0];
-                    lst_Locais = GetDeliveryLocationsFromSP(AccountNumber, null, clientName);
+                    string clientNIF = client.NIF;
+                    lst_Locais = GetDeliveryLocationsFromSP(AccountNumber, null, clientNIF);
                     //string parentAccountNr = lst_Locais.Select(x => x.ParentAccountNumber).FirstOrDefault();
                     
                     lst_DeliverLocations = GetDeliveryLocationsByProposalIDFromSP(proposalID);
@@ -448,7 +448,7 @@ namespace WebApplication1.Controllers
         }
         // ----------------------------- HELPERS -----------------------------
 
-        public List<BB_LocaisEnvio> GetDeliveryLocationsFromSP(string AccountNumber, string ParentAccountNumber, string clientName)
+        public List<BB_LocaisEnvio> GetDeliveryLocationsFromSP(string AccountNumber, string ParentAccountNumber, string clientNIF)
         {
             try
             {
@@ -465,7 +465,7 @@ namespace WebApplication1.Controllers
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@AccountNumber", AccountNumber);
                     cmd.Parameters.AddWithValue("@ParentAccountNumber", ParentAccountNumber);
-                    cmd.Parameters.AddWithValue("@ClientName", clientName);
+                    cmd.Parameters.AddWithValue("@ClientCIF", clientNIF);
                     SqlDataReader rdr = cmd.ExecuteReader();
 
                     while (rdr.Read())
