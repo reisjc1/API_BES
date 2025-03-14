@@ -7,6 +7,8 @@ namespace WebApplication1.Models.SetupXML
 {
     public class PartnerInfo
     {
+        public int OrderId { get; set; }
+        public int DeliveryLocationIDX { get; set; }
         public string PARTN_ROLE { get; set; }
         public string CUSTOMER { get; set; }
         public string CP_NAME { get; set; }

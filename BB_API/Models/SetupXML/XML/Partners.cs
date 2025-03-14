@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using static WebApplication1.Models.SetupXML.XSD;
@@ -97,13 +98,13 @@ namespace WebApplication1.Models.SetupXML.XML
 
                         nameParts = client.Owner.Split(' ');
                     }
-                        //partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
-                        //if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
-                        if (string.IsNullOrEmpty(partnerInfo.ISNEWADDRESS))
+                    //partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
+                    //if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
+                    if (string.IsNullOrEmpty(partnerInfo.ISNEWADDRESS))
                     {
-                        using(var bdCliente =  new BB_DB_DEVEntities2())
+                        using (var bdCliente = new BB_DB_DEVEntities2())
                         {
-                            
+
                             BB_Proposal_DeliveryLocation idLocaisEnvio = bdCliente.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId && x.AccountType == "Ship To").FirstOrDefault();
 
                             //int IDLOCAISENVIO = Int32.Parse(idLocaisEnvio);
@@ -128,7 +129,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         using (var bdCliente = new BB_DB_DEVEntities2())
                         {
                             BB_Proposal_DeliveryLocation idLocaisEnvio = bdCliente.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId && x.AccountType == "Ship To").FirstOrDefault();
-                      
+
                             Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES addressObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES();
                             Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD addressAddObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD();
 
@@ -194,7 +195,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             customerTU = "150423";
                         }
-                        if(partnerInfo.POST_CODE1 != "29470" && partnerInfo.POST_CODE1 != "29470" && partnerInfo.POST_CODE1 != "29490")
+                        if (partnerInfo.POST_CODE1 != "29470" && partnerInfo.POST_CODE1 != "29470" && partnerInfo.POST_CODE1 != "29490")
                         {
                             collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
                             {
@@ -203,7 +204,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 CUSTOMER = partnerInfo.CUSTOMER,
                             });
                         }
-                      
+
                     }
 
 
@@ -228,7 +229,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
                                         {
                                             SD_DOC = order.Sd_Doc,  //"Teste",//order.SD_DOC,
-                                            PARTN_ROLE = "RE", 
+                                            PARTN_ROLE = "RE",
                                             CUSTOMER = dLocation.SAPCustomerNr,       //"1137222",             // partnerInfo.CUSTOMER, //
                                             CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
                                             CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
@@ -254,7 +255,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                 }
                             }
-                           
+
                         }
 
                     }
@@ -266,6 +267,290 @@ namespace WebApplication1.Models.SetupXML.XML
                 partnersAdressesList.AdressesAdd = collectionAddressesAdd;
 
                 return partnersAdressesList;
+
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+                return null;
+            }
+
+        }
+
+        public PartnersAdressesList ConfigPartnersV2(int proposalId, List<OrdersPartners> orders, string randomLetterNumber, BB_Proposal d, BB_Clientes client)
+        {
+            try
+            {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    List<BB_Proposal_DeliveryLocation> dl_lst = db.BB_Proposal_DeliveryLocation.AsNoTracking().Where(x => x.ProposalID == proposalId).ToList();
+                    List<BB_Proposal_ItemDoBasket> itemDoBasket_lst = db.BB_Proposal_ItemDoBasket.AsNoTracking().ToList();
+                    List<BB_LocaisEnvio> lEnvio_lst = db.BB_LocaisEnvio.AsNoTracking().ToList();
+
+                    Addresses address = new Addresses();
+                    AddressesAdd addresseAdd = new AddressesAdd();
+
+                    PartnersAdressesList partnersAdressesList = new PartnersAdressesList();
+
+                    var collectionPartners = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS>();
+                    var collectionAddresses = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES>();
+                    var collectionAddressesAdd = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD>();
+
+                    List<PartnerInfo> partnerInfoLst = new List<PartnerInfo>();
+                    string bdConnect = ConfigurationManager.AppSettings["BasedadosConnect"].ToString();
+                    int i = 0;
+                    Random random = new Random();
+                    int randomNumberAddress = random.Next(1000000, 10000000);
+
+                    string OrdersIDsList = string.Join(", ", orders.Select(o => o.OrderId.ToString()).ToArray());
+
+
+                    using (SqlConnection conn = new SqlConnection(bdConnect))
+                    {
+                        conn.Open();
+
+                        SqlCommand cmd = new SqlCommand("SP_GET_LIST_ORDERS_PARTNERs_INFO", conn);
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@OrderList", OrdersIDsList);
+                        SqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                try
+                                {
+                                    PartnerInfo partnerInfo = new PartnerInfo
+                                    {
+                                        OrderId = Convert.ToInt32(reader["OrderId"]),
+                                        DeliveryLocationIDX = Convert.ToInt32(reader["DeliveryLocationIDX"]),
+                                        PARTN_ROLE = reader["PARTN_ROLE"].ToString(),
+                                        CUSTOMER = reader["CUSTOMER"].ToString(),
+                                        NAME1 = reader["NAME1"].ToString(),
+                                        NAME2 = reader["NAME2"].ToString(),
+                                        NAME_CO = reader["NAME_CO"].ToString(),
+                                        CITY1 = reader["CITY1"].ToString(),
+                                        POST_CODE1 = reader["POST_CODE1"].ToString(),
+                                        STREET = reader["STREET"].ToString(),
+                                        FLOOR = reader["FLOOR"].ToString(),
+                                        ROOMNUMBER = reader["ROOMNUMBER"].ToString(),
+                                        BUSINESSCODE = reader["BusinessCode"].ToString(),
+                                        ISNEWADDRESS = reader["IsNewAddress"].ToString(),
+                                        COUNTRY = reader["COUNTRY"].ToString(),
+                                        LANGU = reader["LANGU"].ToString(),
+                                        REGION = reader["REGION"].ToString(),
+                                        TEL_NUMBER = reader["TEL_NUMBER"].ToString(),
+                                        BUILD_LONG = reader["BUILD_LONG"].ToString(),
+                                        TAX_NO_1 = reader["TAX_NO_1"].ToString(),
+                                    };
+
+                                    partnerInfoLst.Add(partnerInfo);
+
+                                }catch(Exception ex)
+                                {
+                                    ex.Message.ToString();
+                                    return null;
+                                }
+                            }
+                    }
+
+                    foreach (var order in partnerInfoLst)
+                    {
+                        var orderDoc = orders.Where(x => x.OrderId == order.OrderId).Select(x => x.Sd_Doc).FirstOrDefault();
+                        //string cp_Name1 = 
+                        //SD_DocOrdersPartner SDocPartner = orders.Where(x => x.OrderId == order.ID).FirstOrDefault();
+                        if (order.PARTN_ROLE != null)
+                        {
+                            switch (order.PARTN_ROLE)
+                            {
+                                case "Ship To":
+                                    order.PARTN_ROLE = "WE";
+                                    break;
+                                case "Bill To":
+                                    order.PARTN_ROLE = "RE";
+                                    break;
+                                case "Sold To":
+                                    order.PARTN_ROLE = "AG";
+                                    break;
+
+
+
+                            }
+
+                        }
+                        string[] nameParts = null;
+                        //BB_Clientes client = new BB_Clientes();
+                        //using (var db = new BB_DB_DEVEntities2())
+                        //{
+                        //    string clientNumber = db.BB_Proposal.Where(x => x.ID == proposalId).Select(x => x.ClientAccountNumber).FirstOrDefault();
+                        //    client = db.BB_Clientes.Where(x => x.accountnumber == clientNumber).FirstOrDefault();
+
+                        //}
+                        nameParts = client.Owner.Split(' ');
+                        //partnerInfo.CUSTOMER = "1132257";//"1161897"; //null;//
+                        //if (!string.IsNullOrEmpty(partnerInfo.CUSTOMER))
+                        if (string.IsNullOrEmpty(order.ISNEWADDRESS))
+                        {
+                            BB_Proposal_DeliveryLocation idLocaisEnvio = dl_lst.Where(x => x.IDX == order.DeliveryLocationIDX).FirstOrDefault();
+
+
+                            
+                            if(idLocaisEnvio != null)
+                            {
+                                collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                                {
+                                    SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
+                                    PARTN_ROLE = order.PARTN_ROLE, //"WE",
+                                    CUSTOMER = idLocaisEnvio.SAPCustomerNr,
+                                    CP_NAMEV = nameParts[nameParts.Length - 1],     //"ALVAREZ",
+                                    CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1)),
+                                    CP_PHONE = client.telephone1//"66666666"
+                                });
+                            }
+
+                        }
+                        else
+                        {
+                            BB_Proposal_DeliveryLocation idLocaisEnvio = dl_lst.Where(x => x.IDX == order.DeliveryLocationIDX).FirstOrDefault();
+
+                            Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES addressObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES();
+                            Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD addressAddObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD();
+
+                            int randomNumberI = randomNumberAddress + i;
+
+                            addressObj = address.ConfigAddress(order.OrderId, randomLetterNumber, randomNumberI);
+                            addressAddObj = addresseAdd.ConfigAddressAdd(order.OrderId, addressObj.ADDRNUMBER);
+
+                            Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS partner = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS();
+                            partner.SD_DOC = orderDoc;
+                            partner.PARTN_ROLE = order.PARTN_ROLE;
+                            partner.CUSTOMER = idLocaisEnvio.SAPCustomerNr;
+                            partner.ADDRNUMBER = addressObj.ADDRNUMBER;
+                            partner.CP_NAMEV = nameParts[nameParts.Length - 1];
+                            partner.CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1));
+                            partner.CP_PHONE = client.telephone1;
+
+                            //partnersAdressesList.Partners.Add(partner);
+                            collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                            {
+                                SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
+                                PARTN_ROLE = order.PARTN_ROLE, //"WE",
+                                CUSTOMER = idLocaisEnvio.SAPCustomerNr,
+                                ADDRNUMBER = addressObj.ADDRNUMBER,      //$"A_3686501_{randomLetterNumber}",  //$"A_3686499_{randomLetterNunber}",
+                                CP_NAMEV = nameParts[nameParts.Length - 1],     //"ALVAREZ",
+                                CP_NAME1 = string.Join(" ", nameParts.Take(nameParts.Length - 1)),
+                                CP_PHONE = client.telephone1//"66666666"
+                            });
+                            collectionAddresses.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES
+                            {
+                                ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
+                                NAME1 = order.NAME1, // "EUROPEA DE EXPEDICIONES SL",
+                                NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
+                                NAME_CO = "DEPART",
+                                CITY1 = addressObj.CITY1,// "CADIZ",
+                                POST_CODE1 = addressObj.POST_CODE1,//"11006",
+                                STREET = addressObj.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
+                                FLOOR = addressObj.FLOOR,//"3",
+                                ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
+                                COUNTRY = addressObj.COUNTRY,//"ES",
+                                LANGU = addressObj.LANGU,//"E",
+                                REGION = addressObj.REGION,//"11",
+                                TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
+                                BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
+                            });
+                            collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
+                            {
+                                TAX_NO_1 = addressAddObj.TAX_NO_1,
+                                TAX_NO_2 = client.NIF,
+                                ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
+                            });
+                            i++;
+
+                        }
+                        if (order.POST_CODE1.StartsWith("294 ") || order.POST_CODE1.StartsWith("46") || order.POST_CODE1.StartsWith("12"))
+                        {
+                            string customerTU = "";
+                            if (order.POST_CODE1.StartsWith("294"))
+                            {
+                                customerTU = "149450";
+                            }
+                            if (order.POST_CODE1.StartsWith("46") || order.POST_CODE1.StartsWith("12"))
+                            {
+                                customerTU = "150423";
+                            }
+                            if (order.POST_CODE1 != "29470" && order.POST_CODE1 != "29470" && order.POST_CODE1 != "29490")
+                            {
+                                collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                                {
+                                    SD_DOC = orderDoc,
+                                    PARTN_ROLE = "TU",
+                                    CUSTOMER = order.CUSTOMER,
+                                });
+                            }
+
+                        }
+
+
+                        List<BB_Proposal_DeliveryLocation> dl = dl_lst.Where(x => x.AccountType == "Bill To").ToList();
+
+                        if (dl.Count > 0)
+                        {
+                            foreach (var dLocation in dl)
+                            {
+                                //BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == dLocation.ProposalID).FirstOrDefault();
+                                int fkLocaisEvnio = int.Parse(dLocation.ID);
+                                BB_LocaisEnvio lEnvio = lEnvio_lst.Where(x => x.ID == fkLocaisEvnio).FirstOrDefault();
+                                //BB_Clientes c = db.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).FirstOrDefault();
+                                string[] namePartsBT = client.Owner.Split(' ');
+
+                                if (dLocation.BillReceiver == true)
+                                {
+                                    if (dLocation.SAPCustomerNr != null)
+                                    {
+                                        collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                                        {
+                                            SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
+                                            PARTN_ROLE = "RE",
+                                            CUSTOMER = dLocation.SAPCustomerNr,       //"1137222",             // partnerInfo.CUSTOMER, //
+                                            CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
+                                            CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
+                                            CP_PHONE = client.telephone1//"66666666"
+                                        });
+                                    }
+                                }
+
+                                if (dLocation.Payer == true)
+                                {
+
+                                    if (dLocation.SAPCustomerNr != null)
+                                    {
+                                        collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                                        {
+                                            SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
+                                            PARTN_ROLE = "RG",
+                                            CUSTOMER = dLocation.SAPCustomerNr,      //lEnvio.SAPCustomerNr.ToString(),             // partnerInfo.CUSTOMER, //
+                                            CP_NAMEV = namePartsBT[namePartsBT.Length - 1],     //"ALVAREZ",
+                                            CP_NAME1 = string.Join(" ", namePartsBT.Take(namePartsBT.Length - 1)),
+                                            CP_PHONE = client.telephone1//"66666666"
+                                        });
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+
+                    partnersAdressesList.Partners = collectionPartners;
+                    partnersAdressesList.Adresses = collectionAddresses;
+                    partnersAdressesList.AdressesAdd = collectionAddressesAdd;
+
+                    stopwatch.Stop();
+
+                    Console.WriteLine($"Order - ConfigOrders: {stopwatch.ElapsedMilliseconds} ms");
+
+                    return partnersAdressesList;
+                }
 
             }
             catch (Exception ex)

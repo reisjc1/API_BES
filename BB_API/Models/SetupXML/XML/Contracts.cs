@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using static WebApplication1.Models.SetupXML.XSD;
@@ -12,6 +15,9 @@ namespace WebApplication1.Models.SetupXML.XML
         {
             try
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+
                 string contractType = "";
                 string formattedDtCont = "";
                 string vtLaufk = "";
@@ -94,37 +100,88 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     var collectionContracts = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS>();
                 
-                    List<BB_Proposal_ItemDoBasket> bb_itemsDoBasket = new List<BB_Proposal_ItemDoBasket>();
-                    int? firstItemGroup = 0;
-                    List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId).ToList();
-                    foreach (var dLocations in dl)
+                    //List<BB_Proposal_ItemDoBasket> bb_itemsDoBasket = new List<BB_Proposal_ItemDoBasket>();
+                    //int? firstItemGroup = 0;
+                    //List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId).ToList();
+                    //foreach (var dLocations in dl)
+                    //{
+                    //    List<BB_Proposal_ItemDoBasket> itemsDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == dLocations.IDX).OrderBy(x => x.Group).ToList();
+                    //    foreach (var items in itemsDoBasket)
+                    //    {
+                    //        BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == items.CodeRef).FirstOrDefault();
+                    //        if (bB_Equipamentos != null)
+                    //        {
+                    //            if (items.Group != firstItemGroup)
+                    //            {
+                    //                bb_itemsDoBasket.Add(items);
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+
+                    //            if (items.Description.Contains("MAIN MATERIAL"))
+                    //            {
+                    //                bb_itemsDoBasket.Add(items);
+                    //            }
+                    //        }
+
+                    //    }
+
+                    //}
+
+                    List<XMLOrders> groups = new List<XMLOrders>();
+
+                    string bdConnect = ConfigurationManager.AppSettings["BasedadosConnect"].ToString();
+                    int i = 0;
+                    Random random = new Random();
+                    int randomNumberAddress = random.Next(1000000, 10000000);
+
+                    using (SqlConnection conn = new SqlConnection(bdConnect))
                     {
-                        List<BB_Proposal_ItemDoBasket> itemsDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == dLocations.IDX).OrderBy(x => x.Group).ToList();
-                        foreach (var items in itemsDoBasket)
+                        conn.Open();
+
+                        SqlCommand cmd = new SqlCommand("GetXMLOrders", conn);
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@ProposalId", proposalId);
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
                         {
-                            BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == items.CodeRef).FirstOrDefault();
-                            if (bB_Equipamentos != null)
+                            try
                             {
-                                if (items.Group != firstItemGroup)
+                                XMLOrders order = new XMLOrders
                                 {
-                                    bb_itemsDoBasket.Add(items);
-                                }
+                                    ID = Convert.ToInt32(reader["ID"]),
+                                    CodeRef = reader["CodeRef"].ToString(),
+                                    ItemGroup = Convert.ToInt32(reader["ItemGroup"]),
+                                    IDX = Convert.ToInt32(reader["IDX"]),
+                                    ContactName = reader["ContactName"].ToString(),
+                                    ContactSurname = reader["ContactSurname"].ToString(),
+                                    ContactMovil = reader["ContactMovil"].ToString(),
+                                    Schedule = reader["Schedule"].ToString(),
+                                    DLFloor = reader["DLFloor"].ToString(),
+                                    Department = reader["Department"].ToString(),
+                                    Building = reader["Building"].ToString(),
+                                    Room = reader["Room"].ToString(),
+                                    City = reader["City"].ToString(),
+                                    TypeOfOrder = Convert.ToInt32(reader["TypeOfOrder"])
+                                };
+
+                                groups.Add(order);
+
                             }
-                            else
+                            catch (Exception ex)
                             {
-
-                                if (items.Description.Contains("MAIN MATERIAL"))
-                                {
-                                    bb_itemsDoBasket.Add(items);
-                                }
+                                ex.Message.ToString();
+                                return null;
                             }
-
                         }
 
                     }
 
 
-                    int noOrders = bb_itemsDoBasket.Count();
+                    int noOrders = groups.Count();
                     DateTime? createdTimeContractN = c.CreatedTime;
                     if (createdTimeContractN.HasValue)
                     {
@@ -206,6 +263,10 @@ namespace WebApplication1.Models.SetupXML.XML
                     //        VT_FAKSK = "X"
                     //    });
                     //}
+
+                    stopwatch.Stop();
+
+                    Console.WriteLine($"Order - ConfigOrders: {stopwatch.ElapsedMilliseconds} ms");
 
                     return collectionContracts;
                 }

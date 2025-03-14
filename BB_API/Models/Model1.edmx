@@ -104,6 +104,9 @@
           <Property Name="numberofemployees" Type="int" />
           <Property Name="new_totalequipments" Type="int" />
           <Property Name="new_totalequipmentskm" Type="int" />
+          <Property Name="Branch" Type="nvarchar(max)" />
+          <Property Name="Branch_Id" Type="nvarchar(max)" />
+          <Property Name="Branch_Local" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BB_Coderef_Generic">
           <Key>
@@ -1913,6 +1916,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetXMLOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProposalId" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="BB_DB_DEVModelStoreContainer">
           <EntitySet Name="BB_Acessories" EntityType="Self.BB_Acessories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Bank_Bnp" EntityType="Self.BB_Bank_Bnp" Schema="dbo" store:Type="Tables" />
@@ -2304,6 +2310,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="BB_WFA_Proposal_OneShot_History" EntityType="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History" />
+          <FunctionImport Name="GetXMLOrders">
+            <Parameter Name="ProposalId" Mode="In" Type="Int32" />
+          </FunctionImport>
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -2628,6 +2637,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="numberofemployees" Type="Int32" />
           <Property Name="new_totalequipments" Type="Int32" />
           <Property Name="new_totalequipmentskm" Type="Int32" />
+          <Property Name="Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Branch_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Branch_Local" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BB_Proposal_Observations">
           <Key>
@@ -4533,6 +4545,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_Clientes">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Clientes">
               <MappingFragment StoreEntitySet="BB_Clientes">
+                <ScalarProperty Name="Branch_Local" ColumnName="Branch_Local" />
+                <ScalarProperty Name="Branch_Id" ColumnName="Branch_Id" />
+                <ScalarProperty Name="Branch" ColumnName="Branch" />
                 <ScalarProperty Name="new_totalequipmentskm" ColumnName="new_totalequipmentskm" />
                 <ScalarProperty Name="new_totalequipments" ColumnName="new_totalequipments" />
                 <ScalarProperty Name="numberofemployees" ColumnName="numberofemployees" />
@@ -6123,6 +6138,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetXMLOrders" FunctionName="BB_DB_DEVModel.Store.GetXMLOrders" />
           
           </EntityContainerMapping>
       </Mapping>

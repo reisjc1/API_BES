@@ -12,6 +12,8 @@ namespace WebApplication1.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class BB_DB_DEVEntities2 : DbContext
     {
@@ -142,5 +144,14 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
         public virtual DbSet<BB_WFA_Proposal_OneShot_History> BB_WFA_Proposal_OneShot_History { get; set; }
+    
+        public virtual int GetXMLOrders(Nullable<int> proposalId)
+        {
+            var proposalIdParameter = proposalId.HasValue ?
+                new ObjectParameter("ProposalId", proposalId) :
+                new ObjectParameter("ProposalId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetXMLOrders", proposalIdParameter);
+        }
     }
 }

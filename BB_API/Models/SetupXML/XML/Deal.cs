@@ -126,7 +126,6 @@ namespace WebApplication1.Models.SetupXML.XML
                     string randomNumberString = randomNumber.ToString();
                     string randomLetterNumber = randomLetter + randomNumberString;
 
-
                     List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
 
                     LD_Contrato c = db.LD_Contrato.Where(x => x.ID == contractId).FirstOrDefault();
@@ -209,7 +208,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     var sDocOrder = new OrdersPartnersList();
                     var collectionOrders = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS>();
 
-                    sDocOrder = ordersConfig.ConfigOrders(d.ID, randomLetterNumber, VTTYPFinancingType, collectionContracts[0].CONTR_DOC, c, d, pf, ct);
+                    sDocOrder = ordersConfig.ConfigOrdersV2(d.ID, randomLetterNumber, VTTYPFinancingType, collectionContracts[0].CONTR_DOC, c, d, pf, ct);
                     foreach (var sDocPartner in sDocOrder.SdDocOrderPartner)
                     {
                         sD_DocOrdersPartners.Add(sDocPartner);
@@ -222,12 +221,12 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     //PARTERNS //Addresses //AddressesAdd
                     Partners partnersConfig = new Partners();
-                    var collectionPartners = partnersConfig.ConfigPartners(d.ID, sD_DocOrdersPartners, randomLetterNumber);
+                    var collectionPartners = partnersConfig.ConfigPartnersV2(d.ID, sD_DocOrdersPartners, randomLetterNumber, d, client);
 
 
                     //CONDITIONS
                     Conditions conditionsConfig = new Conditions();
-                    var collectionConditions = conditionsConfig.ConfigConditions(collectionOrders, collectionContracts, d.ID, ft.Code);
+                    var collectionConditions = conditionsConfig.ConfigConditionsV2(collectionOrders, collectionContracts, d.ID, ft.Code, pf);
 
                     //SET FIELD MISSING IN FINANCE COLLECTION
                     foreach(var financePart in sDocOrder.z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERs)

@@ -40,5 +40,8 @@ namespace WebApplication1.Models
         public Nullable<int> numberofemployees { get; set; }
         public Nullable<int> new_totalequipments { get; set; }
         public Nullable<int> new_totalequipmentskm { get; set; }
+        public string Branch { get; set; }
+        public string Branch_Id { get; set; }
+        public string Branch_Local { get; set; }
     }
 }
