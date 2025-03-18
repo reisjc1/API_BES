@@ -45,6 +45,7 @@ namespace WebApplication1.BLL
                     proposal.ValueTotal = p.Summary.businessTotal;
 
                     proposal.IsMultipleContract = p.Draft.details.IsMultipleContract ?? false;
+                    proposal.IsNP = p.Draft.baskets.IsNP;
 
 
                     List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposal.ID).ToList();
@@ -1803,6 +1804,7 @@ namespace WebApplication1.BLL
                     err.ProposalObj.Draft.baskets.BEUSupport = typeOfClient.BEUSupport;
                 }
 
+                err.ProposalObj.Draft.baskets.IsNP = proposal.IsNP ?? false;
 
                 //LD_DocumentProposal - Contractos
                 err.ProposalObj.Draft.contracts = new BusinessContract();
@@ -1851,7 +1853,8 @@ namespace WebApplication1.BLL
                     StatusID = 1,
                     ToDelete = false,
                     ValueTotal = p.Summary.businessTotal,
-                    IsMultipleContract = IsMultipleContract
+                    IsMultipleContract = IsMultipleContract,
+                    IsNP = p.Draft.baskets.IsNP
                 };
 
                 if(bb_proposal != null)

@@ -42,5 +42,7 @@ namespace WebApplication1.Models
         public Nullable<int> DeliveryLocationID { get; set; }
         public Nullable<int> Group { get; set; }
         public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public Nullable<bool> IsUsedMachine { get; set; }
+        public string SerialNumber { get; set; }
     }
 }

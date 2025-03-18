@@ -554,7 +554,6 @@ namespace WebApplication1.Models.SetupXML.XML
                     //BB_FinancingContractType ct = db.BB_FinancingContractType.Where(x => x.ID == pf.ContractTypeId).FirstOrDefault();
                     BB_Campanha ca = db.BB_Campanha.Where(x => x.ID == d.CampaignID).FirstOrDefault();
                     List<BB_Proposal_Quote> quote_lst = db.BB_Proposal_Quote.AsNoTracking().Where(x => x.Proposal_ID == proposalId && x.IsUsed == true).ToList();
-                    List<BB_Proposal_Counters> counters_lst = db.BB_Proposal_Counters.AsNoTracking().Where(x => x.ProposalID == proposalId).ToList();
                     Random random = new Random();
                     int randomNumberOrderDoc = random.Next(1000000, 10000000);
                     string randomNumberOrderString = randomNumberOrderDoc.ToString();
@@ -590,6 +589,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     ID = Convert.ToInt32(reader["ID"]),
                                     CodeRef = reader["CodeRef"].ToString(),
+                                    IsUsedMachine = (bool?)reader["IsUsedMachine"],
+                                    SerialNumber = reader["SerialNumber"].ToString(),
                                     ItemGroup = Convert.ToInt32(reader["ItemGroup"]),
                                     IDX = Convert.ToInt32(reader["IDX"]),
                                     ContactName = reader["ContactName"].ToString(),
@@ -675,27 +676,13 @@ namespace WebApplication1.Models.SetupXML.XML
                                             MODEL_YN = "Y" // Perguntar ao Luis
                                         });
 
-                                        BB_Proposal_Quote quote = quote_lst.Where(x => x.CodeRef == item.CodeRef && x.IsUsed == true).FirstOrDefault();
-
                                         //bundelCodeRef = item.CodeRef;
                                         firstItemGroup = false;
 
-                                        if(quote != null)
+                                        if(item.IsUsedMachine == true)
                                         {
                                             isUsedMachine = true;
-
-                                            if(counters_lst != null)
-                                            {
-                                                BB_Proposal_Counters counter = counters_lst.Where(x => x.OSID == quote.ID).FirstOrDefault();
-
-                                                if(counter != null)
-                                                {
-                                                    serialNumber = counter.serialNumber;
-                                                    counters_lst.Remove(counter);
-                                                }
-                                            }
-
-                                            
+                                            serialNumber = item.SerialNumber;
                                         }
                                         else
                                         {
@@ -841,7 +828,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         CONTRACT_DOC = contractDoc, //$"C_{c.ID}_1_{randomLetterNunber}",   //contractDoc,
                                         CONTRACT_ITM = contractItm, // add +10 no foreach de orders  
                                         USED_MACHINE = "1",               //"A6DR021",                  //order.CodeRef,
-                                        ORDER_FLAG = "O1u", //TODO: MANTER ESTE VALOR;
+                                        ORDER_FLAG = "O1U", //TODO: MANTER ESTE VALOR;
                                         ORDER_INFO = serialNumber,
                                         LINKING_PIN = proposalId.ToString(),
                                         Z1ZVOE_ORDER_CONTACT = collectionOrdersContact,

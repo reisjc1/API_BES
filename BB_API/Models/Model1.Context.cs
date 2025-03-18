@@ -144,6 +144,7 @@ namespace WebApplication1.Models
         public virtual DbSet<LD_DocumentProposal> LD_DocumentProposal { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
         public virtual DbSet<BB_WFA_Proposal_OneShot_History> BB_WFA_Proposal_OneShot_History { get; set; }
+        public virtual DbSet<BB_WFA_NP_Approvers> BB_WFA_NP_Approvers { get; set; }
     
         public virtual int GetXMLOrders(Nullable<int> proposalId)
         {

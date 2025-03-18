@@ -9,6 +9,8 @@ namespace WebApplication1.Models.SetupXML
     {
         public int ID { get; set; }
         public string CodeRef { get; set; }
+        public bool? IsUsedMachine { get; set; }
+        public string SerialNumber { get; set; }
         public int ItemGroup { get; set; }
         public int IDX { get; set; }
         public string ContactName { get; set; }

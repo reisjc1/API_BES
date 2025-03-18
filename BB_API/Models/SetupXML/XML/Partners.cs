@@ -286,8 +286,8 @@ namespace WebApplication1.Models.SetupXML.XML
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     List<BB_Proposal_DeliveryLocation> dl_lst = db.BB_Proposal_DeliveryLocation.AsNoTracking().Where(x => x.ProposalID == proposalId).ToList();
-                    List<BB_Proposal_ItemDoBasket> itemDoBasket_lst = db.BB_Proposal_ItemDoBasket.AsNoTracking().ToList();
-                    List<BB_LocaisEnvio> lEnvio_lst = db.BB_LocaisEnvio.AsNoTracking().ToList();
+                    //List<BB_Proposal_ItemDoBasket> itemDoBasket_lst = db.BB_Proposal_ItemDoBasket.AsNoTracking().ToList();
+                    //List<BB_LocaisEnvio> lEnvio_lst = db.BB_LocaisEnvio.AsNoTracking().ToList();
 
                     Addresses address = new Addresses();
                     AddressesAdd addresseAdd = new AddressesAdd();
@@ -305,7 +305,6 @@ namespace WebApplication1.Models.SetupXML.XML
                     int randomNumberAddress = random.Next(1000000, 10000000);
 
                     string OrdersIDsList = string.Join(", ", orders.Select(o => o.OrderId.ToString()).ToArray());
-
 
                     using (SqlConnection conn = new SqlConnection(bdConnect))
                     {
@@ -499,7 +498,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 //BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == dLocation.ProposalID).FirstOrDefault();
                                 int fkLocaisEvnio = int.Parse(dLocation.ID);
-                                BB_LocaisEnvio lEnvio = lEnvio_lst.Where(x => x.ID == fkLocaisEvnio).FirstOrDefault();
+                                //BB_LocaisEnvio lEnvio = lEnvio_lst.Where(x => x.ID == fkLocaisEvnio).FirstOrDefault();
                                 //BB_Clientes c = db.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).FirstOrDefault();
                                 string[] namePartsBT = client.Owner.Split(' ');
 

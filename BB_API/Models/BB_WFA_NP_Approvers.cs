@@ -12,15 +12,11 @@ namespace WebApplication1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class BB_WFA_Approvers_Control
+    public partial class BB_WFA_NP_Approvers
     {
         public int ID { get; set; }
-        public Nullable<int> WFA_Workflow_Proposal_ID { get; set; }
-        public Nullable<int> WFA_Control_ID { get; set; }
-        public Nullable<int> WFA_Level_ID { get; set; }
-        public string Approver_ID { get; set; }
+        public Nullable<int> ProposalID { get; set; }
+        public string ApproverID { get; set; }
         public Nullable<bool> IsApproved { get; set; }
-        public Nullable<bool> IsComplete { get; set; }
-        public Nullable<bool> IsNP { get; set; }
     }
 }

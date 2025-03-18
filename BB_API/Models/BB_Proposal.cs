@@ -52,6 +52,7 @@ namespace WebApplication1.Models
         public string ContractNumberPai { get; set; }
         public Nullable<System.DateTime> DataFechoContracto { get; set; }
         public Nullable<int> Pedido_SAP { get; set; }
+        public Nullable<bool> IsNP { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }

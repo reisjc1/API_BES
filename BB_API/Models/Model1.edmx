@@ -847,6 +847,7 @@
           <Property Name="ContractNumberPai" Type="varchar" MaxLength="100" />
           <Property Name="DataFechoContracto" Type="datetime" />
           <Property Name="Pedido_SAP" Type="int" />
+          <Property Name="IsNP" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_Aprovacao_Quote">
           <Key>
@@ -1081,6 +1082,8 @@
           <Property Name="DeliveryLocationID" Type="int" />
           <Property Name="Group" Type="int" />
           <Property Name="DeliveryDate" Type="date" />
+          <Property Name="IsUsedMachine" Type="bit" />
+          <Property Name="SerialNumber" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="BB_Proposal_LeaseDesk_Detalhe">
           <Key>
@@ -1587,6 +1590,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Approver_ID" Type="nvarchar" MaxLength="128" />
           <Property Name="IsApproved" Type="bit" />
           <Property Name="IsComplete" Type="bit" />
+          <Property Name="IsNP" Type="bit" />
         </EntityType>
         <EntityType Name="BB_WFA_Comments_Business">
           <Key>
@@ -1638,6 +1642,15 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Condition2_ID" Type="int" />
           <Property Name="Condition2_Value" Type="float" />
           <Property Name="Type2_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="BB_WFA_NP_Approvers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProposalID" Type="int" />
+          <Property Name="ApproverID" Type="varchar(max)" />
+          <Property Name="IsApproved" Type="bit" />
         </EntityType>
         <EntityType Name="BB_WFA_Proposal_OneShot_History">
           <Key>
@@ -2018,6 +2031,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_WFA_Control" EntityType="Self.BB_WFA_Control" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Exception" EntityType="Self.BB_WFA_Exception" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Levels" EntityType="Self.BB_WFA_Levels" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_WFA_NP_Approvers" EntityType="Self.BB_WFA_NP_Approvers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Proposal_OneShot_History" EntityType="Self.BB_WFA_Proposal_OneShot_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="Self.BB_WFA_Workflow_Proposal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_WorkSheet_Metadata" EntityType="Self.BB_WorkSheet_Metadata" Schema="dbo" store:Type="Tables" />
@@ -2311,8 +2325,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="BB_WFA_Proposal_OneShot_History" EntityType="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History" />
           <FunctionImport Name="GetXMLOrders">
-            <Parameter Name="ProposalId" Mode="In" Type="Int32" />
+          <Parameter Name="ProposalId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="BB_WFA_NP_Approvers" EntityType="BB_DB_DEVModel.BB_WFA_NP_Approvers" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -3564,6 +3579,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="DeliveryLocationID" Type="Int32" />
           <Property Name="Group" Type="Int32" />
           <Property Name="DeliveryDate" Type="DateTime" Precision="0" />
+          <Property Name="IsUsedMachine" Type="Boolean" />
+          <Property Name="SerialNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BB_RD_WFA_BU">
           <Key>
@@ -3708,6 +3725,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Approver_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="IsApproved" Type="Boolean" />
           <Property Name="IsComplete" Type="Boolean" />
+          <Property Name="IsNP" Type="Boolean" />
         </EntityType>
         <EntityType Name="BB_WFA_Exception">
           <Key>
@@ -4045,6 +4063,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Pedido_SAP" Type="Int32" />
           <NavigationProperty Name="BB_Proposal_OPSImplement" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSImplement_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSImplement" />
           <NavigationProperty Name="BB_Proposal_OPSManage" Relationship="BB_DB_DEVModel.FK_BB_Proposal_OPSManage_BB_Proposal" FromRole="BB_Proposal" ToRole="BB_Proposal_OPSManage" />
+          <Property Name="IsNP" Type="Boolean" />
         </EntityType>
         <Association Name="FK_BB_Proposal_OPSImplement_BB_Proposal">
           <End Type="BB_DB_DEVModel.BB_Proposal" Role="BB_Proposal" Multiplicity="1" />
@@ -4219,6 +4238,15 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="GPTotal" Type="Double" />
           <Property Name="GPPercentage" Type="Double" />
           <Property Name="TotalNetsale" Type="Double" />
+          <Property Name="IsApproved" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_WFA_NP_Approvers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="ApproverID" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="IsApproved" Type="Boolean" />
         </EntityType>
         
@@ -5458,6 +5486,8 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_Proposal_ItemDoBasket">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_ItemDoBasket">
               <MappingFragment StoreEntitySet="BB_Proposal_ItemDoBasket">
+                <ScalarProperty Name="SerialNumber" ColumnName="SerialNumber" />
+                <ScalarProperty Name="IsUsedMachine" ColumnName="IsUsedMachine" />
                 <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
                 <ScalarProperty Name="Group" ColumnName="Group" />
                 <ScalarProperty Name="DeliveryLocationID" ColumnName="DeliveryLocationID" />
@@ -5638,6 +5668,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_WFA_Approvers_Control">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Approvers_Control">
               <MappingFragment StoreEntitySet="BB_WFA_Approvers_Control">
+                <ScalarProperty Name="IsNP" ColumnName="IsNP" />
                 <ScalarProperty Name="IsComplete" ColumnName="IsComplete" />
                 <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
                 <ScalarProperty Name="Approver_ID" ColumnName="Approver_ID" />
@@ -5950,6 +5981,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_Proposal">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal">
               <MappingFragment StoreEntitySet="BB_Proposal">
+                <ScalarProperty Name="IsNP" ColumnName="IsNP" />
                 <ScalarProperty Name="Pedido_SAP" ColumnName="Pedido_SAP" />
                 <ScalarProperty Name="DataFechoContracto" ColumnName="DataFechoContracto" />
                 <ScalarProperty Name="ContractNumberPai" ColumnName="ContractNumberPai" />
@@ -6139,6 +6171,16 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="GetXMLOrders" FunctionName="BB_DB_DEVModel.Store.GetXMLOrders" />
+          <EntitySetMapping Name="BB_WFA_NP_Approvers">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_NP_Approvers">
+              <MappingFragment StoreEntitySet="BB_WFA_NP_Approvers">
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="ApproverID" ColumnName="ApproverID" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           
           </EntityContainerMapping>
       </Mapping>

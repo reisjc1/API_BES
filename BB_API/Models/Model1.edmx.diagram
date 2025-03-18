@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="92e69cd63c354872a780272c018650b2" Name="Diagram1" ZoomLevel="65">
+      <Diagram DiagramId="92e69cd63c354872a780272c018650b2" Name="Diagram1" ZoomLevel="85">
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Acessories" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Bank_Bnp" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Consumables" Width="1.5" PointX="0.75" PointY="4.75" />
@@ -130,6 +130,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentProposal" Width="1.5" PointX="32.375" PointY="12.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="29.375" PointY="34.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History" Width="1.5" PointX="34.375" PointY="4.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_NP_Approvers" Width="1.5" PointX="34.375" PointY="10.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

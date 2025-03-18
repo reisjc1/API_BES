@@ -391,6 +391,7 @@ namespace WebApplication1.Models
         public Boolean? newBusinessLine { get; set; }
         public Boolean? GMA { get; set; }
         public Boolean? BEUSupport { get; set; }
+        public Boolean IsNP { get; set; }
     }
 
     public class DeliveryLocationsBes

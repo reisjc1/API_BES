@@ -708,6 +708,8 @@ namespace WebApplication1.Controllers
         public List<Counter> counters { get; set; }
         public int? parentIndex { get; set; }
         public PsConfig psConfig { get; set; }
+        public string SerialNumber { get; set; }
+        public bool IsUsedMachine { get; set; }
 
     }
 }
