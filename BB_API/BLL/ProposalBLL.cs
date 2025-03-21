@@ -1214,6 +1214,32 @@ namespace WebApplication1.BLL
 
                     err.ProposalObj = new ProposalRootObject();
                     err.ProposalObj.Draft = p.Draft;
+
+                    // VALIDACOES NO PRODUCCION ---------------------------------
+                    bool? isNP = db.BB_Proposal.Where(x => x.ID == proposal.ID).Select(x => x.IsNP).FirstOrDefault();
+
+                    BB_WFA_NP_Approvers approval = db.BB_WFA_NP_Approvers.Where(x => x.ProposalID == proposal.ID).OrderByDescending(x => x.ID).FirstOrDefault();
+
+                    // Se já existir um approver para este proposalID e que tenha aprovado ou reprovado..
+                    // se já estiver APROVADO, coloco o IsNP a false <=> processo NAO FICA bloqueado
+                    // se já estiver REPROVADO, coloco o IsNP a true <=> processo FICA bloqueado
+                    if (approval != null && approval.IsApproved != null)
+                    {
+                        err.ProposalObj.Draft.baskets.IsPassedNP = approval.IsApproved.Value;
+                    }
+                    else
+                    {
+                        if (isNP == true)
+                        {
+                            err.ProposalObj.Draft.baskets.IsPassedNP = false;
+                        }
+                        else
+                        {
+                            err.ProposalObj.Draft.baskets.IsPassedNP = true;
+                        }
+                    }
+                    // ------------------------------------------------------------------
+
                     return err;
 
 
@@ -1806,6 +1832,34 @@ namespace WebApplication1.BLL
 
                 err.ProposalObj.Draft.baskets.IsNP = proposal.IsNP ?? false;
 
+
+                // Validacoes "NO PRODUCCION" ----------------------
+                bool? isNP = db.BB_Proposal.Where(x => x.ID == i.ProposalId).Select(x => x.IsNP).FirstOrDefault();
+
+                BB_WFA_NP_Approvers approval = db.BB_WFA_NP_Approvers.Where(x => x.ProposalID == i.ProposalId).OrderByDescending(x => x.ID).FirstOrDefault();
+
+                // Se já existir um approver para este proposalID e que tenha aprovado ou reprovado..
+                // se já estiver APROVADO, coloco o IsNP a false <=> processo NAO FICA bloqueado
+                // se já estiver REPROVADO, coloco o IsNP a true <=> processo FICA bloqueado
+                if (approval != null && approval.IsApproved != null)
+                {
+                    err.ProposalObj.Draft.baskets.IsPassedNP = approval.IsApproved.Value;
+                }
+                else
+                {
+                    if (isNP == true)
+                    {
+                        err.ProposalObj.Draft.baskets.IsPassedNP = false;
+                    }
+                    else
+                    {
+                        err.ProposalObj.Draft.baskets.IsPassedNP = true;
+                    }
+                }
+                // ------------------------------------------------
+
+            
+
                 //LD_DocumentProposal - Contractos
                 err.ProposalObj.Draft.contracts = new BusinessContract();
                 List<LD_DocumentProposal> contractDocs = db.LD_DocumentProposal.Where(x => x.ProposalID == proposal.ID && x.ClassificationID == 5).ToList();
@@ -1856,6 +1910,8 @@ namespace WebApplication1.BLL
                     IsMultipleContract = IsMultipleContract,
                     IsNP = p.Draft.baskets.IsNP
                 };
+
+                err.ProposalObj.Draft.baskets.IsPassedNP = false;
 
                 if(bb_proposal != null)
                 {
