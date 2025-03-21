@@ -619,6 +619,8 @@ namespace WebApplication1.Models.SetupXML.XML
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     List<BB_Proposal_Quote> quote_lst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
+                    BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    List<BB_Data_Integration> dataIntegration_lst = db.BB_Data_Integration.AsNoTracking().ToList();
 
 
                     foreach (var items in orders)
@@ -627,8 +629,6 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
 
                             BB_Proposal_Quote quote = quote_lst.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
-                            List<BB_Data_Integration> dataIntegration_lst = db.BB_Data_Integration.AsNoTracking().ToList();
-                            //BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(X => X.CodeRef == item.CodeRef).FirstOrDefault();
                             ConditionPVP conditionPVP = new ConditionPVP();
 
 
@@ -670,8 +670,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 BB_Proposal_Quote quote1 = quote_lst.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
 
-                                string financingCode = ConditionMaterial(item.CodeRef, financingType,dataIntegration_lst);
-                                BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                                string financingCode = ConditionMaterial(item.CodeRef, financingType, dataIntegration_lst);
 
                                 ConditionPVP conditionPvp = conditionsPvp.Find(x => x.ConditionCode == financingCode);
                                 if (quote1 != null)

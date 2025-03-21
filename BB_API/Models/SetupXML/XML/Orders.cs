@@ -1035,6 +1035,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 REQ_QTY = "1"
                             });
 
+                            string[] splitDesciption = bB_Proposal_Upturn.Description.Split('-');
                             if (bB_Proposal_Upturn.Contact != null)
                             {
                                 string[] splitContact = bB_Proposal_Upturn.Contact.Split(';');
@@ -1044,9 +1045,9 @@ namespace WebApplication1.Models.SetupXML.XML
                                     SD_DOC = orderRetiradaDoc,
                                     APLF_NAME = (splitContact != null && !string.IsNullOrEmpty(splitContact[0]) ? splitContact[0] : ""), //"M. LUIS ALVAREZ",
                                     APLF_PHON = (splitContact != null && !string.IsNullOrEmpty(splitContact[1]) ? splitContact[1] : ""),       //"66666666",
-                                    APLF_OPEN = (splitContact != null && !string.IsNullOrEmpty(splitContact[3]) ? splitContact[3] : ""),//"9h 17h",
+                                    APLF_OPEN = (splitContact != null && !string.IsNullOrEmpty(splitContact[2]) ? splitContact[2] : ""),//"9h 17h",
                                     APLF_INFO = "",//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                    APLF_INFO2 = "Marque/Modèle: Konica Minolta / " + (splitContact != null && !string.IsNullOrEmpty(splitContact[2]) ? splitContact[2] : "") + "-N°:" + bB_Proposal_Upturn.Description,//"Asc: Oui -Connexion: PRINTFLEET",
+                                    APLF_INFO2 = "Marque/Modèle: Konica Minolta / " + (splitDesciption != null && !string.IsNullOrEmpty(splitDesciption[0]) ? splitDesciption[0] : "") + "-N°:" + splitDesciption[1],//"Asc: Oui -Connexion: PRINTFLEET",
                                     APLF_INFO3 = "2024431493"
 
                                 });
@@ -1072,12 +1073,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                 DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
                                 REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
                                 REF_1 = "SDR252146", //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
-                                PURCH_NO_C = "RETIRAR bizhub 36",  //Nome interno da oferta
+                                PURCH_NO_C = "RETIRAR " + splitDesciption[0],  //Nome interno da oferta
                                 SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
                                 PMNTTRMS = "E6CD", //TODO: manter  || FinancingPaymentMethods.
                                 MACHINE = "5R", //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
                                 ORDER_FLAG = "5R", //TODO: MANTER ESTE VALOR;
-                                EQUIPMENT_NO = bB_Proposal_Upturn.Description,
+                                EQUIPMENT_NO = splitDesciption[1],
                                 DWERK = "5300",
                                 LINKING_PIN = proposalId.ToString(),
                                 Z1ZVOE_ORDER_CONTACT = collectionOrdersContactRetiradas,
