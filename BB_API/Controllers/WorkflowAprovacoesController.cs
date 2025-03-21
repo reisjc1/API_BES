@@ -2341,7 +2341,7 @@ namespace WebApplication1.Controllers
                                                                         && x.WFA_Workflow_Proposal_ID == wf_p.ID 
                                                                         && x.WFA_Control_ID == control_ID 
                                                                         && x.WFA_Level_ID == level_ID
-                                                                        && x.IsNP == false)
+                                                                        && x.IsNP == false || x.IsNP == null)
                                                                     .FirstOrDefault();
 
 
