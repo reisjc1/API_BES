@@ -23,6 +23,8 @@ using DocumentFormat.OpenXml.Drawing;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Win32;
 using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
+using System.Net.Mime;
 
 namespace WebApplication1.Controllers
 {
@@ -989,9 +991,7 @@ namespace WebApplication1.Controllers
                         db.BB_WFA_Approvers_Control.RemoveRange(matchedApprovers);
                         db.BB_WFA_Workflow_Proposal.RemoveRange(checkExistent);
                         db.SaveChanges();
-
                     }
-
                     //Verifica se existe um pedido criado mas não iniciado.
                     //Salta para a chamada da SP
                     else if (checkExistent.Find(x => x.Started == false) != null)
@@ -1347,6 +1347,8 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                bool resultReturn = false;
+
                 string bdConnect = @AppSettingsGet.BasedadosConnect;
                 using (SqlConnection conn = new SqlConnection(bdConnect))
                 {
@@ -1368,17 +1370,105 @@ namespace WebApplication1.Controllers
 
                     var result = returnParameter.Value;
 
-                    if(result.ToString() == "1")
+                    if (result.ToString() == "1")
                     {
-                        return true;
+                        resultReturn = true;
                     }
                     else
                     {
-                        return false;
+                        resultReturn = false;
                     }
-
-
                 }
+
+
+                // Workflow da No Production checkbox ---------------------
+
+                // FALTA VERIFICAR UM HISORICA DO NP !!!!!!!!!!!!!!!!!!!!!
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    bool? isNP = db.BB_Proposal.Where(x => x.ID == ProposalID).Select(x => x.IsNP).FirstOrDefault();
+
+                    // procurar o ultimo registo no historico NP para este proposalID
+                    BB_WFA_NP_Approvers Saved_Np_Approver = db.BB_WFA_NP_Approvers.Where(x => x.ProposalID == ProposalID).OrderByDescending(x => x.ID).FirstOrDefault();
+
+                    // se ja existir historico..
+                    if (Saved_Np_Approver != null)
+                    {
+                        // se o historico ja estiver REPROVADO
+                        if (Saved_Np_Approver.IsApproved == false)
+                        {
+                            BB_WFA_Workflow_Proposal wfa_proposal = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).FirstOrDefault();
+
+                            // Adicionar novos registos para uma nova aprovacao
+                            if (wfa_proposal != null)
+                            {
+                                BB_WFA_Approvers_Control NP_WFA_approver = new BB_WFA_Approvers_Control()
+                                {
+                                    WFA_Workflow_Proposal_ID = wfa_proposal.ID,
+                                    WFA_Control_ID = 0,
+                                    WFA_Level_ID = 0,
+                                    Approver_ID = "1a088bd8-b063-4999-8edb-e7f6726593fb",
+                                    IsApproved = null,
+                                    IsComplete = false,
+                                    IsNP = true
+                                };
+
+                                db.BB_WFA_Approvers_Control.Add(NP_WFA_approver);
+
+                                // Adicionar ao Historico
+                                BB_WFA_NP_Approvers Np_Approver = new BB_WFA_NP_Approvers()
+                                {
+                                    ProposalID = ProposalID,
+                                    ApproverID = "1a088bd8-b063-4999-8edb-e7f6726593fb",
+                                    IsApproved = null
+                                };
+
+                                db.BB_WFA_NP_Approvers.Add(Np_Approver);
+
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                    // Se NAO EXISTIR historico
+                    else
+                    {
+                        BB_WFA_Workflow_Proposal wfa_proposal = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).FirstOrDefault();
+
+                        // Adicionar novos registos
+                        if (wfa_proposal != null)
+                        {
+                            BB_WFA_Approvers_Control NP_WFA_approver = new BB_WFA_Approvers_Control()
+                            {
+                                WFA_Workflow_Proposal_ID = wfa_proposal.ID,
+                                WFA_Control_ID = 0,
+                                WFA_Level_ID = 0,
+                                Approver_ID = "0082e4e9-0c11-40fb-8bc4-332202849d4d",
+                                IsApproved = null,
+                                IsComplete = false,
+                                IsNP = true
+                            };
+
+                            db.BB_WFA_Approvers_Control.Add(NP_WFA_approver);
+
+                            // Adicionar ao Historico
+                            BB_WFA_NP_Approvers Np_Approver = new BB_WFA_NP_Approvers()
+                            {
+                                ProposalID = ProposalID,
+                                ApproverID = "0082e4e9-0c11-40fb-8bc4-332202849d4d",
+                                IsApproved = null
+                            };
+
+                            db.BB_WFA_NP_Approvers.Add(Np_Approver);
+
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                // --------------------------------------------------------
+
+
+                return resultReturn;
             }
             catch (Exception ex)
             {
@@ -1827,6 +1917,36 @@ namespace WebApplication1.Controllers
 
             try {
 
+                // ------------------------------------ VALIDACAO DO NO PRODUCCION ------------------------------------
+                using (var db = new BB_DB_DEVEntities2())
+                {
+
+                    bool? isNP = db.BB_Proposal.Where(x => x.ID == proposalID).Select(x => x.IsNP).FirstOrDefault();
+                    wrp.IsNP = isNP ?? false;
+
+                    BB_WFA_NP_Approvers approval = db.BB_WFA_NP_Approvers.Where(x => x.ProposalID == proposalID).OrderByDescending(x => x.ID).FirstOrDefault();
+
+                    // Se já existir um approver para este proposalID e que tenha aprovado ou reprovado..
+                    // se já estiver APROVADO, coloco o IsNP a false <=> processo NAO FICA bloqueado
+                    // se já estiver REPROVADO, coloco o IsNP a true <=> processo FICA bloqueado
+                    if (approval != null && approval.IsApproved != null)
+                    {
+                        wrp.IsPassedNP = approval.IsApproved.Value;                     
+                    }
+                    else
+                    {
+                        if(isNP == true)
+                        {
+                            wrp.IsPassedNP = false;
+                        }
+                        else
+                        {
+                            wrp.IsPassedNP = true;
+                        }
+                    }
+                }
+                // ----------------------------------------------------------------------------------------------------
+
                 bool configDif = checkHistoryConfigurator_Quote(proposalID);
                 bool configDif_RS = checkHistoryConfigurator_Quote_RS(proposalID);
 
@@ -2081,7 +2201,45 @@ namespace WebApplication1.Controllers
 
                         lst_approver_proposal.Add(wfa_approver_proposal);
                     }
-                    rdr.Close();              
+                    rdr.Close();
+
+                    // VALIDACAO NO PRODUCCION
+
+                    string sql_NP = "SELECT * FROM " + "ft_get_WFA_Approver_Proposals_NP" + "(@User_ID)";
+
+                    SqlCommand cmd_NP = new SqlCommand(sql_NP, conn);
+                    cmd_NP.CommandTimeout = 180;
+                    cmd_NP.CommandType = CommandType.Text;
+                    cmd_NP.Parameters.AddWithValue("@User_ID", user_ID);
+                    SqlDataReader rdr_NP = cmd_NP.ExecuteReader();
+
+
+                    while (rdr_NP.Read())
+                    {
+                        WFA_Approver_Proposal wfa_approver_proposal_NP = new WFA_Approver_Proposal
+                        {
+                            QuoteNr = rdr_NP["QuoteNr"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("QuoteNr")) : "",
+                            ProposalID = rdr_NP["ProposalID"] != DBNull.Value ? (int?)rdr_NP["ProposalID"] : null,
+                            ProposalName = rdr_NP["ProposalName"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("ProposalName")) : "",
+                            Client = rdr_NP["Client"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("Client")) : "",
+                            CreatedBy = rdr_NP["CreatedBy"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("CreatedBy")) : "",
+                            ApprovedRequestDate = rdr_NP["ApprovedRequestDate"] != DBNull.Value ? (DateTime?)rdr_NP["ApprovedRequestDate"] : null,
+                            ControlID = rdr_NP["ControlID"] != DBNull.Value ? (int?)rdr_NP["ControlID"] : null,
+                            LevelID = rdr_NP["LevelID"] != DBNull.Value ? (int?)rdr_NP["LevelID"] : null,
+                            Status = rdr_NP["Status"] != DBNull.Value ? (bool?)rdr_NP["Status"] : null,
+                            ConditionType = "NO PRODUCCIÓN",
+                            BU_Name = "-",
+                            Element = "",
+                            ConditionValue = null,
+                            Condition = null,
+                            ConditionValue2 = null,
+                            Condition2 = null,
+                            ConditionType2 = null
+                        };
+
+                        lst_approver_proposal.Add(wfa_approver_proposal_NP);
+                    }
+                    rdr_NP.Close();
                 }
             }
             catch (Exception ex)
@@ -2129,17 +2287,14 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("WFAProcessValidation")]
-        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, bool lowerLevels, string user_ID, int control_ID, int level_ID, ProposalRootObject draft)
+        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, bool lowerLevels, string user_ID, int control_ID, int level_ID, bool IsNP)
         {
             try
             {
 
                 ProposalBLL proposalBLL = new ProposalBLL();
 
-                if (draft != null)
-                {
-                    proposalBLL.ProposalDraftSave(draft);
-                }
+
                 // TODO possiveis inner joins
                 using (var db = new BB_DB_DEVEntities2())
                 {
@@ -2151,64 +2306,97 @@ namespace WebApplication1.Controllers
                         return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
                     }
 
-                    BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control
-                                                                .Where(x => x.Approver_ID == user_ID 
-                                                                    && x.WFA_Workflow_Proposal_ID == wf_p.ID 
-                                                                    && x.WFA_Control_ID == control_ID 
-                                                                    && x.WFA_Level_ID == level_ID)
-                                                                .FirstOrDefault();
-
-
-
-                    if(approver_control != null)
+                    // VALIDATION NO PRODUCTION --------------------
+                    if (IsNP)
                     {
-                        approver_control.IsApproved = isApproved;
+                        BB_WFA_NP_Approvers np_approver = db.BB_WFA_NP_Approvers.Where(x => x.ProposalID == proposalID).OrderByDescending(x => x.ID).FirstOrDefault();
 
-                        db.Entry(approver_control).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
-
-
-                    if (lowerLevels)
-                    {
-                        int? level = db.BB_WFA_Levels.Where(l => l.ID == level_ID)
-                                                     .FirstOrDefault()
-                                                     .Level;                        
-                        while (--level > 0)
+                        if (np_approver != null)
                         {
-                            level_ID = db.BB_WFA_Levels.Where(l => l.Level == level && l.WFA_Control_ID == control_ID)
-                                                       .FirstOrDefault()
-                                                       .ID;
-                            if (level_ID == null) break;
-                            approver_control = db.BB_WFA_Approvers_Control
-                                                .Where(x => x.WFA_Workflow_Proposal_ID == wf_p.ID
-                                                    && x.WFA_Control_ID == control_ID
-                                                    && x.WFA_Level_ID == level_ID)
-                                                .FirstOrDefault();
+                            np_approver.IsApproved = isApproved;
 
-                            if (approver_control != null)
-                            {
-                                approver_control.IsApproved = isApproved;
+                            db.Entry(np_approver).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
 
-                                db.Entry(approver_control).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
+                        BB_WFA_Approvers_Control approver_control_np = db.BB_WFA_Approvers_Control
+                                            .Where(x => x.Approver_ID == user_ID
+                                                && x.WFA_Workflow_Proposal_ID == wf_p.ID
+                                                && x.IsNP == true)
+                                            .FirstOrDefault();
+
+                        if (approver_control_np != null)
+                        {
+                            approver_control_np.IsApproved = isApproved;
+
+                            db.Entry(approver_control_np).State = EntityState.Modified;
+                            db.SaveChanges();
                         }
                     }
+                    else
+                    {
+                        // VALIDATION GENERAL WORKFLOW ---------------------
+                        BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control
+                                                                    .Where(x => x.Approver_ID == user_ID 
+                                                                        && x.WFA_Workflow_Proposal_ID == wf_p.ID 
+                                                                        && x.WFA_Control_ID == control_ID 
+                                                                        && x.WFA_Level_ID == level_ID
+                                                                        && x.IsNP == false)
+                                                                    .FirstOrDefault();
+
+
+
+                        if(approver_control != null)
+                        {
+                            approver_control.IsApproved = isApproved;
+
+                            db.Entry(approver_control).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+
+
+                        if (lowerLevels)
+                        {
+                            int? level = db.BB_WFA_Levels.Where(l => l.ID == level_ID)
+                                                         .FirstOrDefault()
+                                                         .Level;                        
+                            while (--level > 0)
+                            {
+                                level_ID = db.BB_WFA_Levels.Where(l => l.Level == level && l.WFA_Control_ID == control_ID)
+                                                           .FirstOrDefault()
+                                                           .ID;
+                                if (level_ID == null) break;
+                                approver_control = db.BB_WFA_Approvers_Control
+                                                    .Where(x => x.WFA_Workflow_Proposal_ID == wf_p.ID
+                                                        && x.WFA_Control_ID == control_ID
+                                                        && x.WFA_Level_ID == level_ID
+                                                        && x.IsNP == false)
+                                                    .FirstOrDefault();
+
+                                if (approver_control != null)
+                                {
+                                    approver_control.IsApproved = isApproved;
+
+                                    db.Entry(approver_control).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+                            }
+                        }
+
+
+                        bool? approved = (from W in db.BB_WFA_Workflow_Proposal
+                                        where W.Proposal_ID == proposalID && W.Finished == true
+                                        orderby W.Started descending
+                                        select W.IsApproved).FirstOrDefault();
+
+                        if(approved != null)
+                        {
+                            WFA_SendEmails(proposalID, false, approved);
+                        }
+
+                    };
 
                     string msg = isApproved ? "El proceso ha sido aprobado." : "El proceso ha sido rechazado.";
-
-
-
-                    bool? approved = (from W in db.BB_WFA_Workflow_Proposal
-                                    where W.Proposal_ID == proposalID && W.Finished == true
-                                    orderby W.Started descending
-                                    select W.IsApproved).FirstOrDefault();
-
-                    if(approved != null)
-                    {
-                        WFA_SendEmails(proposalID, false, approved);
-                    }
 
                     return Ok(msg);
 
@@ -2490,6 +2678,8 @@ namespace WebApplication1.Controllers
             public List<BB_Proposal_Quote_WFA> Lst_BBP_Quote { get; set; }
             public List<BB_Proposal_Quote_RS_WFA> Lst_BBP_RS_Quote { get; set; }
             public List<string> Pending_Approvers_Lst { get; set; }
+            public bool? IsNP { get; set; }
+            public bool? IsPassedNP { get; set; }
         }
 
 
@@ -2573,9 +2763,9 @@ namespace WebApplication1.Controllers
             public string ConditionType { get; set; }
             public string BU_Name { get; set; }
             public string Element { get; set; }
-            public double ConditionValue { get; set; }
+            public double? ConditionValue { get; set; }
             public string Condition { get; set; }
-            public double ConditionValue2 { get; set; }
+            public double? ConditionValue2 { get; set; }
             public string Condition2 { get; set; }
             public string ConditionType2 { get; set; }
         }

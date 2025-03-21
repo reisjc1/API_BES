@@ -392,6 +392,7 @@ namespace WebApplication1.Models
         public Boolean? GMA { get; set; }
         public Boolean? BEUSupport { get; set; }
         public Boolean IsNP { get; set; }
+        public Boolean? IsPassedNP { get; set; }
     }
 
     public class DeliveryLocationsBes

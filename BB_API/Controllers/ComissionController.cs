@@ -1,6 +1,4 @@
 ﻿using Microsoft.Office.Interop.Excel;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,18 +10,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Web;
 using System.Web.Http;
-using System.Web.Http.Results;
-using System.Web.UI.WebControls;
 using WebApplication1.App_Start;
 using WebApplication1.BLL;
 using WebApplication1.Models;
 using WebApplication1.Models.ViewModels;
-using WebGrease.Css.Ast;
-using static Microsoft.Exchange.WebServices.Data.SearchFilter;
 
 namespace WebApplication1.Controllers
 {
@@ -193,7 +184,6 @@ namespace WebApplication1.Controllers
         {
             try
             {
-
 
                 ProposalBLL p1 = new ProposalBLL();
                 LoadProposalInfo i = new LoadProposalInfo();
@@ -806,6 +796,12 @@ namespace WebApplication1.Controllers
                 i.ProposalId = proposalID;
                 ActionResponse loadProposal = p1.LoadProposal(i);
 
+                // No caso do negocio ser "No Produccion", nao devo gerar comissao
+                if (loadProposal.ProposalObj.Draft.baskets.IsNP)
+                {
+                    return;
+                }
+
                 var basket = loadProposal.ProposalObj.Draft.baskets.os_basket;
 
 
@@ -1125,30 +1121,6 @@ namespace WebApplication1.Controllers
                     //                              Construcao do modelo 'bb_commission_general' para o insert
                     // --------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                    using (var dbUsers = new masterEntities())
-                        {
-                            AspNetUsers user = dbUsers.AspNetUsers.Where(x => x.Email == proposal.AccountManager).FirstOrDefault();
-                            
-                            bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;
-                            
-                            
-                            
-                            bb_commission_general.N_Trab = user.N_TRABAJADOR;
-                            bb_commission_general.Manager_Nombre = user.Manager;
-
-                            bb_commission_general.Manager = dbUsers.AspNetUsers
-                                                                    .Where(x => x.Email == user.ManagerEmail)
-                                                                    .Select(x => x.ErpNumber)
-                                                                    .FirstOrDefault();
-                           
-
-                        bb_commission_general.Delegacion = user.Location;
-                        bb_commission_general.Area = user.AreaComercial;
-                        bb_commission_general.Usuario_Sharepoint = user.USUARIO_Sharepoint_Email;
-                        bb_commission_general.Usuario_Sharepoint_Nombre = user.USUARIO_Sharepoint_Nome;
-
-                    }
-
                     bb_commission_general.ContractID = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ID).FirstOrDefault();
 
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
@@ -1168,6 +1140,49 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
                     bb_commission_general.CN_Total = Math.Round((double)proposal.ValueTotal, 2);
                     bb_commission_general.Comision_Copias = 0;
+
+                    using (var dbUsers = new masterEntities())
+                    {
+                        AspNetUsers user = dbUsers.AspNetUsers
+                                            .Where(x => x.Email == proposal.AccountManager)
+                                            .FirstOrDefault();
+                        if (user != null)
+                        {
+
+                            bb_commission_general.Manager = dbUsers.AspNetUsers
+                                                                    .Where(x => x.Email == user.ManagerEmail)
+                                                                    .Select(x => x.ErpNumber)
+                                                                    .FirstOrDefault();
+
+
+                            // Regras InsideSales
+                            string modifiedByRole = dbUsers.AspNetUsers.Where(x => x.Email == proposal.ModifiedBy.ToString()).Select(x => x.FunctionSimpleDeal).FirstOrDefault();
+
+                            if (modifiedByRole == "DRV - Inside Sales - BES")
+                            {
+                                using (var dbC = new BB_DB_DEVEntities2())
+                                {
+                                    bb_commission_general.Delegacion = dbC.BB_Clientes
+                                                                          .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
+                                                                          .Select(x => x.Branch_Local)
+                                                                          .FirstOrDefault();
+                                }
+                            }
+                            else
+                            {
+                                bb_commission_general.Delegacion = user.Location;
+                            }
+
+                            bb_commission_general.Area = user.AreaComercial;
+                            bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;
+                            bb_commission_general.N_Trab = user.N_TRABAJADOR;
+                            bb_commission_general.Manager_Nombre = user.Manager;
+                            bb_commission_general.Usuario_Sharepoint = user.USUARIO_Sharepoint_Email;
+                            bb_commission_general.Usuario_Sharepoint_Nombre = user.USUARIO_Sharepoint_Nome;
+                        }
+                    }
+
+
 
                     foreach (var machine in machines)
                     {
