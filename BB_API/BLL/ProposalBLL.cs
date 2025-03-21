@@ -1911,8 +1911,7 @@ namespace WebApplication1.BLL
                     IsNP = p.Draft.baskets.IsNP
                 };
 
-                err.ProposalObj.Draft.baskets.IsPassedNP = false;
-
+                
                 if(bb_proposal != null)
                 {
                     log4net.ThreadContext.Properties["proposal_id"] = bb_proposal.ID;
@@ -2640,6 +2639,7 @@ namespace WebApplication1.BLL
             }
             err.ProposalObj = new ProposalRootObject();
             err.ProposalObj.Draft = p.Draft;
+            err.ProposalObj.Draft.baskets.IsPassedNP = false;
             return err;
         }
 
