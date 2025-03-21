@@ -1436,7 +1436,7 @@ namespace WebApplication1.Controllers
                         BB_WFA_Workflow_Proposal wfa_proposal = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).FirstOrDefault();
 
                         // Adicionar novos registos
-                        if (wfa_proposal != null)
+                        if (wfa_proposal != null && isNP == true)
                         {
                             BB_WFA_Approvers_Control NP_WFA_approver = new BB_WFA_Approvers_Control()
                             {
