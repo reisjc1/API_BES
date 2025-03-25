@@ -1016,74 +1016,77 @@ namespace WebApplication1.Models.SetupXML.XML
                     var collectionOrderItemsRetiradas = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>();
                     var collectionOrdersContactRetiradas = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT>(); //Informação igual 
 
-                    BB_Proposal_Upturn bB_Proposal_Upturn = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    List<BB_Proposal_Upturn> bB_Proposal_Upturn = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalId).ToList();
 
                     if (bB_Proposal_Upturn != null)
                     {
-                        if ((bool)bB_Proposal_Upturn.Retirada)
+                        foreach(var upturn in bB_Proposal_Upturn)
                         {
-                            Random randomRetirada = new Random();
-                            int randomNumberOrderDocRetirada = randomRetirada.Next(1000000, 10000000);
-                            string randomNumberOrderRetiradaString = randomNumberOrderDocRetirada.ToString();
-
-                            string orderRetiradaDoc = $"O_R{randomNumberOrderRetiradaString}_{randomLetterNunber}";
-                            collectionOrderItemsRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                            if ((bool)upturn.Retirada)
                             {
-                                SD_DOC = orderRetiradaDoc,
-                                ITM_NUMBER = "10", // contractItm,
-                                MATERIAL = "9960DX00058", //"A6DR021",//order.CodeRef,
-                                REQ_QTY = "1"
-                            });
+                                Random randomRetirada = new Random();
+                                int randomNumberOrderDocRetirada = randomRetirada.Next(1000000, 10000000);
+                                string randomNumberOrderRetiradaString = randomNumberOrderDocRetirada.ToString();
 
-                            string[] splitDesciption = bB_Proposal_Upturn.Description.Split('-');
-                            if (bB_Proposal_Upturn.Contact != null)
-                            {
-                                string[] splitContact = bB_Proposal_Upturn.Contact.Split(';');
-
-                                collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                string orderRetiradaDoc = $"O_R{randomNumberOrderRetiradaString}_{randomLetterNunber}";
+                                collectionOrderItemsRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                                 {
                                     SD_DOC = orderRetiradaDoc,
-                                    APLF_NAME = (splitContact != null && !string.IsNullOrEmpty(splitContact[0]) ? splitContact[0] : ""), //"M. LUIS ALVAREZ",
-                                    APLF_PHON = (splitContact != null && !string.IsNullOrEmpty(splitContact[1]) ? splitContact[1] : ""),       //"66666666",
-                                    APLF_OPEN = (splitContact != null && !string.IsNullOrEmpty(splitContact[2]) ? splitContact[2] : ""),//"9h 17h",
-                                    APLF_INFO = "",//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                    APLF_INFO2 = "Marque/Modèle: Konica Minolta / " + (splitDesciption != null && !string.IsNullOrEmpty(splitDesciption[0]) ? splitDesciption[0] : "") + "-N°:" + splitDesciption[1],//"Asc: Oui -Connexion: PRINTFLEET",
-                                    APLF_INFO3 = "2024431493"
-
+                                    ITM_NUMBER = "10", // contractItm,
+                                    MATERIAL = "9960DX00058", //"A6DR021",//order.CodeRef,
+                                    REQ_QTY = "1"
                                 });
-                            }
-                            else
-                            {
-                                collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+
+                                string[] splitDesciption = upturn.Description.Split(';');
+                                if (upturn.Contact != null)
+                                {
+                                    string[] splitContact = upturn.Contact.Split(';');
+
+                                    collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                    {
+                                        SD_DOC = orderRetiradaDoc,
+                                        APLF_NAME = (splitContact != null && !string.IsNullOrEmpty(splitContact[0]) ? splitContact[0] : ""), //"M. LUIS ALVAREZ",
+                                        APLF_PHON = (splitContact != null && !string.IsNullOrEmpty(splitContact[1]) ? splitContact[1] : ""),       //"66666666",
+                                        APLF_OPEN = (splitContact != null && !string.IsNullOrEmpty(splitContact[2]) ? splitContact[2] : ""),//"9h 17h",
+                                        APLF_INFO = "",//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                        APLF_INFO2 = "Marque/Modèle: Konica Minolta / " + (splitDesciption != null && !string.IsNullOrEmpty(splitDesciption[0]) ? splitDesciption[0] : "") + "-N°:" + splitDesciption[1],//"Asc: Oui -Connexion: PRINTFLEET",
+                                        APLF_INFO3 = "2024431493"
+
+                                    });
+                                }
+                                else
+                                {
+                                    collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                    {
+                                        SD_DOC = orderRetiradaDoc,
+                                        APLF_NAME = "M. LUIS ALVAREZ",
+                                        APLF_PHON = "66666666",
+                                        APLF_OPEN = "9h 17h",
+                                        APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                        APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
+                                        APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
+                                    });
+                                }
+                                DateTime currentDate = DateTime.Now;
+                                string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
+                                collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
                                 {
                                     SD_DOC = orderRetiradaDoc,
-                                    APLF_NAME = "M. LUIS ALVAREZ",
-                                    APLF_PHON = "66666666",
-                                    APLF_OPEN = "9h 17h",
-                                    APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                    APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
-                                    APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
+                                    DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
+                                    REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
+                                    REF_1 = "SDR252146", //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
+                                    PURCH_NO_C = "RETIRAR " + splitDesciption[0],  //Nome interno da oferta
+                                    SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
+                                    PMNTTRMS = "E6CD", //TODO: manter  || FinancingPaymentMethods.
+                                    MACHINE = "5R", //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
+                                    ORDER_FLAG = "5R", //TODO: MANTER ESTE VALOR;
+                                    EQUIPMENT_NO = splitDesciption[1],
+                                    DWERK = "5300",
+                                    LINKING_PIN = proposalId.ToString(),
+                                    Z1ZVOE_ORDER_CONTACT = collectionOrdersContactRetiradas,
+                                    Z1ZVOE_ORDER_ITEMS = collectionOrderItemsRetiradas
                                 });
                             }
-                            DateTime currentDate = DateTime.Now;
-                            string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
-                            collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
-                            {
-                                SD_DOC = orderRetiradaDoc,
-                                DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
-                                REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
-                                REF_1 = "SDR252146", //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
-                                PURCH_NO_C = "RETIRAR " + splitDesciption[0],  //Nome interno da oferta
-                                SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
-                                PMNTTRMS = "E6CD", //TODO: manter  || FinancingPaymentMethods.
-                                MACHINE = "5R", //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
-                                ORDER_FLAG = "5R", //TODO: MANTER ESTE VALOR;
-                                EQUIPMENT_NO = splitDesciption[1],
-                                DWERK = "5300",
-                                LINKING_PIN = proposalId.ToString(),
-                                Z1ZVOE_ORDER_CONTACT = collectionOrdersContactRetiradas,
-                                Z1ZVOE_ORDER_ITEMS = collectionOrderItemsRetiradas
-                            });
                         }
                     }
 
