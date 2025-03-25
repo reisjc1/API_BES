@@ -1162,15 +1162,24 @@ namespace WebApplication1.Controllers
                             {
                                 using (var dbC = new BB_DB_DEVEntities2())
                                 {
-                                    bb_commission_general.Delegacion = dbC.BB_Clientes
-                                                                          .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
-                                                                          .Select(x => x.Branch_Local)
-                                                                          .FirstOrDefault();
+
+                                    var delegation = dbC.BB_Clientes
+                                                    .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
+                                                    .Select(x => x.Branch_Local)
+                                                    .FirstOrDefault();
+
+                                    if (delegation != null)
+                                    {
+                                        bb_commission_general.Delegacion = delegation;
+                                    }
+
                                 }
+                                bb_commission_general.Es_InsideSales = true;
                             }
                             else
                             {
                                 bb_commission_general.Delegacion = user.Location;
+                                bb_commission_general.Es_InsideSales = false;
                             }
 
                             bb_commission_general.Area = user.AreaComercial;

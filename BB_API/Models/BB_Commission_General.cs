@@ -114,5 +114,6 @@ namespace WebApplication1.Models
         public string Percentage_Comision { get; set; }
         public string Incidencias { get; set; }
         public Nullable<int> ContractID { get; set; }
+        public Nullable<bool> Es_InsideSales { get; set; }
     }
 }

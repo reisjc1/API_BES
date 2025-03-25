@@ -234,6 +234,7 @@
           <Property Name="Percentage_Comision" Type="nvarchar" MaxLength="255" />
           <Property Name="Incidencias" Type="nvarchar(max)" />
           <Property Name="ContractID" Type="int" />
+          <Property Name="Es_InsideSales" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Consumables">
           <Key>
@@ -2322,12 +2323,12 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             <End Role="BB_Proposal_OPSManage" EntitySet="BB_Proposal_OPSManage" />
           </AssociationSet>
           <EntitySet Name="LD_DocumentProposal" EntityType="BB_DB_DEVModel.LD_DocumentProposal" />
-          <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="BB_WFA_Proposal_OneShot_History" EntityType="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History" />
           <FunctionImport Name="GetXMLOrders">
           <Parameter Name="ProposalId" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="BB_WFA_NP_Approvers" EntityType="BB_DB_DEVModel.BB_WFA_NP_Approvers" />
+          <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -4113,6 +4114,37 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ProposalID" Type="Int32" />
         </EntityType>
+        <EntityType Name="BB_WFA_Proposal_OneShot_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Proposal_ID" Type="Int32" />
+          <Property Name="WFA_Workflow_Proposal_ID" Type="Int32" />
+          <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CodeRef" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="UnitPriceCost" Type="Double" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="TotalCost" Type="Double" />
+          <Property Name="Margin" Type="Double" />
+          <Property Name="PVP" Type="Double" />
+          <Property Name="TotalPVP" Type="Double" />
+          <Property Name="DiscountPercentage" Type="Double" />
+          <Property Name="UnitDiscountPrice" Type="Double" />
+          <Property Name="GPTotal" Type="Double" />
+          <Property Name="GPPercentage" Type="Double" />
+          <Property Name="TotalNetsale" Type="Double" />
+          <Property Name="IsApproved" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_WFA_NP_Approvers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="ApproverID" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IsApproved" Type="Boolean" />
+        </EntityType>
         <EntityType Name="BB_Commission_General">
           <Key>
             <PropertyRef Name="ID" />
@@ -4217,37 +4249,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Percentage_Comision" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Incidencias" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ContractID" Type="Int32" />
-        </EntityType>
-        <EntityType Name="BB_WFA_Proposal_OneShot_History">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Proposal_ID" Type="Int32" />
-          <Property Name="WFA_Workflow_Proposal_ID" Type="Int32" />
-          <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CodeRef" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="UnitPriceCost" Type="Double" />
-          <Property Name="Qty" Type="Int32" />
-          <Property Name="TotalCost" Type="Double" />
-          <Property Name="Margin" Type="Double" />
-          <Property Name="PVP" Type="Double" />
-          <Property Name="TotalPVP" Type="Double" />
-          <Property Name="DiscountPercentage" Type="Double" />
-          <Property Name="UnitDiscountPrice" Type="Double" />
-          <Property Name="GPTotal" Type="Double" />
-          <Property Name="GPPercentage" Type="Double" />
-          <Property Name="TotalNetsale" Type="Double" />
-          <Property Name="IsApproved" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="BB_WFA_NP_Approvers">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="ApproverID" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="Es_InsideSales" Type="Boolean" />
         </EntityType>
         
         </Schema>
@@ -6041,9 +6043,44 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Proposal_OneShot_History">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History">
+              <MappingFragment StoreEntitySet="BB_WFA_Proposal_OneShot_History">
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="TotalNetsale" ColumnName="TotalNetsale" />
+                <ScalarProperty Name="GPPercentage" ColumnName="GPPercentage" />
+                <ScalarProperty Name="GPTotal" ColumnName="GPTotal" />
+                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
+                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+                <ScalarProperty Name="TotalPVP" ColumnName="TotalPVP" />
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="Margin" ColumnName="Margin" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="UnitPriceCost" ColumnName="UnitPriceCost" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="WFA_Workflow_Proposal_ID" ColumnName="WFA_Workflow_Proposal_ID" />
+                <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetXMLOrders" FunctionName="BB_DB_DEVModel.Store.GetXMLOrders" />
+          <EntitySetMapping Name="BB_WFA_NP_Approvers">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_NP_Approvers">
+              <MappingFragment StoreEntitySet="BB_WFA_NP_Approvers">
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="ApproverID" ColumnName="ApproverID" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="BB_Commission_General">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Commission_General">
               <MappingFragment StoreEntitySet="BB_Commission_General">
+                <ScalarProperty Name="Es_InsideSales" ColumnName="Es_InsideSales" />
                 <ScalarProperty Name="ContractID" ColumnName="ContractID" />
                 <ScalarProperty Name="Incidencias" ColumnName="Incidencias" />
                 <ScalarProperty Name="Percentage_Comision" ColumnName="Percentage_Comision" />
@@ -6143,40 +6180,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="Sales_Group" ColumnName="Sales_Group" />
                 <ScalarProperty Name="Codigo_Agencia" ColumnName="Codigo_Agencia" />
                 <ScalarProperty Name="Delegacion" ColumnName="Delegacion" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_WFA_Proposal_OneShot_History">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History">
-              <MappingFragment StoreEntitySet="BB_WFA_Proposal_OneShot_History">
-                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-                <ScalarProperty Name="TotalNetsale" ColumnName="TotalNetsale" />
-                <ScalarProperty Name="GPPercentage" ColumnName="GPPercentage" />
-                <ScalarProperty Name="GPTotal" ColumnName="GPTotal" />
-                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
-                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
-                <ScalarProperty Name="TotalPVP" ColumnName="TotalPVP" />
-                <ScalarProperty Name="PVP" ColumnName="PVP" />
-                <ScalarProperty Name="Margin" ColumnName="Margin" />
-                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="UnitPriceCost" ColumnName="UnitPriceCost" />
-                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
-                <ScalarProperty Name="Family" ColumnName="Family" />
-                <ScalarProperty Name="WFA_Workflow_Proposal_ID" ColumnName="WFA_Workflow_Proposal_ID" />
-                <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetXMLOrders" FunctionName="BB_DB_DEVModel.Store.GetXMLOrders" />
-          <EntitySetMapping Name="BB_WFA_NP_Approvers">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_NP_Approvers">
-              <MappingFragment StoreEntitySet="BB_WFA_NP_Approvers">
-                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-                <ScalarProperty Name="ApproverID" ColumnName="ApproverID" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
