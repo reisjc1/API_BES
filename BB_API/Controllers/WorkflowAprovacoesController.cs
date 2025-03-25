@@ -2341,7 +2341,7 @@ namespace WebApplication1.Controllers
                                                                         && x.WFA_Workflow_Proposal_ID == wf_p.ID 
                                                                         && x.WFA_Control_ID == control_ID 
                                                                         && x.WFA_Level_ID == level_ID
-                                                                        && x.IsNP == false || x.IsNP == null)
+                                                                        && x.IsNP == null)
                                                                     .FirstOrDefault();
 
 
@@ -2481,6 +2481,28 @@ namespace WebApplication1.Controllers
                         .Where(x => x.Proposal_ID == proposalID)
                         .ToList();
 
+                    // É OBRIGATÓRIO que os histórico esteja organizado de acordo com o que está no configurador !!
+                    //
+                    var groupedQuotes = quotesList.GroupBy(q => q.Family).ToDictionary(g => g.Key, g => g.ToList());
+
+                    List<BB_Proposal_Quote> reorderedQuotesList = new List<BB_Proposal_Quote>();
+
+                    // Percorrer historyList e reorganizar quotesList na mesma ordem de Family
+                    foreach (var historyItem in historyList)
+                    {
+                        if (groupedQuotes.ContainsKey(historyItem.Family) && groupedQuotes[historyItem.Family].Count > 0)
+                        {
+                            // Adiciona o primeiro elemento disponível da Family correspondente e remove da lista
+                            reorderedQuotesList.Add(groupedQuotes[historyItem.Family][0]);
+                            groupedQuotes[historyItem.Family].RemoveAt(0);
+                        }
+                    }
+
+                    // Atualiza quotesList com a nova ordem
+                    quotesList = reorderedQuotesList;
+
+                    // Verificar se que está no configurador foi alterado em relação ao que está no histórico
+                    // Isto porque? Porque caso a proposta esteja validade, se houver alterações no configurador, tem de se criar novo workflow
                     if (quotesList.Count > 0 && historyList.Count > 0)
                     {
                         for (int h = 0; h < historyList.Count && h < quotesList.Count; h++)
@@ -2512,26 +2534,90 @@ namespace WebApplication1.Controllers
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    List<BB_Proposal_Quote_RS> config_Quote = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+                    string query = $@"
+                SELECT * 
+                FROM BB_Proposal_Quote_RS
+                WHERE CodeRef IN (
+                    SELECT CodeRef FROM BB_WFA_Proposal_OneShot_History 
+                    WHERE ProposalID = {proposalID}
+                ) 
+                AND Proposal_ID = {proposalID}";
 
-                    if(config_Quote.Count > 0)
+                    List<BB_Proposal_Quote_RS> quotesList = new List<BB_Proposal_Quote_RS>();
+                    string bdConnect = @AppSettingsGet.BasedadosConnect;
+
+                    using (SqlConnection conn = new SqlConnection(bdConnect))
                     {
-                        List<BB_WFA_Proposal_OneShot_History> history_Quote = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
+                        SqlCommand command = new SqlCommand(query, conn);
+                        conn.Open();
 
-                        if(history_Quote.Count > 0)
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            foreach (var historyItem in history_Quote)
+                            while (reader.Read())
                             {
-                                BB_Proposal_Quote_RS configItem = config_Quote.Where(x => x.CodeRef == historyItem.CodeRef).FirstOrDefault();
-
-                                if (configItem.DiscountPercentage != historyItem.DiscountPercentage ||
-                                    configItem.UnitDiscountPrice != historyItem.UnitDiscountPrice ||
-                                    configItem.Qty != historyItem.Qty ||
-                                    configItem.UnitPriceCost != historyItem.UnitPriceCost ||
-                                    configItem.PVP != historyItem.PVP)
+                                BB_Proposal_Quote_RS quote = new BB_Proposal_Quote_RS()
                                 {
-                                    return true;
-                                }
+                                    ProposalID = reader["ProposalID"] != DBNull.Value ? (int)reader["ProposalID"] : 0,
+                                    Locked = reader["Locked"] != DBNull.Value && (bool)reader["Locked"],
+                                    Family = reader["Family"] != DBNull.Value ? reader["Family"].ToString() : string.Empty,
+                                    CodeRef = reader["CodeRef"] != DBNull.Value ? reader["CodeRef"].ToString() : string.Empty,
+                                    Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : string.Empty,
+                                    UnitPriceCost = reader["UnitPriceCost"] != DBNull.Value ? (double)reader["UnitPriceCost"] : 0.0,
+                                    Qty = reader["Qty"] != DBNull.Value ? (int)reader["Qty"] : 0,
+                                    TotalCost = reader["TotalCost"] != DBNull.Value ? (double)reader["TotalCost"] : 0.0,
+                                    Margin = reader["Margin"] != DBNull.Value ? (double)reader["Margin"] : 0.0,
+                                    PVP = reader["PVP"] != DBNull.Value ? (double)reader["PVP"] : 0.0,
+                                    TotalPVP = reader["TotalPVP"] != DBNull.Value ? (double)reader["TotalPVP"] : 0.0,
+                                    DiscountPercentage = reader["DiscountPercentage"] != DBNull.Value ? (double)reader["DiscountPercentage"] : 0.0,
+                                    UnitDiscountPrice = reader["UnitDiscountPrice"] != DBNull.Value ? (double)reader["UnitDiscountPrice"] : 0.0,
+                                    GPTotal = reader["GPTotal"] != DBNull.Value ? (double)reader["GPTotal"] : 0.0,
+                                    GPPercentage = reader["GPPercentage"] != DBNull.Value ? (double)reader["GPPercentage"] : 0.0,
+                                    TotalNetsale = reader["TotalNetsale"] != DBNull.Value ? (double)reader["TotalNetsale"] : 0.0,
+                                    IsFinanced = reader["IsFinanced"] != DBNull.Value && (bool)reader["IsFinanced"],
+                                    TotalMonths = reader["Qty"] != DBNull.Value ? (int)reader["Qty"] : 0,                                   
+                                };
+
+                                quotesList.Add(quote);
+                            }
+                        }
+                    }
+
+                    List<BB_WFA_Proposal_OneShot_History> historyList = db.BB_WFA_Proposal_OneShot_History
+                        .Where(x => x.Proposal_ID == proposalID)
+                        .ToList();
+
+                    // É OBRIGATÓRIO que os histórico esteja organizado de acordo com o que está no configurador !!
+                    //
+                    var groupedQuotes = quotesList.GroupBy(q => q.Family).ToDictionary(g => g.Key, g => g.ToList());
+
+                    List<BB_Proposal_Quote_RS> reorderedQuotesList = new List<BB_Proposal_Quote_RS>();
+
+                    // Percorrer historyList e reorganizar quotesList na mesma ordem de Family
+                    foreach (var historyItem in historyList)
+                    {
+                        if (groupedQuotes.ContainsKey(historyItem.Family) && groupedQuotes[historyItem.Family].Count > 0)
+                        {
+                            // Adiciona o primeiro elemento disponível da Family correspondente e remove da lista
+                            reorderedQuotesList.Add(groupedQuotes[historyItem.Family][0]);
+                            groupedQuotes[historyItem.Family].RemoveAt(0);
+                        }
+                    }
+
+                    // Atualiza quotesList com a nova ordem
+                    quotesList = reorderedQuotesList;
+
+                    // Verificar se que está no configurador foi alterado em relação ao que está no histórico
+                    // Isto porque? Porque caso a proposta esteja validade, se houver alterações no configurador, tem de se criar novo workflow
+                    if (quotesList.Count > 0 && historyList.Count > 0)
+                    {
+                        for (int h = 0; h < historyList.Count && h < quotesList.Count; h++)
+                        {
+                            // Comparar os elementos correspondentes de historyList e quotesList no mesmo índice
+                            if (historyList[h].DiscountPercentage != quotesList[h].DiscountPercentage ||
+                                historyList[h].UnitDiscountPrice != quotesList[h].UnitDiscountPrice ||
+                                historyList[h].Qty != quotesList[h].Qty)
+                            {
+                                return true;
                             }
                         }
                     }
