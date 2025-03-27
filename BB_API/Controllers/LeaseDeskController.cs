@@ -2705,6 +2705,8 @@ namespace WebApplication1.Controllers
                                         resumo.Room = i.Room;
                                         resumo.Schedule = i.Schedule;
                                         resumo.DeliveryDate = i.DeliveryDate;
+                                        resumo.IsUsedMachine = (bool)it.IsUsedMachine ? "Si" : "No";
+                                        resumo.SerialNumber = it.SerialNumber != null ? it.SerialNumber : "-";
                                         lstBB_Proposal_DeliveryLocationResumoModel.Add(resumo);
                                     }
                                 }
