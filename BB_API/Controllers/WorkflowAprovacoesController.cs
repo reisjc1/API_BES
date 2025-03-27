@@ -1398,7 +1398,7 @@ namespace WebApplication1.Controllers
                         // se o historico ja estiver REPROVADO
                         if (Saved_Np_Approver.IsApproved == false)
                         {
-                            BB_WFA_Workflow_Proposal wfa_proposal = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).FirstOrDefault();
+                            BB_WFA_Workflow_Proposal wfa_proposal = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).OrderByDescending(x => x.ID).FirstOrDefault();
 
                             // Adicionar novos registos para uma nova aprovacao
                             if (wfa_proposal != null)
@@ -1433,7 +1433,7 @@ namespace WebApplication1.Controllers
                     // Se NAO EXISTIR historico
                     else
                     {
-                        BB_WFA_Workflow_Proposal wfa_proposal = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).FirstOrDefault();
+                        BB_WFA_Workflow_Proposal wfa_proposal = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).OrderByDescending(x => x.ID).FirstOrDefault();
 
                         // Adicionar novos registos
                         if (wfa_proposal != null && isNP == true)
