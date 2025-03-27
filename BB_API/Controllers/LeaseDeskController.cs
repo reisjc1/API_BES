@@ -2540,6 +2540,66 @@ namespace WebApplication1.Controllers
         }
 
 
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GetGroupedConfigurator")]
+        public List<HW_SW> GetGroupedConfigurator(int? proposalID)
+        {
+            List<HW_SW> configurator = new List<HW_SW>();
+
+            try {
+                using (var db = new BB_DB_DEVEntities2())
+                { 
+                    List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+                    List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+
+                    List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.ToList();
+
+                    HashSet<string> equipamentosCodeRefs = equipamentos
+                    .Select(e => e.CodeRef)
+                    .ToHashSet();
+
+                    HashSet<int> locations_IDX = db.BB_Proposal_DeliveryLocation
+                        .Where(x => x.ProposalID == proposalID && x.AccountType == "Ship To")
+                        .Select(x => x.IDX)
+                        .ToHashSet(); // Melhor performance do que List para Contains()
+
+                    List<BB_Proposal_ItemDoBasket> itemsDoBasket_lst = db.BB_Proposal_ItemDoBasket
+                        .Where(x => locations_IDX.Contains((int)x.DeliveryLocationID))
+                        .ToList();
+
+                    foreach (var item in itemsDoBasket_lst)
+                    {
+                        if (equipamentosCodeRefs.Contains(item.CodeRef) || item.Description.Contains("MAIN MATERIAL"))
+                        {
+                            HW_SW element = new HW_SW
+                            {
+                                CodeRef = item.CodeRef,
+                                Description = item.Description,
+                                Group = item.Group,
+                            };
+
+                            configurator.Add(element);
+                        }
+                    }
+                }
+
+
+            }
+            catch(Exception ex)
+            {
+                string error = ex.Message;
+            }
+
+            return configurator;
+        }
+
+
+
+
+
+
+
         [AcceptVerbs("GET", "POST")]
         [ActionName("GravarDocumentLine")]
         public IHttpActionResult GravarDocumentLine(DocumentProposal a)
@@ -4063,6 +4123,16 @@ namespace WebApplication1.Controllers
             public int? motivoID { get; set; }
 
         }
+
+        public class HW_SW
+        {
+            public string CodeRef { get; set; }
+            public string Description { get; set; }
+            public int? Group { get; set; }
+            public List<OsBasket> Accessories { get; set; }
+        }
+
+
         public class PrazoDiferenciado
         {
             public int ID { get; set; }

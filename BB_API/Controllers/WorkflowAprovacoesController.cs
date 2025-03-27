@@ -1408,7 +1408,7 @@ namespace WebApplication1.Controllers
                                     WFA_Workflow_Proposal_ID = wfa_proposal.ID,
                                     WFA_Control_ID = 0,
                                     WFA_Level_ID = 0,
-                                    Approver_ID = "1a088bd8-b063-4999-8edb-e7f6726593fb",
+                                    Approver_ID = "0082e4e9-0c11-40fb-8bc4-332202849d4d",
                                     IsApproved = null,
                                     IsComplete = false,
                                     IsNP = true
@@ -1420,7 +1420,7 @@ namespace WebApplication1.Controllers
                                 BB_WFA_NP_Approvers Np_Approver = new BB_WFA_NP_Approvers()
                                 {
                                     ProposalID = ProposalID,
-                                    ApproverID = "1a088bd8-b063-4999-8edb-e7f6726593fb",
+                                    ApproverID = "0082e4e9-0c11-40fb-8bc4-332202849d4d",
                                     IsApproved = null
                                 };
 
@@ -2187,6 +2187,7 @@ namespace WebApplication1.Controllers
                             Status = rdr["Status"] != DBNull.Value ? (bool?)rdr["Status"] : null,
                             ProposalName = rdr["ProposalName"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ProposalName")) : "",
                             ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
+                            ApproverID = rdr["ApproverID"] != DBNull.Value ? (int?)rdr["ApproverID"] : null,
                             ControlID = rdr["ControlID"] != DBNull.Value ? (int?)rdr["ControlID"] : null,
                             LevelID = rdr["LevelID"] != DBNull.Value ? (int?)rdr["LevelID"] : null,
                             ConditionType = rdr["ConditionType"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ConditionType")) : "",
@@ -2220,6 +2221,7 @@ namespace WebApplication1.Controllers
                         {
                             QuoteNr = rdr_NP["QuoteNr"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("QuoteNr")) : "",
                             ProposalID = rdr_NP["ProposalID"] != DBNull.Value ? (int?)rdr_NP["ProposalID"] : null,
+                            ApproverID = rdr["ApproverID"] != DBNull.Value ? (int?)rdr["ApproverID"] : null,
                             ProposalName = rdr_NP["ProposalName"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("ProposalName")) : "",
                             Client = rdr_NP["Client"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("Client")) : "",
                             CreatedBy = rdr_NP["CreatedBy"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("CreatedBy")) : "",
@@ -2287,23 +2289,30 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("WFAProcessValidation")]
-        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, bool lowerLevels, string user_ID, int control_ID, int level_ID, bool IsNP)
+        public IHttpActionResult WFAProcessValidation(int proposalID, bool isApproved, bool lowerLevels, string user_ID, int control_ID, int level_ID, int ApproverID)
         {
             try
             {
-
-                ProposalBLL proposalBLL = new ProposalBLL();
-
-
                 // TODO possiveis inner joins
                 using (var db = new BB_DB_DEVEntities2())
                 {
+                    bool IsNP = false;
 
                     BB_WFA_Workflow_Proposal wf_p = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID && x.Finished == false).FirstOrDefault();
 
                     if(wf_p == null)
                     {
                         return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
+                    }
+
+                    // Identificação se a aprovacao foi causada por ser NP
+                     var aux = db.BB_WFA_Approvers_Control
+                                           .Where(x => x.ID == ApproverID)
+                                           .FirstOrDefault();
+
+                    if(aux.IsNP == true)
+                    {
+                        IsNP = true;
                     }
 
                     // VALIDATION NO PRODUCTION --------------------
@@ -2319,19 +2328,19 @@ namespace WebApplication1.Controllers
                             db.SaveChanges();
                         }
 
-                        BB_WFA_Approvers_Control approver_control_np = db.BB_WFA_Approvers_Control
-                                            .Where(x => x.Approver_ID == user_ID
-                                                && x.WFA_Workflow_Proposal_ID == wf_p.ID
-                                                && x.IsNP == true)
-                                            .FirstOrDefault();
+                        //BB_WFA_Approvers_Control approver_control_np = db.BB_WFA_Approvers_Control
+                        //                    .Where(x => x.Approver_ID == user_ID
+                        //                        && x.WFA_Workflow_Proposal_ID == wf_p.ID
+                        //                        && x.IsNP == true)
+                        //                    .FirstOrDefault();
 
-                        if (approver_control_np != null)
-                        {
-                            approver_control_np.IsApproved = isApproved;
+                        //if (approver_control_np != null)
+                        //{
+                            aux.IsApproved = isApproved;
 
-                            db.Entry(approver_control_np).State = EntityState.Modified;
+                            db.Entry(aux).State = EntityState.Modified;
                             db.SaveChanges();
-                        }
+                        //}
                     }
                     else
                     {
@@ -2541,7 +2550,7 @@ namespace WebApplication1.Controllers
                     SELECT CodeRef FROM BB_WFA_Proposal_OneShot_History 
                     WHERE ProposalID = {proposalID}
                 ) 
-                AND Proposal_ID = {proposalID}";
+                AND ProposalID = {proposalID}";
 
                     List<BB_Proposal_Quote_RS> quotesList = new List<BB_Proposal_Quote_RS>();
                     string bdConnect = @AppSettingsGet.BasedadosConnect;
@@ -2844,6 +2853,7 @@ namespace WebApplication1.Controllers
             public bool? Status { get; set; }
             public string ProposalName  { get; set; }
             public int? ProposalID { get; set; }
+            public int? ApproverID { get; set; }
             public int? ControlID { get; set; }
             public int? LevelID { get; set; }
             public string ConditionType { get; set; }
