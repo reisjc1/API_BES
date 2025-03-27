@@ -2167,82 +2167,83 @@ namespace WebApplication1.Controllers
                 {
                     conn.Open();
 
-                    string sql = "SELECT * FROM " + "ft_get_WFA_Approver_Proposals"+ "(@User_ID)";
-
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.CommandTimeout = 180;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@User_ID", user_ID);
-                    SqlDataReader rdr = cmd.ExecuteReader();
-
-
-                    while (rdr.Read())
+                    // Executa a primeira consulta
+                    string sql = "SELECT * FROM ft_get_WFA_Approver_Proposals(@User_ID)";
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
-                        WFA_Approver_Proposal wfa_approver_proposal = new WFA_Approver_Proposal
+                        cmd.CommandTimeout = 180;
+                        cmd.Parameters.AddWithValue("@User_ID", user_ID);
+
+                        using (SqlDataReader rdr = cmd.ExecuteReader())
                         {
-                            QuoteNr = rdr["QuoteNr"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("QuoteNr")) : "",
-                            Client = rdr["Client"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Client")) : "",
-                            CreatedBy = rdr["CreatedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CreatedBy")) : "",
-                            ApprovedRequestDate = rdr["ApprovedRequestDate"] != DBNull.Value ? (DateTime?)rdr["ApprovedRequestDate"] : null,
-                            Status = rdr["Status"] != DBNull.Value ? (bool?)rdr["Status"] : null,
-                            ProposalName = rdr["ProposalName"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ProposalName")) : "",
-                            ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
-                            ApproverID = rdr["ApproverID"] != DBNull.Value ? (int?)rdr["ApproverID"] : null,
-                            ControlID = rdr["ControlID"] != DBNull.Value ? (int?)rdr["ControlID"] : null,
-                            LevelID = rdr["LevelID"] != DBNull.Value ? (int?)rdr["LevelID"] : null,
-                            ConditionType = rdr["ConditionType"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ConditionType")) : "",
-                            BU_Name = rdr["BU_Name"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("BU_Name")) : "",
-                            Element = rdr["Element"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Element")) : "",
-                            ConditionValue = rdr["ConditionValue"] != DBNull.Value ? rdr.GetDouble(rdr.GetOrdinal("ConditionValue")) : 0.0,
-                            Condition = rdr["Condition"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Condition")) : "",
-                            ConditionValue2 = rdr["ConditionValue2"] != DBNull.Value ? rdr.GetDouble(rdr.GetOrdinal("ConditionValue2")) : 0.0,
-                            Condition2 = rdr["Condition2"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Condition2")) : "",
-                            ConditionType2 = rdr["ConditionType2"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ConditionType2")) : "",
-                        };
+                            while (rdr.Read())
+                            {
+                                WFA_Approver_Proposal wfa_approver_proposal = new WFA_Approver_Proposal
+                                {
+                                    QuoteNr = rdr["QuoteNr"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("QuoteNr")) : "",
+                                    Client = rdr["Client"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Client")) : "",
+                                    CreatedBy = rdr["CreatedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CreatedBy")) : "",
+                                    ApprovedRequestDate = rdr["ApprovedRequestDate"] != DBNull.Value ? (DateTime?)rdr["ApprovedRequestDate"] : null,
+                                    Status = rdr["Status"] != DBNull.Value ? (bool?)rdr["Status"] : null,
+                                    ProposalName = rdr["ProposalName"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ProposalName")) : "",
+                                    ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
+                                    ApproverID = rdr["ApproverID"] != DBNull.Value ? (int?)rdr["ApproverID"] : null,
+                                    ControlID = rdr["ControlID"] != DBNull.Value ? (int?)rdr["ControlID"] : null,
+                                    LevelID = rdr["LevelID"] != DBNull.Value ? (int?)rdr["LevelID"] : null,
+                                    ConditionType = rdr["ConditionType"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ConditionType")) : "",
+                                    BU_Name = rdr["BU_Name"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("BU_Name")) : "",
+                                    Element = rdr["Element"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Element")) : "",
+                                    ConditionValue = rdr["ConditionValue"] != DBNull.Value ? rdr.GetDouble(rdr.GetOrdinal("ConditionValue")) : 0.0,
+                                    Condition = rdr["Condition"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Condition")) : "",
+                                    ConditionValue2 = rdr["ConditionValue2"] != DBNull.Value ? rdr.GetDouble(rdr.GetOrdinal("ConditionValue2")) : 0.0,
+                                    Condition2 = rdr["Condition2"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Condition2")) : "",
+                                    ConditionType2 = rdr["ConditionType2"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ConditionType2")) : "",
+                                };
 
-                        lst_approver_proposal.Add(wfa_approver_proposal);
+                                lst_approver_proposal.Add(wfa_approver_proposal);
+                            }
+                        }
                     }
-                    rdr.Close();
 
-                    // VALIDACAO NO PRODUCCION
-
-                    string sql_NP = "SELECT * FROM " + "ft_get_WFA_Approver_Proposals_NP" + "(@User_ID)";
-
-                    SqlCommand cmd_NP = new SqlCommand(sql_NP, conn);
-                    cmd_NP.CommandTimeout = 180;
-                    cmd_NP.CommandType = CommandType.Text;
-                    cmd_NP.Parameters.AddWithValue("@User_ID", user_ID);
-                    SqlDataReader rdr_NP = cmd_NP.ExecuteReader();
-
-
-                    while (rdr_NP.Read())
+                    // Executa a segunda consulta
+                    string sql_NP = "SELECT * FROM ft_get_WFA_Approver_Proposals_NP(@User_ID)";
+                    using (SqlCommand cmd_NP = new SqlCommand(sql_NP, conn))
                     {
-                        WFA_Approver_Proposal wfa_approver_proposal_NP = new WFA_Approver_Proposal
-                        {
-                            QuoteNr = rdr_NP["QuoteNr"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("QuoteNr")) : "",
-                            ProposalID = rdr_NP["ProposalID"] != DBNull.Value ? (int?)rdr_NP["ProposalID"] : null,
-                            ApproverID = rdr["ApproverID"] != DBNull.Value ? (int?)rdr["ApproverID"] : null,
-                            ProposalName = rdr_NP["ProposalName"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("ProposalName")) : "",
-                            Client = rdr_NP["Client"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("Client")) : "",
-                            CreatedBy = rdr_NP["CreatedBy"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("CreatedBy")) : "",
-                            ApprovedRequestDate = rdr_NP["ApprovedRequestDate"] != DBNull.Value ? (DateTime?)rdr_NP["ApprovedRequestDate"] : null,
-                            ControlID = rdr_NP["ControlID"] != DBNull.Value ? (int?)rdr_NP["ControlID"] : null,
-                            LevelID = rdr_NP["LevelID"] != DBNull.Value ? (int?)rdr_NP["LevelID"] : null,
-                            Status = rdr_NP["Status"] != DBNull.Value ? (bool?)rdr_NP["Status"] : null,
-                            ConditionType = "NO PRODUCCIÓN",
-                            BU_Name = "-",
-                            Element = "",
-                            ConditionValue = null,
-                            Condition = null,
-                            ConditionValue2 = null,
-                            Condition2 = null,
-                            ConditionType2 = null
-                        };
+                        cmd_NP.CommandTimeout = 180;
+                        cmd_NP.Parameters.AddWithValue("@User_ID", user_ID);
 
-                        lst_approver_proposal.Add(wfa_approver_proposal_NP);
+                        using (SqlDataReader rdr_NP = cmd_NP.ExecuteReader())
+                        {
+                            while (rdr_NP.Read())
+                            {
+                                WFA_Approver_Proposal wfa_approver_proposal_NP = new WFA_Approver_Proposal
+                                {
+                                    QuoteNr = rdr_NP["QuoteNr"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("QuoteNr")) : "",
+                                    ProposalID = rdr_NP["ProposalID"] != DBNull.Value ? (int?)rdr_NP["ProposalID"] : null,
+                                    ApproverID = rdr_NP["ApproverID"] != DBNull.Value ? (int?)rdr_NP["ApproverID"] : null, // Corrigido para usar rdr_NP
+                                    ProposalName = rdr_NP["ProposalName"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("ProposalName")) : "",
+                                    Client = rdr_NP["Client"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("Client")) : "",
+                                    CreatedBy = rdr_NP["CreatedBy"] != DBNull.Value ? rdr_NP.GetString(rdr_NP.GetOrdinal("CreatedBy")) : "",
+                                    ApprovedRequestDate = rdr_NP["ApprovedRequestDate"] != DBNull.Value ? (DateTime?)rdr_NP["ApprovedRequestDate"] : null,
+                                    ControlID = rdr_NP["ControlID"] != DBNull.Value ? (int?)rdr_NP["ControlID"] : null,
+                                    LevelID = rdr_NP["LevelID"] != DBNull.Value ? (int?)rdr_NP["LevelID"] : null,
+                                    Status = rdr_NP["Status"] != DBNull.Value ? (bool?)rdr_NP["Status"] : null,
+                                    ConditionType = "NO PRODUCCIÓN",
+                                    BU_Name = "-",
+                                    Element = "",
+                                    ConditionValue = null,
+                                    Condition = null,
+                                    ConditionValue2 = null,
+                                    Condition2 = null,
+                                    ConditionType2 = null
+                                };
+
+                                lst_approver_proposal.Add(wfa_approver_proposal_NP);
+                            }
+                        }
                     }
-                    rdr_NP.Close();
                 }
+
             }
             catch (Exception ex)
             {
