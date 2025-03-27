@@ -703,7 +703,7 @@ namespace WebApplication1.Controllers
                             ld.ModifiedBy = proposal.CreatedBy;
                             ld.ModifiedTime = DateTime.Now;
                             ld.TipoContratoID = ContractType;
-                            ld.ComentariosGC += " " + Observations;
+                            ld.ComentariosGC = ld.ComentariosGC != Observations ? ld.ComentariosGC + " " + Observations : Observations;
                             ld.IsClosed = false;
                             ld.Retorno = false;
                             ld.SystemAssinaturaID = assnaturaID;
