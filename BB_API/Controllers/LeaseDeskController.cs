@@ -2422,7 +2422,9 @@ namespace WebApplication1.Controllers
                 if (activePS != null && activePS.GlobalClickVVA != null)
                 {
 
-                    vt.VVA = activePS.GlobalClickVVA.PVP;
+                    vt.VVA = Math.Round(activePS.GlobalClickVVA.PVP, 5);
+                    activePS.GlobalClickVVA.BWExcessPVP = Math.Round(activePS.GlobalClickVVA.BWExcessPVP, 5);
+                    activePS.GlobalClickVVA.CExcessPVP = Math.Round(activePS.GlobalClickVVA.CExcessPVP, 5);
                     switch (activePS.GlobalClickVVA.RentBillingFrequency)
                     {
                         case 3:
