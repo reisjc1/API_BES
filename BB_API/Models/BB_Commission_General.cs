@@ -115,5 +115,6 @@ namespace WebApplication1.Models
         public string Incidencias { get; set; }
         public Nullable<int> ContractID { get; set; }
         public Nullable<bool> Es_InsideSales { get; set; }
+        public Nullable<bool> IsNP { get; set; }
     }
 }

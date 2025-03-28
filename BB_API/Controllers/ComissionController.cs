@@ -796,12 +796,6 @@ namespace WebApplication1.Controllers
                 i.ProposalId = proposalID;
                 ActionResponse loadProposal = p1.LoadProposal(i);
 
-                // No caso do negocio ser "No Produccion", nao devo gerar comissao
-                if (loadProposal.ProposalObj.Draft.baskets.IsNP)
-                {
-                    return;
-                }
-
                 var basket = loadProposal.ProposalObj.Draft.baskets.os_basket;
 
 
@@ -946,6 +940,8 @@ namespace WebApplication1.Controllers
                     // --------------- PONTO 3 -------------->
 
                     BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
+
+                    bb_commission_general.IsNP = proposal.IsNP;
 
                     bool isNewClient = proposal.ClientAccountNumber.StartsWith("P");
                     bool isNewBusinessLine = loadProposal.ProposalObj.Draft.baskets.newBusinessLine ?? false;
@@ -1165,12 +1161,12 @@ namespace WebApplication1.Controllers
 
                                     var delegation = dbC.BB_Clientes
                                                     .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
-                                                    .Select(x => x.Branch_Local)
                                                     .FirstOrDefault();
 
                                     if (delegation != null)
                                     {
-                                        bb_commission_general.Delegacion = delegation;
+                                        if(delegation.Territory != null || delegation.Territory != "BF-724I7TH2" || delegation.Territory != "Javier Gomez Garcia")
+                                        bb_commission_general.Delegacion = delegation.Territory;
                                     }
 
                                 }
@@ -1647,7 +1643,7 @@ namespace WebApplication1.Controllers
                     if (ExportInitialDate != null && ExportFinalDate != null)
                     {
                         commission_lst = db.BB_Commission_General
-                        .Where(x => x.Fecha_Operacion >= ExportInitialDate && x.Fecha_Operacion <= ExportFinalDate) // Filtra pelo intervalo de datas
+                        .Where(x => x.Fecha_Operacion >= ExportInitialDate && x.Fecha_Operacion <= ExportFinalDate && x.IsNP == false) // Filtra pelo intervalo de datas
                         .OrderByDescending(x => x.ID)
                         .ToList();
                     }
