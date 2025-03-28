@@ -336,6 +336,8 @@ namespace WebApplication1.Models
         public string Room { get; set; }
         public string Schedule { get; set; }
         public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public string IsUsedMachine { get; set; }
+        public string SerialNumber { get; set; }
     }
 
     public class BB_Proposal_DeliveryGroup
