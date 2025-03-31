@@ -179,7 +179,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             
                                 BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliveryLocationIDX.DeliveryContact).FirstOrDefault();
 
-                                collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.Key.CodeRef);
+                                collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.Key.CodeRef, 1);
 
                                 //List<Accessories> accessories = GetAcesseries("A63R021");
                                 if (dLClient != null)
@@ -570,7 +570,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     int i = 0;
                     //Random random = new Random();
                     int randomNumberAddress = random.Next(1000000, 10000000);
-                    
+                    int machineCounter = 0;
+
                     using (SqlConnection conn = new SqlConnection(bdConnect))
                     {
                         conn.Open();
@@ -606,6 +607,11 @@ namespace WebApplication1.Models.SetupXML.XML
                                 };
 
                                 groups.Add(order);
+
+                                if(order.TypeOfOrder == 1)
+                                {
+                                    machineCounter++;
+                                }
 
                             }catch(Exception ex)
                             {
@@ -726,7 +732,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 //BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == order.DeliveryContact).FirstOrDefault();
 
-                                collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.CodeRef);
+                                collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.CodeRef, machineCounter);
 
                                 //List<Accessories> accessories = GetAcesseries("A63R021");
                                 //if (dLClient != null)
@@ -1110,7 +1116,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
         }
-        public System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES> ClickPrices(int proposalId, string orderDoc, string codeRef)
+        public System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES> ClickPrices(int proposalId, string orderDoc, string codeRef, int machineCounter)
         {
             try
             {
@@ -1176,7 +1182,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     string formatNumber = activePS.GlobalClickVVA.BWExcessPVP.ToString("F5");
                                     kBETR = formatNumber.Replace(",", ".");
-                                    copiasIncludias = activePS.BWVolume;
+                                    copiasIncludias = activePS.BWVolume / machineCounter;
                                     kSTBM = copiasIncludias.ToString();
                                 }
 
@@ -1217,7 +1223,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     string formatNumber = activePS.GlobalClickVVA.CExcessPVP.ToString("F5");
                                     kBETR = formatNumber.Replace(",", ".");
-                                    copiasIncludias = activePS.CVolume;
+                                    copiasIncludias = activePS.CVolume / machineCounter;
                                     kSTBM = copiasIncludias.ToString();
                                 }
 
@@ -1258,7 +1264,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     kBETR = formatNumber.Replace(",", ".");
                                 }
 
-                                copiasIncludias = activePS.BWVolume + activePS.CVolume;
+                                copiasIncludias = activePS.BWVolume / machineCounter;
                                 kSTBM = copiasIncludias.ToString();
 
                                 collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
