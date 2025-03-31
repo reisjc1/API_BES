@@ -107,6 +107,7 @@
           <Property Name="Branch" Type="nvarchar(max)" />
           <Property Name="Branch_Id" Type="nvarchar(max)" />
           <Property Name="Branch_Local" Type="nvarchar(max)" />
+          <Property Name="Territory" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BB_Coderef_Generic">
           <Key>
@@ -235,6 +236,7 @@
           <Property Name="Incidencias" Type="nvarchar(max)" />
           <Property Name="ContractID" Type="int" />
           <Property Name="Es_InsideSales" Type="bit" />
+          <Property Name="IsNP" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Consumables">
           <Key>
@@ -2656,6 +2658,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Branch_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Branch_Local" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Territory" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BB_Proposal_Observations">
           <Key>
@@ -4250,6 +4253,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Incidencias" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ContractID" Type="Int32" />
           <Property Name="Es_InsideSales" Type="Boolean" />
+          <Property Name="IsNP" Type="Boolean" />
         </EntityType>
         
         </Schema>
@@ -4575,6 +4579,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_Clientes">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Clientes">
               <MappingFragment StoreEntitySet="BB_Clientes">
+                <ScalarProperty Name="Territory" ColumnName="Territory" />
                 <ScalarProperty Name="Branch_Local" ColumnName="Branch_Local" />
                 <ScalarProperty Name="Branch_Id" ColumnName="Branch_Id" />
                 <ScalarProperty Name="Branch" ColumnName="Branch" />
@@ -6080,6 +6085,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_Commission_General">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Commission_General">
               <MappingFragment StoreEntitySet="BB_Commission_General">
+                <ScalarProperty Name="IsNP" ColumnName="IsNP" />
                 <ScalarProperty Name="Es_InsideSales" ColumnName="Es_InsideSales" />
                 <ScalarProperty Name="ContractID" ColumnName="ContractID" />
                 <ScalarProperty Name="Incidencias" ColumnName="Incidencias" />
