@@ -806,22 +806,22 @@ namespace WebApplication1.BLL
                 //    };
                 //    svr.OPSImplement.Add(item);
                 //}
-                //List<BB_Proposal_OPSManage> opsManage = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
-                //foreach (BB_Proposal_OPSManage managePack in opsManage)
-                //{
-                //    OPSManage item = new OPSManage
-                //    {
-                //        CodeRef = managePack.CodeRef,
-                //        Description = managePack.Description,
-                //        ID = managePack.ID,
-                //        Name = managePack.Name,
-                //        PVP = managePack.PVP,
-                //        Quantity = managePack.Quantity,
-                //        UnitDiscountPrice = managePack.UnitDiscountPrice,
-                //        TotalMonths = managePack.TotalMonths
-                //    };
-                //    svr.OPSManage.Add(item);
-                //}
+                List<BB_Proposal_OPSManage> opsManage = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
+                foreach (BB_Proposal_OPSManage managePack in opsManage)
+                {
+                    OPSManage item = new OPSManage
+                    {
+                        CodeRef = managePack.CodeRef,
+                        Description = managePack.Description,
+                        ID = managePack.ID,
+                        Name = managePack.Name,
+                        PVP = managePack.PVP,
+                        Quantity = managePack.Quantity,
+                        UnitDiscountPrice = managePack.UnitDiscountPrice,
+                        TotalMonths = managePack.TotalMonths
+                    };
+                    svr.OPSManage.Add(item);
+                }
 
                 List<BB_Proposal_Quote> quotesList = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
 

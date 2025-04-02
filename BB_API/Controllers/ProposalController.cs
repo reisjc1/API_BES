@@ -1828,12 +1828,20 @@ namespace WebApplication1.Controllers
                 //}
 
                 //Validate if everything is added 
-                int totalQtyInOS = 0;
+                int? totalQtyInOS = 0;
                 int? totalQtyItemDoBasket = 0;
 
                 foreach(var item in a.ProposalObj.Draft.baskets.os_basket)
                 {
                     totalQtyInOS += item.Qty;
+                }
+
+                foreach(var ops in a.ProposalObj.Draft.opsPacks.opsManage)
+                {
+                    if(ops.UnitDiscountPrice > 0)
+                    {
+                        totalQtyInOS += ops.Quantity;
+                    }
                 }
                 
                 using (var db = new BB_DB_DEVEntities2())

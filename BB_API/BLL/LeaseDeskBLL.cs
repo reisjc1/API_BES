@@ -99,7 +99,7 @@ namespace WebApplication1.BLL
                                     group1.CodeRef = item.CodeRef;
                                     group1.BundleRef = true;
                                     group1.Qty = item.Qty;
-
+                                    group1.UnitDiscountPrice = (double)item.UnitDiscountPrice;
                                     Bundles.Items.Add(group1);
 
                                     firstItemGroup = false;
@@ -111,6 +111,7 @@ namespace WebApplication1.BLL
                                     group2.CodeRef = item.CodeRef;
                                     group2.BundleRef = false;
                                     group2.Qty = item.Qty;
+                                    group2.UnitDiscountPrice = (double)item.UnitDiscountPrice;
                                     Bundles.Items.Add(group2);
                                 }
 
@@ -135,6 +136,7 @@ namespace WebApplication1.BLL
         {
             public string CodeRef { get; set; }
             public bool BundleRef { get; set; }
+            public double UnitDiscountPrice { get; set; }
             public int? Qty { get; set; }
         }
         
