@@ -17,7 +17,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WorkSheet_PT_Metadata" Width="1.5" PointX="8.75" PointY="7.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Status" Width="1.5" PointX="9.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission" Width="1.5" PointX="9.375" PointY="10.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Quote_RS" Width="2" PointX="11.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_PsConfig" Width="2" PointX="11.125" PointY="9.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Commission" Width="2" PointX="12.875" PointY="6.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_FinancingContractType" Width="1.5" PointX="13.375" PointY="10.75" />
@@ -131,6 +130,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History" Width="1.5" PointX="34.375" PointY="4.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_WFA_NP_Approvers" Width="1.5" PointX="34.375" PointY="10.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Commission_General" Width="1.5" PointX="29.375" PointY="34.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Quote_RS" Width="1.5" PointX="34.375" PointY="13.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

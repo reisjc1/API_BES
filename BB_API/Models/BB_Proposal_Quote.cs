@@ -45,5 +45,6 @@ namespace WebApplication1.Models
         public Nullable<bool> IsInClient { get; set; }
         public Nullable<double> UnitPriceCost_ { get; set; }
         public Nullable<double> TotalCost_ { get; set; }
+        public Nullable<bool> AsBeenInWFA { get; set; }
     }
 }

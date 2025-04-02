@@ -579,11 +579,11 @@ namespace WebApplication1.Controllers
 
 
                     wfa_create_obj.Lst_Approver = new List<WFA_Approvers>();
-                    
+
                     using (var dbX = new masterEntities())
                     {
                         List<AspNetRoles> roles = (from r in dbX.AspNetRoles
-                                                   //join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
+                                                       //join ur in dbX.AspNetUserRoles_KM on r.Id equals ur.RoleId
                                                    where r.Country == "BES"
                                                    select r)
                                                    .DistinctBy(x => x.Id)
@@ -654,105 +654,105 @@ namespace WebApplication1.Controllers
                         Customer_ID = newLine.TypeOfCustomer
                     };
 
-                        db.BB_WFA_Control.Add(bb_wfa_control);
-                        db.SaveChanges();
+                    db.BB_WFA_Control.Add(bb_wfa_control);
+                    db.SaveChanges();
 
-                        //ADICIONAR LEVELS.....
+                    //ADICIONAR LEVELS.....
 
-                        BB_WFA_Levels bb_wfa_level = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            Level = 1,
-                            WFA_Approver_ID = newLine.Level1_Approver,
-                            Condition_ID = newLine.Level1_Condition,
-                            Condition_Value = newLine.Percentage_1,
-                            Type_ID = newLine.Level1_Type,
-                            Condition2_ID = newLine.Level1_Condition2,
-                            Condition2_Value = newLine.Percentage2_1,
-                            Type2_ID = newLine.Level1_Type2
-                        };
+                    BB_WFA_Levels bb_wfa_level = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        Level = 1,
+                        WFA_Approver_ID = newLine.Level1_Approver,
+                        Condition_ID = newLine.Level1_Condition,
+                        Condition_Value = newLine.Percentage_1,
+                        Type_ID = newLine.Level1_Type,
+                        Condition2_ID = newLine.Level1_Condition2,
+                        Condition2_Value = newLine.Percentage2_1,
+                        Type2_ID = newLine.Level1_Type2
+                    };
 
-                        BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            Level = 2,
-                            WFA_Approver_ID = newLine.Level2_Approver,
-                            Condition_ID = newLine.Level2_Condition,
-                            Condition_Value = newLine.Percentage_2,
-                            Type_ID = newLine.Level2_Type,
-                            Condition2_ID = newLine.Level2_Condition2,
-                            Condition2_Value = newLine.Percentage2_2,
-                            Type2_ID = newLine.Level2_Type2
-                        };
+                    BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        Level = 2,
+                        WFA_Approver_ID = newLine.Level2_Approver,
+                        Condition_ID = newLine.Level2_Condition,
+                        Condition_Value = newLine.Percentage_2,
+                        Type_ID = newLine.Level2_Type,
+                        Condition2_ID = newLine.Level2_Condition2,
+                        Condition2_Value = newLine.Percentage2_2,
+                        Type2_ID = newLine.Level2_Type2
+                    };
 
-                        BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            Level = 3,
-                            WFA_Approver_ID = newLine.Level3_Approver,
-                            Condition_ID = newLine.Level3_Condition,
-                            Condition_Value = newLine.Percentage_3,
-                            Type_ID = newLine.Level3_Type,
-                            Condition2_ID = newLine.Level3_Condition2,
-                            Condition2_Value = newLine.Percentage2_3,
-                            Type2_ID = newLine.Level3_Type2
-                        };
+                    BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        Level = 3,
+                        WFA_Approver_ID = newLine.Level3_Approver,
+                        Condition_ID = newLine.Level3_Condition,
+                        Condition_Value = newLine.Percentage_3,
+                        Type_ID = newLine.Level3_Type,
+                        Condition2_ID = newLine.Level3_Condition2,
+                        Condition2_Value = newLine.Percentage2_3,
+                        Type2_ID = newLine.Level3_Type2
+                    };
 
-                        BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            Level = 4,
-                            WFA_Approver_ID = newLine.Level4_Approver,
-                            Condition_ID = newLine.Level4_Condition,
-                            Condition_Value = newLine.Percentage_4,
-                            Type_ID = newLine.Level4_Type,
-                            Condition2_ID = newLine.Level4_Condition2,
-                            Condition2_Value = newLine.Percentage2_4,
-                            Type2_ID = newLine.Level4_Type2
-                        };
+                    BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        Level = 4,
+                        WFA_Approver_ID = newLine.Level4_Approver,
+                        Condition_ID = newLine.Level4_Condition,
+                        Condition_Value = newLine.Percentage_4,
+                        Type_ID = newLine.Level4_Type,
+                        Condition2_ID = newLine.Level4_Condition2,
+                        Condition2_Value = newLine.Percentage2_4,
+                        Type2_ID = newLine.Level4_Type2
+                    };
 
-                        BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            Level = 5,
-                            WFA_Approver_ID = newLine.Level5_Approver,
-                            Condition_ID = newLine.Level5_Condition,
-                            Condition_Value = newLine.Percentage_5,
-                            Type_ID = newLine.Level5_Type,
-                            Condition2_ID = newLine.Level5_Condition2,
-                            Condition2_Value = newLine.Percentage2_5,
-                            Type2_ID = newLine.Level5_Type2
-                        };
+                    BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        Level = 5,
+                        WFA_Approver_ID = newLine.Level5_Approver,
+                        Condition_ID = newLine.Level5_Condition,
+                        Condition_Value = newLine.Percentage_5,
+                        Type_ID = newLine.Level5_Type,
+                        Condition2_ID = newLine.Level5_Condition2,
+                        Condition2_Value = newLine.Percentage2_5,
+                        Type2_ID = newLine.Level5_Type2
+                    };
 
 
-                        // VERIFICAR SE OS LEVELS TÊM TUDO PREENCHIDO...
+                    // VERIFICAR SE OS LEVELS TÊM TUDO PREENCHIDO...
 
-                        if (bb_wfa_level.WFA_Control_ID != null && bb_wfa_level.WFA_Approver_ID != null && bb_wfa_level.Condition_ID != null &&
-                            bb_wfa_level.Condition_Value != null && bb_wfa_level.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level);
-                        }
+                    if (bb_wfa_level.WFA_Control_ID != null && bb_wfa_level.WFA_Approver_ID != null && bb_wfa_level.Condition_ID != null &&
+                        bb_wfa_level.Condition_Value != null && bb_wfa_level.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level);
+                    }
 
-                        if (bb_wfa_level_2.WFA_Control_ID != null && bb_wfa_level_2.WFA_Approver_ID != null && bb_wfa_level_2.Condition_ID != null &&
-                            bb_wfa_level_2.Condition_Value != null && bb_wfa_level_2.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level_2);
-                        }
-                        if (bb_wfa_level_3.WFA_Control_ID != null && bb_wfa_level_3.WFA_Approver_ID != null && bb_wfa_level_3.Condition_ID != null &&
-                            bb_wfa_level_3.Condition_Value != null && bb_wfa_level_3.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level_3);
-                        }
-                        if (bb_wfa_level_4.WFA_Control_ID != null && bb_wfa_level_4.WFA_Approver_ID != null && bb_wfa_level_4.Condition_ID != null &&
-                            bb_wfa_level_4.Condition_Value != null && bb_wfa_level_4.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level_4);
-                        }
-                        if (bb_wfa_level_5.WFA_Control_ID != null && bb_wfa_level_5.WFA_Approver_ID != null && bb_wfa_level_5.Condition_ID != null &&
-                            bb_wfa_level_5.Condition_Value != null && bb_wfa_level_5.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level_5);
-                        }                   
+                    if (bb_wfa_level_2.WFA_Control_ID != null && bb_wfa_level_2.WFA_Approver_ID != null && bb_wfa_level_2.Condition_ID != null &&
+                        bb_wfa_level_2.Condition_Value != null && bb_wfa_level_2.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level_2);
+                    }
+                    if (bb_wfa_level_3.WFA_Control_ID != null && bb_wfa_level_3.WFA_Approver_ID != null && bb_wfa_level_3.Condition_ID != null &&
+                        bb_wfa_level_3.Condition_Value != null && bb_wfa_level_3.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level_3);
+                    }
+                    if (bb_wfa_level_4.WFA_Control_ID != null && bb_wfa_level_4.WFA_Approver_ID != null && bb_wfa_level_4.Condition_ID != null &&
+                        bb_wfa_level_4.Condition_Value != null && bb_wfa_level_4.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level_4);
+                    }
+                    if (bb_wfa_level_5.WFA_Control_ID != null && bb_wfa_level_5.WFA_Approver_ID != null && bb_wfa_level_5.Condition_ID != null &&
+                        bb_wfa_level_5.Condition_Value != null && bb_wfa_level_5.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level_5);
+                    }
 
                     db.SaveChanges();
 
@@ -975,54 +975,97 @@ namespace WebApplication1.Controllers
                                                           .ToList();
 
 
-                    //Verifica se já existe um pedido iniciado recentemente
-                    //Termina o método retornando uma mensagem para o user
-                    if (checkExistent.Find(x=> x.Started==true) != null)
+                    //Verifica se já existe um pedido iniciado
+                    if (checkExistent.Find(x => x.Started == true) != null)
                     {
-                        BB_Proposal_Quote quote = db.BB_Proposal_Quote
-                                                    .Where(q=>q.Proposal_ID == ProposalID)
-                                                    .FirstOrDefault();
+                        bool configDif = checkHistoryConfigurator_Quote(ProposalID);
+                        bool configDif_RS = checkHistoryConfigurator_Quote_RS(ProposalID);
+
+
+
+
+
                         
-                        var approversControlToDelete = db.BB_WFA_Approvers_Control.ToList();
-                        var matchedApprovers = approversControlToDelete
+                        //var areMoreLinesAddedOrRemoved = false;
+
+                        //var linhasAbordadasWFA = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == ProposalID && x.AsBeenInWFA == true).ToList();
+                        //var linhasDoConfig = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == ProposalID).ToList();
+
+                        //var linhasAbordadasWFA_RS = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == ProposalID && x.AsBeenInWFA == true).ToList();
+                        //var linhasDoConfig_RS = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == ProposalID).ToList();
+
+                        //if (linhasDoConfig.Count != linhasAbordadasWFA.Count || linhasDoConfig_RS.Count != linhasDoConfig_RS.Count)
+                        //{
+                        //    areMoreLinesAddedOrRemoved = true;
+                        //}
+
+
+
+
+
+
+
+
+                        // SE o último ID da lastQuote para este proposalID for > BB_Quote_ID da History,
+                        // entao areMoreLinesAdded = true;
+
+                        // Se houver diferenças, apagar
+                        if (configDif || configDif_RS)
+                        {
+                            // E SE HOUVER ALTERAÇÕES ENTRE O HISTORICO E A QUOTE
+                            // ENTAO AÍ É QUE VOU APAGAR TUDO DESTE WORKFLOW
+                            // ATÉ PORQUE SE HOUVER DIFERENÇAS, O VALOR TOTAL VAI VARIAR E É SEMPRE PRECISO WORKFLOW (DESENVOLVIMENTO FUTURO)
+                            var approversControlToDelete = db.BB_WFA_Approvers_Control.ToList();
+                            var matchedApprovers = approversControlToDelete
                             .Where(ac => checkExistent.Any(ce => ce.ID == ac.WFA_Workflow_Proposal_ID))
                             .ToList();
 
-                        db.BB_WFA_Approvers_Control.RemoveRange(matchedApprovers);
-                        db.BB_WFA_Workflow_Proposal.RemoveRange(checkExistent);
-                        db.SaveChanges();
-                    }
-                    //Verifica se existe um pedido criado mas não iniciado.
-                    //Salta para a chamada da SP
-                    else if (checkExistent.Find(x => x.Started == false) != null)
-                    {
-                        if (CallWFASP(ProposalID, 1))
-                        {
-                            message = "Proceso creado e iniciado con éxito.";
-                            WFA_SendEmails(ProposalID, true, null);
-                            return Ok(message);
+                            var wfa_history = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == ProposalID).ToList();
+                            var wfas = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).ToList();
+
+                            db.BB_WFA_Proposal_OneShot_History.RemoveRange(wfa_history);
+                            db.BB_WFA_Approvers_Control.RemoveRange(matchedApprovers);
+                            db.BB_WFA_Workflow_Proposal.RemoveRange(wfas);
+                            db.SaveChanges();
+
+                            // ENTAO E NO CASO DE ADICIONAREM 1 LINHA NOVA AO CONFIGURADOR ????????????????????????????
+
+                            //Criação do objeto e inserção na BD
+                            BB_WFA_Workflow_Proposal toInsert = new BB_WFA_Workflow_Proposal()
+                            {
+                                Proposal_ID = ProposalID,
+                                Created_Date = DateTime.Now,
+                                Started = false,
+                                Finished = false,
+                                IsApproved = null,
+                                IsCompleted = false
+                            };
+
+                            db.BB_WFA_Workflow_Proposal.Add(toInsert);
+                            db.SaveChanges();
                         }
                         else
                         {
-                            message = "El proceso se creó, pero hubo un problema al iniciarlo." +
-                                      "Vuelva a realizar el pedido. Si el error persiste, póngase en contacto con el departamento de Business Builder.";
+                            message = "Ya existe un flujo de validaciones en curso.";
                             return Ok(message);
                         }
                     }
-
-                    //Criação do objeto e inserção na BD
-                    BB_WFA_Workflow_Proposal toInsert = new BB_WFA_Workflow_Proposal()
+                    else
                     {
-                        Proposal_ID = ProposalID,
-                        Created_Date = DateTime.Now,
-                        Started = false,
-                        Finished = false,
-                        IsApproved = null,
-                        IsCompleted = false
-                    };
+                        //Criação do objeto e inserção na BD
+                        BB_WFA_Workflow_Proposal toInsert = new BB_WFA_Workflow_Proposal()
+                        {
+                            Proposal_ID = ProposalID,
+                            Created_Date = DateTime.Now,
+                            Started = false,
+                            Finished = false,
+                            IsApproved = null,
+                            IsCompleted = false
+                        };
 
-                    db.BB_WFA_Workflow_Proposal.Add(toInsert);
-                    db.SaveChanges();
+                        db.BB_WFA_Workflow_Proposal.Add(toInsert);
+                        db.SaveChanges();
+                    }
                 }
 
                 if (CallWFASP(ProposalID, 1))
@@ -1122,9 +1165,9 @@ namespace WebApplication1.Controllers
         private void deleteIfPassedValidation(WFAValidations_OneShot validations)
         {
             bool passedValidation = true;
-            foreach(var wrp in validations.Lst_BBP_Quote)
+            foreach (var wrp in validations.Lst_BBP_Quote)
             {
-                if(wrp.passedValidation == false)
+                if (wrp.passedValidation == false)
                     passedValidation = false;
             }
 
@@ -1141,16 +1184,16 @@ namespace WebApplication1.Controllers
                     using (var db = new BB_DB_DEVEntities2())
                     {
                         var proposal = db.BB_WFA_Workflow_Proposal.Where(wp => wp.IsCompleted == false).FirstOrDefault();
-                        if(proposal != null)
+                        if (proposal != null)
                         {
                             BB_WFA_Approvers_Control control = db.BB_WFA_Approvers_Control.Where(ac => ac.WFA_Workflow_Proposal_ID == proposal.ID).FirstOrDefault();
-                            
+
                             db.BB_WFA_Workflow_Proposal.Remove(proposal);
                             db.BB_WFA_Approvers_Control.Remove(control);
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
 
                 }
@@ -1160,7 +1203,8 @@ namespace WebApplication1.Controllers
 
         private bool WFA_SendEmails(int ProposalID, bool IsNewProcess, bool? IsApproved)
         {
-            try {
+            try
+            {
                 EmailService emailService = new EmailService();
 
                 using (var db = new BB_DB_DEVEntities2())
@@ -1186,38 +1230,38 @@ namespace WebApplication1.Controllers
                                          join u in users on r.Approver_ID equals u.Id
                                          select new { u.Email, r.CreatedBy })
                                          .ToList();
-                    
 
 
-                    string subject = IsNewProcess ? "Worflow Aprovações - Pedido para Analisar" : "Workflow Aprovações - Análise Terminada";
-                    string body = IsNewProcess ? $"Bom dia,{Environment.NewLine}{Environment.NewLine}" +
-                        $"Tem um novo pedido de Workflow para analisar. " +
-                        $"Poderá aceder ao mesmo através do menu Área Comercial > Oportunidades na apicação Business Builder. {Environment.NewLine}{Environment.NewLine} " +
-                        $"Muito Obrigado,{Environment.NewLine}Bom trabalho"
-                        :
-                        string.Format("Bom dia, {0}{0}Informamos que o pedido de aprovação já foi terminado. " +
-                        "O pedido foi {1}.{0}" +
-                        "Poderá verificar o mesmo no menu Área Comercial > Oportunidades. {0} " +
-                        "Muito Obrigado,{0}Bom trabalho", Environment.NewLine, (bool)IsApproved ? "aprovado" : "rejeitado");
 
-                    //approvers.ForEach(a =>
-                    //{
-                    //    EmailMesage email = new EmailMesage() {
-                    //        Body = body,
-                    //        Subject = subject,
-                    //        //Destination = IsNewProcess ? a.Email : a.CreatedBy
-                    //        Destination = "antonio.simoes@konicaminolta.pt", //TESTES
-                    //        CC = "tiago.simoes@konicaminolta.pt" //TESTES
-                    //    };
-                    //    emailService.SendEmailaync(email);
-                    //});
+                        string subject = IsNewProcess ? "Worflow Aprovações - Pedido para Analisar" : "Workflow Aprovações - Análise Terminada";
+                        string body = IsNewProcess ? $"Bom dia,{Environment.NewLine}{Environment.NewLine}" +
+                            $"Tem um novo pedido de Workflow para analisar. " +
+                            $"Poderá aceder ao mesmo através do menu Área Comercial > Oportunidades na apicação Business Builder. {Environment.NewLine}{Environment.NewLine} " +
+                            $"Muito Obrigado,{Environment.NewLine}Bom trabalho"
+                            :
+                            string.Format("Bom dia, {0}{0}Informamos que o pedido de aprovação já foi terminado. " +
+                            "O pedido foi {1}.{0}" +
+                            "Poderá verificar o mesmo no menu Área Comercial > Oportunidades. {0} " +
+                            "Muito Obrigado,{0}Bom trabalho", Environment.NewLine, (bool)IsApproved ? "aprovado" : "rejeitado");
+
+                        //approvers.ForEach(a =>
+                        //{
+                        //    EmailMesage email = new EmailMesage() {
+                        //        Body = body,
+                        //        Subject = subject,
+                        //        //Destination = IsNewProcess ? a.Email : a.CreatedBy
+                        //        Destination = "antonio.simoes@konicaminolta.pt", //TESTES
+                        //        CC = "tiago.simoes@konicaminolta.pt" //TESTES
+                        //    };
+                        //    emailService.SendEmailaync(email);
+                        //});
+                    }
+
                 }
 
-                }
-                
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -1301,9 +1345,9 @@ namespace WebApplication1.Controllers
                     // Parâmetro para a stored procedure
                     var countryParam = "BES";
 
-                        // Executar a stored procedure
-                        var approvers = dbX.Database.SqlQuery<WFA_Approvers>(
-                            "EXEC GetApprovers @Country = {0}", countryParam).ToList();
+                    // Executar a stored procedure
+                    var approvers = dbX.Database.SqlQuery<WFA_Approvers>(
+                        "EXEC GetApprovers @Country = {0}", countryParam).ToList();
 
                     if (wfa_obj.Lst_Approver == null)
                     {
@@ -1511,105 +1555,105 @@ namespace WebApplication1.Controllers
                         Customer_ID = newLine.TypeOfCustomer
                     };
 
-                        db.BB_WFA_Control.Add(bb_wfa_control);
-                        db.SaveChanges();
+                    db.BB_WFA_Control.Add(bb_wfa_control);
+                    db.SaveChanges();
 
-                        //ADICIONAR LEVELS.....
+                    //ADICIONAR LEVELS.....
 
-                        BB_WFA_Levels bb_wfa_level = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            WFA_Approver_ID = newLine.Level1_Approver,
-                            Condition_ID = newLine.Level1_Condition,
-                            Condition_Value = newLine.Percentage_1,
-                            Condition2_ID = newLine.Level1_Condition2,
-                            Condition2_Value = newLine.Percentage2_1,
-                            Type_ID = newLine.Level1_Type,
-                            Type2_ID = newLine.Level1_Type2,
-                            Level = 1
-                        };
+                    BB_WFA_Levels bb_wfa_level = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        WFA_Approver_ID = newLine.Level1_Approver,
+                        Condition_ID = newLine.Level1_Condition,
+                        Condition_Value = newLine.Percentage_1,
+                        Condition2_ID = newLine.Level1_Condition2,
+                        Condition2_Value = newLine.Percentage2_1,
+                        Type_ID = newLine.Level1_Type,
+                        Type2_ID = newLine.Level1_Type2,
+                        Level = 1
+                    };
 
-                        BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            WFA_Approver_ID = newLine.Level2_Approver,
-                            Condition_ID = newLine.Level2_Condition,
-                            Condition_Value = newLine.Percentage_2,
-                            Condition2_ID = newLine.Level2_Condition2,
-                            Condition2_Value = newLine.Percentage2_2,
-                            Type_ID = newLine.Level2_Type,
-                            Type2_ID = newLine.Level2_Type2,
-                            Level = 2
-                        };
+                    BB_WFA_Levels bb_wfa_level_2 = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        WFA_Approver_ID = newLine.Level2_Approver,
+                        Condition_ID = newLine.Level2_Condition,
+                        Condition_Value = newLine.Percentage_2,
+                        Condition2_ID = newLine.Level2_Condition2,
+                        Condition2_Value = newLine.Percentage2_2,
+                        Type_ID = newLine.Level2_Type,
+                        Type2_ID = newLine.Level2_Type2,
+                        Level = 2
+                    };
 
-                        BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            WFA_Approver_ID = newLine.Level3_Approver,
-                            Condition_ID = newLine.Level3_Condition,
-                            Condition_Value = newLine.Percentage_3,
-                            Condition2_ID = newLine.Level3_Condition2,
-                            Condition2_Value = newLine.Percentage2_3,
-                            Type_ID = newLine.Level3_Type,
-                            Type2_ID = newLine.Level3_Type2,
-                            Level = 3
-                        };
+                    BB_WFA_Levels bb_wfa_level_3 = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        WFA_Approver_ID = newLine.Level3_Approver,
+                        Condition_ID = newLine.Level3_Condition,
+                        Condition_Value = newLine.Percentage_3,
+                        Condition2_ID = newLine.Level3_Condition2,
+                        Condition2_Value = newLine.Percentage2_3,
+                        Type_ID = newLine.Level3_Type,
+                        Type2_ID = newLine.Level3_Type2,
+                        Level = 3
+                    };
 
-                        BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            WFA_Approver_ID = newLine.Level4_Approver,
-                            Condition_ID = newLine.Level4_Condition,
-                            Condition_Value = newLine.Percentage_4,
-                            Condition2_ID = newLine.Level4_Condition2,
-                            Condition2_Value = newLine.Percentage2_4,
-                            Type_ID = newLine.Level4_Type,
-                            Type2_ID = newLine.Level4_Type2,
-                            Level = 4
-                        };
+                    BB_WFA_Levels bb_wfa_level_4 = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        WFA_Approver_ID = newLine.Level4_Approver,
+                        Condition_ID = newLine.Level4_Condition,
+                        Condition_Value = newLine.Percentage_4,
+                        Condition2_ID = newLine.Level4_Condition2,
+                        Condition2_Value = newLine.Percentage2_4,
+                        Type_ID = newLine.Level4_Type,
+                        Type2_ID = newLine.Level4_Type2,
+                        Level = 4
+                    };
 
-                        BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
-                        {
-                            WFA_Control_ID = bb_wfa_control.ID,
-                            WFA_Approver_ID = newLine.Level5_Approver,
-                            Condition_ID = newLine.Level5_Condition,
-                            Condition_Value = newLine.Percentage_5,
-                            Condition2_ID = newLine.Level5_Condition2,
-                            Condition2_Value = newLine.Percentage2_5,
-                            Type_ID = newLine.Level5_Type,
-                            Type2_ID = newLine.Level5_Type2,
-                            Level = 5
-                        };
+                    BB_WFA_Levels bb_wfa_level_5 = new BB_WFA_Levels()
+                    {
+                        WFA_Control_ID = bb_wfa_control.ID,
+                        WFA_Approver_ID = newLine.Level5_Approver,
+                        Condition_ID = newLine.Level5_Condition,
+                        Condition_Value = newLine.Percentage_5,
+                        Condition2_ID = newLine.Level5_Condition2,
+                        Condition2_Value = newLine.Percentage2_5,
+                        Type_ID = newLine.Level5_Type,
+                        Type2_ID = newLine.Level5_Type2,
+                        Level = 5
+                    };
 
 
-                        // VERIFICAR SE OS LEVELS TÊM TUDO PREENCHIDO...
+                    // VERIFICAR SE OS LEVELS TÊM TUDO PREENCHIDO...
 
-                        if (bb_wfa_level.WFA_Control_ID != null && bb_wfa_level.WFA_Approver_ID != null && bb_wfa_level.Condition_ID != null &&
-                            bb_wfa_level.Condition_Value != null && bb_wfa_level.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level);
-                        }
+                    if (bb_wfa_level.WFA_Control_ID != null && bb_wfa_level.WFA_Approver_ID != null && bb_wfa_level.Condition_ID != null &&
+                        bb_wfa_level.Condition_Value != null && bb_wfa_level.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level);
+                    }
 
-                        if (bb_wfa_level_2.WFA_Control_ID != null && bb_wfa_level_2.WFA_Approver_ID != null && bb_wfa_level_2.Condition_ID != null &&
-                            bb_wfa_level_2.Condition_Value != null && bb_wfa_level_2.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level_2);
-                        }
-                        if (bb_wfa_level_3.WFA_Control_ID != null && bb_wfa_level_3.WFA_Approver_ID != null && bb_wfa_level_3.Condition_ID != null &&
-                            bb_wfa_level_3.Condition_Value != null && bb_wfa_level_3.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level_3);
-                        }
-                        if (bb_wfa_level_4.WFA_Control_ID != null && bb_wfa_level_4.WFA_Approver_ID != null && bb_wfa_level_4.Condition_ID != null &&
-                            bb_wfa_level_4.Condition_Value != null && bb_wfa_level_4.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level_4);
-                        }
-                        if (bb_wfa_level_5.WFA_Control_ID != null && bb_wfa_level_5.WFA_Approver_ID != null && bb_wfa_level_5.Condition_ID != null &&
-                            bb_wfa_level_5.Condition_Value != null && bb_wfa_level_5.Type_ID != null)
-                        {
-                            db.BB_WFA_Levels.Add(bb_wfa_level_5);
-                        }                  
+                    if (bb_wfa_level_2.WFA_Control_ID != null && bb_wfa_level_2.WFA_Approver_ID != null && bb_wfa_level_2.Condition_ID != null &&
+                        bb_wfa_level_2.Condition_Value != null && bb_wfa_level_2.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level_2);
+                    }
+                    if (bb_wfa_level_3.WFA_Control_ID != null && bb_wfa_level_3.WFA_Approver_ID != null && bb_wfa_level_3.Condition_ID != null &&
+                        bb_wfa_level_3.Condition_Value != null && bb_wfa_level_3.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level_3);
+                    }
+                    if (bb_wfa_level_4.WFA_Control_ID != null && bb_wfa_level_4.WFA_Approver_ID != null && bb_wfa_level_4.Condition_ID != null &&
+                        bb_wfa_level_4.Condition_Value != null && bb_wfa_level_4.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level_4);
+                    }
+                    if (bb_wfa_level_5.WFA_Control_ID != null && bb_wfa_level_5.WFA_Approver_ID != null && bb_wfa_level_5.Condition_ID != null &&
+                        bb_wfa_level_5.Condition_Value != null && bb_wfa_level_5.Type_ID != null)
+                    {
+                        db.BB_WFA_Levels.Add(bb_wfa_level_5);
+                    }
 
                     db.SaveChanges();
 
@@ -1915,7 +1959,8 @@ namespace WebApplication1.Controllers
             wrp.Lst_BBP_Quote = new List<BB_Proposal_Quote_WFA>();
             wrp.Lst_BBP_RS_Quote = new List<BB_Proposal_Quote_RS_WFA>();
 
-            try {
+            try
+            {
 
                 // ------------------------------------ VALIDACAO DO NO PRODUCCION ------------------------------------
                 using (var db = new BB_DB_DEVEntities2())
@@ -1931,11 +1976,11 @@ namespace WebApplication1.Controllers
                     // se já estiver REPROVADO, coloco o IsNP a true <=> processo FICA bloqueado
                     if (approval != null && approval.IsApproved != null)
                     {
-                        wrp.IsPassedNP = approval.IsApproved.Value;                     
+                        wrp.IsPassedNP = approval.IsApproved.Value;
                     }
                     else
                     {
-                        if(isNP == true)
+                        if (isNP == true)
                         {
                             wrp.IsPassedNP = false;
                         }
@@ -1947,36 +1992,35 @@ namespace WebApplication1.Controllers
                 }
                 // ----------------------------------------------------------------------------------------------------
 
-                bool configDif = checkHistoryConfigurator_Quote(proposalID);
-                bool configDif_RS = checkHistoryConfigurator_Quote_RS(proposalID);
+                //bool configDif = checkHistoryConfigurator_Quote(proposalID);
+                //bool configDif_RS = checkHistoryConfigurator_Quote_RS(proposalID);
 
-                if (configDif || configDif_RS)
-                {
-                    using (var db = new BB_DB_DEVEntities2())
-                    {
+                //if (configDif || configDif_RS)
+                //{
+                //    using (var db = new BB_DB_DEVEntities2())
+                //    {
 
-                        var wfa_proposal_obj = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).FirstOrDefault();
-                        var wfa_history_objs = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
+                //        var wfa_proposal_obj = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).FirstOrDefault();
+                //        var wfa_history_objs = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == proposalID).ToList();
 
-                        var wfa_approvers_objs = db.BB_WFA_Approvers_Control.Where(x => x.WFA_Workflow_Proposal_ID == wfa_proposal_obj.ID).ToList();
+                //        var wfa_approvers_objs = db.BB_WFA_Approvers_Control.Where(x => x.WFA_Workflow_Proposal_ID == wfa_proposal_obj.ID).ToList();
 
+                //        //BB_WFA_Workflow_Proposal wfa = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).OrderByDescending(x => x.ID).FirstOrDefault();
 
-                        //BB_WFA_Workflow_Proposal wfa = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).OrderByDescending(x => x.ID).FirstOrDefault();
+                //        //wfa.Finished_Date = null;
+                //        //wfa.Finished = false;
+                //        //wfa.IsApproved = false;
+                //        //wfa.IsCompleted = false;
 
-                        //wfa.Finished_Date = null;
-                        //wfa.Finished = false;
-                        //wfa.IsApproved = false;
-                        //wfa.IsCompleted = false;
+                //        //db.Entry(wfa).State = EntityState.Modified;
 
-                        //db.Entry(wfa).State = EntityState.Modified;
+                //        db.BB_WFA_Workflow_Proposal.Remove(wfa_proposal_obj);
+                //        db.BB_WFA_Proposal_OneShot_History.RemoveRange(wfa_history_objs);
+                //        db.BB_WFA_Approvers_Control.RemoveRange(wfa_approvers_objs);
 
-                        db.BB_WFA_Workflow_Proposal.Remove(wfa_proposal_obj);
-                        db.BB_WFA_Proposal_OneShot_History.RemoveRange(wfa_history_objs);
-                        db.BB_WFA_Approvers_Control.RemoveRange(wfa_approvers_objs);
-
-                        db.SaveChanges();
-                    }
-                }
+                //        db.SaveChanges();
+                //    }
+                //}
 
 
 
@@ -1987,62 +2031,62 @@ namespace WebApplication1.Controllers
 
                     conn.Open();
 
-                        SqlCommand cmd = new SqlCommand("SP_Workflow_Aprovacoes_OneShot_Validation", conn);
-                        cmd.CommandTimeout = 180;
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Proposal_ID", proposalID);
-                        cmd.Parameters.AddWithValue("@WFA_ID", 1);
-                        cmd.Parameters.AddWithValue("@is_RS", 0);
-                        SqlDataReader rdr = cmd.ExecuteReader();
+                    SqlCommand cmd = new SqlCommand("SP_Workflow_Aprovacoes_OneShot_Validation", conn);
+                    cmd.CommandTimeout = 180;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Proposal_ID", proposalID);
+                    cmd.Parameters.AddWithValue("@WFA_ID", 1);
+                    cmd.Parameters.AddWithValue("@is_RS", 0);
+                    SqlDataReader rdr = cmd.ExecuteReader();
 
 
-                        while (rdr.Read())
+                    while (rdr.Read())
+                    {
+                        BB_Proposal_Quote_WFA bbp_quote = new BB_Proposal_Quote_WFA
                         {
-                            BB_Proposal_Quote_WFA bbp_quote = new BB_Proposal_Quote_WFA
-                            {
-                                ID = (int)rdr["ID"],
-                                Proposal_ID = rdr["Proposal_ID"] != DBNull.Value ? (int?)rdr["Proposal_ID"] : null,
-                                CreatedBy = rdr["CreatedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CreatedBy")) : "",
-                                ModifiedBy = rdr["ModifiedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ModifiedBy")) : "",
-                                CreatedTime = rdr["CreatedTime"] != DBNull.Value ? (DateTime?)rdr["CreatedTime"] : null,
-                                ModifiedTime = rdr["ModifiedTime"] != DBNull.Value ? (DateTime?)rdr["ModifiedTime"] : null,
-                                Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
-                                Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
-                                CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
-                                Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
-                                UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
-                                Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
-                                TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
-                                Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
-                                PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
-                                TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
-                                DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
-                                UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
-                                GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
-                                GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
-                                TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
-                                IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
-                                TCP = rdr["TCP"] != DBNull.Value ? (double?)rdr["TCP"] : null,
-                                Name = rdr["Name"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Name")) : "",
-                                ClickPriceC = rdr["ClickPriceC"] != DBNull.Value ? (double?)rdr["ClickPriceC"] : null,
-                                ClickPriceBW = rdr["ClickPriceBW"] != DBNull.Value ? (double?)rdr["ClickPriceBW"] : null,
-                                IsMarginBEU = rdr["IsMarginBEU"] != DBNull.Value ? (bool?)rdr["IsMarginBEU"] : null,
-                                IsUsed = rdr["IsUsed"] != DBNull.Value ? (bool?)rdr["IsUsed"] : null,
-                                IsInClient = rdr["IsInClient"] != DBNull.Value ? (bool?)rdr["IsInClient"] : null,
-                                TotalCost_ = rdr["TotalCost_"] != DBNull.Value ? (double?)rdr["TotalCost_"] : null,
-                                passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
-                                alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
-                                NotTreated = rdr["NotTreated"] != DBNull.Value ? (bool?)rdr["NotTreated"] : null,
-                            };
-                        
-                        if(bbp_quote.passedValidation == false && (bbp_quote.alertMessage=="" || bbp_quote.alertMessage == null))
+                            ID = (int)rdr["ID"],
+                            Proposal_ID = rdr["Proposal_ID"] != DBNull.Value ? (int?)rdr["Proposal_ID"] : null,
+                            CreatedBy = rdr["CreatedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CreatedBy")) : "",
+                            ModifiedBy = rdr["ModifiedBy"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("ModifiedBy")) : "",
+                            CreatedTime = rdr["CreatedTime"] != DBNull.Value ? (DateTime?)rdr["CreatedTime"] : null,
+                            ModifiedTime = rdr["ModifiedTime"] != DBNull.Value ? (DateTime?)rdr["ModifiedTime"] : null,
+                            Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
+                            Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
+                            CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
+                            Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
+                            UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
+                            Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
+                            TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
+                            Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
+                            PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
+                            TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
+                            DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
+                            UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
+                            GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
+                            GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
+                            TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
+                            IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
+                            TCP = rdr["TCP"] != DBNull.Value ? (double?)rdr["TCP"] : null,
+                            Name = rdr["Name"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Name")) : "",
+                            ClickPriceC = rdr["ClickPriceC"] != DBNull.Value ? (double?)rdr["ClickPriceC"] : null,
+                            ClickPriceBW = rdr["ClickPriceBW"] != DBNull.Value ? (double?)rdr["ClickPriceBW"] : null,
+                            IsMarginBEU = rdr["IsMarginBEU"] != DBNull.Value ? (bool?)rdr["IsMarginBEU"] : null,
+                            IsUsed = rdr["IsUsed"] != DBNull.Value ? (bool?)rdr["IsUsed"] : null,
+                            IsInClient = rdr["IsInClient"] != DBNull.Value ? (bool?)rdr["IsInClient"] : null,
+                            TotalCost_ = rdr["TotalCost_"] != DBNull.Value ? (double?)rdr["TotalCost_"] : null,
+                            passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
+                            alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
+                            NotTreated = rdr["NotTreated"] != DBNull.Value ? (bool?)rdr["NotTreated"] : null,
+                        };
+
+                        if (bbp_quote.passedValidation == false && (bbp_quote.alertMessage == "" || bbp_quote.alertMessage == null))
                         {
                             bbp_quote.alertMessage = "pendingApproval";
                         }
 
                         wrp.Lst_BBP_Quote.Add(bbp_quote);
                     }
-                        rdr.Close();
+                    rdr.Close();
                 }
 
                 List<BB_Proposal_Quote_RS> lst_SR = new List<BB_Proposal_Quote_RS>();
@@ -2053,7 +2097,7 @@ namespace WebApplication1.Controllers
                 }
 
                 if (lst_SR.Count > 0)
-                {                
+                {
                     // LISTA BB_PROPOSAL_RS_QUOTE ---------------------------------------------------------------------
                     using (SqlConnection conn = new SqlConnection(bdConnect))
                     {
@@ -2301,17 +2345,17 @@ namespace WebApplication1.Controllers
 
                     BB_WFA_Workflow_Proposal wf_p = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID && x.Finished == false).FirstOrDefault();
 
-                    if(wf_p == null)
+                    if (wf_p == null)
                     {
                         return Ok("Ha habido un problema con la validación del proceso. Por favor, inténtalo de nuevo más tarde.");
                     }
 
                     // Identificação se a aprovacao foi causada por ser NP
-                     var aux = db.BB_WFA_Approvers_Control
-                                           .Where(x => x.ID == ApproverID)
-                                           .FirstOrDefault();
+                    var aux = db.BB_WFA_Approvers_Control
+                                          .Where(x => x.ID == ApproverID)
+                                          .FirstOrDefault();
 
-                    if(aux.IsNP == true)
+                    if (aux.IsNP == true)
                     {
                         IsNP = true;
                     }
@@ -2337,26 +2381,26 @@ namespace WebApplication1.Controllers
 
                         //if (approver_control_np != null)
                         //{
-                            aux.IsApproved = isApproved;
+                        aux.IsApproved = isApproved;
 
-                            db.Entry(aux).State = EntityState.Modified;
-                            db.SaveChanges();
+                        db.Entry(aux).State = EntityState.Modified;
+                        db.SaveChanges();
                         //}
                     }
                     else
                     {
                         // VALIDATION GENERAL WORKFLOW ---------------------
                         BB_WFA_Approvers_Control approver_control = db.BB_WFA_Approvers_Control
-                                                                    .Where(x => x.Approver_ID == user_ID 
-                                                                        && x.WFA_Workflow_Proposal_ID == wf_p.ID 
-                                                                        && x.WFA_Control_ID == control_ID 
+                                                                    .Where(x => x.Approver_ID == user_ID
+                                                                        && x.WFA_Workflow_Proposal_ID == wf_p.ID
+                                                                        && x.WFA_Control_ID == control_ID
                                                                         && x.WFA_Level_ID == level_ID
                                                                         && x.IsNP == null)
                                                                     .FirstOrDefault();
 
 
 
-                        if(approver_control != null)
+                        if (approver_control != null)
                         {
                             approver_control.IsApproved = isApproved;
 
@@ -2369,7 +2413,7 @@ namespace WebApplication1.Controllers
                         {
                             int? level = db.BB_WFA_Levels.Where(l => l.ID == level_ID)
                                                          .FirstOrDefault()
-                                                         .Level;                        
+                                                         .Level;
                             while (--level > 0)
                             {
                                 level_ID = db.BB_WFA_Levels.Where(l => l.Level == level && l.WFA_Control_ID == control_ID)
@@ -2395,11 +2439,11 @@ namespace WebApplication1.Controllers
 
 
                         bool? approved = (from W in db.BB_WFA_Workflow_Proposal
-                                        where W.Proposal_ID == proposalID && W.Finished == true
-                                        orderby W.Started descending
-                                        select W.IsApproved).FirstOrDefault();
+                                          where W.Proposal_ID == proposalID && W.Finished == true
+                                          orderby W.Started descending
+                                          select W.IsApproved).FirstOrDefault();
 
-                        if(approved != null)
+                        if (approved != null)
                         {
                             WFA_SendEmails(proposalID, false, approved);
                         }
@@ -2584,7 +2628,7 @@ namespace WebApplication1.Controllers
                                     GPPercentage = reader["GPPercentage"] != DBNull.Value ? (double)reader["GPPercentage"] : 0.0,
                                     TotalNetsale = reader["TotalNetsale"] != DBNull.Value ? (double)reader["TotalNetsale"] : 0.0,
                                     IsFinanced = reader["IsFinanced"] != DBNull.Value && (bool)reader["IsFinanced"],
-                                    TotalMonths = reader["Qty"] != DBNull.Value ? (int)reader["Qty"] : 0,                                   
+                                    TotalMonths = reader["Qty"] != DBNull.Value ? (int)reader["Qty"] : 0,
                                 };
 
                                 quotesList.Add(quote);
@@ -2852,7 +2896,7 @@ namespace WebApplication1.Controllers
             public string CreatedBy { get; set; }
             public DateTime? ApprovedRequestDate { get; set; }
             public bool? Status { get; set; }
-            public string ProposalName  { get; set; }
+            public string ProposalName { get; set; }
             public int? ProposalID { get; set; }
             public int? ApproverID { get; set; }
             public int? ControlID { get; set; }

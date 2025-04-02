@@ -36,5 +36,6 @@ namespace WebApplication1.Models
         public Nullable<double> UnitPriceCost { get; set; }
         public Nullable<int> ProposalID { get; set; }
         public Nullable<bool> IsFinanced { get; set; }
+        public Nullable<bool> AsBeenInWFA { get; set; }
     }
 }
