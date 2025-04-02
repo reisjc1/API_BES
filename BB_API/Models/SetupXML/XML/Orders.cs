@@ -1174,7 +1174,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
                                     if (pSM != null)
                                     {
-                                        string formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+                                        string formatNumber = pSM.ApprovedBW != null ? ((double)pSM.ApprovedBW).ToString("F5") : ((double)pSM.RequestedBWClickPrice).ToString("F5");
                                         kBETR = formatNumber.Replace(",", ".");
                                     }
                                 }
@@ -1208,9 +1208,9 @@ namespace WebApplication1.Models.SetupXML.XML
                                 else if (activePS.ClickPerModel != null)
                                 {
                                     BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
-                                    if (pSM != null && pSM.ApprovedC != null)
+                                    if (pSM != null)
                                     {
-                                        string formatNumber = ((double)pSM.ApprovedC).ToString("F5");
+                                        string formatNumber = pSM.ApprovedC != null ? ((double)pSM.ApprovedC).ToString("F5") : ((double)pSM.RequestedCClickPrice).ToString("F5");
                                         kBETR = formatNumber.Replace(",", ".");
                                     }
                                     else
