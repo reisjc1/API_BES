@@ -31,5 +31,6 @@ namespace WebApplication1.Models
         public Nullable<double> GPPercentage { get; set; }
         public Nullable<double> TotalNetsale { get; set; }
         public Nullable<bool> IsApproved { get; set; }
+        public Nullable<int> ID_BB_Quote { get; set; }
     }
 }

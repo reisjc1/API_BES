@@ -39,7 +39,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WorkSheet_PT_Metadata> BB_WorkSheet_PT_Metadata { get; set; }
         public virtual DbSet<BB_Proposal_Status> BB_Proposal_Status { get; set; }
         public virtual DbSet<BB_Commission> BB_Commission { get; set; }
-        public virtual DbSet<BB_Proposal_Quote_RS> BB_Proposal_Quote_RS { get; set; }
         public virtual DbSet<BB_Proposal_PsConfig> BB_Proposal_PsConfig { get; set; }
         public virtual DbSet<BB_Proposal_Commission> BB_Proposal_Commission { get; set; }
         public virtual DbSet<BB_FinancingContractType> BB_FinancingContractType { get; set; }
@@ -145,6 +144,7 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_Proposal_OneShot_History> BB_WFA_Proposal_OneShot_History { get; set; }
         public virtual DbSet<BB_WFA_NP_Approvers> BB_WFA_NP_Approvers { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
+        public virtual DbSet<BB_Proposal_Quote_RS> BB_Proposal_Quote_RS { get; set; }
     
         public virtual int GetXMLOrders(Nullable<int> proposalId)
         {

@@ -1327,6 +1327,7 @@
           <Property Name="IsInClient" Type="bit" />
           <Property Name="UnitPriceCost_" Type="float" />
           <Property Name="TotalCost_" Type="float" />
+          <Property Name="AsBeenInWFA" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_Quote_RS">
           <Key>
@@ -1354,6 +1355,7 @@
           <Property Name="UnitPriceCost" Type="float" />
           <Property Name="ProposalID" Type="int" />
           <Property Name="IsFinanced" Type="bit" />
+          <Property Name="AsBeenInWFA" Type="bit" />
         </EntityType>
         <EntityType Name="BB_Proposal_SigningType">
           <Key>
@@ -1676,6 +1678,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="GPPercentage" Type="float" />
           <Property Name="TotalNetsale" Type="float" />
           <Property Name="IsApproved" Type="bit" />
+          <Property Name="ID_BB_Quote" Type="int" />
         </EntityType>
         <EntityType Name="BB_WFA_Workflow_Proposal">
           <Key>
@@ -2189,7 +2192,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_WorkSheet_PT_Metadata" EntityType="BB_DB_DEVModel.BB_WorkSheet_PT_Metadata" />
           <EntitySet Name="BB_Proposal_Status" EntityType="BB_DB_DEVModel.BB_Proposal_Status" />
           <EntitySet Name="BB_Commission" EntityType="BB_DB_DEVModel.BB_Commission" />
-          <EntitySet Name="BB_Proposal_Quote_RS" EntityType="BB_DB_DEVModel.BB_Proposal_Quote_RS" />
           <EntitySet Name="BB_Proposal_PsConfig" EntityType="BB_DB_DEVModel.BB_Proposal_PsConfig" />
           <EntitySet Name="BB_Proposal_Commission" EntityType="BB_DB_DEVModel.BB_Proposal_Commission" />
           <EntitySet Name="BB_FinancingContractType" EntityType="BB_DB_DEVModel.BB_FinancingContractType" />
@@ -2331,6 +2333,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           </FunctionImport>
           <EntitySet Name="BB_WFA_NP_Approvers" EntityType="BB_DB_DEVModel.BB_WFA_NP_Approvers" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
+          <EntitySet Name="BB_Proposal_Quote_RS" EntityType="BB_DB_DEVModel.BB_Proposal_Quote_RS" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -2502,33 +2505,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Service_ITS" Type="Double" />
           <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
           <Property Name="UpdateBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="BB_Proposal_Quote_RS">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DiscountPercentage" Type="Double" />
-          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="GPPercentage" Type="Double" />
-          <Property Name="GPTotal" Type="Double" />
-          <Property Name="Locked" Type="Boolean" />
-          <Property Name="Margin" Type="Double" />
-          <Property Name="MonthlyFee" Type="Double" />
-          <Property Name="MonthlyGP" Type="Double" />
-          <Property Name="PVP" Type="Double" />
-          <Property Name="Qty" Type="Int32" />
-          <Property Name="TotalCost" Type="Double" />
-          <Property Name="MonthlyFeeCost" Type="Double" />
-          <Property Name="TotalMonths" Type="Int32" />
-          <Property Name="TotalNetsale" Type="Double" />
-          <Property Name="TotalPVP" Type="Double" />
-          <Property Name="UnitDiscountPrice" Type="Double" />
-          <Property Name="UnitPriceCost" Type="Double" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="IsFinanced" Type="Boolean" />
         </EntityType>
         <EntityType Name="BB_Proposal_PsConfig">
           <Key>
@@ -3213,6 +3189,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="IsInClient" Type="Boolean" />
           <Property Name="UnitPriceCost_" Type="Double" />
           <Property Name="TotalCost_" Type="Double" />
+          <Property Name="AsBeenInWFA" Type="Boolean" />
         </EntityType>
         <EntityType Name="BB_PrintingServices_ClickPerModel">
           <Key>
@@ -4138,6 +4115,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="GPPercentage" Type="Double" />
           <Property Name="TotalNetsale" Type="Double" />
           <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="ID_BB_Quote" Type="Int32" />
         </EntityType>
         <EntityType Name="BB_WFA_NP_Approvers">
           <Key>
@@ -4254,6 +4232,34 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="ContractID" Type="Int32" />
           <Property Name="Es_InsideSales" Type="Boolean" />
           <Property Name="IsNP" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Quote_RS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodeRef" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DiscountPercentage" Type="Double" />
+          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GPPercentage" Type="Double" />
+          <Property Name="GPTotal" Type="Double" />
+          <Property Name="Locked" Type="Boolean" />
+          <Property Name="Margin" Type="Double" />
+          <Property Name="MonthlyFee" Type="Double" />
+          <Property Name="MonthlyGP" Type="Double" />
+          <Property Name="PVP" Type="Double" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="TotalCost" Type="Double" />
+          <Property Name="MonthlyFeeCost" Type="Double" />
+          <Property Name="TotalMonths" Type="Int32" />
+          <Property Name="TotalNetsale" Type="Double" />
+          <Property Name="TotalPVP" Type="Double" />
+          <Property Name="UnitDiscountPrice" Type="Double" />
+          <Property Name="UnitPriceCost" Type="Double" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="IsFinanced" Type="Boolean" />
+          <Property Name="AsBeenInWFA" Type="Boolean" />
         </EntityType>
         
         </Schema>
@@ -4440,34 +4446,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="HW_Printing" ColumnName="HW_Printing" />
                 <ScalarProperty Name="Discount_End" ColumnName="Discount_End" />
                 <ScalarProperty Name="Discount_Start" ColumnName="Discount_Start" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_Quote_RS">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Quote_RS">
-              <MappingFragment StoreEntitySet="BB_Proposal_Quote_RS">
-                <ScalarProperty Name="IsFinanced" ColumnName="IsFinanced" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="UnitPriceCost" ColumnName="UnitPriceCost" />
-                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
-                <ScalarProperty Name="TotalPVP" ColumnName="TotalPVP" />
-                <ScalarProperty Name="TotalNetsale" ColumnName="TotalNetsale" />
-                <ScalarProperty Name="TotalMonths" ColumnName="TotalMonths" />
-                <ScalarProperty Name="MonthlyFeeCost" ColumnName="MonthlyFeeCost" />
-                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="PVP" ColumnName="PVP" />
-                <ScalarProperty Name="MonthlyGP" ColumnName="MonthlyGP" />
-                <ScalarProperty Name="MonthlyFee" ColumnName="MonthlyFee" />
-                <ScalarProperty Name="Margin" ColumnName="Margin" />
-                <ScalarProperty Name="Locked" ColumnName="Locked" />
-                <ScalarProperty Name="GPTotal" ColumnName="GPTotal" />
-                <ScalarProperty Name="GPPercentage" ColumnName="GPPercentage" />
-                <ScalarProperty Name="Family" ColumnName="Family" />
-                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -5114,6 +5092,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_Proposal_Quote">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Quote">
               <MappingFragment StoreEntitySet="BB_Proposal_Quote">
+                <ScalarProperty Name="AsBeenInWFA" ColumnName="AsBeenInWFA" />
                 <ScalarProperty Name="TotalCost_" ColumnName="TotalCost_" />
                 <ScalarProperty Name="UnitPriceCost_" ColumnName="UnitPriceCost_" />
                 <ScalarProperty Name="IsInClient" ColumnName="IsInClient" />
@@ -6051,6 +6030,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_WFA_Proposal_OneShot_History">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Proposal_OneShot_History">
               <MappingFragment StoreEntitySet="BB_WFA_Proposal_OneShot_History">
+                <ScalarProperty Name="ID_BB_Quote" ColumnName="ID_BB_Quote" />
                 <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
                 <ScalarProperty Name="TotalNetsale" ColumnName="TotalNetsale" />
                 <ScalarProperty Name="GPPercentage" ColumnName="GPPercentage" />
@@ -6186,6 +6166,35 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="Sales_Group" ColumnName="Sales_Group" />
                 <ScalarProperty Name="Codigo_Agencia" ColumnName="Codigo_Agencia" />
                 <ScalarProperty Name="Delegacion" ColumnName="Delegacion" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Quote_RS">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Quote_RS">
+              <MappingFragment StoreEntitySet="BB_Proposal_Quote_RS">
+                <ScalarProperty Name="AsBeenInWFA" ColumnName="AsBeenInWFA" />
+                <ScalarProperty Name="IsFinanced" ColumnName="IsFinanced" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="UnitPriceCost" ColumnName="UnitPriceCost" />
+                <ScalarProperty Name="UnitDiscountPrice" ColumnName="UnitDiscountPrice" />
+                <ScalarProperty Name="TotalPVP" ColumnName="TotalPVP" />
+                <ScalarProperty Name="TotalNetsale" ColumnName="TotalNetsale" />
+                <ScalarProperty Name="TotalMonths" ColumnName="TotalMonths" />
+                <ScalarProperty Name="MonthlyFeeCost" ColumnName="MonthlyFeeCost" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="MonthlyGP" ColumnName="MonthlyGP" />
+                <ScalarProperty Name="MonthlyFee" ColumnName="MonthlyFee" />
+                <ScalarProperty Name="Margin" ColumnName="Margin" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="GPTotal" ColumnName="GPTotal" />
+                <ScalarProperty Name="GPPercentage" ColumnName="GPPercentage" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CodeRef" ColumnName="CodeRef" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Office.Interop.Word;
@@ -2540,7 +2541,12 @@ namespace WebApplication1.Controllers
         }
 
 
-
+        /// <summary>
+        /// Metodo para Agrupar a info do configurador pelo grupo
+        /// De forma a facilitar a visao dos detalhs do negocio
+        /// </summary>
+        /// <param name="proposalID"></param>
+        /// <returns></returns>
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetGroupedConfigurator")]
         public List<HW_SW> GetGroupedConfigurator(int? proposalID)
@@ -2549,9 +2555,9 @@ namespace WebApplication1.Controllers
 
             try {
                 using (var db = new BB_DB_DEVEntities2())
-                { 
-                    List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
-                    List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+                {
+                    //List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+                    //List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
 
                     List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.ToList();
 
@@ -2564,27 +2570,57 @@ namespace WebApplication1.Controllers
                         .Select(x => x.IDX)
                         .ToHashSet(); // Melhor performance do que List para Contains()
 
+                    // todos os ItemDoBaskets que sejam Ship To
                     List<BB_Proposal_ItemDoBasket> itemsDoBasket_lst = db.BB_Proposal_ItemDoBasket
                         .Where(x => locations_IDX.Contains((int)x.DeliveryLocationID))
                         .ToList();
 
                     foreach (var item in itemsDoBasket_lst)
                     {
+                        HW_SW element = new HW_SW();
+
+                        // se o codeRef do ItemDoBasket existir dentro dos equipamentos
+                        // significa que é uma máquina e entao, vou criar um HW_SW
                         if (equipamentosCodeRefs.Contains(item.CodeRef) || item.Description.Contains("MAIN MATERIAL"))
                         {
-                            HW_SW element = new HW_SW
+                            element.CodeRef = item.CodeRef;
+                            element.Description = item.Description;
+                            element.Group = item.Group;
+                            element.UnitDiscountPrice = (double)item.UnitDiscountPrice;
+                            element.Qty = (int)item.Qty;
+                            element.TotalNetsale = (double)item.TotalNetsale;
+                            
+                            configurator.Add(element);
+                        }
+                    };
+
+
+                    foreach (var configMissingItems in configurator)
+                    {
+                        // Lista dos ACESSORIOS de apenas 1 grupo em especifico
+                        List<BB_Proposal_ItemDoBasket> groupListFiltered = itemsDoBasket_lst.Where(g => g.Group == configMissingItems.Group
+                                                                                                        && g.CodeRef != configMissingItems.CodeRef
+                                                                                                        && g.Description != "MAIN MATERIAL"
+                                                                                             ).ToList();
+                        foreach (var item in groupListFiltered)
+                        {
+                            OsBasket basketItem = new OsBasket
                             {
-                                CodeRef = item.CodeRef,
-                                Description = item.Description,
-                                Group = item.Group,
+                                    CodeRef = item.CodeRef,
+                                    Description = item.Description,
+                                    Family = item.Family,
+                                    UnitDiscountPrice = (double)item.UnitDiscountPrice,
+                                    Qty = (int)item.Qty,
+                                    TotalNetsale = (double)item.TotalNetsale
                             };
 
-                            configurator.Add(element);
+                            HW_SW HW_SW_GroupX = configurator.Where(x => x.Group == item.Group).FirstOrDefault();
+
+                            HW_SW_GroupX.Accessories.Add(basketItem);
+
                         }
                     }
                 }
-
-
             }
             catch(Exception ex)
             {
@@ -2593,9 +2629,6 @@ namespace WebApplication1.Controllers
 
             return configurator;
         }
-
-
-
 
 
 
@@ -4131,6 +4164,9 @@ namespace WebApplication1.Controllers
             public string CodeRef { get; set; }
             public string Description { get; set; }
             public int? Group { get; set; }
+            public double UnitDiscountPrice { get; set; }
+            public int Qty { get; set; }
+            public double TotalNetsale { get; set; }
             public List<OsBasket> Accessories { get; set; }
         }
 
