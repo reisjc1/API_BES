@@ -1166,7 +1166,7 @@ namespace WebApplication1.Controllers
                                     if (delegation != null)
                                     {
                                         if(delegation.Territory != null || delegation.Territory != "BF-724I7TH2" || delegation.Territory != "Javier Gomez Garcia")
-                                        bb_commission_general.Delegacion = delegation.Territory;
+                                        bb_commission_general.Delegacion = delegation.Territory;                                       
                                     }
 
                                 }
@@ -1177,6 +1177,8 @@ namespace WebApplication1.Controllers
                                 bb_commission_general.Delegacion = user.Location;
                                 bb_commission_general.Es_InsideSales = false;
                             }
+
+                            bb_commission_general.Delegacion = bb_commission_general.Delegacion.ToUpper();
 
                             bb_commission_general.Area = user.AreaComercial;
                             bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;
@@ -1353,12 +1355,19 @@ namespace WebApplication1.Controllers
                     }
                     else
                     {
-                        bb_commission_general.Comision = null;
                         bb_commission_general.Percentage_Comision = "-";
                     }
 
+                    // Fran diz que:
+                    // " Column Q = COPY COMMISSION, if the copy commission is negative, it doesn't add anything, it would be 0. "
+                    if (bb_commission_general.Comision_Copias < 0)
+                    {
+                        bb_commission_general.Comision_Copias = 0;
+                    } 
+
                     bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
                     bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
+                    
 
                     // Calculo do Percentage_Comision ---------------------------------------- ANTIGO
                     //if (bb_commission_general.GP_Total > 0)
@@ -1635,6 +1644,7 @@ namespace WebApplication1.Controllers
             Worksheet worksheet = null;
 
             DateTime todaysDate = DateTime.Now;
+            string onlyDateFromToday = todaysDate.ToString("dd-MM-yyyy");
 
             try
             {
@@ -1675,6 +1685,7 @@ namespace WebApplication1.Controllers
                     { "Area", "AREA" },
                     { "Fecha_Operacion","FECHA OPERACIÓN" },
                     { "Tipo_Operacion","TIPO OPERACIÓN" },
+                    //{ "Tipo_Financiacion","OPERACIÓN TYPE" },
                     { "Tipo_Cliente","TIPO CLIENTE" },
                     { "GMA_10","GMA 10%" },
                     { "Cliente", "CLIENTE" },
@@ -1720,9 +1731,9 @@ namespace WebApplication1.Controllers
                     { "Calculo","CALCULO" },
                     { "Percentage_GP","% GP" },
                     { "Percentage_Comision","% COMISION" },
-                    { "Incidencias","INCIDENCIAS" }
+                    { "Incidencias","INCIDENCIAS" },
                     //{ "Logs","LOGS" },
-                    //{ "Es_Segunda_Mano","ES SEGUNDA MANO" },
+                    { "Es_Segunda_Mano","ES SEGUNDA MANO" },
                     //{ "Es_GMA","ES GMA" },
                     //{ "CBB","CBB" },
                     //{ "Es_Prospecto","ES PROSPECTO" }
@@ -1769,7 +1780,6 @@ namespace WebApplication1.Controllers
                     //{ "Excluido","" },
                     //{ "Support_BEU","" },
                     //{ "Numero_Cliente_SAP","" },
-                    //{ "Tipo_Financiacion","" },
                     //{ "Metodo_Pago_Productos","" },
                     //{ "Metodo_Pago_Mantenimiento","" },
                     //{ "CreatedBy","" },
@@ -1793,7 +1803,7 @@ namespace WebApplication1.Controllers
 
                 foreach (var commission in commission_lst)
                 {
-                    if (commission.Area != null)
+                    if (commission.Area != null || commission.Area == "" || commission.Area == " ")
                     {
                         column = 1;
                         foreach (var campo in campoParaExcel) // Itera sobre o dicionário
@@ -1814,7 +1824,7 @@ namespace WebApplication1.Controllers
                                     worksheet.Cells[line, column] = "BB";
                                 }else if (campo.Key == "Fecha_Factura")
                                 {
-                                    worksheet.Cells[line, column] = todaysDate;
+                                    worksheet.Cells[line, column] = onlyDateFromToday;
                                 }else if (campo.Key == "Area")
                                 {
                                     object value = prop.GetValue(commission);
@@ -1826,19 +1836,50 @@ namespace WebApplication1.Controllers
                                             worksheet.Cells[line, column] = value;
                                         }
                                     }
+                                }else if (campo.Key == "Tipo_Operacion")
+                                {
+                                    string value = prop.GetValue(commission).ToString();
+
+                                    if (value.ToUpper() == "NEGOCIO TRADICIONAL")
+                                    {
+                                        worksheet.Cells[line, column] = "VENTA";
+                                    }
+                                    else if (value.ToUpper() == "COPY CLICK ALQUILER")
+                                    {
+                                        worksheet.Cells[line, column] = "ALQUILER";
+                                    }
                                 }
                                 else
                                 {
-                                    // Obtém o valor da propriedade para o objeto atual
-                                    object value = prop.GetValue(commission);
-                                    worksheet.Cells[line, column] = value;
+                                    // se o campo for do tipo Date, devo formatar apara que aparece apenas a data sem horas e dd-MM-yyyy
+                                    if (prop.PropertyType == typeof(DateTime?))
+                                    {
+                                        object value = (DateTime?)prop.GetValue(commission);
+
+                                        // Verifica se o valor não é null e formata a data
+                                        if (value != null)
+                                        {
+                                            var formattedDate = ((DateTime)value).ToString("dd-MM-yyyy");
+                                            worksheet.Cells[line, column] = formattedDate;
+                                        }
+                                        else
+                                        {
+                                            // Caso o valor seja null, deixa a célula vazia
+                                            worksheet.Cells[line, column] = "";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Obtém o valor da propriedade para o objeto atual
+                                        object value = prop.GetValue(commission);
+                                        worksheet.Cells[line, column] = value;
+                                    }
                                 }
                             }
                             column++;
                         }
-
+                        line++;
                     }
-                    line++;
                 }
 
                 //foreach (var commission in commission_lst)
