@@ -467,7 +467,7 @@ namespace WebApplication1.Models
 
     public class OsBasket
     {
-
+        public int ID { get; set; }
         public string Family { get; set; }
         public string CodeRef { get; set; }
         public string Description { get; set; }

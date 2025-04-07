@@ -1840,6 +1840,7 @@ namespace WebApplication1.Controllers
                         m.Financiamento = rdr["Locadora"].ToString();
 
                         m.TipoNegocio = rdr["TipoNegocio"].ToString();
+                        m.SAPDocumentCode = rdr["SAPDocumentCode"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SAPDocumentCode")) : "";
 
                         listModel.Add(m);
 
@@ -1916,6 +1917,10 @@ namespace WebApplication1.Controllers
                         m.Financiamento = rdr["Locadora"].ToString();
 
                         m.TipoNegocio = rdr["TipoNegocio"].ToString();
+
+                        m.SAPDocumentCode = rdr["SAPDocumentCode"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SAPDocumentCode")) : "";
+
+                        m.SAPDealNumber = rdr["SAPDealNumber"].ToString();
 
                         listModel.Add(m);
 

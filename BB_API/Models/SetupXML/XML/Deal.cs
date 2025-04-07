@@ -2,6 +2,7 @@
 using Renci.SshNet;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -371,7 +372,14 @@ namespace WebApplication1.Models.SetupXML.XML
                     if (isInjecting)
                     {
                         UploadFileToSftp(filepath);
+                        LD_Contrato adminContract = db.LD_Contrato.Where(x => x.ID == contractId).FirstOrDefault();
+
+                        adminContract.SAPDocumentCode = arckey;
+
+                        db.Entry(adminContract).State = EntityState.Modified;
+                        db.SaveChanges();
                     }
+
 
                     return filepath;
                 }

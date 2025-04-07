@@ -22,9 +22,9 @@ namespace WebApplication1.Controllers
                 bool statusMessage = true;
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractId).FirstOrDefault();
+                    int? proposalID = db.LD_Contrato.Where(x => x.ID == contractId).Select(x => x.ProposalID).FirstOrDefault();
 
-                    List<BB_Proposal_DeliveryLocation> locaisEnvioIds = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == lD_Contrato.ProposalID).ToList();
+                    List<BB_Proposal_DeliveryLocation> locaisEnvioIds = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
 
                     bool isMissingSAPNumber = false;
 
@@ -43,7 +43,7 @@ namespace WebApplication1.Controllers
                     if (!isMissingSAPNumber)
                     {
                         deal.DealXML(contractId, true);
-
+                        LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractId).FirstOrDefault();
                         lD_Contrato.StatusID = 9;
                         lD_Contrato.ModifiedBy = name;
 

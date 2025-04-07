@@ -133,7 +133,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_Condition_Type> BB_Proposal_Condition_Type { get; set; }
         public virtual DbSet<BB_PrintingService_Machines> BB_PrintingService_Machines { get; set; }
         public virtual DbSet<BB_WFA_Levels> BB_WFA_Levels { get; set; }
-        public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
         public virtual DbSet<BB_Proposal_OPSImplement> BB_Proposal_OPSImplement { get; set; }
         public virtual DbSet<WFA_FullDetails> WFA_FullDetails { get; set; }
         public virtual DbSet<BB_LocaisEnvio> BB_LocaisEnvio { get; set; }
@@ -145,6 +144,7 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_NP_Approvers> BB_WFA_NP_Approvers { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
         public virtual DbSet<BB_Proposal_Quote_RS> BB_Proposal_Quote_RS { get; set; }
+        public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
     
         public virtual int GetXMLOrders(Nullable<int> proposalId)
         {

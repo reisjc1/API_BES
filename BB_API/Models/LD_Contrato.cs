@@ -41,5 +41,6 @@ namespace WebApplication1.Models
         public string DocusignEnvelopeID { get; set; }
         public Nullable<int> SapVersion { get; set; }
         public Nullable<bool> InvoiceList { get; set; }
+        public string SAPDocumentCode { get; set; }
     }
 }
