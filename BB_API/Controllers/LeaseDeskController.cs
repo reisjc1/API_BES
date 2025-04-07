@@ -2464,17 +2464,26 @@ namespace WebApplication1.Controllers
             //a.ProposalObj.Draft.details.ValueTotal = pr1 != null && pr1.SubTotal != null ? pr1.SubTotal.Value : a.ProposalObj.Draft.details.ValueTotal;
 
             if (a.ProposalObj.Draft.baskets.rs_basket.Count() > 0 || a.ProposalObj.Draft.opsPacks.opsManage.Count() > 0)
+            {
                 vt.ServicosRecorentesMes = a.ProposalObj.Draft.baskets.rs_basket.Sum(x => x.MonthlyFee) + a.ProposalObj.Draft.opsPacks.opsManage.Sum(x => x.UnitDiscountPrice * x.Quantity);
+                vt.ServicosRecorentesMes = Math.Round((double)vt.ServicosRecorentesMes, 2);
+            }
             else
+            {
                 vt.ServicosRecorentesMes = 0;
-
+            }
             if (a.ProposalObj.Draft.baskets.rs_basket.Count() > 0 || a.ProposalObj.Draft.opsPacks.opsManage.Count() > 0)
+            {
                 vt.ServicosRecorentesTotal = a.ProposalObj.Draft.baskets.rs_basket.Sum(x => x.TotalNetsale) + a.ProposalObj.Draft.opsPacks.opsManage.Sum(x => x.UnitDiscountPrice * x.Quantity * x.TotalMonths);
+                vt.ServicosRecorentesTotal = Math.Round((double)vt.ServicosRecorentesTotal, 2);
+            }
             else
+            {
                 vt.ServicosRecorentesTotal = 0;
+            }
 
 
-            vt.ConfiguracaoOneShotValor = a.ProposalObj.Draft.details.ValueTotal - vt.ServicosRecorentesTotal;
+            vt.ConfiguracaoOneShotValor = Math.Round((double)(a.ProposalObj.Draft.details.ValueTotal - vt.ServicosRecorentesTotal), 2);
 
             double fee = (activePS != null && activePS.Fee != null ? activePS.Fee : 0);
 
@@ -2518,7 +2527,7 @@ namespace WebApplication1.Controllers
 
 
             vt.LeiCopiaPrivada = LeiDaCopiaPriada;
-            vt.RendaTotal = vt.VVA + vt.RendaFinanciada + vt.ServicosRecorentesMes + fee;
+            vt.RendaTotal = Math.Round((double)(vt.VVA + vt.RendaFinanciada + vt.ServicosRecorentesMes + fee), 2);
             if (prazoDiferenciado1 != null && prazoDiferenciado1.FinancingID == 6)
             {
                 vt.RendaTotal = vt.RendaFinanciada;
@@ -2533,7 +2542,11 @@ namespace WebApplication1.Controllers
 
             a.ProposalObj.ConditionsPvp = condPvp;
 
-
+            //foreach(var manage in a.ProposalObj.Draft.opsPacks.opsManage)
+            //{
+            //    manage.UnitDiscountPrice = Math.Round((double)manage.UnitDiscountPrice, 3);
+            //}
+            
 
 
 
@@ -2720,7 +2733,7 @@ namespace WebApplication1.Controllers
                                     {
                                         BB_Proposal_DeliveryLocationResumoModel resumo = new BB_Proposal_DeliveryLocationResumoModel();
                                         resumo.Group = p.Key;
-                                        resumo.Adress1 = currentLocal.Adress1;
+                                        resumo.Adress1 = currentLocal.IsNewAddress == true ? currentLocal.RoadType + " " + currentLocal.RoadName + " " + currentLocal.RoadNumber : currentLocal.Adress1;
                                         resumo.Adress2 = currentLocal.Adress2;
                                         resumo.PostalCode = i.PostalCode;
                                         resumo.City = i.City;

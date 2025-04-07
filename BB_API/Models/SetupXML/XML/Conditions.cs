@@ -387,6 +387,20 @@ namespace WebApplication1.Models.SetupXML.XML
                                 //    }
                                 //}
                             }
+                            else
+                            {
+                                ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZPD4");
+                                if (cond == null)
+                                {
+                                    conditionPVP.ConditionCode = "ZPD4";
+                                    conditionPVP.PVP = Math.Round((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * opsM.TotalMonths  ?? 0.0, 2);
+                                    conditionsPvp.Add(conditionPVP);
+                                }
+                                else
+                                {
+                                    cond.PVP = Math.Round((cond.PVP + ((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * opsM.TotalMonths)) ?? 0.0, 2);
+                                }
+                            }
                             //if (ops != null)
                             //{
                             //    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
@@ -723,20 +737,22 @@ namespace WebApplication1.Models.SetupXML.XML
                             //BB_Proposal_Quote quote = quote_lst.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
                             ConditionPVP conditionPVP = new ConditionPVP();
 
+                                if(item.TotalMonths == 0)
+                                {
 
-                                //if (quote.Family.Contains("HW") || quote.Family.Contains("CS"))
-                                //{
-                                ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZPD4");
-                                if (cond == null)
-                                {
-                                    conditionPVP.ConditionCode = "ZPD4";
-                                    conditionPVP.PVP = item.UnitDiscountPrice * item.Qty;
-                                    conditionsPvp.Add(conditionPVP);
-                                }
-                                else
-                                {
-                                    cond.PVP += (item.UnitDiscountPrice * item.Qty);
-                                }
+                                    //if (quote.Family.Contains("HW") || quote.Family.Contains("CS"))
+                                    //{
+                                    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZPD4");
+                                    if (cond == null)
+                                    {
+                                        conditionPVP.ConditionCode = "ZPD4";
+                                        conditionPVP.PVP = item.UnitDiscountPrice * item.Qty;
+                                        conditionsPvp.Add(conditionPVP);
+                                    }
+                                    else
+                                    {
+                                        cond.PVP += (item.UnitDiscountPrice * item.Qty);
+                                    }
 
                                 //}
                                 //else
@@ -753,6 +769,21 @@ namespace WebApplication1.Models.SetupXML.XML
                                 //        cond.PVP = cond.PVP + quote.UnitDiscountPrice;
                                 //    }
                                 //}
+                                }
+                                else
+                                {
+                                    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZPD4");
+                                    if (cond == null)
+                                    {
+                                        conditionPVP.ConditionCode = "ZPD4";
+                                        conditionPVP.PVP = (item.UnitDiscountPrice * item.Qty) * item.TotalMonths;
+                                        conditionsPvp.Add(conditionPVP);
+                                    }
+                                    else
+                                    {
+                                        cond.PVP += (item.UnitDiscountPrice * item.Qty) * item.TotalMonths;
+                                }
+                                }
                             //if (quote != null)
                             //{
                             //}

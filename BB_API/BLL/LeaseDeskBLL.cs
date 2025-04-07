@@ -69,7 +69,10 @@ namespace WebApplication1.BLL
                 List<ItemGroups> listGroups = new List<ItemGroups>();
                 using (var db = new BB_DB_DEVEntities2())
                 {
+                    List<string> quoteLst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).Select(x => x.CodeRef).ToList();
                     List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId).ToList();
+                    BB_Proposal_OPSManage opsM = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+
                     foreach (var deliveryLocation in dl)
                     {
                         int? groupNumber = null;
@@ -100,6 +103,7 @@ namespace WebApplication1.BLL
                                     group1.BundleRef = true;
                                     group1.Qty = item.Qty;
                                     group1.UnitDiscountPrice = (double)item.UnitDiscountPrice;
+                                    group1.TotalMonths = 0;
                                     Bundles.Items.Add(group1);
 
                                     firstItemGroup = false;
@@ -108,11 +112,27 @@ namespace WebApplication1.BLL
                                 else
                                 {
                                     ItemGroup group2 = new ItemGroup();
-                                    group2.CodeRef = item.CodeRef;
-                                    group2.BundleRef = false;
-                                    group2.Qty = item.Qty;
-                                    group2.UnitDiscountPrice = (double)item.UnitDiscountPrice;
-                                    Bundles.Items.Add(group2);
+                                    if (quoteLst.Contains(item.CodeRef))
+                                    {
+                                        group2.CodeRef = item.CodeRef;
+                                        group2.BundleRef = false;
+                                        group2.Qty = item.Qty;
+                                        group2.UnitDiscountPrice = (double)item.UnitDiscountPrice;
+                                        group2.TotalMonths = 0;
+                                        Bundles.Items.Add(group2);
+                                    }
+                                    else
+                                    {
+                                        if(opsM.CodeRef == item.CodeRef)
+                                        {
+                                            group2.CodeRef = item.CodeRef;
+                                            group2.BundleRef = false;
+                                            group2.Qty = item.Qty;
+                                            group2.UnitDiscountPrice = (double)item.UnitDiscountPrice;
+                                            group2.TotalMonths = (int)opsM.TotalMonths;
+                                            Bundles.Items.Add(group2);
+                                        }
+                                    }
                                 }
 
                             }
@@ -138,6 +158,7 @@ namespace WebApplication1.BLL
             public bool BundleRef { get; set; }
             public double UnitDiscountPrice { get; set; }
             public int? Qty { get; set; }
+            public int TotalMonths { get; set; }
         }
         
     }
