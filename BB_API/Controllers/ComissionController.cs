@@ -1191,10 +1191,10 @@ namespace WebApplication1.Controllers
 
 
 
-                    foreach (var machine in machines)
-                    {
-                        bb_commission_general.Comision_Copias = bb_commission_general.Comision_Copias + machine.AppliedCommission;
-                    }
+                    //foreach (var machine in machines)
+                    //{
+                    //    bb_commission_general.Comision_Copias = bb_commission_general.Comision_Copias + machine.AppliedCommission;
+                    //}
 
                     //bb_commission_general.Comision_Copias = protocolDictionary.Values
                     //    .Where(cd => cd.Machines != null)
@@ -1822,9 +1822,9 @@ namespace WebApplication1.Controllers
                                 else if(campo.Key == "Operacion")
                                 {
                                     worksheet.Cells[line, column] = "BB";
-                                }else if (campo.Key == "Fecha_Factura")
-                                {
-                                    worksheet.Cells[line, column] = onlyDateFromToday;
+                                //}else if (campo.Key == "Fecha_Factura")
+                                //{
+                                //    worksheet.Cells[line, column] = onlyDateFromToday;
                                 }else if (campo.Key == "Area")
                                 {
                                     object value = prop.GetValue(commission);

@@ -607,7 +607,7 @@ namespace WebApplication1.Controllers
             int? ProposalID = Int32.Parse(HttpContext.Current.Request.Params["ProposalID"]);
             ActionResponse err = new ActionResponse();
             StringBuilder c = new StringBuilder();
-            String Observations = null;
+            string Observations = "";
             bool isRetorno = false;
 
             bool isFirstTime = false;

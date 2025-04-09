@@ -25,6 +25,7 @@ using Microsoft.Win32;
 using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
 using System.Net.Mime;
+using System.Threading;
 
 namespace WebApplication1.Controllers
 {
@@ -2112,36 +2113,38 @@ namespace WebApplication1.Controllers
                         cmd.Parameters.AddWithValue("@is_RS", 1);
                         SqlDataReader rdr = cmd.ExecuteReader();
 
+                        Thread.Sleep(500);
 
                         while (rdr.Read())
                         {
-                            BB_Proposal_Quote_RS_WFA bbp_rs_quote = new BB_Proposal_Quote_RS_WFA
-                            {
-                                ID = (int)rdr["ID"],
-                                CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
-                                Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
-                                DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
-                                Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
-                                GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
-                                GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
-                                Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
-                                Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
-                                MonthlyFee = rdr["MonthlyFee"] != DBNull.Value ? (double?)rdr["MonthlyFee"] : null,
-                                MonthlyGP = rdr["MonthlyGP"] != DBNull.Value ? (double?)rdr["MonthlyGP"] : null,
-                                PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
-                                Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
-                                TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
-                                MonthlyFeeCost = rdr["MonthlyFeeCost"] != DBNull.Value ? (double?)rdr["MonthlyFeeCost"] : null,
-                                TotalMonths = rdr["TotalMonths"] != DBNull.Value ? (int?)rdr["TotalMonths"] : null,
-                                TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
-                                TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
-                                UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
-                                UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
-                                ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
-                                IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
-                                passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
-                                alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
-                            };
+                           
+                                BB_Proposal_Quote_RS_WFA bbp_rs_quote = new BB_Proposal_Quote_RS_WFA
+                                {
+                                    ID = (int)rdr["ID"],
+                                    CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
+                                    Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
+                                    DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
+                                    Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
+                                    GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
+                                    GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
+                                    Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
+                                    Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
+                                    MonthlyFee = rdr["MonthlyFee"] != DBNull.Value ? (double?)rdr["MonthlyFee"] : null,
+                                    MonthlyGP = rdr["MonthlyGP"] != DBNull.Value ? (double?)rdr["MonthlyGP"] : null,
+                                    PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
+                                    Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
+                                    TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
+                                    MonthlyFeeCost = rdr["MonthlyFeeCost"] != DBNull.Value ? (double?)rdr["MonthlyFeeCost"] : null,
+                                    TotalMonths = rdr["TotalMonths"] != DBNull.Value ? (int?)rdr["TotalMonths"] : null,
+                                    TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
+                                    TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
+                                    UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
+                                    UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
+                                    ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
+                                    IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
+                                    passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
+                                    alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
+                                };
 
                             if (bbp_rs_quote.passedValidation == false && (bbp_rs_quote.alertMessage == "" || bbp_rs_quote.alertMessage == null))
                             {
@@ -2149,6 +2152,7 @@ namespace WebApplication1.Controllers
                             }
 
                             wrp.Lst_BBP_RS_Quote.Add(bbp_rs_quote);
+                          
                         }
                         rdr.Close();
                     }
