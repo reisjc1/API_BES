@@ -679,7 +679,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                             ITM_NUMBER = "10", // contractItm,
                                             MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                             REQ_QTY = item.Qty.ToString(),
-                                            MODEL_YN = "Y" // Perguntar ao Luis
+                                            MODEL_YN = "Y",// Perguntar ao Luis
+                                            PLANT = "5200"
                                         });
 
                                         //bundelCodeRef = item.CodeRef;
@@ -708,7 +709,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 HG_LV_ITEM = "10",
-                                                MODEL_YN = "Y" // Perguntar ao Luis
+                                                PLANT = item.CodeRef == "9960DX00056" ? "5460" : "5200"
+                                                //MODEL_YN = "Y" // Perguntar ao Luis
                                             });
                                             bundelCodeRef = item.CodeRef;
                                         }
@@ -721,7 +723,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 HG_LV_ITEM = "10",
-                                                MODEL_YN = "Y" // Perguntar ao Luis
+                                                PLANT = item.CodeRef == "9960DX00056" ? "5460": "5200"
+                                                //MODEL_YN = "Y" // Perguntar ao Luis
                                             });
 
                                         }
@@ -764,13 +767,13 @@ namespace WebApplication1.Models.SetupXML.XML
                                 //if (financing == "AL")
                                 //{
                                 var LEAS_ZTERM = "";
-                                if (pf.Months == 60)
-                                {
-                                    LEAS_ZTERM = "E30D";
-                                }
-                                else if (pf.Months == 48 || pf.Months == 0)
+                                if (pf.PaymentAfter == 60)
                                 {
                                     LEAS_ZTERM = "E60D";
+                                }
+                                else if (pf.PaymentAfter == 30)
+                                {
+                                    LEAS_ZTERM = "E30D";
 
                                 }
                                 collectionOrdersFinance.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE
@@ -908,7 +911,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                             REQ_QTY = item.Qty.ToString(),
                                             HG_LV_ITEM = "10",
-                                            MODEL_YN = "Y" // Perguntar ao Luis
+                                            //MODEL_YN = "Y" // Perguntar ao Luis
                                         });
 
                                         itm_number = itm_number + 10;

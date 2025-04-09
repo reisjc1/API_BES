@@ -212,6 +212,8 @@ namespace WebApplication1.Models
         public string InvoiceAssistant { get; set; }
 
         public string TipoNegocio { get; set; }
+        public string SAPDocumentCode { get; set; }
+        public string SAPDealNumber { get; set; }
     }
 
     public  class LD_DocSign_Control_Model_History
