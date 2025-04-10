@@ -419,6 +419,8 @@ namespace WebApplication1.Models
         public DateTime? DateExpired { get; set; }
         public double? Factor { get; set; }
         public string AgreementNumber { get; set; }
+        public double? AmountNotFinanced { get; set; }
+        public double? AmountFinanced { get; set; }
     }
 
     public class FinancingDetails

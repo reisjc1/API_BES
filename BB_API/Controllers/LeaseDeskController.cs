@@ -3842,30 +3842,32 @@ namespace WebApplication1.Controllers
                             data.AccordNumber = accorNumber;
 
                             List<BB_Proposal_DeliveryLocation> bb_pp_dl_lst = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
+                            
 
                             data.DL_Table_Info_Lst = new List<DL_Table_Info>();
 
                             foreach (var deliverLocation in bb_pp_dl_lst)
                             {
-
+                                int? deliverLocationID = Int32.Parse(deliverLocation.ID);
+                                BB_LocaisEnvio bb_local_envio = dbX.BB_LocaisEnvio.Where(x => x.ID == deliverLocationID).FirstOrDefault();
                                 DL_Table_Info dl_info = new DL_Table_Info();
 
                                 dl_info.ProposalID = (int)proposalID;
 
                                 dl_info.Tipo = deliverLocation.AccountType;
 
-                                dl_info.DeliveryLocation = deliverLocation.Adress1 + " " + deliverLocation.PostalCode;
+                                dl_info.DeliveryLocation = deliverLocation.Adress1 == ""  ? 
+                                                           bb_local_envio.Adress1 + " " + bb_local_envio.PostalCode + " " +bb_local_envio.City :
+                                                           deliverLocation.Adress1 + " " + deliverLocation.PostalCode + " " + deliverLocation.City;
                                 dl_info.IDX = deliverLocation.IDX;
-                                int? deliverLocationID = Int32.Parse(deliverLocation.ID);
 
-                                BB_LocaisEnvio bb_local_envio = dbX.BB_LocaisEnvio.Where(x => x.ID == deliverLocationID).FirstOrDefault();
                                 BB_Clientes bb_cliente = dbX.BB_Clientes.Where(x => x.accountnumber == bb_local_envio.AccountNumber).FirstOrDefault();
                                 if (bb_local_envio != null)
                                 {
                                     dl_info.CIF = bb_local_envio.NIF_CIF;
                                     //dl_info.SAP_Nr = deliverLocation.SAPCustomerNr == null ? bb_local_envio.AccountNumber : deliverLocation.SAPCustomerNr;
                                     dl_info.SAP_Nr = deliverLocation.SAPCustomerNr;
-                                    dl_info.CompanyName = bb_local_envio.BusinessCode;
+                                    dl_info.CompanyName = bb_local_envio.BusinessCode == null ? bb_local_envio.NomeCliente : bb_local_envio.BusinessCode;
                                     dl_info.SAP_Company = bb_local_envio.NomeCliente;
                                     dl_info.Address = bb_local_envio.Adress1;
                                     dl_info.IsNewAddress = bb_local_envio.IsNewAddress == null ? false : bb_local_envio.IsNewAddress;

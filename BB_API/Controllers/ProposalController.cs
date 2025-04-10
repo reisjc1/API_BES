@@ -607,7 +607,7 @@ namespace WebApplication1.Controllers
             int? ProposalID = Int32.Parse(HttpContext.Current.Request.Params["ProposalID"]);
             ActionResponse err = new ActionResponse();
             StringBuilder c = new StringBuilder();
-            String Observations = null;
+            String Observations = "";
             bool isRetorno = false;
 
             bool isFirstTime = false;
@@ -692,6 +692,7 @@ namespace WebApplication1.Controllers
                             ld.IsClosed = false;
                             ld.Retorno = false;
                             ld.StatusID = 1;
+                            ld.InvoiceList = true;
                             db.LD_Contrato.Add(ld);
                             db.SaveChanges();
                             ContractoId = ld.ID;
@@ -1712,10 +1713,10 @@ namespace WebApplication1.Controllers
 
                         db.SaveChanges();
                     }
-                    else
-                    {
-                        strErro.AppendFormat("Es necesario completar el contacto para el pedido de documentación.", Environment.NewLine);
-                    }
+                    //else
+                    //{
+                    //    strErro.AppendFormat("Es necesario completar el contacto para el pedido de documentación.", Environment.NewLine);
+                    //}
                 }
 
                 if (SigningType == null || SigningType == "")
@@ -1836,12 +1837,17 @@ namespace WebApplication1.Controllers
                     totalQtyInOS += item.Qty;
                 }
 
-                foreach(var ops in a.ProposalObj.Draft.opsPacks.opsManage)
+                foreach (var item in a.ProposalObj.Draft.baskets.rs_basket)
                 {
-                    if(ops.UnitDiscountPrice > 0)
-                    {
-                        totalQtyInOS += ops.Quantity;
-                    }
+                    totalQtyInOS += item.Qty;
+                }
+
+                foreach (var ops in a.ProposalObj.Draft.opsPacks.opsManage)
+                {
+                    //if(ops.UnitDiscountPrice > 0)
+                    //{
+                    //}
+                    totalQtyInOS += ops.Quantity;
                 }
                 
                 using (var db = new BB_DB_DEVEntities2())

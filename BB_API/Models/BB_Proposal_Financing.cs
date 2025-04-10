@@ -28,5 +28,7 @@ namespace WebApplication1.Models
         public Nullable<System.DateTime> DateExpired { get; set; }
         public Nullable<double> Factor { get; set; }
         public string AgreementNumber { get; set; }
+        public Nullable<double> AmountNotFinanced { get; set; }
+        public Nullable<double> AmountFinanced { get; set; }
     }
 }

@@ -306,6 +306,7 @@ namespace WebApplication1.Models.SetupXML.XML
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     List<BB_Proposal_Quote> quote_lst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
+                    List<BB_Proposal_Quote_RS> quoteRs_lst = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).ToList();
                     List<BB_Data_Integration> dataIntegration_lst = db.BB_Data_Integration.AsNoTracking().ToList();
                     var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     List<BB_PrintingServices> bB_PrintingServices_lst = db.BB_PrintingServices.AsNoTracking().ToList();
@@ -389,16 +390,33 @@ namespace WebApplication1.Models.SetupXML.XML
                             }
                             else
                             {
+                                BB_Proposal_Quote_RS quoteRS = quoteRs_lst.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
                                 ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZPD4");
-                                if (cond == null)
+                                if(quoteRS != null)
                                 {
-                                    conditionPVP.ConditionCode = "ZPD4";
-                                    conditionPVP.PVP = Math.Round((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * opsM.TotalMonths  ?? 0.0, 2);
-                                    conditionsPvp.Add(conditionPVP);
+                                    if (cond == null)
+                                    {
+                                        conditionPVP.ConditionCode = "ZPD4";
+                                        conditionPVP.PVP = Math.Round((quoteRS.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) ?? 0.0, 2);
+                                        conditionsPvp.Add(conditionPVP);
+                                    }
+                                    else
+                                    {
+                                        cond.PVP = Math.Round((cond.PVP + ((quoteRS.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)))) ?? 0.0, 2);
+                                    }
                                 }
                                 else
                                 {
-                                    cond.PVP = Math.Round((cond.PVP + ((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * opsM.TotalMonths)) ?? 0.0, 2);
+                                    if (cond == null)
+                                    {
+                                        conditionPVP.ConditionCode = "ZPD4";
+                                        conditionPVP.PVP = Math.Round((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * opsM.TotalMonths  ?? 0.0, 2);
+                                        conditionsPvp.Add(conditionPVP);
+                                    }
+                                    else
+                                    {
+                                        cond.PVP = Math.Round((cond.PVP + ((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * opsM.TotalMonths)) ?? 0.0, 2);
+                                    }
                                 }
                             }
                             //if (ops != null)
@@ -420,7 +438,8 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
                                 BB_Proposal_Quote quote1 = quote_lst.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
-                                
+                                BB_Proposal_Quote_RS quoteRS1 = quoteRs_lst.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
+
                                 //BB_Proposal_OPSImplement ops = db.BB_Proposal_OPSImplement.Where(x => x.CodeRef == item.MATERIAL && x.ProposalID == proposalId).FirstOrDefault();
                                 //BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                                 string financingCode = ConditionMaterial(item.MATERIAL, contracts[0].VT_VTART, dataIntegration_lst);
@@ -513,87 +532,175 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                                 else
                                 {
-                                    if (conditionPvp != null)
+                                    if(quoteRS1 != null)
                                     {
-                                        if (financingCode == "ZVBR" || financingCode == "ZVBA")
+                                        if (conditionPvp != null)
                                         {
-                                            //if (ftCode == 5)
-                                            //{
-                                            if (pf.Factor > 0)
+                                            if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                             {
-                                                conditionPvp.PVP = Math.Round((((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                //if (ftCode == 5)
+                                                //{
+                                                if (pf.Factor > 0)
+                                                {
+                                                    conditionPvp.PVP = Math.Round((((quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                }
+                                                else
+                                                {
+                                                    conditionPvp.PVP = Math.Round((((quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                }
+
+                                                //}
+                                                //else
+                                                //{
+                                                //    if (pf.Factor > 0)
+                                                //    {
+                                                //        totalPvp = Math.Round((((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor / 100)) + totalPvp) ?? 0.0, 2);
+                                                //    }
+                                                //    else
+                                                //    {
+                                                //        totalPvp = Math.Round((((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor)) + totalPvp) ?? 0.0, 2);
+                                                //    }
+
+                                                //}
                                             }
                                             else
                                             {
-                                                conditionPvp.PVP = Math.Round((((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = Math.Round((((quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) / pf.Months) + conditionPvp.PVP) ?? 0.0, 2);
                                             }
-
-                                            //}
-                                            //else
-                                            //{
-                                            //    if (pf.Factor > 0)
-                                            //    {
-                                            //        totalPvp = Math.Round((((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor / 100)) + totalPvp) ?? 0.0, 2);
-                                            //    }
-                                            //    else
-                                            //    {
-                                            //        totalPvp = Math.Round((((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor)) + totalPvp) ?? 0.0, 2);
-                                            //    }
-
-                                            //}
+                                            //totalPvp = Math.Round(totalPvp ?? 0.0, 2);
+                                            //conditionPvp.PVP = totalPvp;
                                         }
                                         else
                                         {
-                                            conditionPvp.PVP = Math.Round((((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) / pf.Months) + conditionPvp.PVP) ?? 0.0, 2);
+
+                                            ConditionPVP condPvp = new ConditionPVP();
+
+                                            totalPvp = 0;
+                                            if (financingCode == "ZVBR" || financingCode == "ZVBA")
+                                            {
+                                                //if (ftCode == 5)
+                                                //{
+                                                if (pf.Factor > 0)
+                                                {
+                                                    condPvp.PVP = Math.Round(((quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                }
+                                                else
+                                                {
+                                                    condPvp.PVP = Math.Round(((quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) ?? 0.0, 2);
+                                                }
+
+                                                //}
+                                                //else
+                                                //{
+                                                //    if (pf.Factor > 0)
+                                                //    {
+                                                //        totalPvp = Math.Round(((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                //    }
+                                                //    else
+                                                //    {
+                                                //        totalPvp = Math.Round(((quote.UnitDiscountPrice / contratoMeses) * (pf.Factor)) ?? 0.0, 2);
+                                                //    }
+
+                                                //}
+                                            }
+                                            else
+                                            {
+                                                condPvp.PVP = Math.Round(((quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months)) ?? 0.0, 2);
+                                            }
+
+                                            //condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
+                                            condPvp.ConditionCode = financingCode;
+                                            if (condPvp.ConditionCode != null)
+                                            {
+                                                conditionsPvp.Add(condPvp);
+                                            }
+
                                         }
-                                        //totalPvp = Math.Round(totalPvp ?? 0.0, 2);
-                                        //conditionPvp.PVP = totalPvp;
                                     }
                                     else
                                     {
-
-                                        ConditionPVP condPvp = new ConditionPVP();
-
-                                        totalPvp = 0;
-                                        if (financingCode == "ZVBR" || financingCode == "ZVBA")
+                                        if (conditionPvp != null)
                                         {
-                                            //if (ftCode == 5)
-                                            //{
-                                            if (pf.Factor > 0)
+                                            if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                             {
-                                                condPvp.PVP = Math.Round(((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                //if (ftCode == 5)
+                                                //{
+                                                if (pf.Factor > 0)
+                                                {
+                                                    conditionPvp.PVP = Math.Round((((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                }
+                                                else
+                                                {
+                                                    conditionPvp.PVP = Math.Round((((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                }
+
+                                                //}
+                                                //else
+                                                //{
+                                                //    if (pf.Factor > 0)
+                                                //    {
+                                                //        totalPvp = Math.Round((((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor / 100)) + totalPvp) ?? 0.0, 2);
+                                                //    }
+                                                //    else
+                                                //    {
+                                                //        totalPvp = Math.Round((((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor)) + totalPvp) ?? 0.0, 2);
+                                                //    }
+
+                                                //}
                                             }
                                             else
                                             {
-                                                condPvp.PVP = Math.Round(((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) ?? 0.0, 2);
+                                                conditionPvp.PVP = Math.Round((((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) / pf.Months) + conditionPvp.PVP) ?? 0.0, 2);
                                             }
-
-                                            //}
-                                            //else
-                                            //{
-                                            //    if (pf.Factor > 0)
-                                            //    {
-                                            //        totalPvp = Math.Round(((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor / 100)) ?? 0.0, 2);
-                                            //    }
-                                            //    else
-                                            //    {
-                                            //        totalPvp = Math.Round(((quote.UnitDiscountPrice / contratoMeses) * (pf.Factor)) ?? 0.0, 2);
-                                            //    }
-
-                                            //}
+                                            //totalPvp = Math.Round(totalPvp ?? 0.0, 2);
+                                            //conditionPvp.PVP = totalPvp;
                                         }
                                         else
                                         {
-                                            condPvp.PVP = Math.Round(((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months)) ?? 0.0, 2);
-                                        }
 
-                                        //condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
-                                        condPvp.ConditionCode = financingCode;
-                                        if (condPvp.ConditionCode != null)
-                                        {
-                                            conditionsPvp.Add(condPvp);
-                                        }
+                                            ConditionPVP condPvp = new ConditionPVP();
 
+                                            totalPvp = 0;
+                                            if (financingCode == "ZVBR" || financingCode == "ZVBA")
+                                            {
+                                                //if (ftCode == 5)
+                                                //{
+                                                if (pf.Factor > 0)
+                                                {
+                                                    condPvp.PVP = Math.Round(((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                }
+                                                else
+                                                {
+                                                    condPvp.PVP = Math.Round(((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) ?? 0.0, 2);
+                                                }
+
+                                                //}
+                                                //else
+                                                //{
+                                                //    if (pf.Factor > 0)
+                                                //    {
+                                                //        totalPvp = Math.Round(((opsM.UnitDiscountPrice / contratoMeses) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                //    }
+                                                //    else
+                                                //    {
+                                                //        totalPvp = Math.Round(((quote.UnitDiscountPrice / contratoMeses) * (pf.Factor)) ?? 0.0, 2);
+                                                //    }
+
+                                                //}
+                                            }
+                                            else
+                                            {
+                                                condPvp.PVP = Math.Round(((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months)) ?? 0.0, 2);
+                                            }
+
+                                            //condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
+                                            condPvp.ConditionCode = financingCode;
+                                            if (condPvp.ConditionCode != null)
+                                            {
+                                                conditionsPvp.Add(condPvp);
+                                            }
+
+                                        }
                                     }
                                 }
                                

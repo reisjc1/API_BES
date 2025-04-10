@@ -72,7 +72,7 @@ namespace WebApplication1.BLL
                     List<string> quoteLst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).Select(x => x.CodeRef).ToList();
                     List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId).ToList();
                     BB_Proposal_OPSManage opsM = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-
+                    List<string> quoteRSLst = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).Select(x => x.CodeRef).ToList();
                     foreach (var deliveryLocation in dl)
                     {
                         int? groupNumber = null;
@@ -104,6 +104,7 @@ namespace WebApplication1.BLL
                                     group1.Qty = item.Qty;
                                     group1.UnitDiscountPrice = (double)item.UnitDiscountPrice;
                                     group1.TotalMonths = 0;
+                                    group1.LPI = (double)item.TCP;
                                     Bundles.Items.Add(group1);
 
                                     firstItemGroup = false;
@@ -113,6 +114,16 @@ namespace WebApplication1.BLL
                                 {
                                     ItemGroup group2 = new ItemGroup();
                                     if (quoteLst.Contains(item.CodeRef))
+                                    {
+                                        group2.CodeRef = item.CodeRef;
+                                        group2.BundleRef = false;
+                                        group2.Qty = item.Qty;
+                                        group2.UnitDiscountPrice = (double)item.UnitDiscountPrice;
+                                        group2.TotalMonths = 0;
+                                        group2.LPI = 0;
+                                        Bundles.Items.Add(group2);
+                                    }
+                                    else if (quoteRSLst.Contains(item.CodeRef))
                                     {
                                         group2.CodeRef = item.CodeRef;
                                         group2.BundleRef = false;
@@ -130,6 +141,7 @@ namespace WebApplication1.BLL
                                             group2.Qty = item.Qty;
                                             group2.UnitDiscountPrice = (double)item.UnitDiscountPrice;
                                             group2.TotalMonths = (int)opsM.TotalMonths;
+                                            group2.LPI = 0;
                                             Bundles.Items.Add(group2);
                                         }
                                     }
@@ -159,6 +171,7 @@ namespace WebApplication1.BLL
             public double UnitDiscountPrice { get; set; }
             public int? Qty { get; set; }
             public int TotalMonths { get; set; }
+            public double LPI { get; set; }
         }
         
     }

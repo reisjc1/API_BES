@@ -2143,10 +2143,11 @@ namespace WebApplication1.Controllers
                                 alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
                             };
 
-                            if (bbp_rs_quote.passedValidation == false && (bbp_rs_quote.alertMessage == "" || bbp_rs_quote.alertMessage == null))
-                            {
-                                bbp_rs_quote.alertMessage = "pendingApproval";
-                            }
+                            //if (bbp_rs_quote.passedValidation == false && (bbp_rs_quote.alertMessage == "" || bbp_rs_quote.alertMessage == null))
+                            //{
+                            //    bbp_rs_quote.alertMessage = "pendingApproval";
+                            //}
+                            bbp_rs_quote.passedValidation = true;
 
                             wrp.Lst_BBP_RS_Quote.Add(bbp_rs_quote);
                         }
