@@ -809,7 +809,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         //REF_1 = order.Key.Name, //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
                                         PURCH_NO_C = d.CRM_QUOTE_ID,  //Nome interno da oferta
                                         SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
-                                        PMNTTRMS = "303E", //TODO: manter  || FinancingPaymentMethods.
+                                        PMNTTRMS = LEAS_ZTERM, //TODO: manter  || FinancingPaymentMethods.
                                         CONTRACT_DOC = contractDoc, //$"C_{c.ID}_1_{randomLetterNunber}",   //contractDoc,
                                         CONTRACT_ITM = contractItm, // add +10 no foreach de orders  
                                         MACHINE = bundelCodeRef, //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,

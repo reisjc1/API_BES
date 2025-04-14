@@ -32,8 +32,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     //BB_FinancingContractType ct = db.BB_FinancingContractType.Where(x => x.ID == pf.ContractTypeId).FirstOrDefault();
                     //List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
 
-
-
+                    BB_Proposal_PrintingServices2 printingServices2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    BB_PrintingServices bB_Printing = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingServices2.ID).FirstOrDefault();
                     //BB_FinancingType ft = db.BB_FinancingType.Where(x => x.Code == pf.FinancingTypeCode).FirstOrDefault();
                     if(proposalId == 9536)
                     {
@@ -65,35 +65,35 @@ namespace WebApplication1.Models.SetupXML.XML
                     DateTime FirstDayofTheNextMonth = FirstDayofThisMonth.AddMonths(1);
                     string FirstDayNextMonthString = FirstDayofTheNextMonth.ToString("yyyyMMdd");
 
-                    if (pf.Months == 12)
+                    if (bB_Printing.ContractDuration == 12)
                     {
                         vtLaufk = "Z1";
                     }
-                    if (pf.Months == 24)
+                    if (bB_Printing.ContractDuration == 24)
                     {
                         vtLaufk = "Z2";
                     }
-                    if (pf.Months == 36)
+                    if (bB_Printing.ContractDuration == 36)
                     {
                         vtLaufk = "Z3";
                     }
-                    if (pf.Months == 48)
+                    if (bB_Printing.ContractDuration == 48)
                     {
                         vtLaufk = "Z4";
                     }
-                    if (pf.Months == 60)
+                    if (bB_Printing.ContractDuration == 60)
                     {
                         vtLaufk = "Z5";
                     }
-                    if (pf.Months == 72)
+                    if (bB_Printing.ContractDuration == 72)
                     {
                         vtLaufk = "Z6";
                     }
-                    if (pf.Months == 84)
+                    if (bB_Printing.ContractDuration == 84)
                     {
                         vtLaufk = "Z7";
                     }
-                    if (pf.Months == 96)
+                    if (bB_Printing.ContractDuration == 96)
                     {
                         vtLaufk = "Z8";
                     }
@@ -207,7 +207,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         VT_ESCAL = "08",
                         VT_AUGRU = isMultipleContract == false ? "ZCS" : "ZCC",             //input de um campo -> ZCC = só 1 contrato   // ZCS
                         VT_LAUFK = vtLaufk,
-                        VT_VLAUFZ = pf.Months.ToString(),
+                        VT_VLAUFZ = bB_Printing.ContractDuration.ToString(),
                         VT_VLAUFE = "3",
                         VT_ANZPOS = noOrders.ToString(),
                         VT_VUNDAT = FirstDayNextMonthString,
