@@ -1133,8 +1133,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Pedido = proposal.CreatedTime.Value.Year + proposalID.ToString();
                     bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
-                    bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
-                    bb_commission_general.CN_Total = Math.Round((double)proposal.ValueTotal, 2);
+                    bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;                  
                     bb_commission_general.Comision_Copias = 0;
 
                     using (var dbUsers = new masterEntities())
@@ -1219,6 +1218,12 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CN_IMS_VSS = Math.Round((double)bb_commission_general.CN_IMS_VSS, 2);
                     bb_commission_general.CN_PRS = Math.Round((double)bb_commission_general.CN_PRS, 2);
                     bb_commission_general.CN_MCS_BPS = Math.Round((double)bb_commission_general.CN_MCS_BPS, 2);
+
+                    bb_commission_general.CN_Total = Math.Round((double)bb_commission_general.CN_Mobotix +
+                                                                (double)bb_commission_general.CN_Hard +
+                                                                (double)bb_commission_general.CN_IMS_VSS +
+                                                                (double)bb_commission_general.CN_PRS +
+                                                                (double)bb_commission_general.CN_MCS_BPS, 2);
 
 
                     // Soma de todos os GP daquele proposalID (incluindo RS)
