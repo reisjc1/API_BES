@@ -1408,7 +1408,7 @@ namespace WebApplication1.Controllers
                     }
 
                     bb_commission_general.Observacion = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ComentariosGC).FirstOrDefault();
-                    if(bb_commission_general.Observacion == null)
+                    if(bb_commission_general.Observacion == null || bb_commission_general.Observacion == "null")
                     {
                         bb_commission_general.Observacion = " ";
                     }
