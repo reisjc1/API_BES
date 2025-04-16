@@ -1648,9 +1648,6 @@ namespace WebApplication1.Controllers
             Workbook workbook = null;
             Worksheet worksheet = null;
 
-            DateTime todaysDate = DateTime.Now;
-            string onlyDateFromToday = todaysDate.ToString("dd-MM-yyyy");
-
             try
             {
                 using (var db = new BB_DB_DEVEntities2())
@@ -1827,9 +1824,6 @@ namespace WebApplication1.Controllers
                                 else if(campo.Key == "Operacion")
                                 {
                                     worksheet.Cells[line, column] = "BB";
-                                //}else if (campo.Key == "Fecha_Factura")
-                                //{
-                                //    worksheet.Cells[line, column] = onlyDateFromToday;
                                 }else if (campo.Key == "Area")
                                 {
                                     object value = prop.GetValue(commission);
@@ -1917,9 +1911,11 @@ namespace WebApplication1.Controllers
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new ByteArrayContent(fileBytes);
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                string dataHoje = DateTime.Now.ToString("ddMMyyyy");
+
                 response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                 {
-                    FileName = "Export_Deals_BES.xlsx"
+                    FileName = $"Export_Deals_BES_{dataHoje}.xlsx"
                 };
 
                 return response;
@@ -1931,7 +1927,7 @@ namespace WebApplication1.Controllers
 
                 // Retornar resposta HTTP com erro
                 HttpResponseMessage errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                errorResponse.Content = new StringContent("Erro ao exportar comissões para Excel.");
+                errorResponse.Content = new StringContent("Error al exportar comisiones a Excel.");
                 return errorResponse;
             }
             finally
