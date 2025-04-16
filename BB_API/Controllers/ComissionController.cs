@@ -1821,10 +1821,23 @@ namespace WebApplication1.Controllers
                                     worksheet.Cells[line, column] = string.Empty;
                                 }
                                 // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
-                                else if(campo.Key == "Operacion")
+                                else if (campo.Key == "Operacion")
                                 {
                                     worksheet.Cells[line, column] = "BB";
-                                }else if (campo.Key == "Area")
+                                } else if (campo.Key == "Es_Segunda_Mano") {
+
+                                    object value = prop.GetValue(commission);
+
+                                    if(value.ToString() == "TRUE")
+                                    {
+                                        worksheet.Cells[line, column] = "Sí";
+                                    }
+                                    else
+                                    {
+                                        worksheet.Cells[line, column] = "No";
+                                    }
+
+                                } else if (campo.Key == "Area")
                                 {
                                     object value = prop.GetValue(commission);
 
@@ -1835,7 +1848,7 @@ namespace WebApplication1.Controllers
                                             worksheet.Cells[line, column] = value;
                                         }
                                     }
-                                }else if (campo.Key == "Tipo_Operacion")
+                                } else if (campo.Key == "Tipo_Operacion")
                                 {
                                     string value = prop.GetValue(commission).ToString();
 

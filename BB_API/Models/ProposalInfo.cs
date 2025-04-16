@@ -9,6 +9,7 @@ using WebApplication1.Controllers;
 using WebApplication1.Models.SetupXML;
 using WebApplication1.Models.SetupXML.XML;
 using WebApplication1.Models.ViewModels;
+using static WebApplication1.Controllers.LeaseDeskController;
 
 namespace WebApplication1.Models
 {
@@ -184,6 +185,7 @@ namespace WebApplication1.Models
         public List<BB_Permissions> shareProfileDelegation { get; set; }
         public BusinessContract contracts { get; set; }
         public FinancingDetails financingDetails { get; set; }
+        public List<HW_SW> configuratorInfo { get; set; }
 
     }
 
@@ -495,6 +497,7 @@ namespace WebApplication1.Models
         public bool? Locked { get; set; }
         public bool? IsUsed { get; set; }
         public bool? IsInClient { get; set; }
+        public int? Group { get; set; }
     }
 
 

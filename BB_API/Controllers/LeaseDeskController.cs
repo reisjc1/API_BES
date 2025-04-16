@@ -2551,9 +2551,10 @@ namespace WebApplication1.Controllers
             //{
             //    manage.UnitDiscountPrice = Math.Round((double)manage.UnitDiscountPrice, 3);
             //}
-            
 
+            List<HW_SW> configuratorInfo = GetGroupedConfigurator(proposalID);
 
+            a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
 
             return Ok(a.ProposalObj);
         }
@@ -2574,7 +2575,7 @@ namespace WebApplication1.Controllers
             try {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    //List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+                    List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
                     //List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
 
                     List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.ToList();
@@ -2601,13 +2602,17 @@ namespace WebApplication1.Controllers
                         // significa que é uma máquina e entao, vou criar um HW_SW
                         if (equipamentosCodeRefs.Contains(item.CodeRef) || item.Description.Contains("MAIN MATERIAL"))
                         {
+                            element.Family = item.Family;
                             element.CodeRef = item.CodeRef;
                             element.Description = item.Description;
                             element.Group = item.Group;
                             element.UnitDiscountPrice = (double)item.UnitDiscountPrice;
                             element.Qty = (int)item.Qty;
                             element.TotalNetsale = (double)item.TotalNetsale;
-                            
+                            element.IsUsed = (bool)item.IsUsedMachine;
+                            element.GroupPrice = item.UnitDiscountPrice;
+                            element.Accessories = new List<OsBasket>();
+
                             configurator.Add(element);
                         }
                     };
@@ -2620,8 +2625,10 @@ namespace WebApplication1.Controllers
                                                                                                         && g.CodeRef != configMissingItems.CodeRef
                                                                                                         && g.Description != "MAIN MATERIAL"
                                                                                              ).ToList();
+
                         foreach (var item in groupListFiltered)
                         {
+                            // Acessórios
                             OsBasket basketItem = new OsBasket
                             {
                                     CodeRef = item.CodeRef,
@@ -2629,13 +2636,16 @@ namespace WebApplication1.Controllers
                                     Family = item.Family,
                                     UnitDiscountPrice = (double)item.UnitDiscountPrice,
                                     Qty = (int)item.Qty,
-                                    TotalNetsale = (double)item.TotalNetsale
+                                    TotalNetsale = (double)item.TotalNetsale,
+                                    Group = item.Group,
+                                    IsUsed = (bool)item.IsUsedMachine
                             };
 
                             HW_SW HW_SW_GroupX = configurator.Where(x => x.Group == item.Group).FirstOrDefault();
 
-                            HW_SW_GroupX.Accessories.Add(basketItem);
+                            HW_SW_GroupX.GroupPrice += basketItem.UnitDiscountPrice;
 
+                            HW_SW_GroupX.Accessories.Add(basketItem);
                         }
                     }
                 }
@@ -4181,13 +4191,16 @@ namespace WebApplication1.Controllers
 
         public class HW_SW
         {
+            public string Family { get; set; }
             public string CodeRef { get; set; }
             public string Description { get; set; }
             public int? Group { get; set; }
             public double UnitDiscountPrice { get; set; }
             public int Qty { get; set; }
             public double TotalNetsale { get; set; }
+            public bool IsUsed { get; set; }
             public List<OsBasket> Accessories { get; set; }
+            public double? GroupPrice { get; set; }
         }
 
 
