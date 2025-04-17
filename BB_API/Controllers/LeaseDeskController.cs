@@ -2575,7 +2575,7 @@ namespace WebApplication1.Controllers
             try {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+                    //List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
                     //List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
 
                     List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.ToList();
@@ -2593,6 +2593,8 @@ namespace WebApplication1.Controllers
                     List<BB_Proposal_ItemDoBasket> itemsDoBasket_lst = db.BB_Proposal_ItemDoBasket
                         .Where(x => locations_IDX.Contains((int)x.DeliveryLocationID))
                         .ToList();
+
+                    List<BB_Proposal_DeliveryLocationResumoModel> DeliveriesSummary_lst = PontosDeEnvioResumo(proposalID);
 
                     foreach (var item in itemsDoBasket_lst)
                     {
@@ -2612,6 +2614,7 @@ namespace WebApplication1.Controllers
                             element.IsUsed = (bool)item.IsUsedMachine;
                             element.GroupPrice = item.UnitDiscountPrice;
                             element.Accessories = new List<OsBasket>();
+                            element.DeliverySummary = DeliveriesSummary_lst.Where(x => x.Group == element.Group).FirstOrDefault();
 
                             configurator.Add(element);
                         }
@@ -2719,7 +2722,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("PontosDeEnvioResumo")]
-        public IHttpActionResult PontosDeEnvioResumo(int? proposalID)
+        public List<BB_Proposal_DeliveryLocationResumoModel> PontosDeEnvioResumo(int? proposalID)
         {
             List<BB_Proposal_DeliveryLocation> lstBB_Proposal_DeliveryLocation = null;
             List<BB_Proposal_DeliveryLocationResumoModel> lstBB_Proposal_DeliveryLocationResumoModel = null;
@@ -2773,23 +2776,18 @@ namespace WebApplication1.Controllers
                                 }
                             }
                         }
-
-
-
-
-
                     }
                     catch (Exception ex)
                     {
-                        return NotFound();
+                        return null;
                     }
                 }
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return null;
             }
-            return Ok(lstBB_Proposal_DeliveryLocationResumoModel);
+            return lstBB_Proposal_DeliveryLocationResumoModel;
         }
 
         [AcceptVerbs("GET", "POST")]
@@ -4201,6 +4199,7 @@ namespace WebApplication1.Controllers
             public bool IsUsed { get; set; }
             public List<OsBasket> Accessories { get; set; }
             public double? GroupPrice { get; set; }
+            public BB_Proposal_DeliveryLocationResumoModel DeliverySummary { get; set; }
         }
 
 
