@@ -2040,6 +2040,7 @@ namespace WebApplication1.Controllers
                     cmd.Parameters.AddWithValue("@is_RS", 0);
                     SqlDataReader rdr = cmd.ExecuteReader();
 
+                    Thread.Sleep(500);
 
                     while (rdr.Read())
                     {
@@ -2225,6 +2226,8 @@ namespace WebApplication1.Controllers
 
                         using (SqlDataReader rdr = cmd.ExecuteReader())
                         {
+                            Thread.Sleep(500);
+
                             while (rdr.Read())
                             {
                                 WFA_Approver_Proposal wfa_approver_proposal = new WFA_Approver_Proposal
@@ -2495,6 +2498,8 @@ namespace WebApplication1.Controllers
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
+                            Thread.Sleep(500);
+
                             while (reader.Read())
                             {
                                 BB_Proposal_Quote quote = new BB_Proposal_Quote()
@@ -2612,6 +2617,8 @@ namespace WebApplication1.Controllers
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
+                            Thread.Sleep(500);
+
                             while (reader.Read())
                             {
                                 BB_Proposal_Quote_RS quote = new BB_Proposal_Quote_RS()

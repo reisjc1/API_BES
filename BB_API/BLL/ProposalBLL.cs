@@ -443,6 +443,14 @@ namespace WebApplication1.BLL
 
                     BB_Proposal_Financing fin = iMapper.Map<Financing, BB_Proposal_Financing>(p.Draft.financing);
 
+                    // Função auxiliar para validar e corrigir valores NaN
+                    double Sanitize(double value) => double.IsNaN(value) ? 0 : value;
+
+                    // Validação dos campos
+                    fin.AmountFinanced = Sanitize((double)fin.AmountFinanced);
+                    fin.AmountNotFinanced = Sanitize((double)fin.AmountNotFinanced);
+                    fin.MonthlyIncome = Sanitize((double)fin.MonthlyIncome);
+
                     fin.ProposalID = ProposalID;
 
                     db.BB_Proposal_Financing.Add(fin);

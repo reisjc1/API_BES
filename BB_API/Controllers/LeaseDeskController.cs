@@ -2551,9 +2551,10 @@ namespace WebApplication1.Controllers
             //{
             //    manage.UnitDiscountPrice = Math.Round((double)manage.UnitDiscountPrice, 3);
             //}
-            
 
+            List<HW_SW> configuratorInfo = GetGroupedConfigurator(proposalID);
 
+            a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
 
             return Ok(a.ProposalObj);
         }
@@ -2593,6 +2594,8 @@ namespace WebApplication1.Controllers
                         .Where(x => locations_IDX.Contains((int)x.DeliveryLocationID))
                         .ToList();
 
+                    List<BB_Proposal_DeliveryLocationResumoModel> DeliveriesSummary_lst = PontosDeEnvioResumo(proposalID);
+
                     foreach (var item in itemsDoBasket_lst)
                     {
                         HW_SW element = new HW_SW();
@@ -2601,13 +2604,18 @@ namespace WebApplication1.Controllers
                         // significa que é uma máquina e entao, vou criar um HW_SW
                         if (equipamentosCodeRefs.Contains(item.CodeRef) || item.Description.Contains("MAIN MATERIAL"))
                         {
+                            element.Family = item.Family;
                             element.CodeRef = item.CodeRef;
                             element.Description = item.Description;
                             element.Group = item.Group;
                             element.UnitDiscountPrice = (double)item.UnitDiscountPrice;
                             element.Qty = (int)item.Qty;
                             element.TotalNetsale = (double)item.TotalNetsale;
-                            
+                            element.IsUsed = (bool)item.IsUsedMachine;
+                            element.GroupPrice = item.UnitDiscountPrice;
+                            element.Accessories = new List<OsBasket>();
+                            element.DeliverySummary = DeliveriesSummary_lst.Where(x => x.Group == element.Group).FirstOrDefault();
+
                             configurator.Add(element);
                         }
                     };
@@ -2620,8 +2628,10 @@ namespace WebApplication1.Controllers
                                                                                                         && g.CodeRef != configMissingItems.CodeRef
                                                                                                         && g.Description != "MAIN MATERIAL"
                                                                                              ).ToList();
+
                         foreach (var item in groupListFiltered)
                         {
+                            // Acessórios
                             OsBasket basketItem = new OsBasket
                             {
                                     CodeRef = item.CodeRef,
@@ -2629,13 +2639,16 @@ namespace WebApplication1.Controllers
                                     Family = item.Family,
                                     UnitDiscountPrice = (double)item.UnitDiscountPrice,
                                     Qty = (int)item.Qty,
-                                    TotalNetsale = (double)item.TotalNetsale
+                                    TotalNetsale = (double)item.TotalNetsale,
+                                    Group = item.Group,
+                                    IsUsed = (bool)item.IsUsedMachine
                             };
 
                             HW_SW HW_SW_GroupX = configurator.Where(x => x.Group == item.Group).FirstOrDefault();
 
-                            HW_SW_GroupX.Accessories.Add(basketItem);
+                            HW_SW_GroupX.GroupPrice += basketItem.UnitDiscountPrice;
 
+                            HW_SW_GroupX.Accessories.Add(basketItem);
                         }
                     }
                 }
@@ -2709,7 +2722,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("PontosDeEnvioResumo")]
-        public IHttpActionResult PontosDeEnvioResumo(int? proposalID)
+        public List<BB_Proposal_DeliveryLocationResumoModel> PontosDeEnvioResumo(int? proposalID)
         {
             List<BB_Proposal_DeliveryLocation> lstBB_Proposal_DeliveryLocation = null;
             List<BB_Proposal_DeliveryLocationResumoModel> lstBB_Proposal_DeliveryLocationResumoModel = null;
@@ -2763,23 +2776,18 @@ namespace WebApplication1.Controllers
                                 }
                             }
                         }
-
-
-
-
-
                     }
                     catch (Exception ex)
                     {
-                        return NotFound();
+                        return null;
                     }
                 }
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return null;
             }
-            return Ok(lstBB_Proposal_DeliveryLocationResumoModel);
+            return lstBB_Proposal_DeliveryLocationResumoModel;
         }
 
         [AcceptVerbs("GET", "POST")]
@@ -4181,13 +4189,17 @@ namespace WebApplication1.Controllers
 
         public class HW_SW
         {
+            public string Family { get; set; }
             public string CodeRef { get; set; }
             public string Description { get; set; }
             public int? Group { get; set; }
             public double UnitDiscountPrice { get; set; }
             public int Qty { get; set; }
             public double TotalNetsale { get; set; }
+            public bool IsUsed { get; set; }
             public List<OsBasket> Accessories { get; set; }
+            public double? GroupPrice { get; set; }
+            public BB_Proposal_DeliveryLocationResumoModel DeliverySummary { get; set; }
         }
 
 

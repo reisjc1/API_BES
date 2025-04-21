@@ -1133,8 +1133,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Pedido = proposal.CreatedTime.Value.Year + proposalID.ToString();
                     bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
-                    bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
-                    bb_commission_general.CN_Total = Math.Round((double)proposal.ValueTotal, 2);
+                    bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;                  
                     bb_commission_general.Comision_Copias = 0;
 
                     using (var dbUsers = new masterEntities())
@@ -1219,6 +1218,12 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CN_IMS_VSS = Math.Round((double)bb_commission_general.CN_IMS_VSS, 2);
                     bb_commission_general.CN_PRS = Math.Round((double)bb_commission_general.CN_PRS, 2);
                     bb_commission_general.CN_MCS_BPS = Math.Round((double)bb_commission_general.CN_MCS_BPS, 2);
+
+                    bb_commission_general.CN_Total = Math.Round((double)bb_commission_general.CN_Mobotix +
+                                                                (double)bb_commission_general.CN_Hard +
+                                                                (double)bb_commission_general.CN_IMS_VSS +
+                                                                (double)bb_commission_general.CN_PRS +
+                                                                (double)bb_commission_general.CN_MCS_BPS, 2);
 
 
                     // Soma de todos os GP daquele proposalID (incluindo RS)
@@ -1403,7 +1408,7 @@ namespace WebApplication1.Controllers
                     }
 
                     bb_commission_general.Observacion = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ComentariosGC).FirstOrDefault();
-                    if(bb_commission_general.Observacion == null)
+                    if(bb_commission_general.Observacion == null || bb_commission_general.Observacion == "null")
                     {
                         bb_commission_general.Observacion = " ";
                     }
@@ -1643,9 +1648,6 @@ namespace WebApplication1.Controllers
             Workbook workbook = null;
             Worksheet worksheet = null;
 
-            DateTime todaysDate = DateTime.Now;
-            string onlyDateFromToday = todaysDate.ToString("dd-MM-yyyy");
-
             try
             {
                 using (var db = new BB_DB_DEVEntities2())
@@ -1819,13 +1821,23 @@ namespace WebApplication1.Controllers
                                     worksheet.Cells[line, column] = string.Empty;
                                 }
                                 // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
-                                else if(campo.Key == "Operacion")
+                                else if (campo.Key == "Operacion")
                                 {
                                     worksheet.Cells[line, column] = "BB";
-                                //}else if (campo.Key == "Fecha_Factura")
-                                //{
-                                //    worksheet.Cells[line, column] = onlyDateFromToday;
-                                }else if (campo.Key == "Area")
+                                } else if (campo.Key == "Es_Segunda_Mano") {
+
+                                    object value = prop.GetValue(commission);
+
+                                    if(value.ToString() == "TRUE")
+                                    {
+                                        worksheet.Cells[line, column] = "Sí";
+                                    }
+                                    else
+                                    {
+                                        worksheet.Cells[line, column] = "No";
+                                    }
+
+                                } else if (campo.Key == "Area")
                                 {
                                     object value = prop.GetValue(commission);
 
@@ -1836,7 +1848,7 @@ namespace WebApplication1.Controllers
                                             worksheet.Cells[line, column] = value;
                                         }
                                     }
-                                }else if (campo.Key == "Tipo_Operacion")
+                                } else if (campo.Key == "Tipo_Operacion")
                                 {
                                     string value = prop.GetValue(commission).ToString();
 
@@ -1912,9 +1924,11 @@ namespace WebApplication1.Controllers
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new ByteArrayContent(fileBytes);
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                string dataHoje = DateTime.Now.ToString("ddMMyyyy");
+
                 response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                 {
-                    FileName = "Export_Deals_BES.xlsx"
+                    FileName = $"Export_Deals_BES_{dataHoje}.xlsx"
                 };
 
                 return response;
@@ -1926,7 +1940,7 @@ namespace WebApplication1.Controllers
 
                 // Retornar resposta HTTP com erro
                 HttpResponseMessage errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                errorResponse.Content = new StringContent("Erro ao exportar comissões para Excel.");
+                errorResponse.Content = new StringContent("Error al exportar comisiones a Excel.");
                 return errorResponse;
             }
             finally
