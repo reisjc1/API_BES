@@ -688,7 +688,14 @@ namespace WebApplication1.Controllers
                             ld.ModifiedTime = DateTime.Now;
                             ld.TipoContratoID = ContractType;
                             ld.SystemAssinaturaID = assnaturaID;
-                            ld.ComentariosGC = Observations;
+                            if(Observations == "null")
+                            {
+                                ld.ComentariosGC = "Sin comentarios";
+                            }
+                            else
+                            {
+                                ld.ComentariosGC = Observations;
+                            }
                             ld.IsClosed = false;
                             ld.Retorno = false;
                             ld.StatusID = 1;
