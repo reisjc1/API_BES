@@ -1844,10 +1844,10 @@ namespace WebApplication1.Controllers
 
                 foreach (var ops in a.ProposalObj.Draft.opsPacks.opsManage)
                 {
-                    //if(ops.UnitDiscountPrice > 0)
-                    //{
-                    //}
-                    totalQtyInOS += ops.Quantity;
+                    if (ops.UnitDiscountPrice > 0)
+                    {
+                        totalQtyInOS += ops.Quantity;
+                    }
                 }
                 
                 using (var db = new BB_DB_DEVEntities2())
