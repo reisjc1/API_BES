@@ -73,6 +73,7 @@ namespace WebApplication1.BLL
                     List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId).ToList();
                     BB_Proposal_OPSManage opsM = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     List<string> quoteRSLst = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).Select(x => x.CodeRef).ToList();
+                    List<BB_Proposal_Quote_RS> quoteRSList = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).ToList();
                     foreach (var deliveryLocation in dl)
                     {
                         int? groupNumber = null;
@@ -125,11 +126,12 @@ namespace WebApplication1.BLL
                                     }
                                     else if (quoteRSLst.Contains(item.CodeRef))
                                     {
+                                        BB_Proposal_Quote_RS quoteRS = quoteRSList.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
                                         group2.CodeRef = item.CodeRef;
                                         group2.BundleRef = false;
                                         group2.Qty = item.Qty;
                                         group2.UnitDiscountPrice = (double)item.UnitDiscountPrice;
-                                        group2.TotalMonths = 0;
+                                        group2.TotalMonths = (int)quoteRS.TotalMonths;
                                         Bundles.Items.Add(group2);
                                     }
                                     else
