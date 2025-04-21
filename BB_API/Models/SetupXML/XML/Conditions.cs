@@ -938,14 +938,14 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                     else
                                     {
-                                        if (item.TotalMonths == 0)
-                                        {
-                                            conditionPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths) + conditionPvp.PVP;
-                                        }
-                                        else
-                                        {
-                                            conditionPvp.PVP = (item.UnitDiscountPrice / item.Qty) + conditionPvp.PVP;
-                                        }
+                                        conditionPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths) + conditionPvp.PVP;
+                                        //if (item.TotalMonths == 0)
+                                        //{
+                                        //}
+                                        //else
+                                        //{
+                                        //    conditionPvp.PVP = (item.UnitDiscountPrice / item.Qty) + conditionPvp.PVP;
+                                        //}
                                     }
 
 
@@ -1005,14 +1005,14 @@ namespace WebApplication1.Models.SetupXML.XML
                                         }
                                         else
                                         {
-                                            if(item.TotalMonths == 0)
-                                            {
-                                                condPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths);
-                                            }
-                                            else
-                                            {
-                                                condPvp.PVP = (item.UnitDiscountPrice / item.Qty);
-                                            }
+                                            condPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths);
+                                            //if(item.TotalMonths == 0)
+                                            //{
+                                            //}
+                                            //else
+                                            //{
+                                            //    condPvp.PVP = (item.UnitDiscountPrice / item.Qty);
+                                            //}
                                         }
 
                                     }
