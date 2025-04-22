@@ -1469,9 +1469,32 @@ namespace WebApplication1.BLL
                 RecommendedPVP = validationRequest.BB_PrintingServices.BB_VVA.PVP.GetValueOrDefault(),
                 Type = "Click Global - VVA",
             };
-            List<ServiceValidationRequestEquipment> svrEquipments = DistributePages(proposalEquipments, equipments, svr);
-            svr.AverageCostBW = (double)(svrEquipments.Sum(x => x.BWBaseCost * x.BWPages) / svrEquipments.Sum(x => x.BWPages));
-            svr.AverageCostC = (double)(svrEquipments.Where(x => x.CBaseCost != 0).Sum(x => x.CBaseCost * x.CPages) / svrEquipments.Sum(x => x.CPages));
+
+            List<ServiceValidationRequestEquipment> svrEquipments = DistributePages(proposalEquipments, equipments, svr) ?? new List<ServiceValidationRequestEquipment>();
+
+            svr.AverageCostBW = 0;
+            svr.AverageCostC = 0;
+
+
+            if (svrEquipments.Any())
+            {
+                // AVERAGE COST NEGRO
+                var totalBWPages = svrEquipments.Sum(x => x.BWPages);
+                if (totalBWPages > 0)
+                {
+                    var totalBWCost = svrEquipments.Sum(x => x.BWBaseCost * x.BWPages);
+                    svr.AverageCostBW = (double)(totalBWCost / totalBWPages);
+                }
+
+                // AVERAGE COST COLOR
+                var totalCPages = svrEquipments.Sum(x => x.CPages);
+                if (totalCPages > 0)
+                {
+                    var totalCCost = svrEquipments.Where(x => x.CBaseCost != 0).Sum(x => x.CBaseCost * x.CPages);
+                    svr.AverageCostC = (double)(totalCCost / totalCPages);
+                }
+            }
+
             svr.Equipments = svrEquipments;
             return svr;
         }
