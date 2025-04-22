@@ -938,18 +938,18 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                     else
                                     {
-                                        conditionPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths) + conditionPvp.PVP;
-                                        //if (item.TotalMonths == 0)
-                                        //{
-                                        //}
-                                        //else
-                                        //{
-                                        //    conditionPvp.PVP = (item.UnitDiscountPrice / item.Qty) + conditionPvp.PVP;
-                                        //}
+                                        if (item.TotalMonths == 0)
+                                        {
+                                            conditionPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths) + conditionPvp.PVP;
+                                        }
+                                        else
+                                        {
+                                            conditionPvp.PVP = (item.UnitDiscountPrice / item.Qty) + conditionPvp.PVP;
+                                        }
                                     }
 
 
-                                    conditionPvp.PVP = Convert.ToDouble(Math.Round(conditionPvp.PVP ?? 0.0, 2).ToString("F2"));
+                                    conditionPvp.PVP = Convert.ToDouble(conditionPvp.PVP);
                                     //conditionPvp.PVP = totalPvp;
                                 }
                                 else
@@ -1005,19 +1005,19 @@ namespace WebApplication1.Models.SetupXML.XML
                                         }
                                         else
                                         {
-                                            condPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths);
-                                            //if(item.TotalMonths == 0)
-                                            //{
-                                            //}
-                                            //else
-                                            //{
-                                            //    condPvp.PVP = (item.UnitDiscountPrice / item.Qty);
-                                            //}
+                                            if (item.TotalMonths == 0)
+                                            {
+                                                condPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths);
+                                            }
+                                            else
+                                            {
+                                                condPvp.PVP = (item.UnitDiscountPrice / item.Qty);
+                                            }
                                         }
 
                                     }
 
-                                    condPvp.PVP = Convert.ToDouble(Math.Round(condPvp.PVP ?? 0.0, 2).ToString("F2")); ;
+                                    condPvp.PVP = Convert.ToDouble(condPvp.PVP); 
                                     condPvp.ConditionCode = financingCode;
                                     conditionsPvp.Add(condPvp);
                                 }
