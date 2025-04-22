@@ -2576,7 +2576,7 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     //List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
-                    //List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+                    List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
 
                     List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.ToList();
 
@@ -2632,8 +2632,32 @@ namespace WebApplication1.Controllers
                         foreach (var item in groupListFiltered)
                         {
                             // Acessórios
-                            OsBasket basketItem = new OsBasket
+                            HW_SW HW_SW_GroupX = configurator.Where(x => x.Group == item.Group).FirstOrDefault();
+
+                            bool isRS = pp_quote_rs.Any(x => x.CodeRef == item.CodeRef);
+
+                            if (isRS == true)
                             {
+                                OsBasket basketItem = new OsBasket
+                                {
+                                        CodeRef = item.CodeRef,
+                                        Description = item.Description,
+                                        Family = item.Family,
+                                        UnitDiscountPrice = (double)item.UnitDiscountPrice,
+                                        Qty = (int)item.Qty,
+                                        TotalNetsale = (double)item.PVP,
+                                        Group = item.Group,
+                                        IsUsed = (bool)item.IsUsedMachine
+                                };
+
+
+                                HW_SW_GroupX.GroupPrice += basketItem.TotalNetsale;
+                                HW_SW_GroupX.Accessories.Add(basketItem);
+                            }
+                            else
+                            {
+                                OsBasket basketItem = new OsBasket
+                                {
                                     CodeRef = item.CodeRef,
                                     Description = item.Description,
                                     Family = item.Family,
@@ -2642,13 +2666,12 @@ namespace WebApplication1.Controllers
                                     TotalNetsale = (double)item.TotalNetsale,
                                     Group = item.Group,
                                     IsUsed = (bool)item.IsUsedMachine
-                            };
+                                };
 
-                            HW_SW HW_SW_GroupX = configurator.Where(x => x.Group == item.Group).FirstOrDefault();
+                                HW_SW_GroupX.GroupPrice += basketItem.UnitDiscountPrice;
+                                HW_SW_GroupX.Accessories.Add(basketItem);
+                            }
 
-                            HW_SW_GroupX.GroupPrice += basketItem.UnitDiscountPrice;
-
-                            HW_SW_GroupX.Accessories.Add(basketItem);
                         }
                     }
                 }
