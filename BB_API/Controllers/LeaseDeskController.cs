@@ -2577,6 +2577,7 @@ namespace WebApplication1.Controllers
                 {
                     //List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
                     List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+                    List<BB_Proposal_OPSManage> opsManage_lst = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
 
                     List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.ToList();
 
@@ -2636,6 +2637,9 @@ namespace WebApplication1.Controllers
 
                             bool isRS = pp_quote_rs.Any(x => x.CodeRef == item.CodeRef);
 
+                            bool isOPSPackage = opsManage_lst.Any(x => x.CodeRef == item.CodeRef);
+
+                            // SERVICO RECURRENTE
                             if (isRS == true)
                             {
                                 OsBasket basketItem = new OsBasket
@@ -2654,6 +2658,27 @@ namespace WebApplication1.Controllers
                                 HW_SW_GroupX.GroupPrice += basketItem.TotalNetsale;
                                 HW_SW_GroupX.Accessories.Add(basketItem);
                             }
+                            // OPS PACKAGE
+                            else if (isOPSPackage)
+                            {
+                                BB_Proposal_OPSManage opsManage = opsManage_lst.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                OsBasket basketItem = new OsBasket
+                                {
+                                    CodeRef = item.CodeRef,
+                                    Description = item.Description,
+                                    Family = item.Family,
+                                    UnitDiscountPrice = (double)item.UnitDiscountPrice,
+                                    Qty = (int)item.Qty,
+                                    TotalNetsale = Math.Round((double)item.UnitDiscountPrice * (double)opsManage.TotalMonths),
+                                    Group = item.Group,
+                                    IsUsed = (bool)item.IsUsedMachine
+                                };
+
+
+                                HW_SW_GroupX.GroupPrice += basketItem.TotalNetsale;
+                                HW_SW_GroupX.Accessories.Add(basketItem);
+                            }
+                            // PROPOSAL QUOTE
                             else
                             {
                                 OsBasket basketItem = new OsBasket
