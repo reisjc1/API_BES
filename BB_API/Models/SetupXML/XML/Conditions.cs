@@ -128,11 +128,11 @@ namespace WebApplication1.Models.SetupXML.XML
                                             //{
                                             if (pf.Factor > 0)
                                             {
-                                                conditionPvp.PVP = Math.Round((((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = Math.Round((((quote1.TCP + (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY))) * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
                                             }
                                             else
                                             {
-                                                conditionPvp.PVP = Math.Round((((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = Math.Round((((quote1.TCP + (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY))) * (pf.Factor)) + conditionPvp.PVP) ?? 0.0, 2);
                                             }
 
                                             //}
@@ -168,11 +168,11 @@ namespace WebApplication1.Models.SetupXML.XML
                                             //{
                                             if (pf.Factor > 0)
                                             {
-                                                condPvp.PVP = Math.Round(((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                condPvp.PVP = Math.Round(((quote1.TCP + (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY))) * (pf.Factor / 100)) ?? 0.0, 2);
                                             }
                                             else
                                             {
-                                                condPvp.PVP = Math.Round(((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) ?? 0.0, 2);
+                                                condPvp.PVP = Math.Round(((quote1.TCP + (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY))) * (pf.Factor)) ?? 0.0, 2);
                                             }
 
                                             //}
@@ -915,11 +915,26 @@ namespace WebApplication1.Models.SetupXML.XML
                                         //{
                                         if (pf.Factor > 0)
                                         {
-                                            conditionPvp.PVP = (item.UnitDiscountPrice * item.Qty) * (pf.Factor / 100) + conditionPvp.PVP;
+                                            if(item.LPI > 0)
+                                            {
+                                                conditionPvp.PVP = (item.LPI + (item.UnitDiscountPrice * item.Qty)) * (pf.Factor / 100) + conditionPvp.PVP;
+                                            }
+                                            else
+                                            {
+                                                conditionPvp.PVP = (item.LPI + (item.UnitDiscountPrice * item.Qty)) * (pf.Factor / 100) + conditionPvp.PVP;
+                                            }
                                         }
                                         else
                                         {
-                                            conditionPvp.PVP = (item.UnitDiscountPrice * item.Qty) * (pf.Factor) + conditionPvp.PVP;
+                                            if (item.LPI > 0)
+                                            {
+                                                conditionPvp.PVP = (item.LPI + (item.UnitDiscountPrice * item.Qty)) * (pf.Factor) + conditionPvp.PVP;
+                                            }
+                                            else
+                                            {
+                                                conditionPvp.PVP = (item.LPI + (item.UnitDiscountPrice * item.Qty)) * (pf.Factor) + conditionPvp.PVP;
+
+                                            }
                                         }
 
                                         //}
@@ -964,11 +979,26 @@ namespace WebApplication1.Models.SetupXML.XML
                                         {
                                             if (condPvp.PVP != null)
                                             {
-                                                condPvp.PVP = (item.UnitDiscountPrice * item.Qty) * (pf.Factor / 100) + condPvp.PVP;
+                                                if (item.LPI > 0)
+                                                {
+                                                    condPvp.PVP = (item.LPI + (item.UnitDiscountPrice * item.Qty)) * (pf.Factor / 100) + condPvp.PVP;
+                                                }
+                                                else
+                                                {
+                                                    condPvp.PVP = (item.LPI + (item.UnitDiscountPrice * item.Qty)) * (pf.Factor / 100) + condPvp.PVP;
+                                                }
                                             }
                                             else
                                             {
-                                                condPvp.PVP = (item.UnitDiscountPrice * item.Qty) * (pf.Factor / 100);
+                                                if (item.LPI > 0)
+                                                {
+                                                    condPvp.PVP = (item.LPI + (item.UnitDiscountPrice * item.Qty)) * (pf.Factor / 100);
+                                                }
+                                                else
+                                                {
+                                                    condPvp.PVP = (item.LPI + (item.UnitDiscountPrice * item.Qty)) * (pf.Factor / 100);
+
+                                                }
                                             }
                                         }
                                         else
