@@ -4090,36 +4090,38 @@ namespace WebApplication1.Controllers
                             if (soldTo != null)
                             {
                                 BB_Proposal_Client bb_Proposal_Client = db.BB_Proposal_Client.Where(x => x.ProposalID == bb_proposal.ID).FirstOrDefault();
-
-                                bb_Proposal_Client.ClientID = soldTo;
-                                bb_proposal.ClientAccountNumber = soldTo;
-                                bb_proposal.Plant = plant;
+                                if(bb_Proposal_Client.ClientID != soldTo)
+                                {
+                                    bb_Proposal_Client.ClientID = soldTo;
+                                    bb_proposal.ClientAccountNumber = soldTo;
+                                }
                             }
+                            bb_proposal.Plant = plant;
 
                             LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractID).FirstOrDefault();
 
                             lD_Contrato.InvoiceList = invoiceList;
 
-                            using( var db2 = new BB_DB_DEVEntities2())
-                            {
+                            //using( var db2 = new BB_DB_DEVEntities2())
+                            //{
 
-                                List<BB_Proposal_DeliveryLocation> deliverLocationList = db2.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == bb_proposal.ID).DistinctBy(x => x.ID).ToList();
+                            //    List<BB_Proposal_DeliveryLocation> deliverLocationList = db2.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == bb_proposal.ID).DistinctBy(x => x.ID).ToList();
 
-                                foreach (var deliveryLocation in deliverLocationList)
-                                {
-                                    int id = Int32.Parse(deliveryLocation.ID);
-                                    BB_LocaisEnvio localEnvio = db2.BB_LocaisEnvio.Where(x => x.ID == id).FirstOrDefault();
+                            //    foreach (var deliveryLocation in deliverLocationList)
+                            //    {
+                            //        int id = Int32.Parse(deliveryLocation.ID);
+                            //        BB_LocaisEnvio localEnvio = db2.BB_LocaisEnvio.Where(x => x.ID == id).FirstOrDefault();
 
-                                    if (localEnvio != null)
-                                    {
-                                        localEnvio.SAPCustomerNr = soldTo;
-                                        db.Entry(localEnvio).State = EntityState.Modified;
-                                        db.SaveChanges();
-                                    }
-                                }
+                            //        if (localEnvio != null)
+                            //        {
+                            //            localEnvio.SAPCustomerNr = soldTo;
+                            //            db.Entry(localEnvio).State = EntityState.Modified;
+                            //            db.SaveChanges();
+                            //        }
+                            //    }
 
 
-                            }
+                            //}
 
                             db.Entry(bb_proposal).State = EntityState.Modified;
                             db.Entry(lD_Contrato).State = EntityState.Modified;

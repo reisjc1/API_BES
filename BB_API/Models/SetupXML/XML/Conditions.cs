@@ -311,6 +311,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     List<BB_PrintingServices> bB_PrintingServices_lst = db.BB_PrintingServices.AsNoTracking().ToList();
                     List<BB_VVA> bB_VVA_lst = db.BB_VVA.AsNoTracking().ToList();
+                    List<BB_PrintingService_Machines> bB_PrintingService_Machine = db.BB_PrintingService_Machines.AsNoTracking().ToList();
                     BB_Proposal_OPSManage opsM = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     //BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
@@ -419,21 +420,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                 }
                             }
-                            //if (ops != null)
-                            //{
-                            //    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
-                            //    if (cond == null)
-                            //    {
-                            //        conditionPVP.ConditionCode = "ZSW4";
-                            //        conditionPVP.PVP = ops.PVP * ops.Quantity;
-                            //        conditionsPvp.Add(conditionPVP);
-                            //    }
-                            //    else
-                            //    {
-                            //        cond.PVP = cond.PVP + (ops.PVP * ops.Quantity);
-                            //    }
-                            //}
-                            //}
+
                             if (contracts[0].VT_VTART == "003" || contracts[0].VT_VTART == "005")
                             {
                                 //BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
@@ -451,15 +438,25 @@ namespace WebApplication1.Models.SetupXML.XML
                                     {
                                         if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                         {
+                                            double? cPVP = 0;
+                                            if(quote1.TCP != null)
+                                            {
+                                                cPVP = quote1.TCP + (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY));
+                                            }
+                                            else
+                                            {
+                                                cPVP = quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY);
+                                            }
                                             //if (ftCode == 5)
                                             //{
                                             if (pf.Factor > 0)
                                             {
-                                                conditionPvp.PVP = Math.Round((((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
+
+                                                conditionPvp.PVP = Math.Round(((cPVP * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
                                             }
                                             else
                                             {
-                                                conditionPvp.PVP = Math.Round((((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = Math.Round(((cPVP * (pf.Factor)) + conditionPvp.PVP) ?? 0.0, 2);
                                             }
 
                                             //}
@@ -491,15 +488,24 @@ namespace WebApplication1.Models.SetupXML.XML
                                         totalPvp = 0;
                                         if (financingCode == "ZVBR" || financingCode == "ZVBA")
                                         {
+                                            double? cPVP = 0;
+                                            if (quote1.TCP != null)
+                                            {
+                                                cPVP = quote1.TCP + (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY));
+                                            }
+                                            else
+                                            {
+                                                cPVP = quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY);
+                                            }
                                             //if (ftCode == 5)
                                             //{
                                             if (pf.Factor > 0)
                                             {
-                                                condPvp.PVP = Math.Round(((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                condPvp.PVP = Math.Round((cPVP * (pf.Factor / 100)) ?? 0.0, 2);
                                             }
                                             else
                                             {
-                                                condPvp.PVP = Math.Round(((quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor)) ?? 0.0, 2);
+                                                condPvp.PVP = Math.Round((cPVP * (pf.Factor)) ?? 0.0, 2);
                                             }
 
                                             //}
@@ -565,7 +571,16 @@ namespace WebApplication1.Models.SetupXML.XML
                                             }
                                             else
                                             {
-                                                conditionPvp.PVP = Math.Round((((quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) / pf.Months) + conditionPvp.PVP) ?? 0.0, 2);
+                                                double? cPVPRS = 0;
+                                                if(quoteRS1.TotalMonths == 1)
+                                                {
+                                                    cPVPRS = (quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months);
+                                                }
+                                                else
+                                                {
+                                                    cPVPRS = quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY);
+                                                }
+                                                conditionPvp.PVP = Math.Round((cPVPRS + conditionPvp.PVP) ?? 0.0, 2);
                                             }
                                             //totalPvp = Math.Round(totalPvp ?? 0.0, 2);
                                             //conditionPvp.PVP = totalPvp;
@@ -605,7 +620,16 @@ namespace WebApplication1.Models.SetupXML.XML
                                             }
                                             else
                                             {
-                                                condPvp.PVP = Math.Round(((quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months)) ?? 0.0, 2);
+                                                double? cPVPRS = 0;
+                                                if (quoteRS1.TotalMonths == 1)
+                                                {
+                                                    cPVPRS = (quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months);
+                                                }
+                                                else
+                                                {
+                                                    cPVPRS = quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY);
+                                                }
+                                                condPvp.PVP = Math.Round((cPVPRS) ?? 0.0, 2);
                                             }
 
                                             //condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
@@ -650,7 +674,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             }
                                             else
                                             {
-                                                conditionPvp.PVP = Math.Round((((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) / pf.Months) + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = Math.Round((((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY))) + conditionPvp.PVP) ?? 0.0, 2);
                                             }
                                             //totalPvp = Math.Round(totalPvp ?? 0.0, 2);
                                             //conditionPvp.PVP = totalPvp;
@@ -690,7 +714,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             }
                                             else
                                             {
-                                                condPvp.PVP = Math.Round(((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months)) ?? 0.0, 2);
+                                                condPvp.PVP = Math.Round(((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY))) ?? 0.0, 2);
                                             }
 
                                             //condPvp.PVP = Math.Round(totalPvp ?? 0.0, 2);
@@ -724,7 +748,8 @@ namespace WebApplication1.Models.SetupXML.XML
                         if (bB_PrintingServices != null)
                         {
                             BB_VVA bB_VVA = bB_VVA_lst.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
-
+                            List<BB_PrintingService_Machines> machines = bB_PrintingService_Machine.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
+                            BB_PrintingService_Machines machineItem = machines.Where(x => x.CodeRef == order.MACHINE).FirstOrDefault();
                             if (bB_VVA != null)
                             {
                                 //BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
@@ -733,7 +758,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     DOC = order.SD_DOC,
                                     COND_FLAG = "A",
                                     KSCHL = "ZVBS",
-                                    KBETR = bB_VVA.PVP != 0 ? Math.Round(bB_VVA.PVP / numberOfMachines ?? 0.0, 2).ToString("F2").Replace(",", ".") : "0.00"
+                                    KBETR = Math.Round(((machineItem.BWVolume * machineItem.ApprovedBW) + (machineItem.CVolume * machineItem.ApprovedC)) ?? 0.0, 2).ToString("F2").Replace(",", ".")
                                 });
                             }
                         }
