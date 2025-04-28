@@ -823,7 +823,7 @@ namespace WebApplication1.Controllers
 
                     List<string> mobotixCodRefs = db.BB_Data_Integration.Where(x => x.Description_Portuguese.Contains("MOBOTIX")).Select(x => x.CodeRef).ToList();
 
-                    var clientGMA = loadProposal.ProposalObj.Draft.client.GMA;
+                    //var clientGMA = loadProposal.ProposalObj.Draft.client.GMA;
                     var isGMA = loadProposal.ProposalObj.Draft.client.isGMA;
 
                     // função interna a ser chamada para fazer o somatório do GPTotal para cada família
@@ -833,7 +833,7 @@ namespace WebApplication1.Controllers
                         {
                             // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
                             // assim, nunca vai cair no else
-                            if (clientGMA != null && clientGMA != "" && isGMA == true)
+                            if (isGMA == true)
                             {
                                 var GMA_Amout = amount * 0.1;
                                 profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0) * quantity;
@@ -909,12 +909,12 @@ namespace WebApplication1.Controllers
 
                             if (oneShot_Item.Description.Contains("MOBOTIX"))
                             {
-                                profitDictionary["MOBOTIX"].GPTotal += (oneShot_Item.GPTotal ?? 0) * oneShot_Item.Qty;
+                                profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal * oneShot_Item.Qty;
 
                             }
                             else if (oneShot_Item.Description.Contains("BPS"))
                             {
-                                profitDictionary["MCS_BPS"].GPTotal += (oneShot_Item.GPTotal ?? 0) * oneShot_Item.Qty;
+                                profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal * oneShot_Item.Qty;
 
                             }
                             else
@@ -925,10 +925,10 @@ namespace WebApplication1.Controllers
                     }
 
                     // servicos recorrentes
-                    foreach (var servRecor_Item in servicosRecorrentes)
-                    {
-                        AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal, servRecor_Item.CodeRef, servRecor_Item.Qty);
-                    }
+                    //foreach (var servRecor_Item in servicosRecorrentes)
+                    //{
+                    //    AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal, servRecor_Item.CodeRef, servRecor_Item.Qty);
+                    //}
 
 
                     var profit_OfficeHW = profitDictionary["HW"];
@@ -1245,6 +1245,7 @@ namespace WebApplication1.Controllers
                                                      bb_commission_general.GP_PRS +
                                                      bb_commission_general.GP_MCS_BPS;
 
+                    // Arredondamentos ------------------------
                     bb_commission_general.GP_Hard = Math.Round((double)bb_commission_general.GP_Hard, 2);
                     bb_commission_general.GP_IMS_VSS = Math.Round((double)bb_commission_general.GP_IMS_VSS, 2);
                     bb_commission_general.GP_PRS = Math.Round((double)bb_commission_general.GP_PRS, 2);
@@ -1400,7 +1401,7 @@ namespace WebApplication1.Controllers
                     // Definir o campo GMA
                     if(bb_commission_general.Es_GMA == true)
                     {
-                        bb_commission_general.GMA_10 = "GMA";
+                        bb_commission_general.GMA_10 = "10%";
                     }
                     else
                     {
