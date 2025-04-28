@@ -1183,10 +1183,28 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                                 else if (activePS.GlobalClickVVA != null)
                                 {
-                                    string formatNumber = activePS.GlobalClickVVA.BWExcessPVP.ToString("F5");
-                                    kBETR = formatNumber.Replace(",", ".");
-                                    copiasIncludias = activePS.BWVolume / machineCounter;
-                                    kSTBM = copiasIncludias.ToString();
+                                    string formatNumber = "";
+                                    BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    if (pSM != null)
+                                    {
+                                        if (pSM.ApprovedBW != null)
+                                        {
+                                            formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+
+                                        }
+                                        else if (pSM.RequestedBWClickPrice != null)
+                                        {
+                                            formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+
+                                        }
+                                        else
+                                        {
+                                            formatNumber = "0,00000";
+                                        }
+                                        kBETR = formatNumber.Replace(",", ".");
+                                        copiasIncludias = pSM.BWVolume;
+                                        kSTBM = copiasIncludias.ToString();
+                                    }
                                 }
 
 
@@ -1224,10 +1242,28 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                                 else if (activePS.GlobalClickVVA != null)
                                 {
-                                    string formatNumber = activePS.GlobalClickVVA.CExcessPVP.ToString("F5");
-                                    kBETR = formatNumber.Replace(",", ".");
-                                    copiasIncludias = activePS.CVolume / machineCounter;
-                                    kSTBM = copiasIncludias.ToString();
+                                    string formatNumber = "";
+                                    BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    if (pSM != null)
+                                    {
+                                        if (pSM.ApprovedBW != null)
+                                        {
+                                            formatNumber = ((double)pSM.ApprovedC).ToString("F5");
+
+                                        }
+                                        else if (pSM.RequestedBWClickPrice != null)
+                                        {
+                                            formatNumber = ((double)pSM.RequestedCClickPrice).ToString("F5");
+
+                                        }
+                                        else
+                                        {
+                                            formatNumber = "0,00000";
+                                        }
+                                        kBETR = formatNumber.Replace(",", ".");
+                                        copiasIncludias = pSM.CVolume;
+                                        kSTBM = copiasIncludias.ToString();
+                                    }
                                 }
 
                                 collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
@@ -1263,12 +1299,30 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                                 else if (activePS.GlobalClickVVA != null)
                                 {
-                                    string formatNumber = activePS.GlobalClickVVA.BWExcessPVP.ToString("F5");
-                                    kBETR = formatNumber.Replace(",", ".");
+                                    string formatNumber = "";
+                                    BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    if (pSM != null)
+                                    {
+                                        if (pSM.ApprovedBW != null)
+                                        {
+                                            formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+
+                                        }
+                                        else if (pSM.RequestedBWClickPrice != null)
+                                        {
+                                            formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+
+                                        }
+                                        else
+                                        {
+                                            formatNumber = "0,00000";
+                                        }
+                                        kBETR = formatNumber.Replace(",", ".");
+                                        copiasIncludias = pSM.BWVolume;
+                                        kSTBM = copiasIncludias.ToString();
+                                    }
                                 }
 
-                                copiasIncludias = activePS.BWVolume / machineCounter;
-                                kSTBM = copiasIncludias.ToString();
 
                                 collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
                                 {
@@ -1294,6 +1348,7 @@ namespace WebApplication1.Models.SetupXML.XML
                 Console.WriteLine($"Order - ConfigOrders: {stopwatch.ElapsedMilliseconds} ms");
 
                 return collectionOrderCLickPrices;
+
             }
             catch (Exception ex)
             {
