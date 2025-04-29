@@ -397,13 +397,30 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     if (cond == null)
                                     {
-                                        conditionPVP.ConditionCode = "ZPD4";
-                                        conditionPVP.PVP = Math.Round((quoteRS.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) ?? 0.0, 2);
-                                        conditionsPvp.Add(conditionPVP);
+                                        if(quoteRS.TotalMonths == 1)
+                                        {
+                                            conditionPVP.ConditionCode = "ZPD4";
+                                            conditionPVP.PVP = Math.Round((quoteRS.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) ?? 0.0, 2);
+                                            conditionsPvp.Add(conditionPVP);
+                                        }
+                                        else
+                                        {
+                                            conditionPVP.ConditionCode = "ZPD4";
+                                            conditionPVP.PVP = Math.Round((quoteRS.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * quoteRS.TotalMonths ?? 0.0, 2);
+                                            conditionsPvp.Add(conditionPVP);
+                                        }
                                     }
                                     else
                                     {
-                                        cond.PVP = Math.Round((cond.PVP + ((quoteRS.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)))) ?? 0.0, 2);
+                                        if (quoteRS.TotalMonths == 1)
+                                        {
+                                            cond.PVP = Math.Round((cond.PVP + ((quoteRS.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)))) ?? 0.0, 2);
+
+                                        }
+                                        else
+                                        {
+                                            cond.PVP = Math.Round((cond.PVP + ((quoteRS.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * quoteRS.TotalMonths)) ?? 0.0, 2);
+                                        }
                                     }
                                 }
                                 else
