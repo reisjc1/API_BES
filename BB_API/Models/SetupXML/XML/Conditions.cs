@@ -314,6 +314,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     List<BB_PrintingService_Machines> bB_PrintingService_Machine = db.BB_PrintingService_Machines.AsNoTracking().ToList();
                     BB_Proposal_OPSManage opsM = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     //BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    BB_Proposal_Overvaluation overvaluation = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
                     //int? numberOfMachines = 0;
                     //foreach(var equip in quote_lst)
@@ -767,17 +768,45 @@ namespace WebApplication1.Models.SetupXML.XML
                             BB_VVA bB_VVA = bB_VVA_lst.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
                             List<BB_PrintingService_Machines> machines = bB_PrintingService_Machine.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
                             BB_PrintingService_Machines machineItem = machines.Where(x => x.CodeRef == order.MACHINE).FirstOrDefault();
-                            if (bB_VVA != null)
+                            if (bB_VVA != null) 
                             {
-                                //BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                                collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                                if(machineItem != null)
                                 {
-                                    DOC = order.SD_DOC,
-                                    COND_FLAG = "A",
-                                    KSCHL = "ZVBS",
-                                    KBETR = Math.Round(((machineItem.BWVolume * machineItem.ApprovedBW) + (machineItem.CVolume * machineItem.ApprovedC)) ?? 0.0, 2).ToString("F2").Replace(",", ".")
-                                });
+                                    //BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                                    collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                                    {
+                                        DOC = order.SD_DOC,
+                                        COND_FLAG = "A",
+                                        KSCHL = "ZVBS",
+                                        KBETR = Math.Round(((machineItem.BWVolume * machineItem.ApprovedBW) + (machineItem.CVolume * machineItem.ApprovedC)) ?? 0.0, 2).ToString("F2").Replace(",", ".")
+                                    });
+                                }
+                                else
+                                {
+                                    BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.SerialNumber == order.ORDER_INFO).FirstOrDefault();
+                                    BB_PrintingService_Machines machineItem2 = machines.Where(x => x.CodeRef == itemDoBasket.CodeRef).FirstOrDefault();
+
+                                    collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                                    {
+                                        DOC = order.SD_DOC,
+                                        COND_FLAG = "A",
+                                        KSCHL = "ZVBS",
+                                        KBETR = Math.Round(((machineItem2.BWVolume * machineItem2.ApprovedBW) + (machineItem2.CVolume * machineItem2.ApprovedC)) ?? 0.0, 2).ToString("F2").Replace(",", ".")
+                                    });
+                                }
                             }
+                            
+                        }
+
+                        if(overvaluation != null)
+                        {
+                            collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                            {
+                                DOC = order.SD_DOC,
+                                COND_FLAG = "O",
+                                KSCHL = "ZEBB",
+                                KBETR = overvaluation.Total.ToString()
+                            });
                         }
 
 

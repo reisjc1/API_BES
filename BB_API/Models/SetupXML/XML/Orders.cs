@@ -628,6 +628,9 @@ namespace WebApplication1.Models.SetupXML.XML
                         .Where(x => x.DeliveryLocationID.HasValue && orderIds.Contains(x.DeliveryLocationID.Value))
                         .ToList();
 
+                    List<BB_Proposal_DeliveryLocation> list_DeliveryLocations = db.BB_Proposal_DeliveryLocation
+                        .Where(x => x.ProposalID == proposalId && x.AccountType == "Bill To").ToList();
+
                     //var count = 0;
 
                     //foreach(var used in quoteUsed_lst)
@@ -673,26 +676,35 @@ namespace WebApplication1.Models.SetupXML.XML
                                     if (bB_Equipamentos != null)
                                     {
                                         isMachine = true;
-                                        collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
-                                        {
-                                            SD_DOC = orderDoc,
-                                            ITM_NUMBER = "10", // contractItm,
-                                            MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
-                                            REQ_QTY = item.Qty.ToString(),
-                                            MODEL_YN = "Y",// Perguntar ao Luis
-                                            PLANT = "5200"
-                                        });
 
                                         //bundelCodeRef = item.CodeRef;
                                         firstItemGroup = false;
 
                                         if(item.IsUsedMachine == true)
                                         {
+                                            collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                            {
+                                                SD_DOC = orderDoc,
+                                                ITM_NUMBER = "10", // contractItm,
+                                                MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
+                                                REQ_QTY = item.Qty.ToString(),
+                                                MODEL_YN = "Y",// Perguntar ao Luis
+                                                PLANT = "5400"
+                                            });
                                             isUsedMachine = true;
                                             serialNumber = item.SerialNumber;
                                         }
                                         else
                                         {
+                                            collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                                            {
+                                                SD_DOC = orderDoc,
+                                                ITM_NUMBER = "10", // contractItm,
+                                                MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
+                                                REQ_QTY = item.Qty.ToString(),
+                                                MODEL_YN = "Y",// Perguntar ao Luis
+                                                PLANT = "5200"
+                                            });
                                             bundelCodeRef = item.CodeRef;
                                         }
 
@@ -731,6 +743,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         itm_number = itm_number + 10;
 
                                     }
+
                                 }
 
                                 //BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == order.DeliveryContact).FirstOrDefault();
@@ -776,11 +789,30 @@ namespace WebApplication1.Models.SetupXML.XML
                                     LEAS_ZTERM = "E30D";
 
                                 }
+
+                                string billToNumber = "";
+
+                                string payerNumber = "";
+
+                                foreach(var dl in list_DeliveryLocations)
+                                {
+                                    if(dl.BillReceiver == true && dl.Payer == true) {
+                                        billToNumber = dl.SAPCustomerNr;
+                                        payerNumber = dl.SAPCustomerNr;
+                                    }else if(dl.BillReceiver == true && dl.Payer == false)
+                                    {
+                                        billToNumber = dl.SAPCustomerNr;
+                                    }
+                                    else
+                                    {
+                                        payerNumber = dl.SAPCustomerNr;
+                                    }
+                                }
                                 collectionOrdersFinance.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE
                                 {
                                     SD_DOC = orderDoc,
                                     FINANCE_TYPE = financing,
-                                    LEAS_KUNNR = ct.CompanyCode == null ? d.ClientAccountNumber : ct.CompanyCode,
+                                    LEAS_KUNNR = ct.CompanyCode == null ? payerNumber : ct.CompanyCode,
                                     LEAS_LVTNR = pf.AgreementNumber,
                                     LEAS_LFAKT = "1",
                                     LEAS_ZTERM = LEAS_ZTERM,
@@ -790,8 +822,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                     LEAS_LEPER = "",
                                     LEAS_LRYTH = "1",
                                     LEAS_LKAUP = "2.5",
-                                    BILL_TO = d.ClientAccountNumber
-                                    //PAYER = d.ClientAccountNumber
+                                    BILL_TO = billToNumber
+                                    //PAYER = payerNumber
                                 });
                                 //}
 
