@@ -23,6 +23,7 @@ namespace WebApplication1.Models.SetupXML
         public string Room { get; set; }
         public string City { get; set; }
         public int TypeOfOrder { get; set; }
+        public string Comments { get; set; }
 
     }
 }

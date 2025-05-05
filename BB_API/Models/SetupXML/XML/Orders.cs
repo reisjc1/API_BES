@@ -603,7 +603,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                     Building = reader["Building"].ToString(),
                                     Room = reader["Room"].ToString(),
                                     City = reader["City"].ToString(),
-                                    TypeOfOrder = Convert.ToInt32(reader["TypeOfOrder"])
+                                    TypeOfOrder = Convert.ToInt32(reader["TypeOfOrder"]),
+                                    Comments = reader["Comments"].ToString()
                                 };
 
                                 groups.Add(order);
@@ -627,7 +628,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     List<BB_Proposal_ItemDoBasket> itemsBasketGroup = db.BB_Proposal_ItemDoBasket
                         .Where(x => x.DeliveryLocationID.HasValue && orderIds.Contains(x.DeliveryLocationID.Value))
                         .ToList();
-
+                    List<BB_Proposal_DeliveryLocation> list_ShipTo = db.BB_Proposal_DeliveryLocation
+                        .Where(x => x.ProposalID == proposalId && x.AccountType == "Ship To").ToList();
                     List<BB_Proposal_DeliveryLocation> list_DeliveryLocations = db.BB_Proposal_DeliveryLocation
                         .Where(x => x.ProposalID == proposalId && x.AccountType == "Bill To").ToList();
 
@@ -753,6 +755,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 //List<Accessories> accessories = GetAcesseries("A63R021");
                                 //if (dLClient != null)
                                 //{
+                                
                                     collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
                                     {
                                         SD_DOC = orderDoc,
@@ -760,7 +763,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         APLF_PHON = order.ContactMovil,       //"66666666",
                                         APLF_OPEN = order.Schedule,//"9h 17h",
                                         APLF_INFO = order.DLFloor + "" + order.Department + "" + order.Building + "" + order.Room,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                        APLF_INFO2 = order.City,//"Asc: Oui -Connexion: PRINTFLEET",
+                                        APLF_INFO2 = order.Comments,//"Asc: Oui -Connexion: PRINTFLEET",
 
                                     });
                                 //}
