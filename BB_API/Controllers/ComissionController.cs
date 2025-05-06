@@ -1675,7 +1675,7 @@ namespace WebApplication1.Controllers
 
                 if (!commission_lst.Any())
                 {
-                    throw new Exception("No data found.");
+                    throw new Exception("No existen comisiones creadas entre las fechas que seleccionó.");
                 }
 
                 //obter o Type do primeiro registo da lista
@@ -1950,9 +1950,14 @@ namespace WebApplication1.Controllers
                 // Log do erro
                 Console.WriteLine($"Error: {ex.Message}");
 
-                // Retornar resposta HTTP com erro
+                // Retornar resposta HTTP com erro, incluindo a mensagem de erro
                 HttpResponseMessage errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                errorResponse.Content = new StringContent("Error al exportar comisiones a Excel.");
+                var errorMessage = $"Error al exportar comisiones a Excel: {ex.Message}";
+
+                // Retorna a mensagem de erro no corpo da resposta
+                errorResponse.Content = new StringContent(errorMessage);
+
+                // Retorna a resposta com o código de erro e a mensagem
                 return errorResponse;
             }
             finally
