@@ -2637,7 +2637,7 @@ namespace WebApplication1.Controllers
 
                             bool isRS = pp_quote_rs.Any(x => x.CodeRef == item.CodeRef);
 
-                            bool isOPSPackage = opsManage_lst.Any(x => x.CodeRef == item.CodeRef);
+                            bool isOPSPackage = opsManage_lst.Any(x => x.CodeRef == item.CodeRef && x.UnitDiscountPrice != 0);
 
                             // SERVICO RECURRENTE
                             if (isRS == true)
@@ -2819,6 +2819,7 @@ namespace WebApplication1.Controllers
                                         resumo.DeliveryDate = i.DeliveryDate;
                                         resumo.IsUsedMachine = (bool)it.IsUsedMachine ? "Si" : "No";
                                         resumo.SerialNumber = it.SerialNumber != null ? it.SerialNumber : "-";
+                                        resumo.Comments = i.Comments != null || i.Comments != "" ? i.Comments : "-";
                                         lstBB_Proposal_DeliveryLocationResumoModel.Add(resumo);
                                     }
                                 }

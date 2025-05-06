@@ -988,12 +988,8 @@ namespace WebApplication1.BLL
                         {
                             using (var db = new BB_DB_DEVEntities2())
                             {
-                                bool exists = db.BB_Proposal_DeliveryLocation.Any(x => x.IDX == billTo.IDX && x.ProposalID == p.Draft.details.ID);
-                                // se existe (editar)
-                                if (!exists)
-                                {
-                                    db.BB_Proposal_DeliveryLocation.Add(billTo);
-                                }
+                                //bool exists = db.BB_Proposal_DeliveryLocation.Any(x => x.IDX == billTo.IDX && x.ProposalID == p.Draft.details.ID);
+                                db.BB_Proposal_DeliveryLocation.AddOrUpdate(billTo);
                                 
                                 db.SaveChanges();
 
