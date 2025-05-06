@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -1655,10 +1656,20 @@ namespace WebApplication1.Controllers
                 {
                     if (ExportInitialDate != null && ExportFinalDate != null)
                     {
-                        commission_lst = db.BB_Commission_General
-                        .Where(x => x.Fecha_Operacion >= ExportInitialDate && x.Fecha_Operacion <= ExportFinalDate && x.IsNP == false) // Filtra pelo intervalo de datas
-                        .OrderByDescending(x => x.ID)
-                        .ToList();
+                        if (ExportInitialDate.Date == ExportFinalDate.Date)
+                        {
+                            commission_lst = db.BB_Commission_General
+                                .Where(x => DbFunctions.TruncateTime(x.Fecha_Operacion) == ExportInitialDate.Date && x.IsNP == false)
+                                .OrderByDescending(x => x.ID)
+                                .ToList();
+                        }
+                        else
+                        {
+                            commission_lst = db.BB_Commission_General
+                            .Where(x => x.Fecha_Operacion >= ExportInitialDate && x.Fecha_Operacion <= ExportFinalDate && x.IsNP == false) // Filtra pelo intervalo de datas
+                            .OrderByDescending(x => x.ID)
+                            .ToList();
+                        }
                     }
                 }
 
