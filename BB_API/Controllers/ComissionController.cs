@@ -1675,7 +1675,11 @@ namespace WebApplication1.Controllers
 
                 if (!commission_lst.Any())
                 {
-                    throw new Exception("No existen comisiones creadas entre las fechas que seleccionó.");
+                    var errorResponse = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    {
+                        Content = new StringContent("No existen comisiones creadas entre las fechas que seleccionó.")
+                    };
+                    return errorResponse;
                 }
 
                 //obter o Type do primeiro registo da lista
