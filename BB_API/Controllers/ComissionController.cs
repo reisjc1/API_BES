@@ -1665,6 +1665,8 @@ namespace WebApplication1.Controllers
                         }
                         else
                         {
+                            ExportFinalDate = ExportFinalDate.AddDays(1);
+
                             commission_lst = db.BB_Commission_General
                             .Where(x => x.Fecha_Operacion >= ExportInitialDate && x.Fecha_Operacion <= ExportFinalDate && x.IsNP == false) // Filtra pelo intervalo de datas
                             .OrderByDescending(x => x.ID)
