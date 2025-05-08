@@ -4074,7 +4074,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("SaveMultiContractInfo")]
-        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract, string plant, bool invoiceList)
+        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract, string plant, bool invoiceList, string contractNumberPai)
         {
             try
             {
@@ -4098,6 +4098,7 @@ namespace WebApplication1.Controllers
                                 }
                             }
                             bb_proposal.Plant = plant;
+                            bb_proposal.ContractNumberPai = contractNumberPai;
 
                             LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractID).FirstOrDefault();
 

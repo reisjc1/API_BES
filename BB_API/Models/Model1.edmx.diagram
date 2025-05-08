@@ -26,7 +26,6 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_FinancingMonthly" Width="1.875" PointX="15" PointY="3.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_FinancingTrimestral" Width="1.5" PointX="15.375" PointY="6.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Overvaluation" Width="1.75" PointX="15.375" PointY="13.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Clientes" Width="1.5" PointX="3.375" PointY="14.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Observations" Width="1.875" PointX="11.625" PointY="16.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_CRM_Quotes" Width="1.5" PointX="0.75" PointY="16.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Machines_Compatibility" Width="1.5" PointX="15.375" PointY="16.75" />
@@ -38,7 +37,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Campanha_Financing" Width="1.5" PointX="17.375" PointY="14.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Campanhas_Printing" Width="1.5" PointX="17.375" PointY="17.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Financing_Documentos" Width="1.5" PointX="0.75" PointY="20.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentClassification" Width="1.5" PointX="2.75" PointY="20.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.LD_DocumentClassification" Width="1.5" PointX="2.5" PointY="22" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_PrintingServices" Width="1.875" PointX="13.375" PointY="19.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.LD_FinancingDocument" Width="1.5" PointX="17.375" PointY="20.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Service_Collab" Width="1.5" PointX="19.375" PointY="20.75" />
@@ -131,6 +130,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Quote_RS" Width="1.5" PointX="34.375" PointY="13.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.LD_Contrato" Width="1.5" PointX="26.375" PointY="33.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Proposal_Financing" Width="1.5" PointX="11.375" PointY="0.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Clientes" Width="1.5" PointX="35.375" PointY="24.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -48,7 +48,6 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_FinancingMonthly> BB_Proposal_FinancingMonthly { get; set; }
         public virtual DbSet<BB_Proposal_FinancingTrimestral> BB_Proposal_FinancingTrimestral { get; set; }
         public virtual DbSet<BB_Proposal_Overvaluation> BB_Proposal_Overvaluation { get; set; }
-        public virtual DbSet<BB_Clientes> BB_Clientes { get; set; }
         public virtual DbSet<BB_Proposal_Observations> BB_Proposal_Observations { get; set; }
         public virtual DbSet<BB_CRM_Quotes> BB_CRM_Quotes { get; set; }
         public virtual DbSet<BB_Machines_Compatibility> BB_Machines_Compatibility { get; set; }
@@ -145,6 +144,7 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_Proposal_Quote_RS> BB_Proposal_Quote_RS { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
         public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
+        public virtual DbSet<BB_Clientes> BB_Clientes { get; set; }
     
         public virtual int GetXMLOrders(Nullable<int> proposalId)
         {

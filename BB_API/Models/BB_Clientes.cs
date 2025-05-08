@@ -44,5 +44,7 @@ namespace WebApplication1.Models
         public string Branch_Id { get; set; }
         public string Branch_Local { get; set; }
         public string Territory { get; set; }
+        public string Erpsalesgroupid { get; set; }
+        public string Erpsalesgroupname { get; set; }
     }
 }

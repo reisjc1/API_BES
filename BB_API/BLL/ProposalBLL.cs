@@ -46,6 +46,7 @@ namespace WebApplication1.BLL
 
                     proposal.IsMultipleContract = p.Draft.details.IsMultipleContract ?? false;
                     proposal.IsNP = p.Draft.baskets.IsNP;
+                    proposal.ContractNumberPai = p.Draft.details.ExistanteContractNumber;
 
 
                     List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposal.ID).ToList();
@@ -988,8 +989,16 @@ namespace WebApplication1.BLL
                         {
                             using (var db = new BB_DB_DEVEntities2())
                             {
-                                //bool exists = db.BB_Proposal_DeliveryLocation.Any(x => x.IDX == billTo.IDX && x.ProposalID == p.Draft.details.ID);
-                                db.BB_Proposal_DeliveryLocation.AddOrUpdate(billTo);
+                                bool exists = db.BB_Proposal_DeliveryLocation.Any(x => x.IDX == billTo.IDX && x.ProposalID == p.Draft.details.ID);
+
+                                if (!exists)
+                                {
+                                    db.BB_Proposal_DeliveryLocation.Add(billTo);
+                                }
+                                //else
+                                //{
+                                //    db.BB_Proposal_DeliveryLocation.AddOrUpdate(billTo);
+                                //}
                                 
                                 db.SaveChanges();
 
@@ -1288,7 +1297,7 @@ namespace WebApplication1.BLL
                 err.ProposalObj.Draft.details.CampaignID = proposal.CampaignID;
 
                 err.ProposalObj.Draft.details.IsMultipleContract = proposal.IsMultipleContract ?? false;
-
+                err.ProposalObj.Draft.details.ExistanteContractNumber = proposal.ContractNumberPai ?? "";
 
                 err.ProposalObj.Draft.baskets = new Baskets();
 
@@ -1912,7 +1921,8 @@ namespace WebApplication1.BLL
                     ToDelete = false,
                     ValueTotal = p.Summary.businessTotal,
                     IsMultipleContract = IsMultipleContract,
-                    IsNP = p.Draft.baskets.IsNP
+                    IsNP = p.Draft.baskets.IsNP,
+                    ContractNumberPai = p.Draft.details.ExistanteContractNumber
                 };
 
                 

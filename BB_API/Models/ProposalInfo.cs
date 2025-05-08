@@ -300,6 +300,7 @@ namespace WebApplication1.Models
         public int? CampaignID { get; set; }
 
         public bool? IsMultipleContract { get; set; }
+        public string ExistanteContractNumber { get; set; }
 
     }
 

@@ -108,6 +108,8 @@
           <Property Name="Branch_Id" Type="nvarchar(max)" />
           <Property Name="Branch_Local" Type="nvarchar(max)" />
           <Property Name="Territory" Type="nvarchar(max)" />
+          <Property Name="Erpsalesgroupid" Type="nvarchar(max)" />
+          <Property Name="Erpsalesgroupname" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BB_Coderef_Generic">
           <Key>
@@ -2204,7 +2206,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_Proposal_FinancingMonthly" EntityType="BB_DB_DEVModel.BB_Proposal_FinancingMonthly" />
           <EntitySet Name="BB_Proposal_FinancingTrimestral" EntityType="BB_DB_DEVModel.BB_Proposal_FinancingTrimestral" />
           <EntitySet Name="BB_Proposal_Overvaluation" EntityType="BB_DB_DEVModel.BB_Proposal_Overvaluation" />
-          <EntitySet Name="BB_Clientes" EntityType="BB_DB_DEVModel.BB_Clientes" />
           <EntitySet Name="BB_Proposal_Observations" EntityType="BB_DB_DEVModel.BB_Proposal_Observations" />
           <EntitySet Name="BB_CRM_Quotes" EntityType="BB_DB_DEVModel.BB_CRM_Quotes" />
           <EntitySet Name="BB_Machines_Compatibility" EntityType="BB_DB_DEVModel.BB_Machines_Compatibility" />
@@ -2337,6 +2338,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_Proposal_Quote_RS" EntityType="BB_DB_DEVModel.BB_Proposal_Quote_RS" />
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
+          <EntitySet Name="BB_Clientes" EntityType="BB_DB_DEVModel.BB_Clientes" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -2603,41 +2605,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Total" Type="Double" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ProposalID" Type="Int32" />
-        </EntityType>
-        <EntityType Name="BB_Clientes">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="accountnumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Owner" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="address1_line1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="emailaddress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="NIF" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Blocked" Type="Boolean" />
-          <Property Name="Holding" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="GMA" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="GMA_Identifier" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Industry" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
-          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsClienteBB" Type="Boolean" />
-          <Property Name="telephone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="NUS_ACCOUNT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="new_businesssegmentname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="numberofemployees" Type="Int32" />
-          <Property Name="new_totalequipments" Type="Int32" />
-          <Property Name="new_totalequipmentskm" Type="Int32" />
-          <Property Name="Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Branch_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Branch_Local" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Territory" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BB_Proposal_Observations">
           <Key>
@@ -4267,6 +4234,43 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="AmountNotFinanced" Type="Double" />
           <Property Name="AmountFinanced" Type="Double" />
         </EntityType>
+        <EntityType Name="BB_Clientes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="accountnumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Owner" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="address1_line1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="emailaddress1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NIF" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Blocked" Type="Boolean" />
+          <Property Name="Holding" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GMA" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GMA_Identifier" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Industry" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Segment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedTime" Type="DateTime" Precision="3" />
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsClienteBB" Type="Boolean" />
+          <Property Name="telephone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NUS_ACCOUNT" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="new_businesssegmentname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="numberofemployees" Type="Int32" />
+          <Property Name="new_totalequipments" Type="Int32" />
+          <Property Name="new_totalequipmentskm" Type="Int32" />
+          <Property Name="Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Branch_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Branch_Local" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Territory" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Erpsalesgroupid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Erpsalesgroupname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         
         </Schema>
     </edmx:ConceptualModels>
@@ -4556,42 +4560,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Total" ColumnName="Total" />
                 <ScalarProperty Name="Motive" ColumnName="Motive" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BB_Clientes">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Clientes">
-              <MappingFragment StoreEntitySet="BB_Clientes">
-                <ScalarProperty Name="Territory" ColumnName="Territory" />
-                <ScalarProperty Name="Branch_Local" ColumnName="Branch_Local" />
-                <ScalarProperty Name="Branch_Id" ColumnName="Branch_Id" />
-                <ScalarProperty Name="Branch" ColumnName="Branch" />
-                <ScalarProperty Name="new_totalequipmentskm" ColumnName="new_totalequipmentskm" />
-                <ScalarProperty Name="new_totalequipments" ColumnName="new_totalequipments" />
-                <ScalarProperty Name="numberofemployees" ColumnName="numberofemployees" />
-                <ScalarProperty Name="new_businesssegmentname" ColumnName="new_businesssegmentname" />
-                <ScalarProperty Name="NUS_ACCOUNT" ColumnName="NUS_ACCOUNT" />
-                <ScalarProperty Name="telephone1" ColumnName="telephone1" />
-                <ScalarProperty Name="IsClienteBB" ColumnName="IsClienteBB" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
-                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Segment" ColumnName="Segment" />
-                <ScalarProperty Name="Industry" ColumnName="Industry" />
-                <ScalarProperty Name="GMA_Identifier" ColumnName="GMA_Identifier" />
-                <ScalarProperty Name="GMA" ColumnName="GMA" />
-                <ScalarProperty Name="Holding" ColumnName="Holding" />
-                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
-                <ScalarProperty Name="NIF" ColumnName="NIF" />
-                <ScalarProperty Name="emailaddress1" ColumnName="emailaddress1" />
-                <ScalarProperty Name="address1_line1" ColumnName="address1_line1" />
-                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
-                <ScalarProperty Name="Owner" ColumnName="Owner" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="accountnumber" ColumnName="accountnumber" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -6204,6 +6172,44 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
                 <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
                 <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Clientes">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Clientes">
+              <MappingFragment StoreEntitySet="BB_Clientes">
+                <ScalarProperty Name="Erpsalesgroupname" ColumnName="Erpsalesgroupname" />
+                <ScalarProperty Name="Erpsalesgroupid" ColumnName="Erpsalesgroupid" />
+                <ScalarProperty Name="Territory" ColumnName="Territory" />
+                <ScalarProperty Name="Branch_Local" ColumnName="Branch_Local" />
+                <ScalarProperty Name="Branch_Id" ColumnName="Branch_Id" />
+                <ScalarProperty Name="Branch" ColumnName="Branch" />
+                <ScalarProperty Name="new_totalequipmentskm" ColumnName="new_totalequipmentskm" />
+                <ScalarProperty Name="new_totalequipments" ColumnName="new_totalequipments" />
+                <ScalarProperty Name="numberofemployees" ColumnName="numberofemployees" />
+                <ScalarProperty Name="new_businesssegmentname" ColumnName="new_businesssegmentname" />
+                <ScalarProperty Name="NUS_ACCOUNT" ColumnName="NUS_ACCOUNT" />
+                <ScalarProperty Name="telephone1" ColumnName="telephone1" />
+                <ScalarProperty Name="IsClienteBB" ColumnName="IsClienteBB" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="ModifiedTime" ColumnName="ModifiedTime" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Segment" ColumnName="Segment" />
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="GMA_Identifier" ColumnName="GMA_Identifier" />
+                <ScalarProperty Name="GMA" ColumnName="GMA" />
+                <ScalarProperty Name="Holding" ColumnName="Holding" />
+                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
+                <ScalarProperty Name="NIF" ColumnName="NIF" />
+                <ScalarProperty Name="emailaddress1" ColumnName="emailaddress1" />
+                <ScalarProperty Name="address1_line1" ColumnName="address1_line1" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="accountnumber" ColumnName="accountnumber" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
