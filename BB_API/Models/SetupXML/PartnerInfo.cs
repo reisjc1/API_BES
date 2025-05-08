@@ -30,5 +30,6 @@ namespace WebApplication1.Models.SetupXML
         public string BUILD_LONG { get; set; }
         public string TAX_NO_1 { get; set; }
         public string TAX_NO_2 { get; set; }
+        public string DEPARTMENT { get; set; }
     }
 }

@@ -189,31 +189,82 @@ namespace WebApplication1.Models.SetupXML.XML
                         formattedDtCont = createdTime.ToString("yyyyMMdd");
                     }
 
-                    bool? isMultipleContract = db.BB_Proposal.Where(x => x.ID == proposalId).Select(x => x.IsMultipleContract).FirstOrDefault();
-
-                    int index = 1;
-                    string contractIndexString = index.ToString();
-                    collectionContracts.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS
+                    BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault();
+                    
+                    if ((bool)proposal.IsMultipleContract)
                     {
+                        int indexMC = 1;
+                        string contractIndexStringMC = indexMC.ToString();
+                        collectionContracts.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS
+                        {
 
 
-                        CONTR_DOC = $"C_D{c.ID}_{contractIndexString}_{randomLetterNunber}",
-                        //CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
-                        VT_AUART = "ZWV1",
-                        VT_BEGDA = formattedDtCont,
-                        VT_ABNDA = "",
-                        VT_VTART = contractType,
-                        VT_SERWI = "BES",             //"BES",
-                        VT_ESCAL = "08",
-                        VT_AUGRU = isMultipleContract == false ? "ZCS" : "ZCC",             //input de um campo -> ZCC = só 1 contrato   // ZCS
-                        VT_LAUFK = vtLaufk,
-                        VT_VLAUFZ = bB_Printing.ContractDuration.ToString(),
-                        VT_VLAUFE = "3",
-                        VT_ANZPOS = noOrders.ToString(),
-                        VT_VUNDAT = FirstDayNextMonthString,
-                        VT_ZTERM = "453E",
-                        VT_FAKSK = "ZN"
-                    });
+                            CONTR_DOC = $"C_D{c.ID}_{contractIndexStringMC}_{randomLetterNunber}",
+                            //CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
+                            VT_AUART = "ZWV1",
+                            VT_BEGDA = formattedDtCont,
+                            VT_ABNDA = "",
+                            VT_VTART = contractType,
+                            VT_SERWI = "BES",             //"BES",
+                            VT_ESCAL = "08",
+                            VT_AUGRU = "ZCC",             //input de um campo -> ZCC = só 1 contrato   // ZCS
+                            VT_LAUFK = vtLaufk,
+                            VT_VLAUFZ = bB_Printing.ContractDuration.ToString(),
+                            VT_VLAUFE = "3",
+                            VT_ANZPOS = noOrders.ToString(),
+                            VT_VUNDAT = FirstDayNextMonthString,
+                            VT_ZTERM = "453E",
+                            VT_FAKSK = "ZN",
+                            VT_SAP_CONTRACT = proposal.ContractNumberPai
+                        });
+                    }
+                    else
+                    {
+                        int index = 1;
+                        string contractIndexString = index.ToString();
+                        collectionContracts.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS
+                        {
+                            CONTR_DOC = $"C_D{c.ID}_{contractIndexString}_{randomLetterNunber}",
+                            //CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
+                            VT_AUART = "ZWV1",
+                            VT_BEGDA = formattedDtCont,
+                            VT_ABNDA = "",
+                            VT_VTART = contractType,
+                            VT_SERWI = "BES",             //"BES",
+                            VT_ESCAL = "08",
+                            VT_AUGRU = "ZCS",             //input de um campo -> ZCC = só 1 contrato   // ZCS
+                            VT_LAUFK = vtLaufk,
+                            VT_VLAUFZ = bB_Printing.ContractDuration.ToString(),
+                            VT_VLAUFE = "3",
+                            VT_ANZPOS = noOrders.ToString(),
+                            VT_VUNDAT = FirstDayNextMonthString,
+                            VT_ZTERM = "453E",
+                            VT_FAKSK = "ZN"
+                        });
+                    }
+                    //int index = 1;
+                    //string contractIndexString = index.ToString();
+                    //collectionContracts.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS
+                    //{
+
+
+                    //    CONTR_DOC = $"C_D{c.ID}_{contractIndexString}_{randomLetterNunber}",
+                    //    //CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
+                    //    VT_AUART = "ZWV1",
+                    //    VT_BEGDA = formattedDtCont,
+                    //    VT_ABNDA = "",
+                    //    VT_VTART = contractType,
+                    //    VT_SERWI = "BES",             //"BES",
+                    //    VT_ESCAL = "08",
+                    //    VT_AUGRU = isMultipleContract == false ? "ZCS" : "ZCC",             //input de um campo -> ZCC = só 1 contrato   // ZCS
+                    //    VT_LAUFK = vtLaufk,
+                    //    VT_VLAUFZ = bB_Printing.ContractDuration.ToString(),
+                    //    VT_VLAUFE = "3",
+                    //    VT_ANZPOS = noOrders.ToString(),
+                    //    VT_VUNDAT = FirstDayNextMonthString,
+                    //    VT_ZTERM = "453E",
+                    //    VT_FAKSK = "ZN"
+                    //});
                     //if (contracts != null)
                     //{
                     //    List<BB_Proposal_ItemDoBasket> bb_itemsDoBasket = new List<BB_Proposal_ItemDoBasket>();

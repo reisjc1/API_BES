@@ -341,6 +341,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         TEL_NUMBER = reader["TEL_NUMBER"].ToString(),
                                         BUILD_LONG = reader["BUILD_LONG"].ToString(),
                                         TAX_NO_1 = reader["TAX_NO_1"].ToString(),
+                                        DEPARTMENT = reader["DEPARTMENT"].ToString()
                                     };
 
                                     partnerInfoLst.Add(partnerInfo);
@@ -446,10 +447,10 @@ namespace WebApplication1.Models.SetupXML.XML
                                 ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
                                 NAME1 = order.NAME1, // "EUROPEA DE EXPEDICIONES SL",
                                 NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
-                                NAME_CO = "DEPART",
+                                NAME_CO = order.DEPARTMENT,
                                 CITY1 = addressObj.CITY1,// "CADIZ",
                                 POST_CODE1 = addressObj.POST_CODE1,//"11006",
-                                STREET = addressObj.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
+                                STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
                                 FLOOR = addressObj.FLOOR,//"3",
                                 ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
                                 COUNTRY = addressObj.COUNTRY,//"ES",
