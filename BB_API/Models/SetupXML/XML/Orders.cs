@@ -24,6 +24,7 @@ namespace WebApplication1.Models.SetupXML.XML
     public class Orders
     {
         //public System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS> ConfigOrders(int proposalId, string randomLetterNunber)
+        //Nao esta a ser usado
         public OrdersPartnersList ConfigOrders(int proposalId, string randomLetterNunber, string financing, string contractDoc, LD_Contrato c, BB_Proposal d, BB_Proposal_Financing pf, BB_FinancingContractType ct)
         {
             try
@@ -533,25 +534,18 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
         }
-
+        //---------------------//
         public OrdersPartnersList ConfigOrdersV2(int proposalId, string randomLetterNunber, string financing, string contractDoc, LD_Contrato c, BB_Proposal d, BB_Proposal_Financing pf, BB_FinancingContractType ct)
         {
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
-                //string contractDoc = "";
                 List<OrdersPartners> sdDocOrdersPartners = new List<OrdersPartners>();
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    //List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
                     BB_Equipamentos maquina = new BB_Equipamentos();
-                    //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                    //BB_Proposal d = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault();
-                    //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                    //BB_Proposal_PrazoDiferenciado pd = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID != d.ID).FirstOrDefault();
-                    //BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == d.ID).FirstOrDefault();
-                    //BB_FinancingContractType ct = db.BB_FinancingContractType.Where(x => x.ID == pf.ContractTypeId).FirstOrDefault();
+
                     BB_Campanha ca = db.BB_Campanha.Where(x => x.ID == d.CampaignID).FirstOrDefault();
                     List<BB_Proposal_Quote> quote_lst = db.BB_Proposal_Quote.AsNoTracking().Where(x => x.Proposal_ID == proposalId && x.IsUsed == true).ToList();
                     Random random = new Random();
@@ -562,8 +556,6 @@ namespace WebApplication1.Models.SetupXML.XML
                     int index = 1;
                     var collectionOrders = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS>();
 
-                    //List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == d.ID && x.AccountType == "Ship To").ToList();
-                    //Dictionary<BB_Proposal_ItemDoBasket, int> groups = new Dictionary<BB_Proposal_ItemDoBasket, int>();
                     List<XMLOrders> groups = new List<XMLOrders>();
 
                     string bdConnect = ConfigurationManager.AppSettings["BasedadosConnect"].ToString();
@@ -952,41 +944,18 @@ namespace WebApplication1.Models.SetupXML.XML
                                         itm_number = itm_number + 10;
                                     }
                                 }
+                                                                
+                                collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                {
+                                    SD_DOC = orderDoc,
+                                    APLF_NAME = order.ContactName + "" + order.ContactSurname, //"M. LUIS ALVAREZ",
+                                    APLF_PHON = order.ContactMovil,       //"66666666",
+                                    APLF_OPEN = order.Schedule,//"9h 17h",
+                                    APLF_INFO = order.DLFloor + " " + order.Department + " " + order.Building + " " + order.Room,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                    APLF_INFO2 = order.Comments,//"Asc: Oui -Connexion: PRINTFLEET",
 
-
-                                //BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == order.DeliveryContact).FirstOrDefault();
-
-                                //collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.Key.CodeRef);
-
-                                //List<Accessories> accessories = GetAcesseries("A63R021");
-                                //if (dLClient != null)
-                                //{
-                                    collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
-                                    {
-                                        SD_DOC = orderDoc,
-                                        APLF_NAME = order.ContactName + "" + order.ContactSurname, //"M. LUIS ALVAREZ",
-                                        APLF_PHON = order.ContactMovil,       //"66666666",
-                                        APLF_OPEN = order.Schedule,//"9h 17h",
-                                        APLF_INFO = order.DLFloor + "" + order.Department + "" + order.Building + "" + order.Room,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                        APLF_INFO2 = order.City,//"Asc: Oui -Connexion: PRINTFLEET",
-
-                                    });
-                                //}
-                                //else
-                                //{
-                                //    collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
-                                //    {
-                                //        SD_DOC = orderDoc,
-                                //        APLF_NAME = "M. LUIS ALVAREZ",
-                                //        APLF_PHON = "66666666",
-                                //        APLF_OPEN = "9h 17h",
-                                //        APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                //        APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
-                                //        APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
-                                //    });
-                                //}
-                                //if (financing == "AL")
-                                //{
+                                });
+                                
                                 var LEAS_ZTERM = "";
                                 if (pf.Months == 60)
                                 {
@@ -1053,8 +1022,6 @@ namespace WebApplication1.Models.SetupXML.XML
                             }
                         }
                     }
-
-
 
 
                     var collectionOrderItemsRetiradas = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>();

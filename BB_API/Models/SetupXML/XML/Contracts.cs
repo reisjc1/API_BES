@@ -26,15 +26,9 @@ namespace WebApplication1.Models.SetupXML.XML
                 //List<BB_Data_Integration> maquinas = new List<BB_Data_Integration>();
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    //LD_Contrato contracts = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                    //BB_Proposal_PrazoDiferenciado pd = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID != proposalId).FirstOrDefault();
-                    //BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                    //BB_FinancingContractType ct = db.BB_FinancingContractType.Where(x => x.ID == pf.ContractTypeId).FirstOrDefault();
-                    //List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
-
                     BB_Proposal_PrintingServices2 printingServices2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_PrintingServices bB_Printing = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingServices2.ID).FirstOrDefault();
-                    //BB_FinancingType ft = db.BB_FinancingType.Where(x => x.Code == pf.FinancingTypeCode).FirstOrDefault();
+
                     if(proposalId == 9536)
                     {
                         ft.Code = 5;
@@ -57,9 +51,6 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
                         contractType = "003"; //Renting 
                     }
-
-
-
 
                     DateTime FirstDayofThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                     DateTime FirstDayofTheNextMonth = FirstDayofThisMonth.AddMonths(1);
@@ -100,35 +91,6 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     var collectionContracts = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS>();
                 
-                    //List<BB_Proposal_ItemDoBasket> bb_itemsDoBasket = new List<BB_Proposal_ItemDoBasket>();
-                    //int? firstItemGroup = 0;
-                    //List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalId).ToList();
-                    //foreach (var dLocations in dl)
-                    //{
-                    //    List<BB_Proposal_ItemDoBasket> itemsDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == dLocations.IDX).OrderBy(x => x.Group).ToList();
-                    //    foreach (var items in itemsDoBasket)
-                    //    {
-                    //        BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == items.CodeRef).FirstOrDefault();
-                    //        if (bB_Equipamentos != null)
-                    //        {
-                    //            if (items.Group != firstItemGroup)
-                    //            {
-                    //                bb_itemsDoBasket.Add(items);
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-
-                    //            if (items.Description.Contains("MAIN MATERIAL"))
-                    //            {
-                    //                bb_itemsDoBasket.Add(items);
-                    //            }
-                    //        }
-
-                    //    }
-
-                    //}
-
                     List<XMLOrders> groups = new List<XMLOrders>();
 
                     string bdConnect = ConfigurationManager.AppSettings["BasedadosConnect"].ToString();

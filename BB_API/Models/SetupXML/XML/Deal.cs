@@ -104,7 +104,7 @@ namespace WebApplication1.Models.SetupXML.XML
             }
         }
 
-
+        //Metodo chamado quando se carrega no botao injetar e download
         public string DealXML(int contractId, bool isInjecting = false)
         {
             try
@@ -150,18 +150,21 @@ namespace WebApplication1.Models.SetupXML.XML
                     }
                     switch (ft.Code)
                     {
+                        //Aquisicao direta ou sell to customer
                         case 0:
                             financingType = "K";
                             VTTYPFinancingType = "SA";
                             contractType = "002";
                             break;
 
+                        //Leasing
                         case 1:
                             financingType = "L";
                             VTTYPFinancingType = "DL";
                             contractType = "002";
                             break;
 
+                        //Reting
                         case 2:
                             financingType = "L";
                             VTTYPFinancingType = "DL";
@@ -169,12 +172,14 @@ namespace WebApplication1.Models.SetupXML.XML
                             //contractType = "002";  //Renting por enquanto enviar 002 e o ideal é enviar 008
                             break;
 
+                        //Assigment Lease
                         case 3:
                             financingType = "L";
                             VTTYPFinancingType = "AL";
                             contractType = "005";
                             break;
 
+                        //Rental Direto com a Konica
                         case 5:
                             financingType = "M";
                             VTTYPFinancingType = "AS";

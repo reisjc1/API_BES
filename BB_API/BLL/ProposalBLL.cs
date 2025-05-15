@@ -159,7 +159,7 @@ namespace WebApplication1.BLL
 
                         quote.Proposal_ID = ProposalID;
                         quote.CreatedBy = p.Draft.details.CreatedBy;
-                        quote.CreatedTime = DateTime.Now;
+                         quote.CreatedTime = DateTime.Now;
                         quote.ModifiedBy = p.Draft.details.CreatedBy;
                         quote.ModifiedTime = DateTime.Now;
 
@@ -1458,10 +1458,32 @@ namespace WebApplication1.BLL
                 }
                 else
                 {
-                    err.ProposalObj.Draft.client.accountnumber = "";
-                    err.ProposalObj.Draft.client.isNewClient = false;
-                    err.ProposalObj.Draft.client.isPublicSector = false;
-                    err.ProposalObj.Draft.client.isGMA = false;
+                    if(proposal.ClientAccountNumber != null)
+                    {
+                        infCliente = db.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).FirstOrDefault();
+
+                        var configCliente = new MapperConfiguration(cfg =>
+                        {
+                            cfg.CreateMap<BB_Clientes, Client>();
+                        });
+
+                        IMapper iMapperCliente = configCliente.CreateMapper();
+
+                        Client c = iMapperCliente.Map<BB_Clientes, Client>(infCliente);
+
+                        c.modeId = infCliente.IsClienteBB.GetValueOrDefault() ? 1 : 0;
+                        err.ProposalObj.Draft.client = c;
+                        err.ProposalObj.Draft.client.isNewClient = infCliente.accountnumber.StartsWith("P2") ? true : false;
+                        err.ProposalObj.Draft.client.isPublicSector = false;
+                        err.ProposalObj.Draft.client.isGMA = infCliente.GMA != null ? true : false;
+                    }
+                    else
+                    {
+                        err.ProposalObj.Draft.client.accountnumber = "";
+                        err.ProposalObj.Draft.client.isNewClient = false;
+                        err.ProposalObj.Draft.client.isPublicSector = false;
+                        err.ProposalObj.Draft.client.isGMA = false;
+                    }
                 }
 
                 //PRINTING SERVICES 
