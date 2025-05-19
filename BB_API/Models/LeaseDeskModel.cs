@@ -214,6 +214,8 @@ namespace WebApplication1.Models
         public string TipoNegocio { get; set; }
         public string SAPDocumentCode { get; set; }
         public string SAPDealNumber { get; set; }
+        public string SalesGroup { get; set; }
+        public string SalesOffice { get; set; }
     }
 
     public  class LD_DocSign_Control_Model_History

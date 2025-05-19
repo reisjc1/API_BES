@@ -1450,6 +1450,9 @@ namespace WebApplication1.BLL
 
                     Client c = iMapperCliente.Map<BB_Clientes, Client>(infCliente);
 
+                    c.SalesGroup = infCliente.Territory.Substring(4, 4);
+                    c.SalesOffice = infCliente.Territory.Substring(8, 3);
+
                     c.modeId = infCliente.IsClienteBB.GetValueOrDefault() ? 1 : 0;
                     err.ProposalObj.Draft.client = c;
                     err.ProposalObj.Draft.client.isNewClient = cli.IsNewClient;

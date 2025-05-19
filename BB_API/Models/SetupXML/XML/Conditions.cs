@@ -741,8 +741,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 DOC = order.SD_DOC,
                                 COND_FLAG = "O",
                                 KSCHL = "ZEBB",
-                                KBETR = overvaluation.Total.ToString()
-                            });
+                                KBETR = overvaluation.Total.ToString().Replace(",", ".")
+                            }); 
                         }
 
 

@@ -1842,6 +1842,9 @@ namespace WebApplication1.Controllers
                         m.TipoNegocio = rdr["TipoNegocio"].ToString();
                         m.SAPDocumentCode = rdr["SAPDocumentCode"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SAPDocumentCode")) : "";
 
+                        m.SalesGroup = rdr["SalesGroup"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SalesGroup")) : "";
+                        m.SalesOffice = rdr["SalesOffice"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SalesOffice")) : "";
+
                         listModel.Add(m);
 
 
