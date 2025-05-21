@@ -357,7 +357,7 @@ namespace WebApplication1.Controllers
                     }
                     catch (Exception ex)
                     {
-                        
+
                     }
                 }
 
@@ -431,7 +431,7 @@ namespace WebApplication1.Controllers
 
 
                 //ITS
-                ITS_Comissao its  = CalculoITS(aa.ProposalObj);
+                ITS_Comissao its = CalculoITS(aa.ProposalObj);
                 _Comission.ITS = its;
 
 
@@ -441,15 +441,15 @@ namespace WebApplication1.Controllers
 
 
                 //ACELADOR NOVO CLIETNE
-               NewClient_Comissao com  = CalculoNewClient(_Comission, proposalID);
+                NewClient_Comissao com = CalculoNewClient(_Comission, proposalID);
                 _Comission.Newclient = com;
 
                 //ACELADOR Debito Directo
                 DebitoDirecto_Commisao d = CalculoDebitoDirecto(_Comission, proposalID);
                 _Comission.DebitoDirecto = d;
 
-                _Comission.TotalComissao = _Comission.Hw_Printing.HW_PrintingComissao.GetValueOrDefault() 
-                    + _Comission.ITS.ITSComissao.GetValueOrDefault() + 
+                _Comission.TotalComissao = _Comission.Hw_Printing.HW_PrintingComissao.GetValueOrDefault()
+                    + _Comission.ITS.ITSComissao.GetValueOrDefault() +
                     _Comission.TFM.TFMComissao.GetValueOrDefault() +
                     _Comission.Newclient.NewClientComissao.GetValueOrDefault()
                     + _Comission.DebitoDirecto.DebitoDirectoComissao.GetValueOrDefault();
@@ -488,7 +488,7 @@ namespace WebApplication1.Controllers
                         DebitoDirecto.ValueValor = comission.Hw_Printing.HW_PrintingComissao.GetValueOrDefault() + comission.ITS.ITSComissao.GetValueOrDefault() + comission.TFM.TFMComissao.GetValueOrDefault();
                         DebitoDirecto.Percentagem = Applydiscount;
                         double? vlaor = (comission.Hw_Printing.HW_PrintingComissao.GetValueOrDefault() + comission.ITS.ITSComissao.GetValueOrDefault() + comission.TFM.TFMComissao.GetValueOrDefault()) * Applydiscountpercetagem;
-                        DebitoDirecto.DebitoDirectoComissao = Math.Round(vlaor.GetValueOrDefault(), 2) ;
+                        DebitoDirecto.DebitoDirectoComissao = Math.Round(vlaor.GetValueOrDefault(), 2);
                     }
                 }
             }
@@ -506,19 +506,19 @@ namespace WebApplication1.Controllers
 
             NewClient_Comissao _NewClient_Comissao = new NewClient_Comissao();
             _NewClient_Comissao.IsNewClient = false;
-            
+
             try
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     BB_Proposal_Client _BB_Proposal_Client = db.BB_Proposal_Client.Where(x => x.ProposalID == proposalID).FirstOrDefault();
 
-                    if(_BB_Proposal_Client != null && _BB_Proposal_Client.IsNewClient == true)
+                    if (_BB_Proposal_Client != null && _BB_Proposal_Client.IsNewClient == true)
                     {
                         double? Applydiscount = 25;
                         double? Applydiscountpercetagem = Applydiscount / 100;
                         _NewClient_Comissao.Percentagem = Applydiscount;
-                         double? valor = (comission.Hw_Printing.HW_PrintingComissao.GetValueOrDefault() + comission.ITS.ITSComissao.GetValueOrDefault() + comission.TFM.TFMComissao.GetValueOrDefault()) * Applydiscountpercetagem;
+                        double? valor = (comission.Hw_Printing.HW_PrintingComissao.GetValueOrDefault() + comission.ITS.ITSComissao.GetValueOrDefault() + comission.TFM.TFMComissao.GetValueOrDefault()) * Applydiscountpercetagem;
                         _NewClient_Comissao.NewClientComissao = Math.Round(valor.GetValueOrDefault(), 2);
                         _NewClient_Comissao.IsNewClient = true;
                         _NewClient_Comissao.ValueValor = comission.Hw_Printing.HW_PrintingComissao.GetValueOrDefault() + comission.ITS.ITSComissao.GetValueOrDefault() + comission.TFM.TFMComissao.GetValueOrDefault();
@@ -550,15 +550,15 @@ namespace WebApplication1.Controllers
                     {
 
                         vva = activePS.GlobalClickVVA.PVP * activePS.ContractDuration;
-                        
-                        
+
+
                     }
                 }
 
                 double? ApplyDiscount = 1;
-                double? ApplyDiscountPercentagem = ApplyDiscount  / 100;
+                double? ApplyDiscountPercentagem = ApplyDiscount / 100;
 
-                VvaComissao = Math.Round((vva * ApplyDiscountPercentagem).GetValueOrDefault(),2);
+                VvaComissao = Math.Round((vva * ApplyDiscountPercentagem).GetValueOrDefault(), 2);
 
                 if (VvaComissao >= 500)
                     VvaComissao = 500;
@@ -605,7 +605,7 @@ namespace WebApplication1.Controllers
                         _SumGP2_HW += item.GPTotal;
                 }
 
-              
+
 
                 //Configurador Servicos Recorrnts
                 List<RsBasket> _BB_Proposal_Quote_RS_HW = proposalObj.Draft.baskets.rs_basket.Where(
@@ -730,7 +730,7 @@ namespace WebApplication1.Controllers
                 PVPTotal = _BB_Proposal_Quote.Sum(x => x.TotalPVP);
                 ValorFinal_C_Desconto = _BB_Proposal_Quote.Sum(x => x.TotalNetsale);
 
-                 using (var db = new BB_DB_DEVEntities2())
+                using (var db = new BB_DB_DEVEntities2())
                 {
                     //ValorFinal_C_Desconto = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalObj.Draft.details.ID && (x.Family == "OPSHW" || x.Family == "PPHW")).Select(x => x.TotalNetsale).Sum().GetValueOrDefault();
                     //PVPTotal = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalObj.Draft.details.ID && (x.Family == "OPSHW" || x.Family == "PPHW")).Select(x => x.TotalPVP).Sum().GetValueOrDefault();
@@ -739,14 +739,14 @@ namespace WebApplication1.Controllers
                     //    ValorFinal_C_Desconto = ValorFinal_C_Desconto + proposalObj.Draft.overvaluations.Select(x => x.Total).FirstOrDefault();
                     //}
 
-                
 
-                if (ValorFinal_C_Desconto >= 0 && PVPTotal >= 0)
-                {
-                    _PercentagemDesconto = Math.Round(ValorFinal_C_Desconto.GetValueOrDefault() / PVPTotal.GetValueOrDefault(), 4);
-                    _PercentagemDesconto = Math.Round((100 - (_PercentagemDesconto * 100)).GetValueOrDefault(), 2);
-                }
-              
+
+                    if (ValorFinal_C_Desconto >= 0 && PVPTotal >= 0)
+                    {
+                        _PercentagemDesconto = Math.Round(ValorFinal_C_Desconto.GetValueOrDefault() / PVPTotal.GetValueOrDefault(), 4);
+                        _PercentagemDesconto = Math.Round((100 - (_PercentagemDesconto * 100)).GetValueOrDefault(), 2);
+                    }
+
                     List<BB_Commission> _lstBB_Commission = db.BB_Commission.ToList();
                     double? _ApplyDiscount = 0;
 
@@ -763,12 +763,12 @@ namespace WebApplication1.Controllers
                             break;
                         }
                     }
-                    
+
                     //Calculate Comission
                     hw.HW_PrintingComissao = Math.Round((_ApplyDiscount * ValorFinal_C_Desconto).GetValueOrDefault(), 2);
-                   
+
                     hw.ValueHardware = ValorFinal_C_Desconto;
-                   
+
 
                     //Tecto maximo 5000
                     if (hw.HW_PrintingComissao >= 5000)
@@ -815,7 +815,7 @@ namespace WebApplication1.Controllers
                         { "HW", new GrossProfit(){ GPTotal = 0,} },
                         { "IMS_VSS", new GrossProfit(){ GPTotal = 0,} },
                         { "PRS", new GrossProfit(){ GPTotal = 0,} },
-                        { "MCS_BPS", new GrossProfit(){ GPTotal = 0,} },                     
+                        { "MCS_BPS", new GrossProfit(){ GPTotal = 0,} },
                         { "MOBOTIX", new GrossProfit(){ GPTotal = 0,} },
                     };
 
@@ -837,9 +837,10 @@ namespace WebApplication1.Controllers
                             if (isGMA == true)
                             {
                                 var GMA_Amout = amount * 0.1;
-                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0) * quantity;
+                            profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0) * quantity;
                             }
-                            // se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
+                            
+                            //// se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
                             else
                             {
                                 profitDictionary["HW"].GPTotal += (amount ?? 0) * quantity;
@@ -922,7 +923,7 @@ namespace WebApplication1.Controllers
                             {
                                 AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
                             }
-                        }                                              
+                        }
                     }
 
                     // servicos recorrentes
@@ -1025,9 +1026,9 @@ namespace WebApplication1.Controllers
                             ApprovedPrintingService activePS = null;
 
                             if (loadProposal.ProposalObj.Draft.printingServices2.ActivePrintingService != null)
-                            {                         
+                            {
                                 activePS = loadProposal.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[loadProposal.ProposalObj.Draft.printingServices2.ActivePrintingService.Value - 1];
-                                
+
                                 // VVA ----------------------------
                                 if (activePS != null && activePS.GlobalClickVVA != null)
                                 {
@@ -1079,15 +1080,15 @@ namespace WebApplication1.Controllers
                                     }
                                 }
 
-                            Machine machine = new Machine
-                            {
-                                CodeRef = quote.CodeRef,
-                                Description = quote.Description,
-                                Qty = quote.Qty,
-                                DescPerClick = 100 - ((100* vendaClick) / pvpClick),
-                                PHC1 = equipamento.PHC1,
-                                PHC4 = equipamento.PHC4
-                            };
+                                Machine machine = new Machine
+                                {
+                                    CodeRef = quote.CodeRef,
+                                    Description = quote.Description,
+                                    Qty = quote.Qty,
+                                    DescPerClick = 100 - ((100 * vendaClick) / pvpClick),
+                                    PHC1 = equipamento.PHC1,
+                                    PHC4 = equipamento.PHC4
+                                };
 
                                 // Formulas a aplicar a cada registo do "protocolDictionary" a cada maquina
                                 string key = $"{machine.PHC1}_{machine.PHC4}";
@@ -1121,20 +1122,35 @@ namespace WebApplication1.Controllers
                     bb_commission_general.ContractID = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ID).FirstOrDefault();
 
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
-                        bb_commission_general.Tipo_Operacion = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
-
+                    var campanha = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
+                    //bb_commission_general.Tipo_Operacion = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
+                    if (campanha != null)
+                    {
+                        switch (campanha.ToUpper())
+                        {
+                            case "NEGOCIO TRADICIONAL":
+                                bb_commission_general.Tipo_Operacion = "VENTA";
+                                break;
+                            case "COPY CLICK ALQUILER":
+                                bb_commission_general.Tipo_Operacion = "ALQUILER";
+                                break;
+                            default:
+                                bb_commission_general.Tipo_Operacion = "-"; 
+                                break;
+                        }
+                    }
                     DateTime? modifiedDate = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ModifiedTime).FirstOrDefault();
 
                     if (modifiedDate.HasValue)
                     {
                         // exemplo:  01-02-2023 => 2302
                         bb_commission_general.Production = ((modifiedDate.Value.Year % 100) * 100) + modifiedDate.Value.Month;
-                    }                  
+                    }
 
                     bb_commission_general.Pedido = proposal.CreatedTime.Value.Year + proposalID.ToString();
                     bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
-                    bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;                  
+                    bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
                     bb_commission_general.Comision_Copias = 0;
 
                     using (var dbUsers = new masterEntities())
@@ -1165,8 +1181,8 @@ namespace WebApplication1.Controllers
 
                                     if (delegation != null)
                                     {
-                                        if(delegation.Territory != null || delegation.Territory != "BF-724I7TH2" || delegation.Territory != "Javier Gomez Garcia")
-                                        bb_commission_general.Delegacion = delegation.Territory;                                       
+                                        if (delegation.Territory != null || delegation.Territory != "BF-724I7TH2" || delegation.Territory != "Javier Gomez Garcia")
+                                            bb_commission_general.Delegacion = delegation.Territory;
                                     }
 
                                 }
@@ -1257,7 +1273,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
                     bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.client.isGMA;
                     bb_commission_general.CBB = bb_commission_general.Es_GMA;
-                    bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;            
+                    bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;
 
                     bb_commission_general.Tipo_Financiacion = db.BB_FinancingType.Where(x => x.Code == loadProposal.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
 
@@ -1310,13 +1326,15 @@ namespace WebApplication1.Controllers
 
                             if (area.Contains("VD") || area.Contains("GC") || area.Contains("PP"))
                             {
-                                if (area.Contains("VD")){
+                                if (area.Contains("VD"))
+                                {
                                     key = "VD";
                                 }
                                 else if (area.Contains("GC"))
                                 {
-                                   key = "GC";
-                                }else if (area.Contains("PP"))
+                                    key = "GC";
+                                }
+                                else if (area.Contains("PP"))
                                 {
                                     key = "PP";
                                 }
@@ -1330,7 +1348,7 @@ namespace WebApplication1.Controllers
                                 {
                                     return selectedTable[key].newBusiness;
                                 }
-                                else if(tipoCliente == "CLIENTE")
+                                else if (tipoCliente == "CLIENTE")
                                 {
                                     return selectedTable[key].client;
                                 }
@@ -1370,11 +1388,11 @@ namespace WebApplication1.Controllers
                     if (bb_commission_general.Comision_Copias < 0)
                     {
                         bb_commission_general.Comision_Copias = 0;
-                    } 
+                    }
 
                     bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
                     bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
-                    
+
 
                     // Calculo do Percentage_Comision ---------------------------------------- ANTIGO
                     //if (bb_commission_general.GP_Total > 0)
@@ -1400,17 +1418,17 @@ namespace WebApplication1.Controllers
 
 
                     // Definir o campo GMA
-                    if(bb_commission_general.Es_GMA == true)
+                    if (bb_commission_general.Es_GMA == true) 
                     {
-                        bb_commission_general.GMA_10 = "10%";
+                        bb_commission_general.GMA_10 = "GMA";
                     }
                     else
                     {
-                        bb_commission_general.GMA_10 = "X"; 
+                        bb_commission_general.GMA_10 = "X";
                     }
 
                     bb_commission_general.Observacion = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ComentariosGC).FirstOrDefault();
-                    if(bb_commission_general.Observacion == null || bb_commission_general.Observacion == "null")
+                    if (bb_commission_general.Observacion == null || bb_commission_general.Observacion == "null")
                     {
                         bb_commission_general.Observacion = " ";
                     }
@@ -1430,19 +1448,19 @@ namespace WebApplication1.Controllers
                     }
 
                     if (isSecondHand == true && (bb_commission_general.Area == "GC" || bb_commission_general.Area == "GC IT" || bb_commission_general.Area == "VD" || bb_commission_general.Area == "VD IT"))
-                    { 
+                    {
                         bb_commission_general.Condicion = "1";
                     }
 
                     else if (isPPMachine == true && isSecondHand == true)
                     {
                         bb_commission_general.Condicion = "4";
-                    }               
+                    }
                     else
                     {
                         bb_commission_general.Condicion = "0";
                     }
-                  
+
 
                     // Calculo de Premios ----------------------------------------------------
                     bb_commission_general.GP_HW_Premio = CalculatePremio((double)bb_commission_general.GP_Hard, bb_commission_general.Condicion);
@@ -1465,13 +1483,30 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.GP_Total_Premios = Math.Round((double)bb_commission_general.GP_Total_Premios, 2);
 
+
+                    var CNhardPercentage = bb_commission_general.CN_Hard * 0.1;
+                    if(bb_commission_general.GP_Hard < CNhardPercentage && !bb_commission_general.Es_GMA.Value)
+                    {
+                        bb_commission_general.GMA_10 = "10%";
+                        bb_commission_general.GP_Hard = CNhardPercentage;
+
+
+                    }
+
+                    bb_commission_general.GP_Total = bb_commission_general.GP_Hard +
+                                                      bb_commission_general.GP_IMS_VSS +
+                                                      bb_commission_general.GP_PRS +
+                                                      bb_commission_general.GP_MCS_BPS;
+
                     // Calculo do Percentage_GP ----------------------------------------------
                     if (bb_commission_general.CN_Total > 0)
                     {
-                        var percentage_GP = ((bb_commission_general.GP_Total / bb_commission_general.CN_Total) * 100);                
+                        var percentage_GP = ((bb_commission_general.GP_Total / bb_commission_general.CN_Total) * 100);
                         if (percentage_GP != null)
                         {
                             percentage_GP = Math.Round((double)percentage_GP, 2);
+                           
+                          
                             bb_commission_general.Percentage_GP = percentage_GP.ToString() + '%';
                         }
                         else
@@ -1842,11 +1877,13 @@ namespace WebApplication1.Controllers
                                 else if (campo.Key == "Operacion")
                                 {
                                     worksheet.Cells[line, column] = "BB";
-                                } else if (campo.Key == "Es_Segunda_Mano") {
+                                }
+                                else if (campo.Key == "Es_Segunda_Mano")
+                                {
 
                                     object value = prop.GetValue(commission);
 
-                                    if(value.ToString() == "TRUE")
+                                    if (value.ToString() == "TRUE")
                                     {
                                         worksheet.Cells[line, column] = "Sí";
                                     }
@@ -1855,7 +1892,8 @@ namespace WebApplication1.Controllers
                                         worksheet.Cells[line, column] = "No";
                                     }
 
-                                } else if (campo.Key == "Area")
+                                }
+                                else if (campo.Key == "Area")
                                 {
                                     object value = prop.GetValue(commission);
 
@@ -1866,18 +1904,19 @@ namespace WebApplication1.Controllers
                                             worksheet.Cells[line, column] = value;
                                         }
                                     }
-                                } else if (campo.Key == "Tipo_Operacion")
+                                }
+                                else if (campo.Key == "Tipo_Operacion")
                                 {
                                     string value = prop.GetValue(commission).ToString();
 
-                                    if (value.ToUpper() == "NEGOCIO TRADICIONAL")
-                                    {
+                                    //if (value.ToUpper() == "NEGOCIO TRADICIONAL")
+                                    //{
                                         worksheet.Cells[line, column] = "VENTA";
-                                    }
-                                    else if (value.ToUpper() == "COPY CLICK ALQUILER")
-                                    {
-                                        worksheet.Cells[line, column] = "ALQUILER";
-                                    }
+                                    //}
+                                    //else if (value.ToUpper() == "COPY CLICK ALQUILER")
+                                    //{
+                                    //    worksheet.Cells[line, column] = "ALQUILER";
+                                    //}
                                 }
                                 else
                                 {
@@ -1985,7 +2024,7 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("GET", "POST")]
         [ActionName("GetAllCommissions")]
         public IHttpActionResult GetAllCommissions()
-        {          
+        {
             List<BB_Commission_General> commision_general_lst = new List<BB_Commission_General>();
             try
             {
@@ -2013,7 +2052,7 @@ namespace WebApplication1.Controllers
             {
                 using (var db = new BB_DB_DEVEntities2())
                 {
-                    if(commissionID != null)
+                    if (commissionID != null)
                     {
                         commision = db.BB_Commission_General.Where(x => x.ID == commissionID).FirstOrDefault();
                     }
@@ -2036,7 +2075,7 @@ namespace WebApplication1.Controllers
         private double CalculatePremio(double value, string condicion)
         {
             switch (condicion)
-            {                
+            {
                 case "3":
                 case "0":
                     return value;
@@ -2085,8 +2124,8 @@ namespace WebApplication1.Controllers
             public int? Qty { get; set; }
             public double? DescPerClick { get; set; }
             public string PHC1 { get; set; }
-            public string PHC4 { get; set;}
-            public double? AppliedCommission { get; set;}
+            public string PHC4 { get; set; }
+            public double? AppliedCommission { get; set; }
         }
     }
 }
