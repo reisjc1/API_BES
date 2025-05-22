@@ -130,7 +130,7 @@ namespace WebApplication1.BLL
 
                     string financingCompany = context.BB_FinancingContractType
                                                      .Where(f => f.ID == p.Draft.financing.ContractTypeId)
-                                                     .Select(f=> f.Company + " - " + f.CompanyCode)
+                                                     .Select(f => f.Company + " - " + f.CompanyCode)
                                                      .FirstOrDefault();
                     string financingCompanyCode = context.BB_FinancingContractType
                                              .Where(f => f.ID == p.Draft.financing.ContractTypeId)
@@ -165,7 +165,7 @@ namespace WebApplication1.BLL
 
                         quote.Proposal_ID = ProposalID;
                         quote.CreatedBy = p.Draft.details.CreatedBy;
-                         quote.CreatedTime = DateTime.Now;
+                        quote.CreatedTime = DateTime.Now;
                         quote.ModifiedBy = p.Draft.details.CreatedBy;
                         quote.ModifiedTime = DateTime.Now;
 
@@ -180,7 +180,7 @@ namespace WebApplication1.BLL
                         }
 
                         //BB_PROPOSAL_Counters
-                        
+
                         if (_Quote.counters != null)
                         {
                             foreach (var counter in _Quote.counters)
@@ -989,9 +989,9 @@ namespace WebApplication1.BLL
 
                     var dl_BillTo = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Where(x => x.AccountType == "Bill To");
 
-                    if(dl_BillTo != null)
+                    if (dl_BillTo != null)
                     {
-                        foreach(var billTo in dl_BillTo)
+                        foreach (var billTo in dl_BillTo)
                         {
                             using (var db = new BB_DB_DEVEntities2())
                             {
@@ -1005,7 +1005,7 @@ namespace WebApplication1.BLL
                                 //{
                                 //    db.BB_Proposal_DeliveryLocation.AddOrUpdate(billTo);
                                 //}
-                                
+
                                 db.SaveChanges();
 
                             }
@@ -1121,7 +1121,7 @@ namespace WebApplication1.BLL
                     //    }
                     //}
 
-                   //BB_PROPOSAL_COnsigments
+                    //BB_PROPOSAL_COnsigments
                     var configConsigments = new MapperConfiguration(cfg =>
                     {
                         cfg.CreateMap<Consignment, BB_Proposal_Consignments>();
@@ -1139,8 +1139,8 @@ namespace WebApplication1.BLL
                     if (p.Draft.shareProfileDelegation != null)
                     {
                         List<BB_Permissions> bB_Permissions_db = db.BB_Permissions.Where(x => x.ProposalID == p.Draft.details.ID).ToList();
-                        
-                        if(p.Draft.shareProfileDelegation.Count != bB_Permissions_db.Count)
+
+                        if (p.Draft.shareProfileDelegation.Count != bB_Permissions_db.Count)
                         {
                             bB_Permissions_db.ForEach(permission => permission.ToDelete = !p.Draft.shareProfileDelegation.Any(i => i.ID == permission.ID));
 
@@ -1190,11 +1190,11 @@ namespace WebApplication1.BLL
                         throw ex;
                     }
 
-                    if(p.Draft.printingServices2.PrintingCondition != 0)
+                    if (p.Draft.printingServices2.PrintingCondition != 0)
                     {
                         BB_Proposal_Condition_Type existPrintingCondition = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == p.Draft.details.ID && x.ConditionType == "ZVBS").FirstOrDefault();
 
-                        if(existPrintingCondition != null)
+                        if (existPrintingCondition != null)
                         {
                             existPrintingCondition.ConditionValue = p.Draft.printingServices2.PrintingCondition;
 
@@ -1453,7 +1453,7 @@ namespace WebApplication1.BLL
                         ID = item.ID,
                         Total = item.Total,
                         Type = item.Type,
-                        Retirada = item.Retirada == null? false : (bool)item.Retirada
+                        Retirada = item.Retirada == null ? false : (bool)item.Retirada
                     };
                     err.ProposalObj.Draft.upturns.Add(upturn);
                 }
@@ -1475,11 +1475,19 @@ namespace WebApplication1.BLL
                     IMapper iMapperCliente = configCliente.CreateMapper();
 
                     Client c = iMapperCliente.Map<BB_Clientes, Client>(infCliente);
+                    if (infCliente.Territory != null && infCliente.Territory.Length >= 8)
+                    {
+                        c.SalesGroup = infCliente.Territory.Substring(4, 4);
+                    }
+                    if (infCliente.Territory != null && infCliente.Territory.Length >= 11)
+                    {
+                        c.SalesOffice = infCliente.Territory != null ? infCliente.Territory.Substring(8, 3) : "-";
+                    }
 
-                    c.SalesGroup = infCliente.Territory.Substring(4, 4);
-                    c.SalesOffice = infCliente.Territory.Substring(8, 3);
+                    c.modeId = infCliente.IsClienteBB == true ? 1
+                    : infCliente.IsClienteBB == false ? 0
+                    : (int?)null;
 
-                    c.modeId = infCliente.IsClienteBB.GetValueOrDefault() ? 1 : 0;
                     err.ProposalObj.Draft.client = c;
                     err.ProposalObj.Draft.client.isNewClient = cli.IsNewClient;
                     err.ProposalObj.Draft.client.isPublicSector = cli.IsPublicSector;
@@ -1487,7 +1495,7 @@ namespace WebApplication1.BLL
                 }
                 else
                 {
-                    if(proposal.ClientAccountNumber != null)
+                    if (proposal.ClientAccountNumber != null)
                     {
                         infCliente = db.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).FirstOrDefault();
 
@@ -1555,7 +1563,7 @@ namespace WebApplication1.BLL
                     .FirstOrDefault(x => x.ProposalID == proposal.ID);
                 BB_Proposal_Condition_Type existPrintingCondition = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposal.ID && x.ConditionType == "ZVBS").FirstOrDefault();
 
-                    
+
                 if (printingServices2 != null)
                 {
                     PrintingServices2 proposalPS2 = new PrintingServices2()
@@ -1569,7 +1577,7 @@ namespace WebApplication1.BLL
 
                     if (existPrintingCondition != null)
                     {
-                       proposalPS2.PrintingCondition = existPrintingCondition.ConditionValue;
+                        proposalPS2.PrintingCondition = existPrintingCondition.ConditionValue;
                     }
                     foreach (BB_PrintingServices ps in printingServices2.BB_PrintingServices)
                     {
@@ -1639,7 +1647,7 @@ namespace WebApplication1.BLL
                             };
                             newPS.Machines.Add(psMachine);
                         }
-                        BB_Proposal_PrintingServiceValidationRequest validationRequest = ps.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == ps.ID &&  x.ToDelete == false).FirstOrDefault();
+                        BB_Proposal_PrintingServiceValidationRequest validationRequest = ps.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == ps.ID && x.ToDelete == false).FirstOrDefault();
                         if (validationRequest != null)
                         {
                             newPS.RequestedAt = validationRequest.RequestedAt;
@@ -1665,11 +1673,11 @@ namespace WebApplication1.BLL
 
                     //if(proposalPS2.ApprovedPrintingServices.Count != 0)
                     //{
-                        proposalPS2.ApprovedPrintingServices = proposalPS2.ApprovedPrintingServices.OrderBy(x => x.IsPrecalc).ToList();
-                        err.ProposalObj.Draft.printingServices2 = proposalPS2;
+                    proposalPS2.ApprovedPrintingServices = proposalPS2.ApprovedPrintingServices.OrderBy(x => x.IsPrecalc).ToList();
+                    err.ProposalObj.Draft.printingServices2 = proposalPS2;
                     //}
 
-                    
+
 
                 }
 
@@ -1922,7 +1930,7 @@ namespace WebApplication1.BLL
                 }
                 // ------------------------------------------------
 
-            
+
 
                 //LD_DocumentProposal - Contractos
                 err.ProposalObj.Draft.contracts = new BusinessContract();
@@ -1976,15 +1984,15 @@ namespace WebApplication1.BLL
                     ContractNumberPai = p.Draft.details.ExistanteContractNumber
                 };
 
-                
-                if(bb_proposal != null)
+
+                if (bb_proposal != null)
                 {
                     log4net.ThreadContext.Properties["proposal_id"] = bb_proposal.ID;
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(bb_proposal);
                     Exception message = new Exception("Nova Proposta");
                     log.Info(json, message);
                 }
-                
+
 
                 db.BB_Proposal.Add(bb_proposal);
                 try
@@ -2048,7 +2056,7 @@ namespace WebApplication1.BLL
                         }
 
                         //BB_PROPOSAL_Counters
-                       
+
                         if (_Quote.counters != null)
                         {
                             foreach (var counter in _Quote.counters)
@@ -2657,7 +2665,7 @@ namespace WebApplication1.BLL
 
                 //TYPE OF CLIENT
                 BB_TypeOfClient typeOfClient = db.BB_TypeOfClient.Where(x => x.ProposalID == p.Draft.details.ID).FirstOrDefault();
-                if(typeOfClient is null)
+                if (typeOfClient is null)
                 {
                     typeOfClient = new BB_TypeOfClient();
                 }
@@ -2671,7 +2679,8 @@ namespace WebApplication1.BLL
                 {
                     db.BB_TypeOfClient.AddOrUpdate(typeOfClient);
                     db.SaveChanges();
-                } catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     throw ex;
                 }
@@ -2695,7 +2704,7 @@ namespace WebApplication1.BLL
                         throw ex;
                     }
                 }
-                
+
 
             }
             catch (Exception e)
@@ -2750,8 +2759,9 @@ namespace WebApplication1.BLL
                 }
 
                 List<BB_Proposal_Contacts_Signing> lstSigningContactsDoc = p.ClientApproval.SigningContacts;
-                if (lstSigningContactsDoc.Count > 0 && lstSigningContactsDoc[0].Email != "" 
-                        && lstSigningContactsDoc[0].Name != "" && lstSigningContactsDoc[0].Telefone != ""){
+                if (lstSigningContactsDoc.Count > 0 && lstSigningContactsDoc[0].Email != ""
+                        && lstSigningContactsDoc[0].Name != "" && lstSigningContactsDoc[0].Telefone != "")
+                {
                     foreach (var ContactSign in lstSigningContactsDoc)
                     {
                         BB_Proposal_Contacts_Signing ca = new BB_Proposal_Contacts_Signing();
@@ -2800,7 +2810,7 @@ namespace WebApplication1.BLL
 
         //            db.LD_DocumentProposal.Add(doc);
         //        }
-                
+
         //        db.SaveChanges();
 
         //    } catch (Exception ex)
