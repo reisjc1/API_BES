@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -23,6 +24,11 @@ namespace WebApplication1.BLL
         public BB_DB_DEVEntities2 db = new BB_DB_DEVEntities2();
         public ActionResponse ProposalDraftSave(ProposalRootObject p)
         {
+            using (EventLog eventLog = new EventLog("Application"))
+            {
+                eventLog.Source = "Application";
+                eventLog.WriteEntry("ProposalDraftSave:IN", EventLogEntryType.Information, 101, 1);
+            }
             ActionResponse err = new ActionResponse();
             try
             {
@@ -1199,6 +1205,12 @@ namespace WebApplication1.BLL
                             }
                             catch (Exception ex)
                             {
+                                err.Message = ex.Message.ToString();
+                                using (EventLog eventLog = new EventLog("Application"))
+                                {
+                                    eventLog.Source = "Application";
+                                    eventLog.WriteEntry("ProposalDraftSave p.Draft.printingServices2.PrintingCondition Ex: " + ex.Message.ToString(), EventLogEntryType.Information, 101, 1);
+                                }
                                 throw ex;
                             }
 
@@ -1219,6 +1231,11 @@ namespace WebApplication1.BLL
                             }
                             catch (Exception ex)
                             {
+                                using (EventLog eventLog = new EventLog("Application"))
+                                {
+                                    eventLog.Source = "Application";
+                                    eventLog.WriteEntry("ProposalDraftSave p.Draft.printingServices2.PrintingCondition (line 1237) Ex: " + ex.InnerException.ToString(), EventLogEntryType.Information, 101, 1);
+                                }
                                 throw ex;
                             }
                         }
@@ -1262,9 +1279,18 @@ namespace WebApplication1.BLL
             {
                 //err.ErrorCode = 1;
                 err.Message = ex.Message.ToString();
+                using (EventLog eventLog = new EventLog("Application"))
+                {
+                    eventLog.Source = "Application";
+                    eventLog.WriteEntry("ProposalDraftSave Ex: " + ex.InnerException.ToString(), EventLogEntryType.Information, 101, 1);
+                }
 
             }
-
+            using (EventLog eventLog = new EventLog("Application"))
+            {
+                eventLog.Source = "Application";
+                eventLog.WriteEntry("ProposalDraftSave OUT", EventLogEntryType.Information, 101, 1);
+            }
             return err;
         }
 

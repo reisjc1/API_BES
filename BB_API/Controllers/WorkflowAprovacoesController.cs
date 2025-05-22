@@ -26,6 +26,7 @@ using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
 using System.Net.Mime;
 using System.Threading;
+using System.Diagnostics;
 
 namespace WebApplication1.Controllers
 {
@@ -986,7 +987,7 @@ namespace WebApplication1.Controllers
 
 
 
-                        
+
                         //var areMoreLinesAddedOrRemoved = false;
 
                         //var linhasAbordadasWFA = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == ProposalID && x.AsBeenInWFA == true).ToList();
@@ -1959,7 +1960,11 @@ namespace WebApplication1.Controllers
             WFAValidations_OneShot wrp = new WFAValidations_OneShot();
             wrp.Lst_BBP_Quote = new List<BB_Proposal_Quote_WFA>();
             wrp.Lst_BBP_RS_Quote = new List<BB_Proposal_Quote_RS_WFA>();
-
+            using (EventLog eventLog = new EventLog("Application"))
+            {
+                eventLog.Source = "Application";
+                eventLog.WriteEntry("ValidateWFARules IN", EventLogEntryType.Information, 101, 1);
+            }
             try
             {
 
@@ -2118,34 +2123,34 @@ namespace WebApplication1.Controllers
 
                         while (rdr.Read())
                         {
-                           
-                                BB_Proposal_Quote_RS_WFA bbp_rs_quote = new BB_Proposal_Quote_RS_WFA
-                                {
-                                    ID = (int)rdr["ID"],
-                                    CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
-                                    Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
-                                    DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
-                                    Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
-                                    GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
-                                    GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
-                                    Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
-                                    Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
-                                    MonthlyFee = rdr["MonthlyFee"] != DBNull.Value ? (double?)rdr["MonthlyFee"] : null,
-                                    MonthlyGP = rdr["MonthlyGP"] != DBNull.Value ? (double?)rdr["MonthlyGP"] : null,
-                                    PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
-                                    Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
-                                    TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
-                                    MonthlyFeeCost = rdr["MonthlyFeeCost"] != DBNull.Value ? (double?)rdr["MonthlyFeeCost"] : null,
-                                    TotalMonths = rdr["TotalMonths"] != DBNull.Value ? (int?)rdr["TotalMonths"] : null,
-                                    TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
-                                    TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
-                                    UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
-                                    UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
-                                    ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
-                                    IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
-                                    passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
-                                    alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
-                                };
+
+                            BB_Proposal_Quote_RS_WFA bbp_rs_quote = new BB_Proposal_Quote_RS_WFA
+                            {
+                                ID = (int)rdr["ID"],
+                                CodeRef = rdr["CodeRef"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("CodeRef")) : "",
+                                Description = rdr["Description"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Description")) : "",
+                                DiscountPercentage = rdr["DiscountPercentage"] != DBNull.Value ? (double?)rdr["DiscountPercentage"] : null,
+                                Family = rdr["Family"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Family")) : "",
+                                GPPercentage = rdr["GPPercentage"] != DBNull.Value ? (double?)rdr["GPPercentage"] : null,
+                                GPTotal = rdr["GPTotal"] != DBNull.Value ? (double?)rdr["GPTotal"] : null,
+                                Locked = rdr["Locked"] != DBNull.Value ? (bool?)rdr["Locked"] : null,
+                                Margin = rdr["Margin"] != DBNull.Value ? (double?)rdr["Margin"] : null,
+                                MonthlyFee = rdr["MonthlyFee"] != DBNull.Value ? (double?)rdr["MonthlyFee"] : null,
+                                MonthlyGP = rdr["MonthlyGP"] != DBNull.Value ? (double?)rdr["MonthlyGP"] : null,
+                                PVP = rdr["PVP"] != DBNull.Value ? (double?)rdr["PVP"] : null,
+                                Qty = rdr["Qty"] != DBNull.Value ? (int?)rdr["Qty"] : null,
+                                TotalCost = rdr["TotalCost"] != DBNull.Value ? (double?)rdr["TotalCost"] : null,
+                                MonthlyFeeCost = rdr["MonthlyFeeCost"] != DBNull.Value ? (double?)rdr["MonthlyFeeCost"] : null,
+                                TotalMonths = rdr["TotalMonths"] != DBNull.Value ? (int?)rdr["TotalMonths"] : null,
+                                TotalNetsale = rdr["TotalNetsale"] != DBNull.Value ? (double?)rdr["TotalNetsale"] : null,
+                                TotalPVP = rdr["TotalPVP"] != DBNull.Value ? (double?)rdr["TotalPVP"] : null,
+                                UnitDiscountPrice = rdr["UnitDiscountPrice"] != DBNull.Value ? (double?)rdr["UnitDiscountPrice"] : null,
+                                UnitPriceCost = rdr["UnitPriceCost"] != DBNull.Value ? (double?)rdr["UnitPriceCost"] : null,
+                                ProposalID = rdr["ProposalID"] != DBNull.Value ? (int?)rdr["ProposalID"] : null,
+                                IsFinanced = rdr["IsFinanced"] != DBNull.Value ? (bool?)rdr["IsFinanced"] : null,
+                                passedValidation = rdr["passedValidation"] != DBNull.Value ? (bool?)rdr["passedValidation"] : null,
+                                alertMessage = rdr["alertMessage"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("alertMessage")) : "",
+                            };
 
                             //if (bbp_rs_quote.passedValidation == false && (bbp_rs_quote.alertMessage == "" || bbp_rs_quote.alertMessage == null))
                             //{
@@ -2154,7 +2159,7 @@ namespace WebApplication1.Controllers
                             bbp_rs_quote.passedValidation = true;
 
                             wrp.Lst_BBP_RS_Quote.Add(bbp_rs_quote);
-                          
+
                         }
                         rdr.Close();
                     }
@@ -2162,38 +2167,53 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                using (EventLog eventLog = new EventLog("Application"))
+                {
+                    eventLog.Source = "Application";
+                    eventLog.WriteEntry("ValidateWFARules EX " + ex.InnerException.ToString(), EventLogEntryType.Information, 101, 1);
+                }
                 Console.WriteLine(ex.Message);
             }
 
             deleteIfPassedValidation(wrp);
-
             List<string> pendingApprovers = new List<string>();
-
-            using (var db = new BB_DB_DEVEntities2())
+            try
             {
-                int? WFA_ID = db.BB_WFA_Workflow_Proposal
-                    .Where(x => x.Proposal_ID == proposalID)
-                    .Select(x => x.ID)
-                    .FirstOrDefault();
-
-                if (WFA_ID != null)
+                using (var db = new BB_DB_DEVEntities2())
                 {
-                    var approvers = db.BB_WFA_Approvers_Control
-                        .Where(a => a.WFA_Workflow_Proposal_ID == WFA_ID && a.IsApproved == null)
-                        .ToList();
+                    int? WFA_ID = db.BB_WFA_Workflow_Proposal
+                        .Where(x => x.Proposal_ID == proposalID)
+                        .Select(x => x.ID)
+                        .FirstOrDefault();
 
-                    using (var dbU = new masterEntities())
+                    if (WFA_ID != null)
                     {
-                        var users = dbU.AspNetUsers.ToList();
+                        var approvers = db.BB_WFA_Approvers_Control
+                            .Where(a => a.WFA_Workflow_Proposal_ID == WFA_ID && a.IsApproved == null)
+                            .ToList();
 
-                        pendingApprovers = (
-                            from approver in approvers
-                            join user in users on approver.Approver_ID equals user.Id
-                            select user.DisplayName
-                        ).ToList();
+                        using (var dbU = new masterEntities())
+                        {
+                            var users = dbU.AspNetUsers.ToList();
+
+                            pendingApprovers = (
+                                from approver in approvers
+                                join user in users on approver.Approver_ID equals user.Id
+                                select user.DisplayName
+                            ).ToList();
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                using (EventLog eventLog = new EventLog("Application"))
+                {
+                    eventLog.Source = "Application";
+                    eventLog.WriteEntry("ValidateWFARules EX " + ex.InnerException.ToString(), EventLogEntryType.Information, 101, 1);
+                }
+            }
+
 
 
             wrp.Pending_Approvers_Lst = pendingApprovers;
