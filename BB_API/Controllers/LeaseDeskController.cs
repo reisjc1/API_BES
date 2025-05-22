@@ -2301,10 +2301,13 @@ namespace WebApplication1.Controllers
             double? retomas = 0;
             BB_Proposal pr1 = new BB_Proposal();
             BB_Proposal_PrazoDiferenciado prazoDiferenciado1 = new BB_Proposal_PrazoDiferenciado();
+            BB_Clientes cliente = new BB_Clientes();
+            BB_Proposal_Client pCliente = new BB_Proposal_Client();
             using (var db = new BB_DB_DEVEntities2())
             {
                 pr1 = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
-
+                cliente = db.BB_Clientes.Where(x => x.accountnumber == pr1.ClientAccountNumber).FirstOrDefault();
+                pCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == pr1.ID).FirstOrDefault();
                 List<BB_Proposal_Quote> lstQuotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID && (x.Family == "OPSHW" || x.Family == "PPHW")).ToList();
                 foreach (var quote in lstQuotes)
                 {
@@ -2559,6 +2562,12 @@ namespace WebApplication1.Controllers
 
             a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
 
+            a.ProposalObj.Draft.client.SalesGroup = cliente.Territory.Substring(4, 4);
+            a.ProposalObj.Draft.client.SalesOffice = cliente.Territory.Substring(8, 3);
+
+            a.ProposalObj.SAPNumber = pr1.Pedido_SAP == null ? "" : pr1.Pedido_SAP.Value.ToString();
+            a.ProposalObj.IsClientPublicSector = (bool)pCliente.IsPublicSector;
+
             return Ok(a.ProposalObj);
         }
 
@@ -2619,7 +2628,7 @@ namespace WebApplication1.Controllers
                             element.GroupPrice = item.UnitDiscountPrice;
                             element.Accessories = new List<OsBasket>();
                             element.DeliverySummary = DeliveriesSummary_lst.Where(x => x.Group == element.Group).FirstOrDefault();
-
+                            element.SerialNumber = item.SerialNumber != null ? item.SerialNumber : "-";
                             configurator.Add(element);
                         }
                     };
@@ -2654,7 +2663,8 @@ namespace WebApplication1.Controllers
                                         Qty = (int)item.Qty,
                                         TotalNetsale = (double)item.PVP,
                                         Group = item.Group,
-                                        IsUsed = (bool)item.IsUsedMachine
+                                        IsUsed = (bool)item.IsUsedMachine,
+                                        SerialNumber = "-"
                                 };
 
 
@@ -2674,7 +2684,8 @@ namespace WebApplication1.Controllers
                                     Qty = (int)item.Qty,
                                     TotalNetsale = Math.Round((double)item.UnitDiscountPrice * (double)opsManage.TotalMonths),
                                     Group = item.Group,
-                                    IsUsed = (bool)item.IsUsedMachine
+                                    IsUsed = (bool)item.IsUsedMachine,
+                                    SerialNumber = "-"
                                 };
 
 
@@ -2693,7 +2704,8 @@ namespace WebApplication1.Controllers
                                     Qty = (int)item.Qty,
                                     TotalNetsale = (double)item.TotalNetsale,
                                     Group = item.Group,
-                                    IsUsed = (bool)item.IsUsedMachine
+                                    IsUsed = (bool)item.IsUsedMachine,
+                                    SerialNumber = "-"
                                 };
 
                                 HW_SW_GroupX.GroupPrice += basketItem.UnitDiscountPrice;
@@ -3916,9 +3928,15 @@ namespace WebApplication1.Controllers
 
                                 dl_info.Tipo = deliverLocation.AccountType;
 
-                                dl_info.DeliveryLocation = deliverLocation.Adress1 == ""  ? 
-                                                           bb_local_envio.Adress1 + " " + bb_local_envio.PostalCode + " " +bb_local_envio.City :
-                                                           deliverLocation.Adress1 + " " + deliverLocation.PostalCode + " " + deliverLocation.City;
+                                if (bb_local_envio.IsNewAddress != null)
+                                {
+                                    dl_info.DeliveryLocation = bb_local_envio.RoadType + " " + bb_local_envio.RoadName + " " + bb_local_envio.RoadNumber;
+                                }
+                                else
+                                {
+                                    dl_info.DeliveryLocation = deliverLocation.Adress1;
+                                }
+                                dl_info.PostalCode = deliverLocation.PostalCode + " " + deliverLocation.City;
                                 dl_info.IDX = deliverLocation.IDX;
 
                                 BB_Clientes bb_cliente = dbX.BB_Clientes.Where(x => x.accountnumber == bb_local_envio.AccountNumber).FirstOrDefault();
@@ -4054,6 +4072,7 @@ namespace WebApplication1.Controllers
             public string CompanyName { get; set; }
             public string CIF { get; set; }
             public string DeliveryLocation { get; set; }
+            public string PostalCode { get; set; }
             public string SAP_Nr { get; set; }
             public string SAP_Company { get; set; }
             public string Contacto { get; set; }
@@ -4255,6 +4274,7 @@ namespace WebApplication1.Controllers
             public List<OsBasket> Accessories { get; set; }
             public double? GroupPrice { get; set; }
             public BB_Proposal_DeliveryLocationResumoModel DeliverySummary { get; set; }
+            public string SerialNumber { get; set; }
         }
 
 

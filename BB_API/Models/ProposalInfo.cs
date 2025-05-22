@@ -55,6 +55,8 @@ namespace WebApplication1.Models
 
         public ClientApproval ClientApproval { get; set; }
         public List<ConditionPVP> ConditionsPvp { get; set; }
+        public string SAPNumber { get; set; }
+        public bool IsClientPublicSector { get; set; }
 
         //public List<BB_Equipamentos> Equipamentos { get; set; }
     }
@@ -501,6 +503,7 @@ namespace WebApplication1.Models
         public bool? IsUsed { get; set; }
         public bool? IsInClient { get; set; }
         public int? Group { get; set; }
+        public string SerialNumber { get; set; }
     }
 
 
