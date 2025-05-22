@@ -126,12 +126,14 @@ namespace WebApplication1.BLL
                                                      .Where(f => f.ID == p.Draft.financing.ContractTypeId)
                                                      .Select(f=> f.Company + " - " + f.CompanyCode)
                                                      .FirstOrDefault();
-                    string financingCompanyCode = context.BB_FinancingContractType
-                                             .Where(f => f.ID == p.Draft.financing.ContractTypeId)
-                                             .FirstOrDefault()
-                                             .CompanyCode;
+                    //string financingCompanyCode = context.BB_FinancingContractType
+                    //                         .Where(f => f.ID == p.Draft.financing.ContractTypeId)
+                    //                         .FirstOrDefault()
+                    //                         .CompanyCode;
 
-                    proposal.CodArrend = financingCompanyCode;
+
+
+                    proposal.CodArrend = financingCompany;
                     context.Entry(proposal).State = EntityState.Modified;
                     context.SaveChanges();
 
@@ -444,24 +446,27 @@ namespace WebApplication1.BLL
 
                     BB_Proposal_Financing fin = iMapper.Map<Financing, BB_Proposal_Financing>(p.Draft.financing);
 
-                    // Função auxiliar para validar e corrigir valores NaN
-                    double Sanitize(double value) => double.IsNaN(value) ? 0 : value;
-
-                    // Validação dos campos
-                    fin.AmountFinanced = Sanitize((double)fin.AmountFinanced);
-                    fin.AmountNotFinanced = Sanitize((double)fin.AmountNotFinanced);
-                    fin.MonthlyIncome = Sanitize((double)fin.MonthlyIncome);
-
-                    fin.ProposalID = ProposalID;
-
-                    db.BB_Proposal_Financing.Add(fin);
-                    try
+                    if(fin != null)
                     {
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Message.ToString();
+                        // Função auxiliar para validar e corrigir valores NaN
+                        double Sanitize(double value) => double.IsNaN(value) ? 0 : value;
+
+                        // Validação dos campos
+                        fin.AmountFinanced = Sanitize((double)fin.AmountFinanced);
+                        fin.AmountNotFinanced = Sanitize((double)fin.AmountNotFinanced);
+                        fin.MonthlyIncome = Sanitize((double)fin.MonthlyIncome);
+
+                        fin.ProposalID = ProposalID;
+
+                        db.BB_Proposal_Financing.Add(fin);
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
                     }
 
 
@@ -1450,10 +1455,19 @@ namespace WebApplication1.BLL
 
                     Client c = iMapperCliente.Map<BB_Clientes, Client>(infCliente);
 
-                    c.SalesGroup = infCliente.Territory.Substring(4, 4);
-                    c.SalesOffice = infCliente.Territory.Substring(8, 3);
+                    if (infCliente.Territory != null && infCliente.Territory.Length >= 8)
+                    {
+                        c.SalesGroup = infCliente.Territory.Substring(4, 4);
+                    }
+                    if (infCliente.Territory != null && infCliente.Territory.Length >= 11)
+                    {
+                        c.SalesOffice = infCliente.Territory != null ? infCliente.Territory.Substring(8, 3) : "-";
+                    }
 
-                    c.modeId = infCliente.IsClienteBB.GetValueOrDefault() ? 1 : 0;
+                    c.modeId = infCliente.IsClienteBB == true ? 1
+                    : infCliente.IsClienteBB == false ? 0
+                    : (int?)null;
+
                     err.ProposalObj.Draft.client = c;
                     err.ProposalObj.Draft.client.isNewClient = cli.IsNewClient;
                     err.ProposalObj.Draft.client.isPublicSector = cli.IsPublicSector;
@@ -1461,32 +1475,32 @@ namespace WebApplication1.BLL
                 }
                 else
                 {
-                    if(proposal.ClientAccountNumber != null)
-                    {
-                        infCliente = db.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).FirstOrDefault();
+                    //if(proposal.ClientAccountNumber != null)
+                    //{
+                    //    infCliente = db.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).FirstOrDefault();
 
-                        var configCliente = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<BB_Clientes, Client>();
-                        });
+                    //    var configCliente = new MapperConfiguration(cfg =>
+                    //    {
+                    //        cfg.CreateMap<BB_Clientes, Client>();
+                    //    });
 
-                        IMapper iMapperCliente = configCliente.CreateMapper();
+                    //    IMapper iMapperCliente = configCliente.CreateMapper();
 
-                        Client c = iMapperCliente.Map<BB_Clientes, Client>(infCliente);
+                    //    Client c = iMapperCliente.Map<BB_Clientes, Client>(infCliente);
 
-                        c.modeId = infCliente.IsClienteBB.GetValueOrDefault() ? 1 : 0;
-                        err.ProposalObj.Draft.client = c;
-                        err.ProposalObj.Draft.client.isNewClient = infCliente.accountnumber.StartsWith("P2") ? true : false;
-                        err.ProposalObj.Draft.client.isPublicSector = false;
-                        err.ProposalObj.Draft.client.isGMA = infCliente.GMA != null ? true : false;
-                    }
-                    else
-                    {
+                    //    c.modeId = infCliente.IsClienteBB.GetValueOrDefault() ? 1 : 0;
+                    //    err.ProposalObj.Draft.client = c;
+                    //    err.ProposalObj.Draft.client.isNewClient = infCliente.accountnumber.StartsWith("P2") ? true : false;
+                    //    err.ProposalObj.Draft.client.isPublicSector = false;
+                    //    err.ProposalObj.Draft.client.isGMA = infCliente.GMA != null ? true : false;
+                    //}
+                    //else
+                    //{
                         err.ProposalObj.Draft.client.accountnumber = "";
                         err.ProposalObj.Draft.client.isNewClient = false;
                         err.ProposalObj.Draft.client.isPublicSector = false;
                         err.ProposalObj.Draft.client.isGMA = false;
-                    }
+                    //}
                 }
 
                 //PRINTING SERVICES 
