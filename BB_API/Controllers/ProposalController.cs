@@ -263,6 +263,9 @@ namespace WebApplication1.Controllers
                         m.AccountManagerEmail = rdr["AccountManagerEmail"].ToString();
                         m.ModifiedByEmail = rdr["ModifiedByEmail"].ToString();
                         m.ModifiedByName = rdr["ModifiedByName"].ToString();
+                        m.SalesGroup = rdr["SalesGroup"].ToString() == "" ? "-" : rdr["SalesGroup"].ToString();
+                        m.SalesOffice = rdr["SalesOffice"].ToString() == "" ? "-" : rdr["SalesOffice"].ToString();
+
                         lst.Add(m);
                     }
 

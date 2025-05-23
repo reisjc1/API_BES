@@ -604,6 +604,8 @@ namespace WebApplication1.Models
         public string CreatedByName { get; set; }
         public string ModifiedByName { get; set; }
         public BB_Proposal_Status Status { get; set; }
+        public string SalesGroup { get; set; }
+        public string SalesOffice { get; set; }
     }
 
     public class Overvaluation
