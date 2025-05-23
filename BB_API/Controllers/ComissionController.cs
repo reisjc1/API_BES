@@ -1121,7 +1121,15 @@ namespace WebApplication1.Controllers
                     bb_commission_general.ContractID = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ID).FirstOrDefault();
 
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
-                        bb_commission_general.Tipo_Operacion = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
+
+                    if (campaignID == 1)
+                    {
+                        bb_commission_general.Tipo_Operacion = "VENTA";
+                    }
+                    else if (campaignID == 5)
+                    {
+                        bb_commission_general.Tipo_Operacion = "ALQUILER";
+                    }
 
                     DateTime? modifiedDate = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ModifiedTime).FirstOrDefault();
 
@@ -1865,18 +1873,6 @@ namespace WebApplication1.Controllers
                                         {
                                             worksheet.Cells[line, column] = value;
                                         }
-                                    }
-                                } else if (campo.Key == "Tipo_Operacion")
-                                {
-                                    string value = prop.GetValue(commission).ToString();
-
-                                    if (value.ToUpper() == "NEGOCIO TRADICIONAL")
-                                    {
-                                        worksheet.Cells[line, column] = "VENTA";
-                                    }
-                                    else if (value.ToUpper() == "COPY CLICK ALQUILER")
-                                    {
-                                        worksheet.Cells[line, column] = "ALQUILER";
                                     }
                                 }
                                 else
