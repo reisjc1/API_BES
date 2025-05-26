@@ -1235,6 +1235,9 @@ namespace WebApplication1.Controllers
                                                                 (double)bb_commission_general.CN_PRS +
                                                                 (double)bb_commission_general.CN_MCS_BPS, 2);
 
+                    bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.client.isGMA;
+                    bb_commission_general.CBB = bb_commission_general.Es_GMA;
+
                     // Definir o campo "Tipo_Operacion"
                     if (bb_commission_general.Es_GMA == true)
                     {
@@ -1285,8 +1288,6 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Incidencias = null;
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
-                    bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.client.isGMA;
-                    bb_commission_general.CBB = bb_commission_general.Es_GMA;
                     bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;
 
                     bb_commission_general.Tipo_Financiacion = db.BB_FinancingType.Where(x => x.Code == loadProposal.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
