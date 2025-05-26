@@ -2625,7 +2625,7 @@ namespace WebApplication1.Controllers
                             element.Qty = (int)item.Qty;
                             element.TotalNetsale = (double)item.TotalNetsale;
                             element.IsUsed = (bool)item.IsUsedMachine;
-                            element.GroupPrice = item.UnitDiscountPrice;
+                            element.GroupPrice = item.TotalNetsale;
                             element.Accessories = new List<OsBasket>();
                             element.DeliverySummary = DeliveriesSummary_lst.Where(x => x.Group == element.Group).FirstOrDefault();
                             element.SerialNumber = item.SerialNumber != null ? item.SerialNumber : "-";
@@ -2708,7 +2708,7 @@ namespace WebApplication1.Controllers
                                     SerialNumber = "-"
                                 };
 
-                                HW_SW_GroupX.GroupPrice += basketItem.UnitDiscountPrice;
+                                HW_SW_GroupX.GroupPrice += basketItem.TotalNetsale;
                                 HW_SW_GroupX.Accessories.Add(basketItem);
                             }
 
