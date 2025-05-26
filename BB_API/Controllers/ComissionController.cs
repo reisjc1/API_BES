@@ -837,9 +837,9 @@ namespace WebApplication1.Controllers
                             if (isGMA == true)
                             {
                                 var GMA_Amout = amount * 0.1;
-                            profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0) * quantity;
+                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0) * quantity;
                             }
-                            
+
                             //// se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
                             else
                             {
@@ -1122,23 +1122,16 @@ namespace WebApplication1.Controllers
                     bb_commission_general.ContractID = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ID).FirstOrDefault();
 
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
-                    var campanha = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
-                    //bb_commission_general.Tipo_Operacion = db.BB_Campanha.Where(x => x.ID == campaignID).Select(x => x.Campanha).FirstOrDefault();
-                    if (campanha != null)
+
+                    if (campaignID == 1)
                     {
-                        switch (campanha.ToUpper())
-                        {
-                            case "NEGOCIO TRADICIONAL":
-                                bb_commission_general.Tipo_Operacion = "VENTA";
-                                break;
-                            case "COPY CLICK ALQUILER":
-                                bb_commission_general.Tipo_Operacion = "ALQUILER";
-                                break;
-                            default:
-                                bb_commission_general.Tipo_Operacion = "-"; 
-                                break;
-                        }
+                        bb_commission_general.Tipo_Operacion = "VENTA";
                     }
+                    else if (campaignID == 5)
+                    {
+                        bb_commission_general.Tipo_Operacion = "ALQUILER";
+                    }
+
                     DateTime? modifiedDate = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ModifiedTime).FirstOrDefault();
 
                     if (modifiedDate.HasValue)
@@ -1242,14 +1235,38 @@ namespace WebApplication1.Controllers
                                                                 (double)bb_commission_general.CN_PRS +
                                                                 (double)bb_commission_general.CN_MCS_BPS, 2);
 
+                    bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.client.isGMA;
+                    bb_commission_general.CBB = bb_commission_general.Es_GMA;
+
+                    // Definir o campo "Tipo_Operacion"
+                    if (bb_commission_general.Es_GMA == true)
+                    {
+                        bb_commission_general.GMA_10 = "GMA";
+                    }
+                    else
+                    {
+                        bb_commission_general.GMA_10 = "X";
+                    }
 
                     // Soma de todos os GP daquele proposalID (incluindo RS)
                     bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key == "HW").Sum(x => x.Value.GPTotal);
 
-                    if (bb_commission_general.GP_Hard < 10)
+                    var Percent_10_CNHard = bb_commission_general.CN_Hard * 0.1;
+
+                    if (bb_commission_general.GP_Hard < Percent_10_CNHard && bb_commission_general.CN_Hard > 0 && !(bool)bb_commission_general.Es_GMA)
                     {
-                        bb_commission_general.GP_Hard = bb_commission_general.CN_Hard * 0.1;
+                        // Definir o campo "Tipo_Operacion"
+                        bb_commission_general.GMA_10 = "10%";
+
+                        bb_commission_general.GP_Hard = Percent_10_CNHard;
                     }
+
+
+
+                    //if (bb_commission_general.GP_Hard < 0)
+                    //{
+                    //    bb_commission_general.GP_Hard = bb_commission_general.CN_Hard * 0.1;
+                    //}
 
                     bb_commission_general.GP_IMS_VSS = profit_IMS_VSS.GPTotal + profit_MOBOTIX.GPTotal;
 
@@ -1271,8 +1288,6 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Incidencias = null;
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
-                    bb_commission_general.Es_GMA = loadProposal.ProposalObj.Draft.client.isGMA;
-                    bb_commission_general.CBB = bb_commission_general.Es_GMA;
                     bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;
 
                     bb_commission_general.Tipo_Financiacion = db.BB_FinancingType.Where(x => x.Code == loadProposal.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
@@ -1417,16 +1432,6 @@ namespace WebApplication1.Controllers
                     //----------------------------------------------------------------------------------------------------------------------
 
 
-                    // Definir o campo GMA
-                    if (bb_commission_general.Es_GMA == true) 
-                    {
-                        bb_commission_general.GMA_10 = "GMA";
-                    }
-                    else
-                    {
-                        bb_commission_general.GMA_10 = "X";
-                    }
-
                     bb_commission_general.Observacion = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ComentariosGC).FirstOrDefault();
                     if (bb_commission_general.Observacion == null || bb_commission_general.Observacion == "null")
                     {
@@ -1484,15 +1489,6 @@ namespace WebApplication1.Controllers
                     bb_commission_general.GP_Total_Premios = Math.Round((double)bb_commission_general.GP_Total_Premios, 2);
 
 
-                    var CNhardPercentage = bb_commission_general.CN_Hard * 0.1;
-                    if(bb_commission_general.GP_Hard < CNhardPercentage && !bb_commission_general.Es_GMA.Value)
-                    {
-                        bb_commission_general.GMA_10 = "10%";
-                        bb_commission_general.GP_Hard = CNhardPercentage;
-
-
-                    }
-
                     bb_commission_general.GP_Total = bb_commission_general.GP_Hard +
                                                       bb_commission_general.GP_IMS_VSS +
                                                       bb_commission_general.GP_PRS +
@@ -1505,8 +1501,8 @@ namespace WebApplication1.Controllers
                         if (percentage_GP != null)
                         {
                             percentage_GP = Math.Round((double)percentage_GP, 2);
-                           
-                          
+
+
                             bb_commission_general.Percentage_GP = percentage_GP.ToString() + '%';
                         }
                         else
@@ -1904,19 +1900,6 @@ namespace WebApplication1.Controllers
                                             worksheet.Cells[line, column] = value;
                                         }
                                     }
-                                }
-                                else if (campo.Key == "Tipo_Operacion")
-                                {
-                                    string value = prop.GetValue(commission).ToString();
-
-                                    //if (value.ToUpper() == "NEGOCIO TRADICIONAL")
-                                    //{
-                                        worksheet.Cells[line, column] = "VENTA";
-                                    //}
-                                    //else if (value.ToUpper() == "COPY CLICK ALQUILER")
-                                    //{
-                                    //    worksheet.Cells[line, column] = "ALQUILER";
-                                    //}
                                 }
                                 else
                                 {
