@@ -2570,87 +2570,94 @@ namespace WebApplication1.Controllers
 
             a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
             string delegation = "";
-            switch(cliente.Territory.Substring(4, 4))
+            if(cliente != null)
             {
-                case "5241":
-                    delegation = "Barcelona";
-                    break;
-                case "5203":
-                    delegation = "Sales Area 3";
-                    break;
-                case "5243":
-                    delegation = "Algaciras";
-                    break;
-                case "5200":
-                    delegation = "Sales Area 0";
-                    break;
-                case "5248":
-                    delegation = "Sevilla";
-                    break;
-                case "5245":
-                    delegation = "Cádiz";
-                    break;
-                case "5246":
-                    delegation = "Málaga";
-                    break;
-                case "5242":
-                    delegation = "Valencia";
-                    break;
-                case "5247":
-                    delegation = "Santander";
-                    break;
-                case "5204":
-                    delegation = "Sales Area 4";
-                    break;
-                case "5220":
-                    delegation = "Dealer Service";
-                    break;
-                case "5201":
-                    delegation = "Sales Area 1";
-                    break;
-                case "5202":
-                    delegation = "Sales Area 2";
-                    break;
+                switch(cliente.Territory.Substring(4, 4))
+                {
+                    case "5241":
+                        delegation = "Barcelona";
+                        break;
+                    case "5203":
+                        delegation = "Sales Area 3";
+                        break;
+                    case "5243":
+                        delegation = "Algaciras";
+                        break;
+                    case "5200":
+                        delegation = "Sales Area 0";
+                        break;
+                    case "5248":
+                        delegation = "Sevilla";
+                        break;
+                    case "5245":
+                        delegation = "Cádiz";
+                        break;
+                    case "5246":
+                        delegation = "Málaga";
+                        break;
+                    case "5242":
+                        delegation = "Valencia";
+                        break;
+                    case "5247":
+                        delegation = "Santander";
+                        break;
+                    case "5204":
+                        delegation = "Sales Area 4";
+                        break;
+                    case "5220":
+                        delegation = "Dealer Service";
+                        break;
+                    case "5201":
+                        delegation = "Sales Area 1";
+                        break;
+                    case "5202":
+                        delegation = "Sales Area 2";
+                        break;
+                }
             }
 
             string office = "";
-            switch (cliente.Territory.Substring(8, 3))
+            if (cliente != null)
             {
-                case "543":
-                    office = "Production Printing";
-                    break;
-                case "5VT":
-                    office = "Inside Sales";
-                    break;
-                case "521":
-                    office = "PREMIUM";
-                    break;
-                case "522":
-                    office = "ADVANCED";
-                    break;
-                case "523":
-                    office = "PARTNER";
-                    break;
-                case "540":
-                    office = "Regular Customers";
-                    break;
-                case "520":
-                    office = "ELITE";
-                    break;
-                case "544":
-                    office = "Industrial Printing";
-                    break;
-                case "541":
-                    office = "Major Accounts";
-                    break;
-                case "542":
-                    office = "Production Printing";
-                    break;
-                
-            }
+                switch (cliente.Territory.Substring(8, 3))
+                {
+                    case "543":
+                        office = "Production Printing";
+                        break;
+                    case "5VT":
+                        office = "Inside Sales";
+                        break;
+                    case "521":
+                        office = "PREMIUM";
+                        break;
+                    case "522":
+                        office = "ADVANCED";
+                        break;
+                    case "523":
+                        office = "PARTNER";
+                        break;
+                    case "540":
+                        office = "Regular Customers";
+                        break;
+                    case "520":
+                        office = "ELITE";
+                        break;
+                    case "544":
+                        office = "Industrial Printing";
+                        break;
+                    case "541":
+                        office = "Major Accounts";
+                        break;
+                    case "542":
+                        office = "Production Printing";
+                        break;
 
-            a.ProposalObj.Draft.client.SalesGroup = cliente.Territory.Substring(4, 4) + " - " + delegation;
-            a.ProposalObj.Draft.client.SalesOffice = cliente.Territory.Substring(8, 3) + " - " + office;
+                }
+            }
+           
+
+            a.ProposalObj.Draft.client.SalesGroup =  cliente != null ? cliente.Territory.Substring(4, 4) + " - " + delegation : "-";
+            a.ProposalObj.Draft.client.SalesOffice = cliente != null ? cliente.Territory.Substring(8, 3) + " - " + office : "-";
 
             a.ProposalObj.SAPNumber = pr1.Pedido_SAP == null ? "" : pr1.Pedido_SAP.Value.ToString();
             a.ProposalObj.IsClientPublicSector = (bool)pCliente.IsPublicSector;
@@ -4015,7 +4022,7 @@ namespace WebApplication1.Controllers
 
                                 dl_info.Tipo = deliverLocation.AccountType;
 
-                                if (bb_local_envio.Adress1 != null)
+                                if (bb_local_envio.Adress1 != null && bb_local_envio.Adress1 != "")
                                 {
                                     dl_info.DeliveryLocation = bb_local_envio.Adress1;
                                 }
@@ -4033,7 +4040,7 @@ namespace WebApplication1.Controllers
                                     //dl_info.SAP_Nr = deliverLocation.SAPCustomerNr == null ? bb_local_envio.AccountNumber : deliverLocation.SAPCustomerNr;
                                     dl_info.SAP_Nr = deliverLocation.SAPCustomerNr;
                                     dl_info.CompanyName = bb_local_envio.BusinessCode == null ? bb_local_envio.NomeCliente : bb_local_envio.BusinessCode;
-                                    dl_info.SAP_Company = bb_local_envio.NomeCliente;
+                                    dl_info.SAP_Company = bb_local_envio.BusinessCode == null ? bb_local_envio.NomeCliente : bb_local_envio.BusinessCode;
                                     dl_info.Address = bb_local_envio.Adress1;
                                     dl_info.IsNewAddress = bb_local_envio.IsNewAddress == null ? false : bb_local_envio.IsNewAddress;
                                 }
