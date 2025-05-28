@@ -837,29 +837,29 @@ namespace WebApplication1.Controllers
                             if (isGMA == true)
                             {
                                 var GMA_Amout = amount * 0.1;
-                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0) * quantity;
+                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0);
                             }
 
                             //// se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
                             else
                             {
-                                profitDictionary["HW"].GPTotal += (amount ?? 0) * quantity;
+                                profitDictionary["HW"].GPTotal += (amount ?? 0);
                             }
                         }
 
                         if (family.Contains("IMS") || family.Contains("WPH"))
                         {
-                            profitDictionary["IMS_VSS"].GPTotal += (amount ?? 0) * quantity;
+                            profitDictionary["IMS_VSS"].GPTotal += (amount ?? 0);
                         }
 
                         if (family.Contains("PRS") || family.Contains("SV"))
                         {
-                            profitDictionary["PRS"].GPTotal += (amount ?? 0) * quantity;
+                            profitDictionary["PRS"].GPTotal += (amount ?? 0);
                         }
 
                         if (family.Contains("MCS") || family.Contains("BPS"))
                         {
-                            profitDictionary["MCS_BPS"].GPTotal += (amount ?? 0) * quantity;
+                            profitDictionary["MCS_BPS"].GPTotal += (amount ?? 0);
                         }
                     }
 
@@ -1121,16 +1121,28 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.ContractID = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ID).FirstOrDefault();
 
-                    int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
 
-                    if (campaignID == 1)
+                    //bb_commission_general.Tipo_Financiacion = db.BB_FinancingType.Where(x => x.Code == loadProposal.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
+                    int Financing_Type = loadProposal.ProposalObj.Draft.financing.FinancingTypeCode;
+
+                    if (Financing_Type == 0)
                     {
                         bb_commission_general.Tipo_Operacion = "VENTA";
                     }
-                    else if (campaignID == 5)
+                    else
                     {
                         bb_commission_general.Tipo_Operacion = "ALQUILER";
                     }
+
+                    int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
+                    //if (campaignID == 1)
+                    //{
+                    //    bb_commission_general.Tipo_Operacion = "VENTA";
+                    //}
+                    //else if (campaignID == 5)
+                    //{
+                    //    bb_commission_general.Tipo_Operacion = "ALQUILER";
+                    //}
 
                     DateTime? modifiedDate = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ModifiedTime).FirstOrDefault();
 
@@ -1290,19 +1302,30 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Es_Segunda_Mano = isSecondHand;
                     bb_commission_general.Es_Prospecto = loadProposal.ProposalObj.Draft.baskets.prospect;
 
-                    bb_commission_general.Tipo_Financiacion = db.BB_FinancingType.Where(x => x.Code == loadProposal.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
-
                     bb_commission_general.Fecha_Operacion = DateTime.Now;
                     bb_commission_general.CreatedBy = null;
                     bb_commission_general.ModifiedDate = null;
                     bb_commission_general.ModifiedBy = null;
+
+
+                    bool? isNewClient_BB_Clientes = false;
+                    using (var dbC = new BB_DB_DEVEntities2())
+                    {
+
+                        isNewClient_BB_Clientes = dbC.BB_Proposal_Client
+                                        .Where(x => x.ProposalID == proposalID)
+                                        .Select(x=> x.IsNewClient)
+                                        .FirstOrDefault();
+
+                    }
+
 
                     // Definir o tipo de cliente
                     if (isNewBusinessLine == true)
                     {
                         bb_commission_general.Tipo_Cliente = "NLN";
                     }
-                    else if (isNewClient == true)
+                    else if (isNewClient == true || isNewClient_BB_Clientes == true)
                     {
                         bb_commission_general.Tipo_Cliente = "PROSPECTO";
                     }
@@ -1638,9 +1661,9 @@ namespace WebApplication1.Controllers
                     int esRetoma = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalID).Count();
 
                     // ----------------------------------------------------------------------------------------------------
-                    // só devo gerar comissões para Negocio tradicional, Aluguer e Nao se deve ter em conta o que seja "Cesion" nem as "Retiradas"
+                    // só devo gerar comissões para Negocio tradicional (VENTA), Aluguer e Nao se deve ter em conta o que seja "Cesion" nem as "Retiradas"
 
-                    if (campaignID == 1 || campaignID == 5 && financingTypeCode != 4 && esRetoma > 0)
+                    if (campaignID == 1 || campaignID == 5 && financingTypeCode != 4 && esRetoma == 0)
                     {
                         List<BB_Commission_General> lastCommission = db.BB_Commission_General.Where(x => x.BB_Numero == proposalID.ToString()).ToList();
                         if (lastCommission.Any())
