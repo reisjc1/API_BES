@@ -874,30 +874,30 @@ namespace WebApplication1.Controllers
                         if (oneShot_Item.Family.Contains("HW"))
                         {
                             // Alquileres (no aplicable a los vendedores de GGCC)
-                            if (actionCampaignId == 5 && financingTypeCode != 3)
-                            {
-                                var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
+                            //if (actionCampaignId == 5 && financingTypeCode != 3)
+                            //{
+                            //    var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
 
-                                AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            }
+                            //    AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            //}
                             // Máquinas usadas
-                            else if (oneShot_Item.IsUsed == true)
-                            {
-                                var resultX = oneShot_Item.TotalNetsale * 0.65;
+                            //if (oneShot_Item.IsUsed == true)
+                            //{
+                            //    var resultX = oneShot_Item.TotalNetsale;
 
-                                AddProfit(oneShot_Item.Family, resultX, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            }
-                            // Ampliación/Transición a Renting
-                            else if (actionCampaignId == 3)
-                            {
-                                var resultY = oneShot_Item.TotalNetsale * 0.75;
+                            //    AddProfit(oneShot_Item.Family, resultX, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            //}
+                            //// Ampliación/Transición a Renting
+                            //else if (actionCampaignId == 3)
+                            //{
+                            //    var resultY = oneShot_Item.TotalNetsale * 0.75;
 
-                                AddProfit(oneShot_Item.Family, resultY, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            }
-                            else
-                            {
+                            //    AddProfit(oneShot_Item.Family, resultY, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            //}
+                            //else
+                            //{
                                 AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            }
+                            //}
                             // Finalización de Renting con venta
                             //else if (financingTypeCode == 2 || )
                             //{
@@ -1124,17 +1124,23 @@ namespace WebApplication1.Controllers
 
                     //bb_commission_general.Tipo_Financiacion = db.BB_FinancingType.Where(x => x.Code == loadProposal.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
                     int Financing_Type = loadProposal.ProposalObj.Draft.financing.FinancingTypeCode;
+                    int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
 
-                    if (Financing_Type == 0)
-                    {
-                        bb_commission_general.Tipo_Operacion = "VENTA";
-                    }
-                    else
+                    // KM RENTAL
+                    if(Financing_Type == 5)
                     {
                         bb_commission_general.Tipo_Operacion = "ALQUILER";
                     }
+                    // SERVICIONS DE IMPRESSION
+                    else if (campaignID == 5)
+                    {
+                        bb_commission_general.Tipo_Operacion = "SERVICIOS IMPRESSIÓN";
+                    }
+                    else
+                    {
+                        bb_commission_general.Tipo_Operacion = "VENTA";
+                    }
 
-                    int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
                     //if (campaignID == 1)
                     //{
                     //    bb_commission_general.Tipo_Operacion = "VENTA";
@@ -1464,25 +1470,24 @@ namespace WebApplication1.Controllers
                     // Definicao da Condicion para o calculo dos premios ---------------------
 
                     int? campaignID_Cond = db.BB_Proposal.Where(x => x.ID == proposalID).Select(x => x.CampaignID).FirstOrDefault();
-                    bool extensionAlq = false;
+                    //bool extensionAlq = false;
 
                     var equipamentosX = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
                     var isPPMachine = equipamentosX.Where(x => x.Family.StartsWith("PP")).Any();
                     var isAditamento = db.BB_Proposal.Where(x => x.ID == proposalID).Select(x => x.ContractNumberPai).FirstOrDefault();
 
-                    if (campaignID_Cond == 3 || campaignID_Cond == 5)
-                    {
-                        extensionAlq = true;
-                    }
+                    //if (campaignID_Cond == 3 || campaignID_Cond == 5)
+                    //{
+                    //    extensionAlq = true;
+                    //}
 
-                    if (isSecondHand == true && (bb_commission_general.Area == "GC" || bb_commission_general.Area == "GC IT" || bb_commission_general.Area == "VD" || bb_commission_general.Area == "VD IT"))
-                    {
-                        bb_commission_general.Condicion = "1";
-                    }
-
-                    else if (isPPMachine == true && isSecondHand == true)
+                    if (isPPMachine == true && isSecondHand == true)
                     {
                         bb_commission_general.Condicion = "4";
+                    }
+                    else if (isSecondHand == true && (bb_commission_general.Area == "GC" || bb_commission_general.Area == "GC IT" || bb_commission_general.Area == "VD" || bb_commission_general.Area == "VD IT"))
+                    {
+                        bb_commission_general.Condicion = "1";
                     }
                     else
                     {
@@ -1495,13 +1500,13 @@ namespace WebApplication1.Controllers
                     bb_commission_general.GP_HW_Premio = Math.Round((double)bb_commission_general.GP_HW_Premio, 2);
 
 
-                    bb_commission_general.GP_IMS_VSS_Premio = CalculatePremio((double)bb_commission_general.GP_IMS_VSS, bb_commission_general.Condicion);
+                    bb_commission_general.GP_IMS_VSS_Premio = CalculatePremio((double)bb_commission_general.GP_IMS_VSS, "0");
                     bb_commission_general.GP_IMS_VSS_Premio = Math.Round((double)bb_commission_general.GP_IMS_VSS_Premio, 2);
 
-                    bb_commission_general.GP_PRS_Premio = CalculatePremio((double)bb_commission_general.GP_PRS, bb_commission_general.Condicion);
+                    bb_commission_general.GP_PRS_Premio = CalculatePremio((double)bb_commission_general.GP_PRS, "0");
                     bb_commission_general.GP_PRS_Premio = Math.Round((double)bb_commission_general.GP_PRS_Premio, 2);
 
-                    bb_commission_general.GP_MCS_BPS_Premio = CalculatePremio((double)bb_commission_general.GP_MCS_BPS, bb_commission_general.Condicion);
+                    bb_commission_general.GP_MCS_BPS_Premio = CalculatePremio((double)bb_commission_general.GP_MCS_BPS, "0");
                     bb_commission_general.GP_MCS_BPS_Premio = Math.Round((double)bb_commission_general.GP_MCS_BPS_Premio, 2);
 
                     bb_commission_general.GP_Total_Premios = bb_commission_general.GP_HW_Premio +
@@ -2084,9 +2089,8 @@ namespace WebApplication1.Controllers
             {
                 case "3":
                 case "0":
-                    return value;
                 case "4":
-                    return value * 0.65;
+                    return value;
                 case "1":
                     return value * 0.5;
 
