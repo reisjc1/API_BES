@@ -926,11 +926,46 @@ namespace WebApplication1.Controllers
                         }
                     }
 
-                    // servicos recorrentes
-                    //foreach (var servRecor_Item in servicosRecorrentes)
-                    //{
-                    //    AddProfit(servRecor_Item.Family, servRecor_Item.GPTotal, servRecor_Item.CodeRef, servRecor_Item.Qty);
-                    //}
+                    void AddProfit_RS(string family, double? totalNetsale, double? unitPriceCost)
+                    {
+                        if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
+                        {
+                            // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
+                            // assim, nunca vai cair no else
+                            if (isGMA == true)
+                            {
+                                var GMA_Amout = (totalNetsale - unitPriceCost) * 0.1;
+                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0);
+                            }
+
+                            //// se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
+                            else
+                            {
+                                profitDictionary["HW"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
+                            }
+                        }
+
+                        if (family.Contains("IMS") || family.Contains("WPH"))
+                        {
+                            profitDictionary["IMS_VSS"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
+                        }
+
+                        if (family.Contains("PRS") || family.Contains("SV"))
+                        {
+                            profitDictionary["PRS"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
+                        }
+
+                        if (family.Contains("MCS") || family.Contains("BPS"))
+                        {
+                            profitDictionary["MCS_BPS"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
+                        }
+                    }
+
+                    //servicos recorrentes
+                    foreach (var servRecor_Item in servicosRecorrentes)
+                    {
+                        AddProfit_RS(servRecor_Item.Family, servRecor_Item.TotalNetsale, servRecor_Item.UnitPriceCost);
+                    }
 
 
                     var profit_OfficeHW = profitDictionary["HW"];
@@ -1231,14 +1266,29 @@ namespace WebApplication1.Controllers
 
                     // TotalNetSalte dos mobotix
                     bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
+                    var basketMobotix_CN = bb_commission_general.CN_Mobotix;
 
                     bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
 
-                    bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + bb_commission_general.CN_Mobotix;
+                    bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + basketMobotix_CN;
 
                     bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS") || x.Family.EndsWith("SV")).Sum(x => x.TotalNetsale);
 
                     bb_commission_general.CN_MCS_BPS = basket.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
+
+
+                    //Adicionar os Servicos Recurrentes
+                    bb_commission_general.CN_Mobotix += servicosRecorrentes.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
+                    var SR_Mobotix_CN = bb_commission_general.CN_Mobotix;
+
+                    bb_commission_general.CN_Hard += servicosRecorrentes.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
+
+                    bb_commission_general.CN_IMS_VSS += servicosRecorrentes.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + SR_Mobotix_CN;
+
+                    bb_commission_general.CN_PRS += servicosRecorrentes.Where(x => x.Family.Contains("PRS") || x.Family.EndsWith("SV")).Sum(x => x.TotalNetsale);
+
+                    bb_commission_general.CN_MCS_BPS += servicosRecorrentes.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
+
 
 
                     bb_commission_general.CN_Mobotix = Math.Round((double)bb_commission_general.CN_Mobotix, 2);
