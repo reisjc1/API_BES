@@ -1940,24 +1940,26 @@ namespace WebApplication1.Controllers
                             // Obtém a propriedade correspondente à chave do dicionário
                             var prop = propriedades.FirstOrDefault(p => p.Name == campo.Key);
 
-                            if (prop != null)
+                            if(prop == null)
                             {
-                                // coluna que serve como divisória
-                                if (campo.Key == "A")
+                                if(campo.Key == "A")
                                 {
                                     worksheet.Cells[line, column] = string.Empty;
-                                }
+                                }                                
                                 // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
                                 else if (campo.Key == "Operacion")
                                 {
                                     worksheet.Cells[line, column] = "BB";
                                 }
-                                else if (campo.Key == "Es_Segunda_Mano")
+                            }
+                            else
+                            {
+                                if (campo.Key == "Es_Segunda_Mano")
                                 {
 
-                                    object value = prop.GetValue(commission);
+                                    bool isSecondHand = (bool)prop.GetValue(commission);
 
-                                    if (value.ToString() == "TRUE")
+                                    if (isSecondHand)
                                     {
                                         worksheet.Cells[line, column] = "Sí";
                                     }
