@@ -2557,9 +2557,9 @@ namespace WebApplication1.Controllers
 
             LeaseDeskBLL lDBll = new LeaseDeskBLL();
 
-            List<ConditionPVP> condPvp = lDBll.FinancingDetails(proposalID);
+            ConditionsTotais condPvp = lDBll.FinancingDetailsPerMachine(proposalID);
 
-            a.ProposalObj.ConditionsPvp = condPvp;
+            a.ProposalObj.ConditionsPvpPerMachine = condPvp;
 
             //foreach(var manage in a.ProposalObj.Draft.opsPacks.opsManage)
             //{
@@ -2719,7 +2719,7 @@ namespace WebApplication1.Controllers
                             element.Qty = (int)item.Qty;
                             element.TotalNetsale = (double)item.TotalNetsale;
                             element.IsUsed = (bool)item.IsUsedMachine;
-                            element.GroupPrice = item.TotalNetsale;
+                            element.GroupPrice = item.UnitDiscountPrice;
                             element.Accessories = new List<OsBasket>();
                             element.DeliverySummary = DeliveriesSummary_lst.Where(x => x.Group == element.Group).FirstOrDefault();
                             element.SerialNumber = item.SerialNumber != null ? item.SerialNumber : "-";
@@ -2748,6 +2748,7 @@ namespace WebApplication1.Controllers
                             // SERVICO RECURRENTE
                             if (isRS == true)
                             {
+                                BB_Proposal_Quote_RS quoteRS = pp_quote_rs.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
                                 OsBasket basketItem = new OsBasket
                                 {
                                         CodeRef = item.CodeRef,
@@ -2755,7 +2756,7 @@ namespace WebApplication1.Controllers
                                         Family = item.Family,
                                         UnitDiscountPrice = (double)item.UnitDiscountPrice,
                                         Qty = (int)item.Qty,
-                                        TotalNetsale = (double)item.PVP,
+                                        TotalNetsale = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
                                         Group = item.Group,
                                         IsUsed = (bool)item.IsUsedMachine,
                                         SerialNumber = "-"
@@ -2783,7 +2784,7 @@ namespace WebApplication1.Controllers
                                 };
 
 
-                                HW_SW_GroupX.GroupPrice += basketItem.TotalNetsale;
+                                HW_SW_GroupX.GroupPrice += Math.Round((double)item.UnitDiscountPrice * (double)opsManage.TotalMonths);
                                 HW_SW_GroupX.Accessories.Add(basketItem);
                             }
                             // PROPOSAL QUOTE
@@ -2802,7 +2803,7 @@ namespace WebApplication1.Controllers
                                     SerialNumber = "-"
                                 };
 
-                                HW_SW_GroupX.GroupPrice += basketItem.TotalNetsale;
+                                HW_SW_GroupX.GroupPrice += basketItem.UnitDiscountPrice;
                                 HW_SW_GroupX.Accessories.Add(basketItem);
                             }
 

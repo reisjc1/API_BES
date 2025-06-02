@@ -960,5 +960,245 @@ namespace WebApplication1.Models.SetupXML.XML
             }
 
         }
+
+        public List<ConditionPVPPerMachine> ConditionsVariablesPerMachine(List<ItemGroups> orders, string financingType, int? contractMonths, int? proposalId, int? ftCode)
+        {
+            try
+            {
+                List<ConditionPVPPerMachine> conditionsPvp = new List<ConditionPVPPerMachine>();
+
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    List<BB_Data_Integration> dataIntegration_lst = db.BB_Data_Integration.AsNoTracking().ToList();
+                    BB_Proposal_Overvaluation overvaluation = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.AsNoTracking().ToList();
+
+                    foreach (var order in orders)
+                    {
+                        ConditionPVPPerMachine conditionPVPPerMachine = new ConditionPVPPerMachine();
+
+                        conditionPVPPerMachine.Group = order.Group;
+                        conditionPVPPerMachine.Conditions = new List<ConditionPVP>();
+                        foreach (var item in order.Items)
+                        {
+                            ConditionPVP conditionPVP = new ConditionPVP();
+                            if (item.BundleRef)
+                            {
+                                string machineName = equipamentos.Where(x => x.CodeRef == item.CodeRef).Select(x => x.Name).FirstOrDefault();
+                                conditionPVPPerMachine.MachineModel = machineName;
+                            }
+                            // Se for um codigo de referencia do oneshot o total de meses esta definido como 0
+                            if (item.TotalMonths == 0)
+                            {
+                                //if (quote.Family.Contains("HW") || quote.Family.Contains("CS"))
+                                //{
+                                ConditionPVP cond = conditionPVPPerMachine.Conditions.Find(x => x.ConditionCode == "ZPD4");
+                                double? value = item.UnitDiscountPrice * item.Qty;
+
+                                if (cond == null)
+                                {
+                                    conditionPVP.ConditionCode = "ZPD4";
+                                    conditionPVP.PVP = value;
+                                    conditionPVPPerMachine.Conditions.Add(conditionPVP);
+                                }
+                                else
+                                {
+                                    cond.PVP += value;
+                                }
+                            }
+                            //else
+                            //{
+                            //    ConditionPVP cond = conditionsPvp.Find(x => x.ConditionCode == "ZSW4");
+                            //    if (cond == null)
+                            //    {
+                            //        conditionPVP.ConditionCode = "ZSW4";
+                            //        conditionPVP.PVP = quote.UnitDiscountPrice;
+                            //        conditionsPvp.Add(conditionPVP);
+                            //    }
+                            //    else
+                            //    {
+                            //        cond.PVP = cond.PVP + quote.UnitDiscountPrice;
+                            //    }
+                            //}
+                            //}
+                            //Entra aqui caso seja servico recurrente ou pacote ops manage
+                            else
+                            {
+                                ConditionPVP cond = conditionPVPPerMachine.Conditions.Find(x => x.ConditionCode == "ZPD4");
+                                double? value = (item.UnitDiscountPrice * item.Qty) * item.TotalMonths;
+
+                                if (cond == null)
+                                {
+                                    conditionPVP.ConditionCode = "ZPD4";
+                                    conditionPVP.PVP = value;
+                                    conditionPVPPerMachine.Conditions.Add(conditionPVP);
+                                }
+                                else
+                                {
+                                    cond.PVP += value;
+                                }
+                            }
+
+                            //003 - Rental Direto
+                            //005 - AssigmentLease
+                            if (financingType == "003" || financingType == "005")
+                            {
+                                string financingCode = ConditionMaterial(item.CodeRef, financingType, dataIntegration_lst);
+
+                                ConditionPVP conditionPvp = conditionPVPPerMachine.Conditions.Find(x => x.ConditionCode == financingCode);
+
+                                double? baseValue = item.UnitDiscountPrice * item.Qty;
+                                double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
+                                bool isZVBR_or_ZVBA = financingCode == "ZVBR" || financingCode == "ZVBA";
+                                bool isHW = item.Family.Contains("HW");
+
+                                if (conditionPvp != null)
+                                {
+                                    if (isZVBR_or_ZVBA)
+                                    {
+                                        if (pf.Factor > 0)
+                                        {
+                                            // Quando é AssigmentLease temos que adicionar a LPI
+                                            if (financingType == "005")
+                                            {
+                                                conditionPvp.PVP += (item.LPI + baseValue) * factorValue;
+                                            }
+                                            // caso seja Rental Direto
+                                            else if (item.Family.Contains("HW"))
+                                            {
+                                                conditionPvp.PVP += baseValue * factorValue;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (item.TotalMonths == 0)
+                                        {
+                                            conditionPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths) + conditionPvp.PVP;
+                                        }
+                                        else
+                                        {
+                                            conditionPvp.PVP = (item.UnitDiscountPrice / item.Qty) + conditionPvp.PVP;
+                                        }
+                                    }
+
+                                    conditionPvp.PVP = Convert.ToDouble(conditionPvp.PVP);
+                                }
+                                else
+                                {
+                                    ConditionPVP condPvp = new ConditionPVP();
+
+                                    if (financingCode == "ZVBR" || financingCode == "ZVBA")
+                                    {
+                                        bool hasPvp = condPvp.PVP != null;
+
+                                        if (pf.Factor > 0)
+                                        {
+                                            // Condicao ZVBA corresponde ao 005
+                                            if (financingCode == "ZVBA")
+                                            {
+                                                double? value = (item.LPI + baseValue) * factorValue;
+                                                condPvp.PVP = hasPvp ? condPvp.PVP + value : value;
+                                            }
+                                            // Entra aqui quando na condicao ZVBR que corresponde ao 003
+                                            else if (item.Family.Contains("HW"))
+                                            {
+                                                double? value = baseValue * factorValue;
+                                                condPvp.PVP = hasPvp ? condPvp.PVP + value : value;
+                                            }
+                                        }
+                                    }
+
+                                    //Caso a condicao seja diferente de ZVBR e ZVBA (ex: ZVBI, ZVBM)
+                                    else
+                                    {
+                                        if (condPvp.PVP != null)
+                                        {
+                                            if (item.TotalMonths == 0)
+                                            {
+                                                condPvp.PVP += (item.UnitDiscountPrice / item.Qty) / contractMonths;
+                                            }
+                                            else
+                                            {
+                                                condPvp.PVP += (item.UnitDiscountPrice / item.Qty);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (item.TotalMonths == 0)
+                                            {
+                                                condPvp.PVP = ((item.UnitDiscountPrice / item.Qty) / contractMonths);
+                                            }
+                                            else
+                                            {
+                                                condPvp.PVP = item.UnitDiscountPrice / item.Qty;
+                                            }
+                                        }
+                                    }
+
+                                    condPvp.PVP = Convert.ToDouble(condPvp.PVP);
+                                    condPvp.ConditionCode = financingCode;
+                                    conditionPVPPerMachine.Conditions.Add(condPvp);
+                                }
+                            }
+
+                            var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+
+                            int index = (int)printingService2ID.ActivePrintingService;
+                            BB_PrintingServices bB_PrintingServices = null;
+                            if (index > 1)
+                            {
+                                bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
+                            }
+                            else
+                            {
+                                bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
+                            }
+
+                            if (bB_PrintingServices != null)
+                            {
+                                BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
+                                BB_PrintingService_Machines machine = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == bB_PrintingServices.ID && x.CodeRef == item.CodeRef).FirstOrDefault();
+                                if(machine != null)
+                                {
+
+                                    if (bB_VVA != null)
+                                    {
+                                        //BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+
+                                        ConditionPVP condPvp = new ConditionPVP();
+                                        condPvp.PVP = Convert.ToDouble(Math.Round(bB_VVA.PVP ?? 0.0, 2).ToString("F2"));
+                                        condPvp.ConditionCode = "ZVBS";
+                                        conditionPVPPerMachine.Conditions.Add(condPvp);
+                                    }
+                                }
+                            }
+
+                            if (overvaluation != null)
+                            {
+                                ConditionPVP condPvp = new ConditionPVP();
+                                condPvp.PVP = overvaluation.Total;
+                                condPvp.ConditionCode = "ZEBB";
+                                conditionPVPPerMachine.Conditions.Add(condPvp);
+                            }
+
+                        }
+
+                        conditionsPvp.Add(conditionPVPPerMachine);
+                    }
+
+                }
+
+                return conditionsPvp;
+            }
+            catch (Exception e)
+            {
+                string err = e.Message;
+                return null;
+            }
+
+        }
+
     }
 }

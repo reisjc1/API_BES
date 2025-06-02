@@ -55,11 +55,68 @@ namespace WebApplication1.BLL
 
                 List<ItemGroups> groups = GetGroups(proposalId);
 
-
                 List<ConditionPVP> condPvp = cond.ConditionsVariables(groups, contractType, financing.Months, proposalId, ft.Code);
 
 
                 return condPvp;
+            }
+        }
+        public ConditionsTotais FinancingDetailsPerMachine(int? proposalId)
+        {
+            string financingType = "";
+            string contractType = "";
+            Conditions cond = new Conditions();
+            using (var db = new BB_DB_DEVEntities2())
+            {
+
+                BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault();
+                BB_Proposal_Financing financing = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                BB_Proposal_PrazoDiferenciado pd = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+
+                BB_FinancingType ft = db.BB_FinancingType.Where(x => x.Code == financing.FinancingTypeCode).FirstOrDefault();
+
+
+                switch (ft.Code)
+                {
+                    case 0:
+                    case 1:
+                        financingType = "SA";
+                        contractType = "002";
+                        break;
+
+                    case 2:
+                        financingType = "DL";
+                        //contractType = "008";
+                        contractType = "002";//Renting por enquanto enviar 002 e o ideal é enviar 008
+                        break;
+
+                    case 3:
+                        financingType = "AL";
+                        contractType = "005";
+                        break;
+
+                    case 5:
+                        financingType = "AS";
+                        contractType = "003";
+                        break;
+
+                    default:
+                        break;
+                }
+
+                ConditionsTotais conditionsTotais = new ConditionsTotais();
+
+
+                List<ItemGroups> groups = GetGroups(proposalId);
+
+                List<ConditionPVPPerMachine> condPvpPerMachine = cond.ConditionsVariablesPerMachine(groups, contractType, financing.Months, proposalId, ft.Code);
+
+                List<ConditionPVP> condPvp = cond.ConditionsVariables(groups, contractType, financing.Months, proposalId, ft.Code);
+
+                conditionsTotais.ConditionsPerMachine = condPvpPerMachine;
+                conditionsTotais.ConditionsTotal = condPvp;
+
+                return conditionsTotais;
             }
         }
         public List<ItemGroups> GetGroups(int? proposalId)
@@ -67,6 +124,8 @@ namespace WebApplication1.BLL
             try
             {
                 List<ItemGroups> listGroups = new List<ItemGroups>();
+                List<ItemGroups> listGroups2 = new List<ItemGroups>();
+
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     List<string> quoteLst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).Select(x => x.CodeRef).ToList();
@@ -83,6 +142,10 @@ namespace WebApplication1.BLL
                         {
                             if (itemdoBasket.Group != groupNumber)
                             {
+                                ItemGroups item = new ItemGroups();
+                                item.Group = (int)itemdoBasket.Group;
+                                listGroups2.Add(item);
+
                                 groups.Add(itemdoBasket);
                                 groupNumber = itemdoBasket.Group;
                             }
@@ -156,11 +219,17 @@ namespace WebApplication1.BLL
 
                             }
                             listGroups.Add(Bundles);
+
+                            ItemGroups currentItemGroup = listGroups2.Find(x => x.Group == group.Group);
+
+                            currentItemGroup.Items = Bundles.Items;
+                            
                         }
 
                     }
                 }
-                return listGroups;
+                //return listGroups;
+                return listGroups2;
             }
             catch (Exception ex)
             {
@@ -169,6 +238,7 @@ namespace WebApplication1.BLL
         }
         public class ItemGroups
         {
+            public int Group { get; set; }
             public List<ItemGroup> Items { get; set; }
         }
         public class ItemGroup

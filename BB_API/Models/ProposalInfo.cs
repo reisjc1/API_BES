@@ -55,6 +55,8 @@ namespace WebApplication1.Models
 
         public ClientApproval ClientApproval { get; set; }
         public List<ConditionPVP> ConditionsPvp { get; set; }
+        public ConditionsTotais ConditionsPvpPerMachine { get; set; }
+
         public string SAPNumber { get; set; }
         public bool IsClientPublicSector { get; set; }
 
