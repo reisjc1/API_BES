@@ -2467,8 +2467,9 @@ namespace WebApplication1.Controllers
 
                 foreach(var machine in activePS.Machines)
                 {
-                    machine.ClickPriceBW = Math.Round((double)machine.ClickPriceBW, 5);
-                    machine.ClickPriceC = Math.Round((double)machine.ClickPriceC, 5);
+                    machine.ClickPriceBW = machine.ClickPriceBW.HasValue ? Math.Round(machine.ClickPriceBW.Value, 5) : (double?)0;
+                    machine.ClickPriceC = machine.ClickPriceC.HasValue ? Math.Round(machine.ClickPriceC.Value, 5) : (double?)0;
+
                     machine.RequestedBWClickPrice = machine.RequestedBWClickPrice != null ? Math.Round((double)machine.RequestedBWClickPrice, 5) : 0;
                     machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ?  Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
                 }

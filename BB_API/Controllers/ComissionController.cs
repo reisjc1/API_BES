@@ -1511,7 +1511,7 @@ namespace WebApplication1.Controllers
                     //----------------------------------------------------------------------------------------------------------------------
 
 
-                    bb_commission_general.Observacion = db.LD_Contrato.Where(x => x.ProposalID == proposalID).Select(x => x.ComentariosGC).FirstOrDefault();
+                    bb_commission_general.Observacion = db.BB_WFA_Comments_Business.Where(x => x.ProposalID == proposalID && x.CommentType == "RRHH").Select(x => x.Comment).FirstOrDefault();
                     if (bb_commission_general.Observacion == null || bb_commission_general.Observacion == "null")
                     {
                         bb_commission_general.Observacion = " ";
