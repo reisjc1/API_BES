@@ -318,6 +318,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     BB_Proposal_OPSManage opsM = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     //BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal_Overvaluation overvaluation = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.AsNoTracking().ToList();
 
                     int? numberOfMachines = db.BB_Proposal_Quote
                                             .Where(x => x.Proposal_ID == proposalId)
@@ -327,15 +328,25 @@ namespace WebApplication1.Models.SetupXML.XML
                                             (quote, equip) => new { quote.Qty })
                                             .Sum(x => x.Qty) ?? 0;
 
+                    double? cancelationPerMachine = 0;
+                    if (overvaluation != null)
+                    {
+                        cancelationPerMachine = overvaluation.Total / numberOfMachines;
+                    }
+
                     foreach (var order in orders)
                     {
                         List<ConditionPVP> conditionsPvp = new List<ConditionPVP>();
-
+                        BB_Equipamentos isMachine = null;
                         foreach (var item in order.Z1ZVOE_ORDER_ITEMS)
                         {
                             bool isUsed = order.USED_MACHINE == "1" && item.ITM_NUMBER == "10";
                             BB_Proposal_Quote quote = quote_lst.FirstOrDefault(x => x.CodeRef == item.MATERIAL && x.IsUsed == isUsed);
-
+                            BB_Equipamentos equp = equipamentos.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
+                            if(equp != null)
+                            {
+                                isMachine = equp;
+                            }
                             ConditionPVP conditionPVP = new ConditionPVP();
 
                             if (quote != null)
@@ -656,14 +667,14 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
                         //Quando negocio tem sobrevalorizacao, adiciona a condicao ZEBB 
-                        if (overvaluation != null)
+                        if (overvaluation != null && isMachine != null)
                         {
                             collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
                             {
                                 DOC = order.SD_DOC,
                                 COND_FLAG = "O",
                                 KSCHL = "ZEBB",
-                                KBETR = overvaluation.Total.ToString().Replace(",", ".")
+                                KBETR = cancelationPerMachine.ToString().Replace(",", ".")
                             }); 
                         }
 
@@ -974,19 +985,40 @@ namespace WebApplication1.Models.SetupXML.XML
                     BB_Proposal_Overvaluation overvaluation = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.AsNoTracking().ToList();
 
+                    int? numberOfMachines = db.BB_Proposal_Quote
+                                            .Where(x => x.Proposal_ID == proposalId)
+                                            .Join(db.BB_Equipamentos,
+                                            quote => quote.CodeRef,
+                                            equip => equip.CodeRef,
+                                            (quote, equip) => new { quote.Qty })
+                                            .Sum(x => (int?)x.Qty) ?? 0;
+
+                    double? cancelationPerMachine = 0;
+                    if (overvaluation != null)
+                    {
+                        cancelationPerMachine = overvaluation.Total / numberOfMachines;
+                    }
+
                     foreach (var order in orders)
                     {
                         ConditionPVPPerMachine conditionPVPPerMachine = new ConditionPVPPerMachine();
 
                         conditionPVPPerMachine.Group = order.Group;
                         conditionPVPPerMachine.Conditions = new List<ConditionPVP>();
+                        string machineName = null;
                         foreach (var item in order.Items)
                         {
                             ConditionPVP conditionPVP = new ConditionPVP();
                             if (item.BundleRef)
                             {
-                                string machineName = equipamentos.Where(x => x.CodeRef == item.CodeRef).Select(x => x.Name).FirstOrDefault();
-                                conditionPVPPerMachine.MachineModel = machineName;
+                                machineName = equipamentos.Where(x => x.CodeRef == item.CodeRef).Select(x => x.Name).FirstOrDefault();
+                                if(machineName != null)
+                                {
+                                    conditionPVPPerMachine.MachineModel = machineName;
+                                }
+                                else{
+                                    conditionPVPPerMachine.MachineModel = item.Name;
+                                }
                             }
                             // Se for um codigo de referencia do oneshot o total de meses esta definido como 0
                             if (item.TotalMonths == 0)
@@ -1143,46 +1175,48 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
                             }
 
-                            var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                            if (machineName != null)
+                            {
+                                var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
-                            int index = (int)printingService2ID.ActivePrintingService;
-                            BB_PrintingServices bB_PrintingServices = null;
-                            if (index > 1)
-                            {
-                                bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
-                            }
-                            else
-                            {
-                                bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
-                            }
-
-                            if (bB_PrintingServices != null)
-                            {
-                                BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
-                                BB_PrintingService_Machines machine = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == bB_PrintingServices.ID && x.CodeRef == item.CodeRef).FirstOrDefault();
-                                if(machine != null)
+                                int index = (int)printingService2ID.ActivePrintingService;
+                                BB_PrintingServices bB_PrintingServices = null;
+                                if (index > 1)
                                 {
+                                    bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
+                                }
+                                else
+                                {
+                                    bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
+                                }
 
-                                    if (bB_VVA != null)
+                                if (bB_PrintingServices != null)
+                                {
+                                    BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
+                                    BB_PrintingService_Machines machine = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == bB_PrintingServices.ID && x.CodeRef == item.CodeRef).FirstOrDefault();
+                                    if (machineName != null && machine != null)
                                     {
-                                        //BB_Proposal_Condition_Type zvbs = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                                        if (bB_VVA != null)
+                                        {
+                                            double valueZVBS = 0;
 
-                                        ConditionPVP condPvp = new ConditionPVP();
-                                        condPvp.PVP = Convert.ToDouble(Math.Round(bB_VVA.PVP ?? 0.0, 2).ToString("F2"));
-                                        condPvp.ConditionCode = "ZVBS";
-                                        conditionPVPPerMachine.Conditions.Add(condPvp);
+                                            ConditionPVP condPvp = new ConditionPVP();
+                                            condPvp.PVP = Convert.ToDouble(Math.Round((machine.BWVolume * machine.ApprovedBW) + (machine.ApprovedC * machine.CVolume) ?? 0.0, 2).ToString("F2"));
+                                            condPvp.ConditionCode = "ZVBS";
+                                            conditionPVPPerMachine.Conditions.Add(condPvp);
+                                        }
                                     }
                                 }
                             }
 
-                            if (overvaluation != null)
-                            {
-                                ConditionPVP condPvp = new ConditionPVP();
-                                condPvp.PVP = overvaluation.Total;
-                                condPvp.ConditionCode = "ZEBB";
-                                conditionPVPPerMachine.Conditions.Add(condPvp);
-                            }
 
+                        }
+                        if (overvaluation != null && machineName != null)
+                        {
+                            ConditionPVP condPvp = new ConditionPVP();
+                            condPvp.PVP = cancelationPerMachine;
+                            condPvp.ConditionCode = "ZEBB";
+                            conditionPVPPerMachine.Conditions.Add(condPvp);
                         }
 
                         conditionsPvp.Add(conditionPVPPerMachine);

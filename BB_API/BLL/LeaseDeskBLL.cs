@@ -170,6 +170,7 @@ namespace WebApplication1.BLL
                                     group1.TotalMonths = 0;
                                     group1.LPI = (double)item.TCP;
                                     group1.Family = item.Family;
+                                    group1.Name = item.Name;
                                     Bundles.Items.Add(group1);
 
                                     firstItemGroup = false;
@@ -181,12 +182,13 @@ namespace WebApplication1.BLL
                                     if (quoteLst.Contains(item.CodeRef))
                                     {
                                         group2.CodeRef = item.CodeRef;
-                                        group2.BundleRef = false;
+                                        group2.BundleRef = item.Description.Contains("MAIN MATERIAL") ? true : false;
                                         group2.Qty = item.Qty;
                                         group2.UnitDiscountPrice = (double)item.UnitDiscountPrice;
                                         group2.TotalMonths = 0;
                                         group2.LPI = 0;
                                         group2.Family = item.Family;
+                                        group2.Name = item.Name;
                                         Bundles.Items.Add(group2);
                                     }
                                     else if (quoteRSLst.Contains(item.CodeRef))
@@ -199,6 +201,7 @@ namespace WebApplication1.BLL
                                         group2.TotalMonths = (int)quoteRS.TotalMonths;
                                         group2.LPI = 0;
                                         group2.Family = item.Family;
+                                        group2.Name = item.Name;
                                         Bundles.Items.Add(group2);
                                     }
                                     else
@@ -212,6 +215,7 @@ namespace WebApplication1.BLL
                                             group2.TotalMonths = (int)opsM.TotalMonths;
                                             group2.LPI = 0;
                                             group2.Family = item.Family;
+                                            group2.Name = item.Name;
                                             Bundles.Items.Add(group2);
                                         }
                                     }
@@ -250,6 +254,7 @@ namespace WebApplication1.BLL
             public int TotalMonths { get; set; }
             public double LPI { get; set; }
             public string Family { get; set; }
+            public string Name { get; set; }
         }
         
     }

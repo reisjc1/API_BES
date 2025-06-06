@@ -1187,26 +1187,27 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     string formatNumber = "";
                                     BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
-                                    if (pSM != null)
-                                    {
-                                        if (pSM.ApprovedBW != null)
-                                        {
-                                            formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
 
-                                        }
-                                        else if (pSM.RequestedBWClickPrice != null)
-                                        {
-                                            formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
 
-                                        }
-                                        else
-                                        {
-                                            formatNumber = "0,00000";
-                                        }
-                                        kBETR = formatNumber.Replace(",", ".");
-                                        copiasIncludias = pSM.BWVolume;
-                                        kSTBM = copiasIncludias.ToString();
-                                    }
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = activePS.GlobalClickVVA.BWExcessPVP.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = pSM.BWVolume;
+                                    kSTBM = copiasIncludias.ToString();
                                 }
 
 
@@ -1246,26 +1247,27 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     string formatNumber = "";
                                     BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
-                                    if (pSM != null)
-                                    {
-                                        if (pSM.ApprovedBW != null)
-                                        {
-                                            formatNumber = ((double)pSM.ApprovedC).ToString("F5");
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedC).ToString("F5");
 
-                                        }
-                                        else if (pSM.RequestedBWClickPrice != null)
-                                        {
-                                            formatNumber = ((double)pSM.RequestedCClickPrice).ToString("F5");
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedCClickPrice).ToString("F5");
 
-                                        }
-                                        else
-                                        {
-                                            formatNumber = "0,00000";
-                                        }
-                                        kBETR = formatNumber.Replace(",", ".");
-                                        copiasIncludias = pSM.CVolume;
-                                        kSTBM = copiasIncludias.ToString();
-                                    }
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = activePS.GlobalClickVVA.CExcessPVP.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = pSM.CVolume;
+                                    kSTBM = copiasIncludias.ToString();
                                 }
 
                                 collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
@@ -1303,26 +1305,27 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     string formatNumber = "";
                                     BB_PrintingService_Machines pSM = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
-                                    if (pSM != null)
-                                    {
-                                        if (pSM.ApprovedBW != null)
-                                        {
-                                            formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
 
-                                        }
-                                        else if (pSM.RequestedBWClickPrice != null)
-                                        {
-                                            formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
 
-                                        }
-                                        else
-                                        {
-                                            formatNumber = "0,00000";
-                                        }
-                                        kBETR = formatNumber.Replace(",", ".");
-                                        copiasIncludias = pSM.BWVolume;
-                                        kSTBM = copiasIncludias.ToString();
-                                    }
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = activePS.GlobalClickVVA.BWExcessPVP.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = pSM.BWVolume;
+                                    kSTBM = copiasIncludias.ToString();
                                 }
 
 
