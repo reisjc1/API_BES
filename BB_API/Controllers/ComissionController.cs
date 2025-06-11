@@ -852,7 +852,7 @@ namespace WebApplication1.Controllers
                             profitDictionary["IMS_VSS"].GPTotal += (amount ?? 0);
                         }
 
-                        if (family.Contains("PRS") || family.Contains("SV"))
+                        if (family.Contains("SV"))
                         {
                             profitDictionary["PRS"].GPTotal += (amount ?? 0);
                         }
@@ -911,12 +911,12 @@ namespace WebApplication1.Controllers
 
                             if (oneShot_Item.Description.Contains("MOBOTIX"))
                             {
-                                profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal * oneShot_Item.Qty;
+                                profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal;
 
                             }
                             else if (oneShot_Item.Description.Contains("BPS"))
                             {
-                                profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal * oneShot_Item.Qty;
+                                profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal;
 
                             }
                             else
@@ -950,7 +950,7 @@ namespace WebApplication1.Controllers
                             profitDictionary["IMS_VSS"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
                         }
 
-                        if (family.Contains("PRS") || family.Contains("SV"))
+                        if (family.Contains("SV"))
                         {
                             profitDictionary["PRS"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
                         }
@@ -1034,15 +1034,17 @@ namespace WebApplication1.Controllers
 
                     List<Machine> machines = new List<Machine>();
 
-                    double? pvpClick;
-                    double? vendaClick;
+                    double? pvpClick_BW;
+                    double? pvpClick_Color;
+                    double? vendaClick_BW;
+                    double? vendaClick_Color;
 
                     var protocolDictionary = new Dictionary<string, CommissionDictionary>()
                     {
-                        { "A3 Printing_Colour", new CommissionDictionary(){ Commission = 20, Adjustment = 5} },
-                        { "A3 Printing_BW", new CommissionDictionary(){ Commission = 8, Adjustment = 5} },
-                        { "A4 Printing_Colour", new CommissionDictionary(){ Commission = 9, Adjustment = 5} },
-                        { "A4 Printing_BW", new CommissionDictionary(){ Commission = 4, Adjustment = 5} },
+                        { "A3 Printing_Colour", new CommissionDictionary(){ Commission = 20} },
+                        { "A3 Printing_BW", new CommissionDictionary(){ Commission = 8} },
+                        { "A4 Printing_Colour", new CommissionDictionary(){ Commission = 9} },
+                        { "A4 Printing_BW", new CommissionDictionary(){ Commission = 4} },
                     };
 
                     bool? isSecondHand = false;
@@ -1052,9 +1054,9 @@ namespace WebApplication1.Controllers
                         // verificar se o negócio tem second hand ou não
                         if (quote.IsUsed == true && isSecondHand == false) isSecondHand = true;
 
-                        var equipamentos = db.BB_Equipamentos.Where(e => e.CodeRef == quote.CodeRef).ToList();
+                        var equipamento = db.BB_Equipamentos.Where(e => e.CodeRef == quote.CodeRef).FirstOrDefault();
 
-                        foreach (var equipamento in equipamentos)
+                        if(equipamento != null)
                         {
                             BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == quote.Proposal_ID).FirstOrDefault();
                             BB_PrintingServices ps = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == ps2.ID).FirstOrDefault();
@@ -1073,13 +1075,18 @@ namespace WebApplication1.Controllers
 
                                     if (equipamento.PHC4 == "BW")
                                     {
-                                        pvpClick = equipamento.ClickPriceBW;
-                                        vendaClick = ((ps.BWVolume * vva.PVP) / volTotal) / ps.BWVolume;
+                                        pvpClick_BW = equipamento.ClickPriceBW;
+                                        vendaClick_BW = ((ps.BWVolume * vva.PVP) / volTotal) / ps.BWVolume;
+                                        pvpClick_Color = 0;
+                                        vendaClick_Color = 0;
+
                                     }
                                     else
                                     {
-                                        pvpClick = equipamento.ClickPriceC;
-                                        vendaClick = ((ps.CVolume * vva.PVP) / volTotal) / ps.CVolume;
+                                        pvpClick_Color = equipamento.ClickPriceC;
+                                        vendaClick_Color = ((ps.CVolume * vva.PVP) / volTotal) / ps.CVolume;
+                                        pvpClick_BW = equipamento.ClickPriceBW;
+                                        vendaClick_BW = ((ps.BWVolume * vva.PVP) / volTotal) / ps.BWVolume;
                                     }
                                 }
                                 // Sem Volume ----------------------------
@@ -1089,30 +1096,71 @@ namespace WebApplication1.Controllers
 
                                     if (equipamento.PHC4 == "BW")
                                     {
-                                        pvpClick = equipamento.ClickPriceBW;
-                                        vendaClick = ps_noVol.GlobalClickBW;
+                                        pvpClick_BW = equipamento.ClickPriceBW;
+                                        vendaClick_BW = ps_noVol.GlobalClickBW;
+                                        pvpClick_Color = 0;
+                                        vendaClick_Color = 0;
                                     }
                                     else
                                     {
-                                        pvpClick = equipamento.ClickPriceC;
-                                        vendaClick = ps_noVol.GlobalClickC;
+                                        pvpClick_Color = equipamento.ClickPriceC;
+                                        vendaClick_Color = ps_noVol.GlobalClickC;
+                                        pvpClick_BW = equipamento.ClickPriceBW;
+                                        vendaClick_BW = ps_noVol.GlobalClickBW;
                                     }
                                 }
                                 // Por Modelo ----------------------------
                                 else
                                 {
-                                    BB_PrintingService_Machines ps_m = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
+                                    BB_PrintingService_Machines ps_m = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == ps.ID && x.CodeRef == equipamento.CodeRef).FirstOrDefault();
 
                                     if (equipamento.PHC4 == "BW")
                                     {
-                                        pvpClick = equipamento.ClickPriceBW;
-                                        vendaClick = ps_m.ApprovedBW;
+                                        pvpClick_BW = equipamento.ClickPriceBW;
+                                        vendaClick_BW = ps_m.ApprovedBW;
+                                        pvpClick_Color = 0;
+                                        vendaClick_Color = 0;
                                     }
                                     else
                                     {
-                                        pvpClick = equipamento.ClickPriceC;
-                                        vendaClick = ps_m.ApprovedC;
+                                        pvpClick_Color = equipamento.ClickPriceC;
+                                        vendaClick_Color = ps_m.ApprovedC;
+                                        pvpClick_BW = equipamento.ClickPriceBW;
+                                        vendaClick_BW = ps_m.ApprovedBW;
                                     }
+                                }
+
+                                double DescPerClick = 0;
+
+                                if (equipamento.PHC4 == "BW")
+                                {
+                                    DescPerClick = (100 - (((double)vendaClick_BW * 100) / (double)pvpClick_BW));
+
+                                    // Verificar se discount é praticamente zero (com tolerância)
+                                    if (Math.Abs(DescPerClick) < 1e-10)
+                                    {
+                                        DescPerClick = 0.0;
+                                    }
+                                }
+                                else
+                                {
+                                    double discount_Color = 100 - (((double)vendaClick_Color * 100) / (double)pvpClick_Color);
+
+                                    double discount_BW = (100 - (((double)vendaClick_BW * 100) / (double)pvpClick_BW));
+                                    
+                                    // Verificar se discount é praticamente zero (com tolerância)
+                                    if (Math.Abs(discount_Color) < 1e-10)
+                                    {
+                                        discount_Color = 0.0;
+                                    }
+
+                                    // Verificar se discount é praticamente zero (com tolerância)
+                                    if (Math.Abs(discount_BW) < 1e-10)
+                                    {
+                                        discount_BW = 0.0;
+                                    }
+
+                                    DescPerClick = discount_Color + discount_BW;
                                 }
 
                                 Machine machine = new Machine
@@ -1120,34 +1168,107 @@ namespace WebApplication1.Controllers
                                     CodeRef = quote.CodeRef,
                                     Description = quote.Description,
                                     Qty = quote.Qty,
-                                    DescPerClick = 100 - ((100 * vendaClick) / pvpClick),
+                                    DescPerClick = DescPerClick,
                                     PHC1 = equipamento.PHC1,
                                     PHC4 = equipamento.PHC4
                                 };
 
-                                // Formulas a aplicar a cada registo do "protocolDictionary" a cada maquina
                                 string key = $"{machine.PHC1}_{machine.PHC4}";
+
+                                double resultX = 0;
+                                double commission = 0;
 
                                 if (protocolDictionary.ContainsKey(key))
                                 {
                                     // ha penalizacao
+
+                                    // multiplicar o desconto por 5
+                                    // aplicar o resultado à comissão
                                     if (machine.DescPerClick >= 0)
                                     {
-                                        machine.AppliedCommission = (protocolDictionary[key].Commission * machine.Qty) -
-                                            (protocolDictionary[key].Adjustment * machine.DescPerClick);
+
+                                        switch (key)
+                                        {
+                                            case "A3 Printing_Colour":
+                                                resultX = (double)(machine.DescPerClick * 5);
+                                                resultX = resultX == 0 ? 100 : resultX;
+                                                commission = (resultX / 100) * 20;
+                                                break;
+
+                                            case "A3 Printing_BW":
+                                                resultX = (double)(machine.DescPerClick * 5);
+                                                resultX = resultX == 0 ? 100 : resultX;
+                                                commission = (resultX / 100) * 8;
+                                                break;
+
+                                            case "A4 Printing_Colour":
+                                                resultX = (double)(machine.DescPerClick * 5);
+                                                resultX = resultX == 0 ? 100 : resultX;
+                                                commission = (resultX / 100) * 8;
+                                                break;
+
+                                            case "A4 Printing_BW":
+                                                resultX = (double)(machine.DescPerClick * 5);
+                                                resultX = resultX == 0 ? 100 : resultX;
+                                                commission = (resultX / 100) * 4;
+                                                break;
+                                        }
+
+                                        machine.AppliedCommission = commission;
                                     }
-                                    // ha bonificacao
                                     else
                                     {
-                                        machine.AppliedCommission = (protocolDictionary[key].Commission * machine.Qty) - (2 * machine.DescPerClick);
+                                        // multiplicar o desconto por 2
+                                        // aplicar o resultado à comissão
+
+                                        switch (key)
+                                        {
+                                            case "A3 Printing_Colour":
+                                                resultX = (double)(machine.DescPerClick * 2);
+                                                resultX = resultX == 0 ? 100 : resultX;
+                                                commission = (resultX / 100) * 20;
+                                                break;
+
+                                            case "A3 Printing_BW":
+                                                resultX = (double)(machine.DescPerClick * 2);
+                                                resultX = resultX == 0 ? 100 : resultX;
+                                                commission = (resultX / 100) * 8;
+                                                break;
+
+                                            case "A4 Printing_Colour":
+                                                resultX = (double)(machine.DescPerClick * 2);
+                                                resultX = resultX == 0 ? 100 : resultX;
+                                                commission = (resultX / 100) * 9;
+                                                break;
+
+                                            case "A4 Printing_BW":
+                                                resultX = (double)(machine.DescPerClick * 2);
+                                                resultX = resultX == 0 ? 100 : resultX;
+                                                commission = (resultX / 100) * 4;
+                                                break;
+                                        }
+
+                                        machine.AppliedCommission = commission * machine.Qty;
                                     }
+
+
+
+                                    // ha bonificacao
+                                    //else
+                                    //{
+                                    //    machine.AppliedCommission = (protocolDictionary[key].Commission * machine.Qty) - (2 * machine.DescPerClick);
+                                    //}
 
                                     machines.Add(machine);
                                 };
 
                             }
                         }
+                            
                     };
+
+
+
 
 
                     // --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1252,11 +1373,13 @@ namespace WebApplication1.Controllers
                     }
 
 
-
-                    //foreach (var machine in machines)
-                    //{
-                    //    bb_commission_general.Comision_Copias = bb_commission_general.Comision_Copias + machine.AppliedCommission;
-                    //}
+                    foreach (var machine in machines)
+                    {
+                        if(machine.AppliedCommission >= 0)
+                        {
+                            bb_commission_general.Comision_Copias = bb_commission_general.Comision_Copias + machine.AppliedCommission;
+                        }
+                    }
 
                     //bb_commission_general.Comision_Copias = protocolDictionary.Values
                     //    .Where(cd => cd.Machines != null)
@@ -1272,7 +1395,7 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + basketMobotix_CN;
 
-                    bb_commission_general.CN_PRS = basket.Where(x => x.Family.Contains("PRS") || x.Family.EndsWith("SV")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_PRS = basket.Where(x => x.Family.EndsWith("SV")).Sum(x => x.TotalNetsale);
 
                     bb_commission_general.CN_MCS_BPS = basket.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
 
