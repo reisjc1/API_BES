@@ -2758,7 +2758,7 @@ namespace WebApplication1.Controllers
                                         CodeRef = item.CodeRef,
                                         Description = item.Description,
                                         Family = item.Family,
-                                        UnitDiscountPrice = (double)item.UnitDiscountPrice,
+                                        UnitDiscountPrice = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
                                         Qty = (int)item.Qty,
                                         TotalNetsale = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
                                         Group = item.Group,
