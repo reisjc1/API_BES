@@ -461,6 +461,10 @@ namespace WebApplication1.BLL
                         fin.MonthlyIncome = Sanitize((double)fin.MonthlyIncome);
 
                         fin.ProposalID = ProposalID;
+                        fin.AmountFinanced = Math.Round((double)fin.AmountFinanced, 2);
+                        fin.AmountNotFinanced = Math.Round((double)fin.AmountNotFinanced, 2);
+                        fin.MonthlyIncome = Math.Round((double)fin.MonthlyIncome, 2);
+
 
                         db.BB_Proposal_Financing.Add(fin);
                         try
@@ -2219,6 +2223,9 @@ namespace WebApplication1.BLL
                     BB_Proposal_Financing fin = iMapper.Map<Financing, BB_Proposal_Financing>(p.Draft.financing);
 
                     fin.ProposalID = ProposalID;
+                    fin.AmountFinanced = Math.Round((double)fin.AmountFinanced, 2);
+                    fin.AmountNotFinanced = Math.Round((double)fin.AmountNotFinanced, 2);
+                    fin.MonthlyIncome = Math.Round((double)fin.MonthlyIncome, 2);
 
                     db.BB_Proposal_Financing.Add(fin);
                     try
