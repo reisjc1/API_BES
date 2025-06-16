@@ -116,5 +116,6 @@ namespace WebApplication1.Models
         public Nullable<int> ContractID { get; set; }
         public Nullable<bool> Es_InsideSales { get; set; }
         public Nullable<bool> IsNP { get; set; }
+        public Nullable<bool> Es_Hibrida { get; set; }
     }
 }

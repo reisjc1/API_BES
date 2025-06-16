@@ -896,7 +896,7 @@ namespace WebApplication1.Controllers
                             //}
                             //else
                             //{
-                                AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                            AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
                             //}
                             // Finalización de Renting con venta
                             //else if (financingTypeCode == 2 || )
@@ -1056,7 +1056,7 @@ namespace WebApplication1.Controllers
 
                         var equipamento = db.BB_Equipamentos.Where(e => e.CodeRef == quote.CodeRef).FirstOrDefault();
 
-                        if(equipamento != null)
+                        if (equipamento != null)
                         {
                             BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == quote.Proposal_ID).FirstOrDefault();
                             BB_PrintingServices ps = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == ps2.ID).FirstOrDefault();
@@ -1147,7 +1147,7 @@ namespace WebApplication1.Controllers
                                     double discount_Color = 100 - (((double)vendaClick_Color * 100) / (double)pvpClick_Color);
 
                                     double discount_BW = (100 - (((double)vendaClick_BW * 100) / (double)pvpClick_BW));
-                                    
+
                                     // Verificar se discount é praticamente zero (com tolerância)
                                     if (Math.Abs(discount_Color) < 1e-10)
                                     {
@@ -1264,7 +1264,7 @@ namespace WebApplication1.Controllers
 
                             }
                         }
-                            
+
                     };
 
 
@@ -1283,7 +1283,7 @@ namespace WebApplication1.Controllers
                     int? campaignID = loadProposal.ProposalObj.Draft.details.CampaignID;
 
                     // KM RENTAL
-                    if(Financing_Type == 5)
+                    if (Financing_Type == 5)
                     {
                         bb_commission_general.Tipo_Operacion = "ALQUILER";
                     }
@@ -1369,13 +1369,36 @@ namespace WebApplication1.Controllers
                             bb_commission_general.Manager_Nombre = user.Manager;
                             bb_commission_general.Usuario_Sharepoint = user.USUARIO_Sharepoint_Email;
                             bb_commission_general.Usuario_Sharepoint_Nombre = user.USUARIO_Sharepoint_Nome;
+
+
+                            // VALIDAR SE O NEGOCIO É HIBRIDO ---------------------
+                            bool hasUsed = false;
+                            bool hasNew = false;
+
+                            foreach (var item in oneShot)
+                            {
+                                if ((bool)item.IsUsed)
+                                {
+                                    hasUsed = true;
+                                }
+                                else
+                                {
+                                    hasNew = true;
+                                }
+
+                                if (hasUsed && hasNew)
+                                {
+                                    bb_commission_general.Es_Hibrida = true;
+                                    break;
+                                }
+                            }
                         }
                     }
 
 
                     foreach (var machine in machines)
                     {
-                        if(machine.AppliedCommission >= 0)
+                        if (machine.AppliedCommission >= 0)
                         {
                             bb_commission_general.Comision_Copias = bb_commission_general.Comision_Copias + machine.AppliedCommission;
                         }
@@ -1493,7 +1516,7 @@ namespace WebApplication1.Controllers
 
                         isNewClient_BB_Clientes = dbC.BB_Proposal_Client
                                         .Where(x => x.ProposalID == proposalID)
-                                        .Select(x=> x.IsNewClient)
+                                        .Select(x => x.IsNewClient)
                                         .FirstOrDefault();
 
                     }
@@ -1986,6 +2009,8 @@ namespace WebApplication1.Controllers
                     { "Incidencias","INCIDENCIAS" },
                     //{ "Logs","LOGS" },
                     { "Es_Segunda_Mano","ES SEGUNDA MANO" },
+                    { "Es_Hibrida" , "ES HÍBRIDA"},
+                    { "Es_InsideSales", "ES INSIDE SALES"}
                     //{ "Es_GMA","ES GMA" },
                     //{ "CBB","CBB" },
                     //{ "Es_Prospecto","ES PROSPECTO" }
@@ -2063,12 +2088,12 @@ namespace WebApplication1.Controllers
                             // Obtém a propriedade correspondente à chave do dicionário
                             var prop = propriedades.FirstOrDefault(p => p.Name == campo.Key);
 
-                            if(prop == null)
+                            if (prop == null)
                             {
-                                if(campo.Key == "A")
+                                if (campo.Key == "A")
                                 {
                                     worksheet.Cells[line, column] = string.Empty;
-                                }                                
+                                }
                                 // valor do campo inserido manulamente aqui, porque está em falta na BD (ps: este campo é sempre "BB")
                                 else if (campo.Key == "Operacion")
                                 {
@@ -2079,18 +2104,15 @@ namespace WebApplication1.Controllers
                             {
                                 if (campo.Key == "Es_Segunda_Mano")
                                 {
-
-                                    bool isSecondHand = (bool)prop.GetValue(commission);
-
-                                    if (isSecondHand)
-                                    {
-                                        worksheet.Cells[line, column] = "Sí";
-                                    }
-                                    else
-                                    {
-                                        worksheet.Cells[line, column] = "No";
-                                    }
-
+                                    worksheet.Cells[line, column] = ((bool)prop.GetValue(commission)) ? "Sí" : "No";
+                                }
+                                else if (campo.Key == "Es_Hibrida")
+                                {
+                                    worksheet.Cells[line, column] = ((bool)prop.GetValue(commission)) ? "Sí" : "No";
+                                }
+                                else if (campo.Key == "Es_InsideSales")
+                                {
+                                    worksheet.Cells[line, column] = ((bool)prop.GetValue(commission)) ? "Sí" : "No";
                                 }
                                 else if (campo.Key == "Area")
                                 {
