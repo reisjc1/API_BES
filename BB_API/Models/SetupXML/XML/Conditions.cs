@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Presentation;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.Ajax.Utilities;
 using OfficeOpenXml.FormulaParsing.Excel.Functions;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
+using WebApplication1.BLL;
 using WebApplication1.Controllers;
 using static WebApplication1.BLL.LeaseDeskBLL;
 using static WebApplication1.Models.SetupXML.XSD;
@@ -329,11 +331,18 @@ namespace WebApplication1.Models.SetupXML.XML
                                             (quote, equip) => new { quote.Qty })
                                             .Sum(x => x.Qty) ?? 0;
 
+
                     double? cancelationPerMachine = 0;
                     if (overvaluation != null)
                     {
                         cancelationPerMachine = overvaluation.Total / numberOfMachines;
                     }
+
+                    var leaseDeskBLL = new LeaseDeskBLL();
+
+                    List<ItemGroups> groups = leaseDeskBLL.GetGroups(proposalId);
+                    int? totalQty = groups.Sum(p => p.Items.Sum(i => i.Qty));
+
 
                     foreach (var order in orders)
                     {
@@ -348,6 +357,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 isMachine = equp;
                             }
+
                             ConditionPVP conditionPVP = new ConditionPVP();
 
                             if (quote != null)
@@ -431,6 +441,10 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 //Se for máquina vai somar o TCP ao valor da máquina
                                                 cPVP = (quote1.TCP ?? 0) + (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY));
                                             }
+                                            else if (contracts[0].VT_VTART == "005" && !quote1.Family.Contains("HW"))
+                                            {
+                                                cPVP = (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY));
+                                            }
                                             //Rental Direto(003)
                                             else if (quote1.Family.Contains("HW"))
                                             {
@@ -464,6 +478,10 @@ namespace WebApplication1.Models.SetupXML.XML
                                             {
                                                 //Se for máquina vai somar o TCP ao valor da máquina
                                                 cPVP = (quote1.TCP ?? 0) + (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY));
+                                            }
+                                            else if (contracts[0].VT_VTART == "005" && !quote1.Family.Contains("HW"))
+                                            {
+                                                cPVP = (quote1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY));
                                             }
                                             //Rental Direto(003)
                                             // Só vai somar os items que forem do tipo HW
@@ -703,9 +721,10 @@ namespace WebApplication1.Models.SetupXML.XML
                                     double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
 
                                     double? zvbaValue = double.Parse(cond.KBETR);
-                                    zvbaValue += (overvaluation.Total / numberOfMachines) * (double)factorValue;
+                                    zvbaValue += (overvaluation.Total / totalQty) * (double)factorValue;
 
                                     cond.KBETR = Math.Round(zvbaValue ?? 0.0, 2).ToString();
+
                                 }
                             }
                             collectionConditions.Add(cond);
@@ -867,6 +886,10 @@ namespace WebApplication1.Models.SetupXML.XML
                                             {
                                                 conditionPvp.PVP += ((item.LPI + baseValue) * factorValue);
                                             }
+                                            else if (financingType == "005" && !item.Family.Contains("HW"))
+                                            {
+                                                conditionPvp.PVP += (baseValue * factorValue);
+                                            }
                                             // caso seja Rental Direto
                                             else if (item.Family.Contains("HW"))
                                             {
@@ -903,6 +926,10 @@ namespace WebApplication1.Models.SetupXML.XML
                                             {
                                                 double? value = ((item.LPI + baseValue) * factorValue);
                                                 condPvp.PVP = hasPvp ? condPvp.PVP + value : value;
+                                            }
+                                            else if (financingCode == "ZVBA" && !item.Family.Contains("HW"))
+                                            {
+                                                conditionPvp.PVP += (baseValue * factorValue);
                                             }
                                             // Entra aqui quando na condicao ZVBR que corresponde ao 003
                                             else if (item.Family.Contains("HW"))
@@ -1135,6 +1162,10 @@ namespace WebApplication1.Models.SetupXML.XML
                                             {
                                                 conditionPvp.PVP += (item.LPI + baseValue) * factorValue;
                                             }
+                                            else if (financingType == "005" && !item.Family.Contains("HW"))
+                                            {
+                                                conditionPvp.PVP += (baseValue * factorValue);
+                                            }
                                             // caso seja Rental Direto
                                             else if (item.Family.Contains("HW"))
                                             {
@@ -1170,6 +1201,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                             if (financingCode == "ZVBA" && item.Family.Contains("HW"))
                                             {
                                                 double? value = (item.LPI + baseValue) * factorValue;
+                                                condPvp.PVP = hasPvp ? condPvp.PVP + value : value;
+                                            }
+                                            else if (financingCode == "ZVBA" && !item.Family.Contains("HW"))
+                                            {
+
+                                                double? value = baseValue * factorValue;
                                                 condPvp.PVP = hasPvp ? condPvp.PVP + value : value;
                                             }
                                             // Entra aqui quando na condicao ZVBR que corresponde ao 003
