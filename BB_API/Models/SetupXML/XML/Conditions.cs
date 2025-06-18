@@ -639,6 +639,14 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                 }
                             }
+                            if (overvaluation != null)
+                            {
+                                double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
+
+                                var condZVBA = conditionsPvp.Where(x => x.ConditionCode == "ZVBA").FirstOrDefault();
+                                double? overvaluationValue = (overvaluation.Total / totalQty) * factorValue;
+                                condZVBA.PVP = condZVBA.PVP + overvaluationValue;
+                            }
                         }
 
                         //Criação da condição ZVBS quando negocio tem VVA como tipo de servico de printing
@@ -713,24 +721,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 KSCHL = condition.ConditionCode,
                                 KBETR = Math.Round(condition.PVP ?? 0.0, 2).ToString("F2").Replace(",", ".")
                             };
-
-                            if(condition.ConditionCode == "ZVBA")
-                            {
-                                if (overvaluation != null)
-                                {
-                                    double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
-
-                                    double? zvbaValue = double.Parse(cond.KBETR);
-                                    zvbaValue += (overvaluation.Total / totalQty) * (double)factorValue;
-
-                                    cond.KBETR = Math.Round(zvbaValue ?? 0.0, 2).ToString();
-
-                                }
-                            }
                             collectionConditions.Add(cond);
                         }
-
-
                     }
                 }
 
@@ -1256,7 +1248,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
 
                                 var condZVBA = conditionPVPPerMachine.Conditions.Where(x => x.ConditionCode == "ZVBA").FirstOrDefault();
-                                condZVBA.PVP += ((overvaluation.Total / totalQty) * factorValue);
+                                double? overvaluationValue = (overvaluation.Total / totalQty) * factorValue;
+                                condZVBA.PVP = condZVBA.PVP + overvaluationValue;
                             }
 
                             if (machineName != null)
