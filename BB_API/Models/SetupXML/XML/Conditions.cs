@@ -424,7 +424,17 @@ namespace WebApplication1.Models.SetupXML.XML
                                 BB_Proposal_Quote quote1 = quote_lst.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
                                 BB_Proposal_Quote_RS quoteRS1 = quoteRs_lst.Where(x => x.CodeRef == item.MATERIAL).FirstOrDefault();
 
+
                                 string financingCode = ConditionMaterial(item.MATERIAL, contracts[0].VT_VTART, dataIntegration_lst);
+
+                                //Verificar se é serviço recurrente, porque se for tem que ser criada a condicao que esta gravada na
+                                //base de dados (ex: ZVBI, ZVBM, etc) caso não exista nos servicos recurrentes entao tem que ser adicionado o valor
+                                // ao ZVBA
+
+                                if ((quoteRs_lst == null || quoteRs_lst.Count == 0) && contracts[0].VT_VTART == "005")
+                                {
+                                    financingCode = "ZVBA";
+                                }
                                 ConditionPVP conditionPvp = conditionsPvp.Find(x => x.ConditionCode == financingCode);
 
                                 // Caso exista a referencia no configurador
@@ -639,6 +649,14 @@ namespace WebApplication1.Models.SetupXML.XML
                                     }
                                 }
                             }
+                            if (overvaluation != null)
+                            {
+                                double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
+
+                                var condZVBA = conditionsPvp.Where(x => x.ConditionCode == "ZVBA").FirstOrDefault();
+                                double? overvaluationValue = (overvaluation.Total / totalQty) * factorValue;
+                                condZVBA.PVP = condZVBA.PVP + overvaluationValue;
+                            }
                         }
 
                         //Criação da condição ZVBS quando negocio tem VVA como tipo de servico de printing
@@ -713,24 +731,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 KSCHL = condition.ConditionCode,
                                 KBETR = Math.Round(condition.PVP ?? 0.0, 2).ToString("F2").Replace(",", ".")
                             };
-
-                            if(condition.ConditionCode == "ZVBA")
-                            {
-                                if (overvaluation != null)
-                                {
-                                    double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
-
-                                    double? zvbaValue = double.Parse(cond.KBETR);
-                                    zvbaValue += (overvaluation.Total / totalQty) * (double)factorValue;
-
-                                    cond.KBETR = Math.Round(zvbaValue ?? 0.0, 2).ToString();
-
-                                }
-                            }
                             collectionConditions.Add(cond);
                         }
-
-
                     }
                 }
 
@@ -800,6 +802,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     BB_Proposal_Overvaluation overvaluation = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
                     List<BB_Proposal_Quote> oneShot = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
+                    List<BB_Proposal_Quote_RS> rsShot = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).ToList();
 
                     foreach (var order in orders)
                     {
@@ -867,6 +870,16 @@ namespace WebApplication1.Models.SetupXML.XML
                             if (financingType == "003" || financingType == "005")
                             {
                                 string financingCode = ConditionMaterial(item.CodeRef, financingType, dataIntegration_lst);
+
+                                //Verificar se é serviço recurrente, porque se for tem que ser criada a condicao que esta gravada na
+                                //base de dados (ex: ZVBI, ZVBM, etc) caso não exista nos servicos recurrentes entao tem que ser adicionado o valor
+                                // ao ZVBA
+
+
+                                if((rsShot == null || rsShot.Count == 0) && financingType == "005")
+                                {
+                                    financingCode = "ZVBA";
+                                }
 
                                 ConditionPVP conditionPvp = conditionsPvp.Find(x => x.ConditionCode == financingCode);
 
@@ -1043,6 +1056,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     BB_Proposal_Overvaluation overvaluation = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.AsNoTracking().ToList();
                     List<BB_Proposal_Quote> oneShot = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
+                    List<BB_Proposal_Quote_RS> rsShot = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).ToList();
 
                     int? numberOfMachines = db.BB_Proposal_Quote
                                             .Where(x => x.Proposal_ID == proposalId)
@@ -1143,6 +1157,15 @@ namespace WebApplication1.Models.SetupXML.XML
                             if (financingType == "003" || financingType == "005")
                             {
                                 string financingCode = ConditionMaterial(item.CodeRef, financingType, dataIntegration_lst);
+
+                                //Verificar se é serviço recurrente, porque se for tem que ser criada a condicao que esta gravada na
+                                //base de dados (ex: ZVBI, ZVBM, etc) caso não exista nos servicos recurrentes entao tem que ser adicionado o valor
+                                // ao ZVBA
+
+                                if ((rsShot == null && rsShot.Count == 0) && financingType == "005")
+                                {
+                                    financingCode = "ZVBA";
+                                }
 
                                 ConditionPVP conditionPvp = conditionPVPPerMachine.Conditions.Find(x => x.ConditionCode == financingCode);
 
@@ -1256,7 +1279,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
 
                                 var condZVBA = conditionPVPPerMachine.Conditions.Where(x => x.ConditionCode == "ZVBA").FirstOrDefault();
-                                condZVBA.PVP += ((overvaluation.Total / totalQty) * factorValue);
+                                double? overvaluationValue = (overvaluation.Total / totalQty) * factorValue;
+                                condZVBA.PVP = condZVBA.PVP + overvaluationValue;
                             }
 
                             if (machineName != null)
