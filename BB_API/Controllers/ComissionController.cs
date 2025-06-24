@@ -1374,6 +1374,7 @@ namespace WebApplication1.Controllers
                             // VALIDAR SE O NEGOCIO É HIBRIDO ---------------------
                             bool hasUsed = false;
                             bool hasNew = false;
+                            bb_commission_general.Es_Hibrida = false;
 
                             foreach (var item in oneShot)
                             {
