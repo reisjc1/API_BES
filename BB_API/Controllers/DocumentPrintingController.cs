@@ -3148,9 +3148,16 @@ namespace WebApplication1.Controllers
         }
 
         [AcceptVerbs("GET", "POST")]
-        [ActionName("ExportContrato")]
-        public HttpResponseMessage ExportContrato(ProposalRootObject e)
+        [ActionName("ExportExcelContrato")]
+        public HttpResponseMessage ExportExcelContrato(int proposalid)
         {
+
+
+            ProposalBLL p1 = new ProposalBLL();
+            LoadProposalInfo ia = new LoadProposalInfo();
+            ia.ProposalId = proposalid;
+            ActionResponse a = p1.LoadProposal(ia);
+
             //Create HTTP Response.
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
 
@@ -3166,7 +3173,7 @@ namespace WebApplication1.Controllers
                 //}
                 using (var db = new masterEntities())
                 {
-                    c = db.AspNetUsers.Where(x => x.Email == e.Draft.details.CreatedBy).FirstOrDefault();
+                    c = db.AspNetUsers.Where(x => x.Email == a.ProposalObj.Draft.details.CreatedBy).FirstOrDefault();
 
                 }
 
@@ -3180,12 +3187,12 @@ namespace WebApplication1.Controllers
                     System.IO.Directory.CreateDirectory(path);
 
 
-                using (var stream = File.Open(@AppSettingsGet.ConfiguracaoContrato, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var stream = File.Open(@AppSettingsGet.ConfiguracaoNegocioBES, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
 
                     try
                     {
-                        using (var outputFile = new FileStream(path + "ConfiguracaoContrato.xlsx", FileMode.Create))
+                        using (var outputFile = new FileStream(path + "ConfiguracaoNegocioBES.xlsx", FileMode.Create))
                         {
                             stream.CopyTo(outputFile);
                         }
@@ -3201,16 +3208,14 @@ namespace WebApplication1.Controllers
                             stream.Close();
                     }
                 }
-                WriteExportExcelOneShot(@path + "ConfiguracaoContrato.xlsx", e.Draft.details.ID);
+                WriteExportExcel(@path + "ConfiguracaoNegocio.xlsx", a.ProposalObj);
 
-                WriteExportExcelServicosRecorrentes(@path + "ConfiguracaoContrato.xlsx", e.Draft.details.ID);
-                WriteExportExcelFinanciamento(@path + "ConfiguracaoContrato.xlsx", e.Draft.details.ID);
-                WriteExportExcelServiciosPrinting(@path + "ConfiguracaoContrato.xlsx", e.Draft.details.ID);
+
                 //Create HTTP Response.
                 //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
 
 
-                string filePath = @path + "ConfiguracaoContrato.xlsx";
+                string filePath = @path + "ConfiguracaoNegocio.xlsx";
 
 
                 //Check whether File exists.
@@ -3230,7 +3235,7 @@ namespace WebApplication1.Controllers
 
                 //Set the Content Disposition Header Value and FileName.
                 response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                response.Content.Headers.ContentDisposition.FileName = "ConfiguracaoContrato.xlsx";
+                response.Content.Headers.ContentDisposition.FileName = "ConfiguracaoNegocio.xlsx";
 
                 //Set the File Content Type.
                 //response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Proposal.pdf"));
@@ -3239,7 +3244,7 @@ namespace WebApplication1.Controllers
             catch (Exception ex)
 
             {
-                File.Delete(@path + "\\ConfiguracaoContrato.xlsx");
+                File.Delete(@path + "\\ConfiguracaoNegocio.xlsx");
             }
             return response;
 
@@ -3722,12 +3727,12 @@ namespace WebApplication1.Controllers
 
                         if (tipologiaPrintingService == "Haga click por modelo: no incluye volumen")
                         {
-                           
+
                             ws.Cells["A" + idx].Value = "Machine";
                             ws.Cells["B" + idx].Value = "Click Negro";
                             ws.Cells["C" + idx].Value = "Click Color";
                             idx++;
-                            foreach ( var item in activePS.Machines)
+                            foreach (var item in activePS.Machines)
                             {
 
                                 ws.Cells["A" + idx].Value = item.Description;
@@ -4013,6 +4018,169 @@ namespace WebApplication1.Controllers
                         if (i.Contracto == 20)
                             ws.Cells["C" + idx].Value = i.Value;
                     }
+
+                    //KOnica Representante
+                    //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
+                    //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
+
+                    pck.Save();
+
+
+                    pck.Stream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                File.Delete(@path + "\\ConfiguracaoNegocio.xlsx");
+
+            }
+        }
+
+
+        private void WriteExportExcelBES(string path, ProposalRootObject p)
+        {
+            int proposalID = p.Draft.details.ID;
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    BB_Clientes cliente = new BB_Clientes();
+
+                    //using (var db = new BB_DB_DEVEntities2())
+                    //{
+                    //    cliente = db.BB_Clientes.Where(x => x.accountnumber == acocuntNumber).FirstOrDefault();
+                    //    lstBB_Proposal_Contacts_Signing = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == proposalID).ToList();
+                    //}
+
+                    FileInfo newFile = new FileInfo(path);
+
+                    ExcelPackage pck = new ExcelPackage(newFile);
+                    //Add the Content sheet
+                    var ws = pck.Workbook.Worksheets["DEAL"];
+                    //ws.View.ShowGridLines = false;
+                    //ws.Cells["A1"].Value = "Funcionalidade indisponível temporariamente.";
+
+                    string _Payment = "";
+
+                    var financing = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalID).FirstOrDefault();
+
+                    string _SalesRep = "";
+                    string _SalesManager = "";
+                    string _SalesDirector = "";
+                    string _Region = "";
+                    string _SalesGroup = "";
+
+                    
+                    using (var db1 = new masterEntities())
+                    {
+                        AspNetUsers _User = db1.AspNetUsers.Where(x => x.Email == p.Draft.details.CreatedBy).FirstOrDefault();
+                        
+
+                        if (_User != null)
+                        {
+                            _SalesRep = _User.ErpNumber + " - " + _User.DisplayName;
+
+                            AspNetUsers _UserManager = db1.AspNetUsers.Where(x => x.ManagerEmail == _User.ManagerEmail).FirstOrDefault();
+                            if(_UserManager != null)
+                            {
+                                _SalesManager = _UserManager.ErpNumber + " - " + _UserManager.DisplayName;
+                                _SalesDirector = _UserManager.ErpNumber;
+                            }
+                           
+                        }
+                    }
+
+                    BB_Clientes _Cliente = db.BB_Clientes.Where(x => x.accountnumber == p.Draft.client.accountnumber).FirstOrDefault();
+
+                    if(_Cliente != null)
+                    {
+                        _Region = _Cliente.Branch_Id + " - " + _Cliente.Branch_Local;
+                        _SalesGroup = _Cliente.Erpsalesgroupname;
+                    }
+
+
+                    //WORKSHEET - DEAL
+
+                    ws.Cells["B1"].Value = p.Draft.client.Name;
+                    ws.Cells["B2"].Value = "TODO"; //TODO
+                    ws.Cells["B3"].Value = p.Draft.client.accountnumber;
+                    ws.Cells["B5"].Value = _SalesRep;
+                    ws.Cells["B6"].Value = _SalesManager;
+                    ws.Cells["B7"].Value = _SalesDirector;
+                    ws.Cells["B8"].Value = "PREDETERMINADO";
+                    ws.Cells["B9"].Value = _Region;
+                    ws.Cells["B10"].Value = _SalesGroup;
+                    ws.Cells["B11"].Value = "-"; //TODO
+
+                    ws.Cells["B13"].Value = "Y"; //TODO
+                    ws.Cells["B14"].Value = "N";//TODO
+                    ws.Cells["B15"].Value = "N"; //TODO
+                    ws.Cells["B16"].Value = "N"; //TODO
+                    ws.Cells["B17"].Value = "N"; //TODO
+                    ws.Cells["B18"].Value = "N"; //TODO
+                    ws.Cells["B19"].Value = p.Draft.client.isGMA.GetValueOrDefault() == true ? "Y" : "N";
+                    ws.Cells["B20"].Value = "";//TODO
+                    ws.Cells["B21"].Value = p.Draft.details.IsMultipleContract.GetValueOrDefault() == true ? "Y" : "N";
+
+
+
+                    //WORKSHEET - CRM DATA
+                    var wsCRMData = pck.Workbook.Worksheets["CRM DATA"];
+
+                    wsCRMData.Cells["B2"].Value = p.Draft.details.CRM_QUOTE_ID;
+                    wsCRMData.Cells["B3"].Value = p.Draft.client.accountnumber ;
+                    wsCRMData.Cells["B4"].Value = "-";
+                    wsCRMData.Cells["B5"].Value = "-";
+                    wsCRMData.Cells["B6"].Value = "-";
+                    wsCRMData.Cells["B7"].Value = "-";
+
+
+                    string _PROCESSED = "";
+
+                    LD_Contrato _Contrato = db.LD_Contrato.Where(x => x.ProposalID == proposalID).FirstOrDefault();
+
+                    if(_Contrato != null)
+                    {
+                        _PROCESSED = _Contrato.ModifiedBy;
+                    }
+
+
+                    wsCRMData.Cells["B10"].Value = "-";
+                    wsCRMData.Cells["B11"].Value = _PROCESSED;
+                    wsCRMData.Cells["B12"].Value = "-";//TODO
+                    wsCRMData.Cells["B13"].Value = "-";//TODO
+                    wsCRMData.Cells["B14"].Value = p.Draft.client.accountnumber; ;
+
+
+                    //WORKSHEET - ORDER CONTENTS
+                    var wsORDERCONTENTS = pck.Workbook.Worksheets["ORDER CONTENTS"];
+                    int onshotIDX = 4;
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        wsORDERCONTENTS.Cells["B" + onshotIDX].Value = item.Family;
+                        wsORDERCONTENTS.Cells["C" + onshotIDX].Value = item.Description;
+                        wsORDERCONTENTS.Cells["D" + onshotIDX].Value = item.Qty;
+                        wsORDERCONTENTS.Cells["E" + onshotIDX].Value = "Y";
+                        wsORDERCONTENTS.Cells["F" + onshotIDX].Value = item.UnitPriceCost;
+                        wsORDERCONTENTS.Cells["G" + onshotIDX].Value = item.PVP;
+                        wsORDERCONTENTS.Cells["H" + onshotIDX].Value = item.UnitDiscountPrice;
+                        wsORDERCONTENTS.Cells["I" + onshotIDX].Value = item.GPTotal;
+                        wsORDERCONTENTS.Cells["J" + onshotIDX].Value = item.TotalNetsale;
+                        wsORDERCONTENTS.Cells["K" + onshotIDX].Value = item.DiscountPercentage;
+                        wsORDERCONTENTS.Cells["L" + onshotIDX].Value = "0";
+                        wsORDERCONTENTS.Cells["M" + onshotIDX].Value = item.TotalNetsale;
+                        onshotIDX++;
+                    }
+
+
+                    int rsIDX = 4;
+                    foreach (var item in p.Draft.baskets.rs_basket)
+                    {
+                        wsORDERCONTENTS.Cells["Q" + rsIDX].Value = item.Family;
+                        rsIDX++;
+                    }
+
+
 
                     //KOnica Representante
                     //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";

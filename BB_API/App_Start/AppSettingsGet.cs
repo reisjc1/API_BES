@@ -61,6 +61,11 @@ namespace WebApplication1.App_Start
             get { return ConfigurationManager.AppSettings["ConfiguracaoNegocio"].ToString(); }
         }
 
+        public static string ConfiguracaoNegocioBES
+        {
+            get { return ConfigurationManager.AppSettings["ConfiguracaoNegocioBES"].ToString(); }
+        }
+
         public static string ConfiguracaoContrato
         {
             get { return ConfigurationManager.AppSettings["ConfiguracaoContrato"].ToString(); }
