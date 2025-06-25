@@ -4196,13 +4196,13 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("SaveMultiContractInfo")]
-        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract, string plant, bool invoiceList, string contractNumberPai)
+        public IHttpActionResult SaveMultiContractInfo(int? contractID, string soldTo, bool isMultipleContract, string plant, bool invoiceList, string contractNumberPai, string financingcompany)
         {
             try
             {
                 if (contractID != null)
                 {
-                    using (var db = new BB_DB_DEV_LeaseDesk())
+                    using (var db = new BB_DB_DEVEntities2())
                     {
                         int? contractProposal = db.LD_Contrato.Where(x => x.ID == contractID).Select(x => x.ProposalID).FirstOrDefault();
 
@@ -4221,11 +4221,19 @@ namespace WebApplication1.Controllers
                             }
                             bb_proposal.Plant = plant;
                             bb_proposal.ContractNumberPai = contractNumberPai;
+                            
 
                             LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractID).FirstOrDefault();
 
                             lD_Contrato.InvoiceList = invoiceList;
 
+                            BB_FinancingContractType contractType = db.BB_FinancingContractType.Where(x => x.CompanyCode == financingcompany).FirstOrDefault();
+
+                            BB_Proposal_Financing proposal_Financing = db.BB_Proposal_Financing.Where(x => x.ProposalID == contractProposal).FirstOrDefault();
+
+                            proposal_Financing.ContractTypeId = contractType.ID;
+
+                            bb_proposal.CodArrend = contractType.Company + " - " + contractType.CompanyCode;
                             //using( var db2 = new BB_DB_DEVEntities2())
                             //{
 
@@ -4249,6 +4257,7 @@ namespace WebApplication1.Controllers
 
                             db.Entry(bb_proposal).State = EntityState.Modified;
                             db.Entry(lD_Contrato).State = EntityState.Modified;
+                            db.Entry(proposal_Financing).State = EntityState.Modified;
 
                             db.SaveChanges();
                         }

@@ -142,9 +142,9 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_NP_Approvers> BB_WFA_NP_Approvers { get; set; }
         public virtual DbSet<BB_Proposal_Quote_RS> BB_Proposal_Quote_RS { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
-        public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
         public virtual DbSet<BB_Clientes> BB_Clientes { get; set; }
         public virtual DbSet<BB_Commission_General> BB_Commission_General { get; set; }
+        public virtual DbSet<BB_Proposal_Financing> BB_Proposal_Financing { get; set; }
     
         public virtual int GetXMLOrders(Nullable<int> proposalId)
         {
