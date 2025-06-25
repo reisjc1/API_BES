@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Numeric;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1337,33 +1338,44 @@ namespace WebApplication1.Controllers
                             // Regras InsideSales
                             string modifiedByRole = dbUsers.AspNetUsers.Where(x => x.Email == proposal.ModifiedBy.ToString()).Select(x => x.FunctionSimpleDeal).FirstOrDefault();
 
-                            if (modifiedByRole == "DRV - Inside Sales - BES")
+
+                            using (var dbC = new BB_DB_DEVEntities2())
                             {
-                                using (var dbC = new BB_DB_DEVEntities2())
-                                {
+                                var client = dbC.BB_Clientes
+                                                        .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
+                                                        .FirstOrDefault();
 
-                                    var delegation = dbC.BB_Clientes
-                                                    .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
-                                                    .FirstOrDefault();
+                                if (modifiedByRole == "DRV - Inside Sales - BES")
+                                {                                 
 
-                                    if (delegation != null)
-                                    {
-                                        if (delegation.Territory != null || delegation.Territory != "BF-724I7TH2" || delegation.Territory != "Javier Gomez Garcia")
-                                            bb_commission_general.Delegacion = delegation.Territory;
-                                    }
+                                        if (client != null)
+                                        {
+                                            if (client.Territory != null || client.Territory != "BF-724I7TH2" || client.Territory != "Javier Gomez Garcia")
+                                                bb_commission_general.Delegacion = client.Territory;
+                                        }                                      
 
+                                        bb_commission_general.Es_InsideSales = true;
                                 }
-                                bb_commission_general.Es_InsideSales = true;
-                            }
-                            else
-                            {
-                                bb_commission_general.Delegacion = user.Location;
-                                bb_commission_general.Es_InsideSales = false;
+                                else
+                                {
+                                        bb_commission_general.Delegacion = user.Location;
+                                        bb_commission_general.Es_InsideSales = false;
+                                }
+
+                                string areaClient = dbUsers.AspNetUsers.Where(x => x.DisplayName == client.Owner).Select(x => x.AreaComercial).FirstOrDefault();
+
+                                if(areaClient != null)
+                                {
+                                    bb_commission_general.Area = areaClient;
+                                }
+                                else
+                                {
+                                    bb_commission_general.Area = "VD";
+                                }
                             }
 
                             bb_commission_general.Delegacion = bb_commission_general.Delegacion.ToUpper();
 
-                            bb_commission_general.Area = user.AreaComercial;
                             bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;
                             bb_commission_general.N_Trab = user.N_TRABAJADOR;
                             bb_commission_general.Manager_Nombre = user.Manager;
