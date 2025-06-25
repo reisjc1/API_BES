@@ -30,5 +30,10 @@ namespace WebApplication1.Models
         public string AgreementNumber { get; set; }
         public Nullable<double> AmountNotFinanced { get; set; }
         public Nullable<double> AmountFinanced { get; set; }
+        public Nullable<int> MaintanceContractDuration { get; set; }
+        public Nullable<int> MaintanceContractPaymentMethodID { get; set; }
+        public string MaintanceContractPaymentAfter { get; set; }
+        public string MaintanceContractPaymentAfterText { get; set; }
+        public string MaintanceContractPaymentTerms { get; set; }
     }
 }

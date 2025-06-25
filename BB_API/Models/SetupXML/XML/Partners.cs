@@ -432,9 +432,9 @@ namespace WebApplication1.Models.SetupXML.XML
                                 collectionAddresses.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES
                                 {
                                     ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
-                                    NAME1 = order.NAME1, // "EUROPEA DE EXPEDICIONES SL",
-                                    NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
-                                    NAME_CO = order.DEPARTMENT,
+                                    NAME1 = order.NAME1 == "" ? order.BUSINESSCODE : order.NAME1,
+                                    //NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
+                                    //NAME_CO = order.DEPARTMENT,
                                     CITY1 = addressObj.CITY1,// "CADIZ",
                                     POST_CODE1 = addressObj.POST_CODE1,//"11006",
                                     STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
@@ -444,7 +444,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     LANGU = addressObj.LANGU,//"E",
                                     REGION = addressObj.REGION,//"11",
                                     TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
-                                    BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
+                                    //BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
                                 });
                                 collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
                                 {
@@ -483,18 +483,19 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
                                 PARTN_ROLE = order.PARTN_ROLE, //"WE",
-                                CUSTOMER = idLocaisEnvio.SAPCustomerNr,
+                                //CUSTOMER = idLocaisEnvio.SAPCustomerNr,
                                 ADDRNUMBER = addressObj.ADDRNUMBER,      //$"A_3686501_{randomLetterNumber}",  //$"A_3686499_{randomLetterNunber}",
                                 CP_NAMEV = bB_Proposal_DL_ClientContacts.Surname,     //"ALVAREZ",
                                 CP_NAME1 = bB_Proposal_DL_ClientContacts.Name,
-                                CP_PHONE = bB_Proposal_DL_ClientContacts.Movil.ToString()
+                                CP_PHONE = bB_Proposal_DL_ClientContacts.Movil.ToString(),
+                                CP_MAIL = bB_Proposal_DL_ClientContacts.Email
                             });
                             collectionAddresses.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES
                             {
                                 ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
-                                NAME1 = order.NAME1, // "EUROPEA DE EXPEDICIONES SL",
-                                NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
-                                NAME_CO = order.DEPARTMENT,
+                                NAME1 = order.NAME1 == "" ? order.BUSINESSCODE : order.NAME1,
+                                //NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
+                                //NAME_CO = order.DEPARTMENT,
                                 CITY1 = addressObj.CITY1,// "CADIZ",
                                 POST_CODE1 = addressObj.POST_CODE1,//"11006",
                                 STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
@@ -504,12 +505,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                 LANGU = addressObj.LANGU,//"E",
                                 REGION = addressObj.REGION,//"11",
                                 TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
-                                BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
+                                //BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
                             });
                             collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
                             {
-                                TAX_NO_1 = addressAddObj.TAX_NO_1,
-                                TAX_NO_2 = client.NIF,
+                                TAX_NO_1 = "G48441745", //addressAddObj.TAX_NO_1,
+                                TAX_NO_2 = "G48441745",//client.NIF,
                                 ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
                             });
                             i++;
@@ -545,6 +546,9 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             foreach (var dLocation in dl)
                             {
+
+                                //validar se morada tem ambas as checkbox ativas
+
                                 //BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == dLocation.ProposalID).FirstOrDefault();
                                 int fkLocaisEvnio = int.Parse(dLocation.ID);
                                 //BB_LocaisEnvio lEnvio = lEnvio_lst.Where(x => x.ID == fkLocaisEvnio).FirstOrDefault();
@@ -553,17 +557,118 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 if (dLocation.BillReceiver == true)
                                 {
-                                    if (dLocation.SAPCustomerNr != null)
+                                    if (dLocation.SAPCustomerNr != null || dLocation.SAPCustomerNr != "")
                                     {
+
+                                        Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES addressObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES();
+                                        Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD addressAddObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD();
+
+                                        int randomNumberI = randomNumberAddress + i;
+
+                                        addressObj = address.ConfigAddress(order.OrderId, randomLetterNumber, randomNumberI);
+                                        addressAddObj = addresseAdd.ConfigAddressAdd(order.OrderId, addressObj.ADDRNUMBER);
+
+                                        Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS partner = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS();
+                                        partner.SD_DOC = orderDoc;
+                                        partner.PARTN_ROLE = order.PARTN_ROLE;
+                                        partner.CUSTOMER = dLocation.SAPCustomerNr;
+                                        partner.ADDRNUMBER = addressObj.ADDRNUMBER;
+                                        partner.CP_NAMEV = contactClient.Surname;
+                                        partner.CP_NAME1 = contactClient.Name;
+                                        partner.CP_PHONE = contactClient.Movil.ToString();
+
+                                        //partnersAdressesList.Partners.Add(partner);
                                         collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
                                         {
                                             SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
-                                            PARTN_ROLE = "RE",
-                                            CUSTOMER = dLocation.SAPCustomerNr,       //"1137222",             // partnerInfo.CUSTOMER, //
+                                            PARTN_ROLE = "RE", //"WE",
+                                            CUSTOMER = dLocation.SAPCustomerNr,
+                                            ADDRNUMBER = addressObj.ADDRNUMBER,      //$"A_3686501_{randomLetterNumber}",  //$"A_3686499_{randomLetterNunber}",
                                             CP_NAMEV = contactClient.Surname,     //"ALVAREZ",
                                             CP_NAME1 = contactClient.Name,
-                                            CP_PHONE = contactClient.Movil.ToString()//"66666666"
+                                            CP_PHONE = contactClient.Movil.ToString()
                                         });
+                                        collectionAddresses.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES
+                                        {
+                                            ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
+                                            NAME1 = order.NAME1, // "EUROPEA DE EXPEDICIONES SL",
+                                            NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
+                                            NAME_CO = order.DEPARTMENT,
+                                            CITY1 = addressObj.CITY1,// "CADIZ",
+                                            POST_CODE1 = addressObj.POST_CODE1,//"11006",
+                                            STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
+                                            FLOOR = addressObj.FLOOR,//"3",
+                                            ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
+                                            COUNTRY = addressObj.COUNTRY,//"ES",
+                                            LANGU = addressObj.LANGU,//"E",
+                                            REGION = addressObj.REGION,//"11",
+                                            TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
+                                            BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
+                                        });
+                                        collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
+                                        {
+                                            TAX_NO_1 = addressAddObj.TAX_NO_1,
+                                            TAX_NO_2 = client.NIF,
+                                            ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
+                                        });
+                                        i++;
+                                    }
+                                    else
+                                    {
+
+                                        Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES addressObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES();
+                                        Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD addressAddObj = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD();
+
+                                        int randomNumberI = randomNumberAddress + i;
+
+                                        addressObj = address.ConfigAddress(order.OrderId, randomLetterNumber, randomNumberI);
+                                        addressAddObj = addresseAdd.ConfigAddressAdd(order.OrderId, addressObj.ADDRNUMBER);
+
+                                        Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS partner = new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS();
+                                        partner.SD_DOC = orderDoc;
+                                        partner.PARTN_ROLE = order.PARTN_ROLE;
+                                        //partner.CUSTOMER = dLocation.SAPCustomerNr;
+                                        partner.ADDRNUMBER = addressObj.ADDRNUMBER;
+                                        partner.CP_NAMEV = contactClient.Surname;
+                                        partner.CP_NAME1 = contactClient.Name;
+                                        partner.CP_PHONE = contactClient.Movil.ToString();
+
+                                        //partnersAdressesList.Partners.Add(partner);
+
+                                        collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                                        {
+                                            SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
+                                            PARTN_ROLE = "RE", //"WE",
+                                            CUSTOMER = dLocation.SAPCustomerNr,
+                                            ADDRNUMBER = addressObj.ADDRNUMBER,      //$"A_3686501_{randomLetterNumber}",  //$"A_3686499_{randomLetterNunber}",
+                                            CP_NAMEV = contactClient.Surname,     //"ALVAREZ",
+                                            CP_NAME1 = contactClient.Name,
+                                            CP_PHONE = contactClient.Movil.ToString()
+                                        });
+                                        collectionAddresses.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES
+                                        {
+                                            ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
+                                            NAME1 = order.NAME1, // "EUROPEA DE EXPEDICIONES SL",
+                                            NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
+                                            NAME_CO = order.DEPARTMENT,
+                                            CITY1 = addressObj.CITY1,// "CADIZ",
+                                            POST_CODE1 = addressObj.POST_CODE1,//"11006",
+                                            STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
+                                            FLOOR = addressObj.FLOOR,//"3",
+                                            ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
+                                            COUNTRY = addressObj.COUNTRY,//"ES",
+                                            LANGU = addressObj.LANGU,//"E",
+                                            REGION = addressObj.REGION,//"11",
+                                            TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
+                                            BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
+                                        });
+                                        collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
+                                        {
+                                            TAX_NO_1 = addressAddObj.TAX_NO_1,
+                                            TAX_NO_2 = client.NIF,
+                                            ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
+                                        });
+                                        i++;
                                     }
                                 }
 
