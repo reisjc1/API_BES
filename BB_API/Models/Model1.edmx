@@ -1037,6 +1037,11 @@
           <Property Name="AgreementNumber" Type="varchar" MaxLength="50" />
           <Property Name="AmountNotFinanced" Type="float" />
           <Property Name="AmountFinanced" Type="float" />
+          <Property Name="MaintanceContractDuration" Type="int" />
+          <Property Name="MaintanceContractPaymentMethodID" Type="int" />
+          <Property Name="MaintanceContractPaymentAfter" Type="nvarchar" MaxLength="10" />
+          <Property Name="MaintanceContractPaymentAfterText" Type="nvarchar(max)" />
+          <Property Name="MaintanceContractPaymentTerms" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="BB_Proposal_FinancingMonthly">
           <Key>
@@ -2337,9 +2342,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_WFA_NP_Approvers" EntityType="BB_DB_DEVModel.BB_WFA_NP_Approvers" />
           <EntitySet Name="BB_Proposal_Quote_RS" EntityType="BB_DB_DEVModel.BB_Proposal_Quote_RS" />
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
-          <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
           <EntitySet Name="BB_Clientes" EntityType="BB_DB_DEVModel.BB_Clientes" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
+          <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -4107,27 +4112,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="InvoiceList" Type="Boolean" />
           <Property Name="SAPDocumentCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="BB_Proposal_Financing">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ContractTypeId" Type="Int32" />
-          <Property Name="FinancingTypeCode1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PaymentMethodId" Type="Int32" />
-          <Property Name="PaymentAfter" Type="Int32" />
-          <Property Name="IncludeServices" Type="Boolean" />
-          <Property Name="ProposalID" Type="Int32" />
-          <Property Name="FinancingTypeCode" Type="Int32" />
-          <Property Name="Months" Type="Int32" />
-          <Property Name="MonthlyIncome" Type="Double" />
-          <Property Name="DateApproval" Type="DateTime" Precision="3" />
-          <Property Name="DateExpired" Type="DateTime" Precision="3" />
-          <Property Name="Factor" Type="Double" />
-          <Property Name="AgreementNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="AmountNotFinanced" Type="Double" />
-          <Property Name="AmountFinanced" Type="Double" />
-        </EntityType>
         <EntityType Name="BB_Clientes">
           <Key>
             <PropertyRef Name="ID" />
@@ -4272,6 +4256,32 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Es_InsideSales" Type="Boolean" />
           <Property Name="IsNP" Type="Boolean" />
           <Property Name="Es_Hibrida" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="BB_Proposal_Financing">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContractTypeId" Type="Int32" />
+          <Property Name="FinancingTypeCode1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentMethodId" Type="Int32" />
+          <Property Name="PaymentAfter" Type="Int32" />
+          <Property Name="IncludeServices" Type="Boolean" />
+          <Property Name="ProposalID" Type="Int32" />
+          <Property Name="FinancingTypeCode" Type="Int32" />
+          <Property Name="Months" Type="Int32" />
+          <Property Name="MonthlyIncome" Type="Double" />
+          <Property Name="DateApproval" Type="DateTime" Precision="3" />
+          <Property Name="DateExpired" Type="DateTime" Precision="3" />
+          <Property Name="Factor" Type="Double" />
+          <Property Name="AgreementNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AmountNotFinanced" Type="Double" />
+          <Property Name="AmountFinanced" Type="Double" />
+          <Property Name="MaintanceContractDuration" Type="Int32" />
+          <Property Name="MaintanceContractPaymentMethodID" Type="Int32" />
+          <Property Name="MaintanceContractPaymentAfter" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MaintanceContractPaymentAfterText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MaintanceContractPaymentTerms" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         
         </Schema>
@@ -6048,28 +6058,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_Proposal_Financing">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
-              <MappingFragment StoreEntitySet="BB_Proposal_Financing">
-                <ScalarProperty Name="AmountFinanced" ColumnName="AmountFinanced" />
-                <ScalarProperty Name="AmountNotFinanced" ColumnName="AmountNotFinanced" />
-                <ScalarProperty Name="AgreementNumber" ColumnName="AgreementNumber" />
-                <ScalarProperty Name="Factor" ColumnName="Factor" />
-                <ScalarProperty Name="DateExpired" ColumnName="DateExpired" />
-                <ScalarProperty Name="DateApproval" ColumnName="DateApproval" />
-                <ScalarProperty Name="MonthlyIncome" ColumnName="MonthlyIncome" />
-                <ScalarProperty Name="Months" ColumnName="Months" />
-                <ScalarProperty Name="FinancingTypeCode" ColumnName="FinancingTypeCode" />
-                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
-                <ScalarProperty Name="IncludeServices" ColumnName="IncludeServices" />
-                <ScalarProperty Name="PaymentAfter" ColumnName="PaymentAfter" />
-                <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
-                <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
-                <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_Clientes">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Clientes">
               <MappingFragment StoreEntitySet="BB_Clientes">
@@ -6213,6 +6201,33 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="Sales_Group" ColumnName="Sales_Group" />
                 <ScalarProperty Name="Codigo_Agencia" ColumnName="Codigo_Agencia" />
                 <ScalarProperty Name="Delegacion" ColumnName="Delegacion" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_Proposal_Financing">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Financing">
+              <MappingFragment StoreEntitySet="BB_Proposal_Financing">
+                <ScalarProperty Name="MaintanceContractPaymentTerms" ColumnName="MaintanceContractPaymentTerms" />
+                <ScalarProperty Name="MaintanceContractPaymentAfterText" ColumnName="MaintanceContractPaymentAfterText" />
+                <ScalarProperty Name="MaintanceContractPaymentAfter" ColumnName="MaintanceContractPaymentAfter" />
+                <ScalarProperty Name="MaintanceContractPaymentMethodID" ColumnName="MaintanceContractPaymentMethodID" />
+                <ScalarProperty Name="MaintanceContractDuration" ColumnName="MaintanceContractDuration" />
+                <ScalarProperty Name="AmountFinanced" ColumnName="AmountFinanced" />
+                <ScalarProperty Name="AmountNotFinanced" ColumnName="AmountNotFinanced" />
+                <ScalarProperty Name="AgreementNumber" ColumnName="AgreementNumber" />
+                <ScalarProperty Name="Factor" ColumnName="Factor" />
+                <ScalarProperty Name="DateExpired" ColumnName="DateExpired" />
+                <ScalarProperty Name="DateApproval" ColumnName="DateApproval" />
+                <ScalarProperty Name="MonthlyIncome" ColumnName="MonthlyIncome" />
+                <ScalarProperty Name="Months" ColumnName="Months" />
+                <ScalarProperty Name="FinancingTypeCode" ColumnName="FinancingTypeCode" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="IncludeServices" ColumnName="IncludeServices" />
+                <ScalarProperty Name="PaymentAfter" ColumnName="PaymentAfter" />
+                <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
+                <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
+                <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
