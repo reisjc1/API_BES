@@ -2303,8 +2303,13 @@ namespace WebApplication1.Controllers
             BB_Proposal_PrazoDiferenciado prazoDiferenciado1 = new BB_Proposal_PrazoDiferenciado();
             BB_Clientes cliente = new BB_Clientes();
             BB_Proposal_Client pCliente = new BB_Proposal_Client();
+
+            List<BB_Equipamentos> bb_Equipamentos = new List<BB_Equipamentos>();
+
             using (var db = new BB_DB_DEVEntities2())
             {
+                bb_Equipamentos = db.BB_Equipamentos.ToList();
+
                 pr1 = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
                 cliente = db.BB_Clientes.Where(x => x.accountnumber == pr1.ClientAccountNumber).FirstOrDefault();
                 pCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == pr1.ID).FirstOrDefault();
@@ -2467,6 +2472,12 @@ namespace WebApplication1.Controllers
 
                 foreach(var machine in activePS.Machines)
                 {
+                    machine.BWCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.BWBaseCost).FirstOrDefault();
+                    machine.CCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.CBaseCost).FirstOrDefault();
+
+                    machine.BWCost = machine.BWCost.HasValue ? Math.Round(machine.BWCost.Value, 5) : (double?)0;
+                    machine.CCost = machine.CCost.HasValue ? Math.Round(machine.CCost.Value, 5) : (double?)0;
+
                     machine.ClickPriceBW = machine.ClickPriceBW.HasValue ? Math.Round(machine.ClickPriceBW.Value, 5) : (double?)0;
                     machine.ClickPriceC = machine.ClickPriceC.HasValue ? Math.Round(machine.ClickPriceC.Value, 5) : (double?)0;
 

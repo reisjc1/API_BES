@@ -4396,6 +4396,35 @@ namespace WebApplication1.Controllers
                     }
 
 
+                    double? _Total_Public = _PUBLICO_BPS + _PUBLICO_IMS1 + _PUBLICO_IPHW + _PUBLICO_MCS + _PUBLICO_OPSHW + _PUBLICO_PPHW + _PUBLICO_PRS;
+
+                    double? _Total_VD = _VD_BPS + _VD_IMS1 + _VD_IPHW + _VD_MCS + _VD_OPSHW + _VD_PPHW + _VD_PRS;
+
+                    double? _Total_COST = _COST_BPS + _COST_IMS1 + _COST_IPHW + _COST_MCS + _COST_OPSHW + _COST_PPHW + _COST_PRS;
+
+                    double? _Total_NET = _NET_BPS + _NET_IMS1 + _NET_IPHW + _NET_MCS + _NET_OPSHW + _NET_PPHW + _NET_PRS;
+
+                    double? _Total_GROSS = _GROSS_BPS + _GROSS_IMS1 + _GROSS_IPHW + _GROSS_MCS + _GROSS_OPSHW + _GROSS_PPHW + _GROSS_PRS;
+
+                    double? _Total_MARGIN = _MARGIN_BPS + _MARGIN_IMS1 + _MARGIN_IPHW + _MARGIN_MCS + _MARGIN_OPSHW + _MARGIN_PPHW + _MARGIN_PRS;
+
+                    wsFINANCIALINFORMATION.Cells["C12"].Value = _Total_Public;
+                    wsFINANCIALINFORMATION.Cells["D12"].Value = _Total_VD;
+                    wsFINANCIALINFORMATION.Cells["E12"].Value = _Total_COST;
+                    wsFINANCIALINFORMATION.Cells["F12"].Value = _Total_NET;
+                    wsFINANCIALINFORMATION.Cells["G12"].Value = _Total_GROSS;
+                    wsFINANCIALINFORMATION.Cells["H12"].Value = _Total_MARGIN;
+
+
+                    wsFINANCIALINFORMATION.Cells["J14"].Value = _Total_GROSS;
+                    wsFINANCIALINFORMATION.Cells["J15"].Value = _Total_NET;
+                    wsFINANCIALINFORMATION.Cells["J16"].Value = _Total_MARGIN;
+
+                    wsFINANCIALINFORMATION.Cells["J17"].Value = _NET_OPSHW;
+
+                    wsFINANCIALINFORMATION.Cells["J29"].Value = _NET_OPSHW;
+                    wsFINANCIALINFORMATION.Cells["J30"].Value = _VD_OPSHW;
+
 
                     //WORKSHEET - ORDER CONTENTS
                     var wsORDERCONTENTS = pck.Workbook.Worksheets["ORDER CONTENTS"];
