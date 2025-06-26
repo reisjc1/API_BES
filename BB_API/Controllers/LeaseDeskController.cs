@@ -2308,6 +2308,8 @@ namespace WebApplication1.Controllers
 
             using (var db = new BB_DB_DEVEntities2())
             {
+                bb_Equipamentos = db.BB_Equipamentos.ToList();
+
                 pr1 = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
                 cliente = db.BB_Clientes.Where(x => x.accountnumber == pr1.ClientAccountNumber).FirstOrDefault();
                 pCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == pr1.ID).FirstOrDefault();
