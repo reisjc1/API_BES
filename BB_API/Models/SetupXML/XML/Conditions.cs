@@ -653,7 +653,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
 
-                                var condZVBA = conditionsPvp.Where(x => x.ConditionCode == "ZVBA").FirstOrDefault();
+                                var condZVBA = conditionsPvp.Where(x => x.ConditionCode == "ZVBA" || x.ConditionCode == "ZVBR").FirstOrDefault();
                                 double? overvaluationValue = (overvaluation.Total / totalQty) * factorValue;
                                 condZVBA.PVP = condZVBA.PVP + overvaluationValue;
                             }
@@ -1028,7 +1028,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     {
                         double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
 
-                        var condZVBA = conditionsPvp.Where(x => x.ConditionCode == "ZVBA").FirstOrDefault();
+                        var condZVBA = conditionsPvp.Where(x => x.ConditionCode == "ZVBA" || x.ConditionCode == "ZVBR").FirstOrDefault();
                         condZVBA.PVP += (overvaluation.Total * factorValue);
                     }
                 }
@@ -1278,7 +1278,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             {
                                 double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
 
-                                var condZVBA = conditionPVPPerMachine.Conditions.Where(x => x.ConditionCode == "ZVBA").FirstOrDefault();
+                                var condZVBA = conditionPVPPerMachine.Conditions.Where(x => x.ConditionCode == "ZVBA" || x.ConditionCode == "ZVBR").FirstOrDefault();
                                 double? overvaluationValue = (overvaluation.Total / totalQty) * factorValue;
                                 condZVBA.PVP = condZVBA.PVP + overvaluationValue;
                             }

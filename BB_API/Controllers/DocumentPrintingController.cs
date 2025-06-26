@@ -23,6 +23,7 @@ using WebApplication1.BLL;
 using WebApplication1.DAL;
 using WebApplication1.Models;
 using WebApplication1.Models.ViewModels;
+using WebApplication1.Models.SetupXML;
 
 namespace WebApplication1.Controllers
 {
@@ -3208,14 +3209,14 @@ namespace WebApplication1.Controllers
                             stream.Close();
                     }
                 }
-                WriteExportExcel(@path + "ConfiguracaoNegocio.xlsx", a.ProposalObj);
+                WriteExportExcelBES(@path + "ConfiguracaoNegocioBES.xlsx", a.ProposalObj);
 
 
                 //Create HTTP Response.
                 //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
 
 
-                string filePath = @path + "ConfiguracaoNegocio.xlsx";
+                string filePath = @path + "ConfiguracaoNegocioBES.xlsx";
 
 
                 //Check whether File exists.
@@ -3777,7 +3778,7 @@ namespace WebApplication1.Controllers
 
                     ExcelPackage pck = new ExcelPackage(newFile);
                     //Add the Content sheet
-                    var ws = pck.Workbook.Worksheets["Sheet1"];
+                    var ws = pck.Workbook.Worksheets["DEAL"];
                     //ws.View.ShowGridLines = false;
                     //ws.Cells["A1"].Value = "Funcionalidade indisponível temporariamente.";
 
@@ -4060,7 +4061,7 @@ namespace WebApplication1.Controllers
                     //ws.View.ShowGridLines = false;
                     //ws.Cells["A1"].Value = "Funcionalidade indisponível temporariamente.";
 
-                    string _Payment = "";
+
 
                     var financing = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalID).FirstOrDefault();
 
@@ -4070,39 +4071,73 @@ namespace WebApplication1.Controllers
                     string _Region = "";
                     string _SalesGroup = "";
 
-                    
+
                     using (var db1 = new masterEntities())
                     {
                         AspNetUsers _User = db1.AspNetUsers.Where(x => x.Email == p.Draft.details.CreatedBy).FirstOrDefault();
-                        
+
 
                         if (_User != null)
                         {
                             _SalesRep = _User.ErpNumber + " - " + _User.DisplayName;
 
                             AspNetUsers _UserManager = db1.AspNetUsers.Where(x => x.ManagerEmail == _User.ManagerEmail).FirstOrDefault();
-                            if(_UserManager != null)
+                            if (_UserManager != null)
                             {
                                 _SalesManager = _UserManager.ErpNumber + " - " + _UserManager.DisplayName;
                                 _SalesDirector = _UserManager.ErpNumber;
                             }
-                           
+
                         }
                     }
 
                     BB_Clientes _Cliente = db.BB_Clientes.Where(x => x.accountnumber == p.Draft.client.accountnumber).FirstOrDefault();
 
-                    if(_Cliente != null)
+                    if (_Cliente != null)
                     {
                         _Region = _Cliente.Branch_Id + " - " + _Cliente.Branch_Local;
                         _SalesGroup = _Cliente.Erpsalesgroupname;
                     }
 
+                    string _Payment = "";
+                    // RENTAL - KM rental - 60 mois (KONICA MINOLTA - .)
+
+                    BB_FinancingType _BB_FinancingType = db.BB_FinancingType.Where(x => x.Code == p.Draft.financing.FinancingTypeCode).FirstOrDefault();
+
+                    string _financigTypecode = "";
+                    if (_BB_FinancingType != null)
+                    {
+                        _financigTypecode = _BB_FinancingType.Type;
+                    }
+
+                    string _ContractType = "";
+                    BB_FinancingContractType _BB_FinancingContractType = db.BB_FinancingContractType.Where(x => x.ID == p.Draft.financing.ContractTypeId).FirstOrDefault();
+
+                    if (_BB_FinancingContractType != null)
+                    {
+                        _ContractType = _BB_FinancingContractType.Company;
+                    }
+                    //3 302,07 € at 1,91550 % : 59,34€ per month
+
+                    double? valortotal = 0;
+                    foreach (var itemoneShot in p.Draft.baskets.os_basket)
+                    {
+                        valortotal += itemoneShot.TotalNetsale;
+                    }
+
+                    double? cacelamento = 0;
+                    foreach (var itecacelamento in p.Draft.upturns)
+                    {
+                        cacelamento += itecacelamento.Total;
+                    }
+
+
+                    _Payment = _financigTypecode + " - " + p.Draft.financing.Months + " - " + _ContractType + " - " + " - " + (valortotal + cacelamento) + "€" + " - " + p.Draft.financing.Factor + "% :" + p.Draft.financing.AmountFinanced + "€ per month";
 
                     //WORKSHEET - DEAL
 
                     ws.Cells["B1"].Value = p.Draft.client.Name;
-                    ws.Cells["B2"].Value = "TODO"; //TODO
+                    ws.Cells["B2"].Value = _Payment; //TODO
                     ws.Cells["B3"].Value = p.Draft.client.accountnumber;
                     ws.Cells["B5"].Value = _SalesRep;
                     ws.Cells["B6"].Value = _SalesManager;
@@ -4128,7 +4163,7 @@ namespace WebApplication1.Controllers
                     var wsCRMData = pck.Workbook.Worksheets["CRM DATA"];
 
                     wsCRMData.Cells["B2"].Value = p.Draft.details.CRM_QUOTE_ID;
-                    wsCRMData.Cells["B3"].Value = p.Draft.client.accountnumber ;
+                    wsCRMData.Cells["B3"].Value = p.Draft.client.accountnumber;
                     wsCRMData.Cells["B4"].Value = "-";
                     wsCRMData.Cells["B5"].Value = "-";
                     wsCRMData.Cells["B6"].Value = "-";
@@ -4139,7 +4174,7 @@ namespace WebApplication1.Controllers
 
                     LD_Contrato _Contrato = db.LD_Contrato.Where(x => x.ProposalID == proposalID).FirstOrDefault();
 
-                    if(_Contrato != null)
+                    if (_Contrato != null)
                     {
                         _PROCESSED = _Contrato.ModifiedBy;
                     }
@@ -4150,6 +4185,245 @@ namespace WebApplication1.Controllers
                     wsCRMData.Cells["B12"].Value = "-";//TODO
                     wsCRMData.Cells["B13"].Value = "-";//TODO
                     wsCRMData.Cells["B14"].Value = p.Draft.client.accountnumber; ;
+
+
+                    //WORKSHEET -  FINANCIAL INFORMATION
+                    var wsFINANCIALINFORMATION = pck.Workbook.Worksheets["FINANCIAL INFORMATION"];
+
+
+                    //WORKSHEET -  FINANCIAL INFORMATION OFFICE HW
+                    double? _PUBLICO_OPSHW = 0;
+                    double? _VD_OPSHW = 0;
+                    double? _COST_OPSHW = 0;
+                    double? _NET_OPSHW = 0;
+                    double? _GROSS_OPSHW = 0;
+                    double? _MARGIN_OPSHW = 0;
+
+
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        if (item.Family.Contains("OPSHW"))
+                        {
+                            _VD_OPSHW += item.PVP;
+                            _COST_OPSHW += item.UnitPriceCost;
+                            _NET_OPSHW += item.UnitDiscountPrice;
+                            _GROSS_OPSHW += item.TotalNetsale;
+                            _MARGIN_OPSHW += item.GPTotal;
+                        }
+                    }
+                    wsFINANCIALINFORMATION.Cells["D2"].Value = _VD_OPSHW;
+                    wsFINANCIALINFORMATION.Cells["E2"].Value = _COST_OPSHW;
+                    wsFINANCIALINFORMATION.Cells["F2"].Value = _NET_OPSHW;
+                    wsFINANCIALINFORMATION.Cells["G2"].Value = _GROSS_OPSHW;
+                    wsFINANCIALINFORMATION.Cells["H2"].Value = _MARGIN_OPSHW;
+
+                    //WORKSHEET -  FINANCIAL INFORMATION PPHW
+                    double? _PUBLICO_PPHW = 0;
+                    double? _VD_PPHW = 0;
+                    double? _COST_PPHW = 0;
+                    double? _NET_PPHW = 0;
+                    double? _GROSS_PPHW = 0;
+                    double? _MARGIN_PPHW = 0;
+
+
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        if (item.Family.Contains("PPHW"))
+                        {
+                            _VD_PPHW += item.PVP;
+                            _COST_PPHW += item.UnitPriceCost;
+                            _NET_PPHW += item.UnitDiscountPrice;
+                            _GROSS_PPHW += item.TotalNetsale;
+                            _MARGIN_PPHW += item.GPTotal;
+                        }
+                    }
+                    wsFINANCIALINFORMATION.Cells["D3"].Value = _VD_PPHW;
+                    wsFINANCIALINFORMATION.Cells["E3"].Value = _COST_PPHW;
+                    wsFINANCIALINFORMATION.Cells["F3"].Value = _NET_PPHW;
+                    wsFINANCIALINFORMATION.Cells["G3"].Value = _GROSS_PPHW;
+                    wsFINANCIALINFORMATION.Cells["H3"].Value = _MARGIN_PPHW;
+
+                    //WORKSHEET -  FINANCIAL INFORMATION IPHW
+                    double? _PUBLICO_IPHW = 0;
+                    double? _VD_IPHW = 0;
+                    double? _COST_IPHW = 0;
+                    double? _NET_IPHW = 0;
+                    double? _GROSS_IPHW = 0;
+                    double? _MARGIN_IPHW = 0;
+
+
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        if (item.Family.Contains("IPHW"))
+                        {
+                            _VD_IPHW += item.PVP;
+                            _COST_IPHW += item.UnitPriceCost;
+                            _NET_IPHW += item.UnitDiscountPrice;
+                            _GROSS_IPHW += item.TotalNetsale;
+                            _MARGIN_IPHW += item.GPTotal;
+                        }
+                    }
+                    wsFINANCIALINFORMATION.Cells["D4"].Value = _VD_IPHW;
+                    wsFINANCIALINFORMATION.Cells["E4"].Value = _COST_IPHW;
+                    wsFINANCIALINFORMATION.Cells["F4"].Value = _NET_IPHW;
+                    wsFINANCIALINFORMATION.Cells["G4"].Value = _GROSS_IPHW;
+                    wsFINANCIALINFORMATION.Cells["H4"].Value = _MARGIN_IPHW;
+
+
+                    //WORKSHEET -  FINANCIAL INFORMATION BPS
+                    double? _PUBLICO_BPS = 0;
+                    double? _VD_BPS = 0;
+                    double? _COST_BPS = 0;
+                    double? _NET_BPS = 0;
+                    double? _GROSS_BPS = 0;
+                    double? _MARGIN_BPS = 0;
+
+
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        if (item.Family.Contains("BPS"))
+                        {
+                            _VD_BPS += item.PVP;
+                            _COST_BPS += item.UnitPriceCost;
+                            _NET_BPS += item.UnitDiscountPrice;
+                            _GROSS_BPS += item.TotalNetsale;
+                            _MARGIN_BPS += item.GPTotal;
+                        }
+                    }
+                    wsFINANCIALINFORMATION.Cells["D5"].Value = _VD_BPS;
+                    wsFINANCIALINFORMATION.Cells["E5"].Value = _COST_BPS;
+                    wsFINANCIALINFORMATION.Cells["F5"].Value = _NET_BPS;
+                    wsFINANCIALINFORMATION.Cells["G5"].Value = _GROSS_BPS;
+                    wsFINANCIALINFORMATION.Cells["H5"].Value = _MARGIN_BPS;
+
+                    //WORKSHEET -  FINANCIAL INFORMATION PRS
+                    double? _PUBLICO_PRS = 0;
+                    double? _VD_PRS = 0;
+                    double? _COST_PRS = 0;
+                    double? _NET_PRS = 0;
+                    double? _GROSS_PRS = 0;
+                    double? _MARGIN_PRS = 0;
+
+
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        if (item.Family.Contains("PRS"))
+                        {
+                            _VD_PRS += item.PVP;
+                            _COST_PRS += item.UnitPriceCost;
+                            _NET_PRS += item.UnitDiscountPrice;
+                            _GROSS_PRS += item.TotalNetsale;
+                            _MARGIN_PRS += item.GPTotal;
+                        }
+                    }
+                    wsFINANCIALINFORMATION.Cells["D6"].Value = _VD_PRS;
+                    wsFINANCIALINFORMATION.Cells["E6"].Value = _COST_PRS;
+                    wsFINANCIALINFORMATION.Cells["F6"].Value = _NET_PRS;
+                    wsFINANCIALINFORMATION.Cells["G6"].Value = _GROSS_PRS;
+                    wsFINANCIALINFORMATION.Cells["H6"].Value = _MARGIN_PRS;
+
+                    //WORKSHEET -  FINANCIAL INFORMATION IMS
+                    double? _PUBLICO_IMS1 = 0;
+                    double? _VD_IMS1 = 0;
+                    double? _COST_IMS1 = 0;
+                    double? _NET_IMS1 = 0;
+                    double? _GROSS_IMS1 = 0;
+                    double? _MARGIN_IMS1 = 0;
+
+
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        if (item.Family.Contains("IMS"))
+                        {
+                            _VD_IMS1 += item.PVP;
+                            _COST_IMS1 += item.UnitPriceCost;
+                            _NET_IMS1 += item.UnitDiscountPrice;
+                            _GROSS_IMS1 += item.TotalNetsale;
+                            _MARGIN_IMS1 += item.GPTotal;
+                        }
+                    }
+                    wsFINANCIALINFORMATION.Cells["D7"].Value = _VD_IMS1;
+                    wsFINANCIALINFORMATION.Cells["E7"].Value = _COST_IMS1;
+                    wsFINANCIALINFORMATION.Cells["F7"].Value = _NET_IMS1;
+                    wsFINANCIALINFORMATION.Cells["G7"].Value = _GROSS_IMS1;
+                    wsFINANCIALINFORMATION.Cells["H7"].Value = _MARGIN_IMS1;
+
+                    //WORKSHEET -  FINANCIAL INFORMATION MCS
+                    double? _PUBLICO_MCS = 0;
+                    double? _VD_MCS = 0;
+                    double? _COST_MCS = 0;
+                    double? _NET_MCS = 0;
+                    double? _GROSS_MCS = 0;
+                    double? _MARGIN_MCS = 0;
+
+
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        if (item.Family.Contains("MCS"))
+                        {
+                            _VD_MCS += item.PVP;
+                            _COST_MCS += item.UnitPriceCost;
+                            _NET_MCS += item.UnitDiscountPrice;
+                            _GROSS_MCS += item.TotalNetsale;
+                            _MARGIN_MCS += item.GPTotal;
+                        }
+                    }
+                    wsFINANCIALINFORMATION.Cells["D8"].Value = _VD_MCS;
+                    wsFINANCIALINFORMATION.Cells["E8"].Value = _COST_MCS;
+                    wsFINANCIALINFORMATION.Cells["F8"].Value = _NET_MCS;
+                    wsFINANCIALINFORMATION.Cells["G8"].Value = _GROSS_MCS;
+                    wsFINANCIALINFORMATION.Cells["H8"].Value = _MARGIN_MCS;
+
+
+                    //WORKSHEET -  FINANCIAL INFORMATION WPH
+                    double? _VD_MCS_WPH = 0;
+                    double? _COST_WPH = 0;
+                    double? _NET_WPH = 0;
+                    double? _GROSS_WPH = 0;
+                    double? _MARGIN_WPH = 0;
+
+
+                    foreach (var item in p.Draft.baskets.os_basket)
+                    {
+                        if (item.Family.Contains("WPH"))
+                        {
+                            _VD_MCS_WPH += item.PVP;
+                            _COST_WPH += item.UnitPriceCost;
+                            _NET_WPH += item.UnitDiscountPrice;
+                            _GROSS_WPH += item.TotalNetsale;
+                            _MARGIN_WPH += item.GPTotal;
+                        }
+                    }
+
+
+                    double? _Total_Public = _PUBLICO_BPS + _PUBLICO_IMS1 + _PUBLICO_IPHW + _PUBLICO_MCS + _PUBLICO_OPSHW + _PUBLICO_PPHW + _PUBLICO_PRS;
+
+                    double? _Total_VD = _VD_BPS + _VD_IMS1 + _VD_IPHW + _VD_MCS + _VD_OPSHW + _VD_PPHW + _VD_PRS;
+
+                    double? _Total_COST = _COST_BPS + _COST_IMS1 + _COST_IPHW + _COST_MCS + _COST_OPSHW + _COST_PPHW + _COST_PRS;
+
+                    double? _Total_NET = _NET_BPS + _NET_IMS1 + _NET_IPHW + _NET_MCS + _NET_OPSHW + _NET_PPHW + _NET_PRS;
+
+                    double? _Total_GROSS = _GROSS_BPS + _GROSS_IMS1 + _GROSS_IPHW + _GROSS_MCS + _GROSS_OPSHW + _GROSS_PPHW + _GROSS_PRS;
+
+                    double? _Total_MARGIN = _MARGIN_BPS + _MARGIN_IMS1 + _MARGIN_IPHW + _MARGIN_MCS + _MARGIN_OPSHW + _MARGIN_PPHW + _MARGIN_PRS;
+
+                    wsFINANCIALINFORMATION.Cells["C12"].Value = _Total_Public;
+                    wsFINANCIALINFORMATION.Cells["D12"].Value = _Total_VD;
+                    wsFINANCIALINFORMATION.Cells["E12"].Value = _Total_COST;
+                    wsFINANCIALINFORMATION.Cells["F12"].Value = _Total_NET;
+                    wsFINANCIALINFORMATION.Cells["G12"].Value = _Total_GROSS;
+                    wsFINANCIALINFORMATION.Cells["H12"].Value = _Total_MARGIN;
+
+
+                    wsFINANCIALINFORMATION.Cells["J14"].Value = _Total_GROSS;
+                    wsFINANCIALINFORMATION.Cells["J15"].Value = _Total_NET;
+                    wsFINANCIALINFORMATION.Cells["J16"].Value = _Total_MARGIN;
+
+                    wsFINANCIALINFORMATION.Cells["J17"].Value = _NET_OPSHW;
+
+                    wsFINANCIALINFORMATION.Cells["J29"].Value = _NET_OPSHW;
+                    wsFINANCIALINFORMATION.Cells["J30"].Value = _VD_OPSHW;
 
 
                     //WORKSHEET - ORDER CONTENTS
@@ -4172,6 +4446,13 @@ namespace WebApplication1.Controllers
                         onshotIDX++;
                     }
 
+                    //TOTAIS por linha
+                    wsFINANCIALINFORMATION.Cells["CD8"].Value = _VD_MCS;
+                    wsFINANCIALINFORMATION.Cells["CD8"].Value = _COST_MCS;
+                    wsFINANCIALINFORMATION.Cells["C188"].Value = _NET_MCS;
+                    wsFINANCIALINFORMATION.Cells["G8"].Value = _GROSS_MCS;
+                    wsFINANCIALINFORMATION.Cells["H8"].Value = _MARGIN_MCS;
+
 
                     int rsIDX = 4;
                     foreach (var item in p.Draft.baskets.rs_basket)
@@ -4180,6 +4461,30 @@ namespace WebApplication1.Controllers
                         rsIDX++;
                     }
 
+
+                    //WORKSHEET - CONTRACT RATES
+                    var wsCONTRACTRATES = pck.Workbook.Worksheets["CONTRACT RATES"];
+
+                    LeaseDeskBLL _LeaseDeskBLL = new LeaseDeskBLL();
+                    ConditionsTotais _ConditionsTotais = new ConditionsTotais();
+
+                    _ConditionsTotais = _LeaseDeskBLL.FinancingDetailsPerMachine(proposalID);
+
+                    int idxMachine = 3;
+                    foreach (var _ItemMachine in _ConditionsTotais.ConditionsPerMachine)
+                    {
+                        string _Machine = _ItemMachine.MachineModel;
+                        wsCONTRACTRATES.Cells["A" + idxMachine++].Value = _Machine;
+                        wsCONTRACTRATES.Cells["A" + idxMachine++].Style.Font.Bold = true;
+                        foreach (var itemConditions in _ItemMachine.Conditions)
+                        {
+                            wsCONTRACTRATES.Cells["A" + idxMachine].Value = itemConditions.ConditionCode;
+                            wsCONTRACTRATES.Cells["B" + idxMachine].Value = itemConditions.PVP;
+                            idxMachine++;
+                        }
+
+                        idxMachine++; idxMachine++;
+                    }
 
 
                     //KOnica Representante
