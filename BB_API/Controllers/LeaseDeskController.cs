@@ -2934,6 +2934,7 @@ namespace WebApplication1.Controllers
                                         resumo.IsUsedMachine = (bool)it.IsUsedMachine ? "Si" : "No";
                                         resumo.SerialNumber = it.SerialNumber != null ? it.SerialNumber : "-";
                                         resumo.Comments = i.Comments != null || i.Comments != "" ? i.Comments : "-";
+                                        resumo.SAPNumber = i.SAPCustomerNr != null || i.SAPCustomerNr != "" ? i.SAPCustomerNr : "";
                                         lstBB_Proposal_DeliveryLocationResumoModel.Add(resumo);
                                     }
                                 }
