@@ -1171,7 +1171,8 @@ namespace WebApplication1.Controllers
                                     Qty = quote.Qty,
                                     DescPerClick = DescPerClick,
                                     PHC1 = equipamento.PHC1,
-                                    PHC4 = equipamento.PHC4
+                                    PHC4 = equipamento.PHC4,
+                                    isUsed = quote.IsUsed
                                 };
 
                                 string key = $"{machine.PHC1}_{machine.PHC4}";
@@ -1249,7 +1250,7 @@ namespace WebApplication1.Controllers
                                                 break;
                                         }
 
-                                        machine.AppliedCommission = commission * machine.Qty;
+                                        machine.AppliedCommission = commission;
                                     }
 
 
@@ -1411,9 +1412,12 @@ namespace WebApplication1.Controllers
 
                     foreach (var machine in machines)
                     {
-                        if (machine.AppliedCommission >= 0)
+                        if (bb_commission_general.Area == "VD" && machine.isUsed == false)
                         {
-                            bb_commission_general.Comision_Copias = bb_commission_general.Comision_Copias + machine.AppliedCommission;
+                            if (machine.AppliedCommission >= 0)
+                            {
+                                bb_commission_general.Comision_Copias = bb_commission_general.Comision_Copias + machine.AppliedCommission;
+                            }
                         }
                     }
 
@@ -1642,7 +1646,7 @@ namespace WebApplication1.Controllers
                     {
                         bb_commission_general.Comision_Copias = 0;
                     }
-
+    
                     bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
                     bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
 
@@ -2275,6 +2279,7 @@ namespace WebApplication1.Controllers
             public string PHC1 { get; set; }
             public string PHC4 { get; set; }
             public double? AppliedCommission { get; set; }
+            public bool? isUsed { get; set; }
         }
     }
 }
