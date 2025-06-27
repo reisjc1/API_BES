@@ -445,7 +445,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
                                     FLOOR = addressObj.FLOOR,//"3",
                                     ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
-                                    COUNTRY = addressObj.COUNTRY,//"ES",
+                                    COUNTRY = "ES",//"ES",
                                     LANGU = addressObj.LANGU,//"E",
                                     REGION = addressObj.REGION,//"11",
                                     TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
@@ -510,7 +510,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
                                 FLOOR = addressObj.FLOOR,//"3",
                                 ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
-                                COUNTRY = addressObj.COUNTRY,//"ES",
+                                COUNTRY = "ES",//"ES",
                                 LANGU = addressObj.LANGU,//"E",
                                 REGION = addressObj.REGION,//"11",
                                 TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
@@ -608,7 +608,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
                                             FLOOR = addressObj.FLOOR,//"3",
                                             ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
-                                            COUNTRY = addressObj.COUNTRY,//"ES",
+                                            COUNTRY = "ES",//"ES",
                                             LANGU = addressObj.LANGU,//"E",
                                             REGION = addressObj.REGION,//"11",
                                             TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
@@ -665,7 +665,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                             STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
                                             FLOOR = addressObj.FLOOR,//"3",
                                             ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
-                                            COUNTRY = addressObj.COUNTRY,//"ES",
+                                            COUNTRY = "ES",//"ES",
                                             LANGU = addressObj.LANGU,//"E",
                                             REGION = addressObj.REGION,//"11",
                                             TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
