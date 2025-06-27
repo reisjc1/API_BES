@@ -754,8 +754,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         APLF_NAME = order.ContactName + "" + order.ContactSurname, //"M. LUIS ALVAREZ",
                                         APLF_PHON = order.ContactMovil,       //"66666666",
                                         APLF_OPEN = order.Schedule,//"9h 17h",
-                                        APLF_INFO = order.DLFloor + " " + order.Department + " " + order.Building + " " + order.Room,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                        APLF_INFO2 = order.Comments,//"Asc: Oui -Connexion: PRINTFLEET",
+                                        APLF_INFO2 = order.Comments//"Asc: Oui -Connexion: PRINTFLEET",
 
                                     });
                                 //}
@@ -951,8 +950,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     APLF_NAME = order.ContactName + "" + order.ContactSurname, //"M. LUIS ALVAREZ",
                                     APLF_PHON = order.ContactMovil,       //"66666666",
                                     APLF_OPEN = order.Schedule,//"9h 17h",
-                                    APLF_INFO = order.DLFloor + " " + order.Department + " " + order.Building + " " + order.Room,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                    APLF_INFO2 = order.Comments,//"Asc: Oui -Connexion: PRINTFLEET",
+                                    APLF_INFO = order.Comments,//"Asc: Oui -Connexion: PRINTFLEET",
 
                                 });
                                 

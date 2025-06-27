@@ -343,6 +343,7 @@ namespace WebApplication1.Models
         public string IsUsedMachine { get; set; }
         public string SerialNumber { get; set; }
         public string Comments { get; set; }
+        public string SAPNumber { get; set; }
     }
 
     public class BB_Proposal_DeliveryGroup
