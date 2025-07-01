@@ -25,5 +25,7 @@ namespace WebApplication1.Models.ViewModels
         public Nullable<bool> IsUsed { get; set; }
         public Nullable<double> BWCost { get; set; }
         public Nullable<double> CCost { get; set; }
+        public Nullable<double> ApprovedBW { get; set; }
+        public Nullable<double> ApprovedC { get; set; }
     }
 }

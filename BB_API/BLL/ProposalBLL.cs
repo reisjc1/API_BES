@@ -1628,10 +1628,13 @@ namespace WebApplication1.BLL
                                 ID = machine.ID,
                                 RequestedBWClickPrice = machine.RequestedBWClickPrice,
                                 RequestedCClickPrice = machine.RequestedCClickPrice,
-                                ClickPriceBW = machine.ApprovedBW,
-                                ClickPriceC = machine.ApprovedC,
+                                ClickPriceBW = machine.BWPVP,
+                                ClickPriceC = machine.CPVP,
                                 BWPVP = machine.BWPVP,
-                                CPVP = machine.CPVP
+                                CPVP = machine.CPVP,
+                                ApprovedBW = machine.ApprovedBW,
+                                ApprovedC = machine.ApprovedC,
+
                             };
                             newPS.Machines.Add(psMachine);
                         }
