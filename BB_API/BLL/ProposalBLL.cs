@@ -12,6 +12,7 @@ using System.Web;
 using WebApplication1.App_Start;
 using WebApplication1.Controllers;
 using WebApplication1.Models;
+using WebApplication1.Models.SetupXML;
 using WebApplication1.Models.ViewModels;
 using WebApplication1.Models.ViewModels.PrintingServicesViewModels;
 
@@ -2802,7 +2803,7 @@ namespace WebApplication1.BLL
 
         //            db.LD_DocumentProposal.Add(doc);
         //        }
-                
+
         //        db.SaveChanges();
 
         //    } catch (Exception ex)
@@ -2810,5 +2811,605 @@ namespace WebApplication1.BLL
         //        throw ex;
         //    }
         //}
+
+        public ProposalRootObject GetProposta(int? proposalID)
+        {
+
+            ProposalBLL p1 = new ProposalBLL();
+            LoadProposalInfo i = new LoadProposalInfo();
+            i.ProposalId = proposalID.Value;
+            ActionResponse a = p1.LoadProposal(i);
+
+            double? LeiDaCopiaPriada = 0;
+            double? sobrevalorizacao = 0;
+            double? retomas = 0;
+            BB_Proposal pr1 = new BB_Proposal();
+            BB_Proposal_PrazoDiferenciado prazoDiferenciado1 = new BB_Proposal_PrazoDiferenciado();
+            BB_Clientes cliente = new BB_Clientes();
+            BB_Proposal_Client pCliente = new BB_Proposal_Client();
+            using (var db = new BB_DB_DEVEntities2())
+            {
+                pr1 = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
+                cliente = db.BB_Clientes.Where(x => x.accountnumber == pr1.ClientAccountNumber).FirstOrDefault();
+                pCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == pr1.ID).FirstOrDefault();
+                List<BB_Proposal_Quote> lstQuotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID && (x.Family == "OPSHW" || x.Family == "PPHW")).ToList();
+                foreach (var quote in lstQuotes)
+                {
+                    double? TCP = db.BB_Equipamentos.Where(x => x.CodeRef == quote.CodeRef).Select(x => x.TCP).FirstOrDefault();
+
+                    var contador = db.BB_Proposal_Counters.Where(x => x.OSID == quote.ID).Count();
+
+                    if (TCP is null)
+                        TCP = 0;
+
+                    if (quote.IsUsed.GetValueOrDefault() == false)
+                        LeiDaCopiaPriada = (TCP * quote.Qty) + LeiDaCopiaPriada;
+
+                }
+
+
+
+
+                List<BB_Proposal_Overvaluation> o = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalID).ToList();
+                foreach (var quote in o)
+                {
+                    sobrevalorizacao += quote.Total;
+                }
+
+                List<BB_Proposal_Upturn> ret = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalID).ToList();
+                foreach (var quote1 in ret)
+                {
+                    retomas += quote1.Total;
+                }
+
+                string nLocadora = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalID).Select(x => x.NLocadora).FirstOrDefault();
+                prazoDiferenciado1 = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalID).FirstOrDefault();
+
+                if (prazoDiferenciado1 != null)
+                {
+                    a.ProposalObj.Draft.financing.DataExpiracao = prazoDiferenciado1.DataExpiracao;
+                }
+
+                if (a.ProposalObj.Draft.financing.diffTerm != null)
+                    a.ProposalObj.Draft.financing.diffTerm.Nlocadora = nLocadora;
+
+                a.ProposalObj.Draft.financingDetails = new FinancingDetails();
+                string contractType = db.BB_FinancingContractType.Where(x => x.ID == a.ProposalObj.Draft.financing.ContractTypeId).Select(x => x.Company).FirstOrDefault();
+                a.ProposalObj.Draft.financingDetails.ContractType = contractType;
+                string financingType = db.BB_FinancingType.Where(x => x.Code == a.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
+                a.ProposalObj.Draft.financingDetails.FinancingType = financingType;
+            }
+
+            a.ProposalObj.Draft.financing.DateApproval = a.ProposalObj.Draft.financing.DateApproval;
+
+            //sobrevalorizacao = (sobrevalorizacao + retomas) - retomas;
+
+            //a.ProposalObj.Draft.details.ValueTotal = a.ProposalObj.Draft.details.ValueTotal + LeiDaCopiaPriada.Value + sobrevalorizacao.Value;
+            a.ProposalObj.Draft.details.ValueTotal = a.ProposalObj.Draft.details.ValueTotal;
+
+            double? sobrevalorizacao1 = 0;
+            sobrevalorizacao1 = sobrevalorizacao - retomas;
+            //double? sobrevalorizacao = 0;
+            //sobrevalorizacao = a.ProposalObj.Draft.overvaluations.Select(x => x.Total).FirstOrDefault();
+            double? OPSHWvalorTotal = 0;
+            double? OPSHWUnti = 0;
+            //if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0 && sobrevalorizacao1 > 0)
+            //{
+            //    if (a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").Count() > 0)
+            //    {
+
+
+            //        OPSHWvalorTotal = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.TotalNetsale)).First();
+
+            //        OPSHWUnti = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.UnitDiscountPrice)).First();
+            //    }
+            //}
+
+            //if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0)
+            //{
+
+            //    a.ProposalObj.Draft.details.ValueTotal = 0;
+            //    foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
+            //    {
+            //        quote.TotalNetsale = sobrevalorizacao1 != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao1) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
+            //        quote.UnitDiscountPrice = Math.Round((quote.TotalNetsale / quote.Qty), 2);
+            //        //quote.TotalNetsale = sobrevalorizacao != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
+
+            //        a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
+            //    }
+            //    a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
+            //}
+            //else
+            //{
+            //    //a.ProposalObj.Draft.details.ValueTotal = 0;
+            //    //foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
+            //    //{
+            //    //    a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
+            //    //}
+            //    //a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
+            //}
+
+            using (var db1 = new BB_DB_DEV_LeaseDesk())
+            {
+                LD_Contrato c = db1.LD_Contrato.Where(x => x.ProposalID == proposalID).FirstOrDefault();
+                a.ProposalObj.NUS = db1.LD_Contrato_Facturacao.Where(x => x.LDID == c.ID).Select(x => x.NUS).FirstOrDefault();
+                a.ProposalObj.FolderDoc = c.Pasta;
+                a.ProposalObj.LeasedeskComentariosGC = c.ComentariosGC;
+                a.ProposalObj.LeasedeskComentarios = c.Comments;
+                a.ProposalObj.LeasedeskComentariosDevolucao = c.ComentariosDevolucao;
+                a.ProposalObj.LeasedeskStatus = db1.LD_Observacoes_Motivos.Where(x => x.ID == c.MotivoID).Select(x => x.Motive).FirstOrDefault();
+            }
+
+            ValoresTotaisRenda vt = new ValoresTotaisRenda();
+            vt.RendaFinanciada = 0;
+            vt.VVA = 0;
+            if (a.ProposalObj.Draft.financing.FinancingTypeCode != 0 && a.ProposalObj.Draft.financing.diffTerm != null)
+            {
+                vt.RendaFinanciada = (a.ProposalObj.Draft.financing.diffTerm.Rent != null ? a.ProposalObj.Draft.financing.diffTerm.Rent : 0);
+
+
+            }
+
+
+            ApprovedPrintingService activePS = null;
+            if (a.ProposalObj.Draft.printingServices2.ActivePrintingService != null)
+            {
+                activePS = a.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[a.ProposalObj.Draft.printingServices2.ActivePrintingService.Value - 1];
+                if (activePS != null && activePS.GlobalClickVVA != null)
+                {
+
+                    vt.VVA = Math.Round(activePS.GlobalClickVVA.PVP, 5);
+                    activePS.GlobalClickVVA.BWExcessPVP = Math.Round(activePS.GlobalClickVVA.BWExcessPVP, 5);
+                    activePS.GlobalClickVVA.CExcessPVP = Math.Round(activePS.GlobalClickVVA.CExcessPVP, 5);
+                    switch (activePS.GlobalClickVVA.RentBillingFrequency)
+                    {
+                        case 3:
+                            activePS.BWVolume = activePS.BWVolume * 3;
+                            activePS.CVolume = activePS.CVolume * 3;
+                            vt.VVA = activePS.GlobalClickVVA.PVP * 3;
+                            break;
+                        case 6:
+                            activePS.BWVolume = activePS.BWVolume * 6;
+                            activePS.CVolume = activePS.CVolume * 6;
+                            vt.VVA = activePS.GlobalClickVVA.PVP * 3;
+                            break;
+                        default: break;
+                    }
+
+                    //switch (activePS.GlobalClickVVA.RentBillingFrequency)
+                    //{
+                    //    case 3:
+                    //        activePS.GlobalClickVVA.PVP = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP * 3 : 0;
+                    //        break;
+                    //    case 6:
+                    //        activePS.GlobalClickVVA.PVP = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP * 6 : 0;
+                    //        break;
+                    //    default: break;
+                    //}
+                    //vt.VVA = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP : 0;
+                }
+
+                foreach (var machine in activePS.Machines)
+                {
+                    machine.ClickPriceBW = machine.ClickPriceBW.HasValue ? Math.Round(machine.ClickPriceBW.Value, 5) : (double?)0;
+                    machine.ClickPriceC = machine.ClickPriceC.HasValue ? Math.Round(machine.ClickPriceC.Value, 5) : (double?)0;
+
+                    machine.RequestedBWClickPrice = machine.RequestedBWClickPrice != null ? Math.Round((double)machine.RequestedBWClickPrice, 5) : 0;
+                    machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ? Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
+                }
+
+            }
+
+            if (retomas.Value > 0)
+            {
+                a.ProposalObj.Draft.details.ValueTotal -= retomas.Value;
+            }
+
+            //a.ProposalObj.Draft.details.ValueTotal = pr1 != null && pr1.SubTotal != null ? pr1.SubTotal.Value : a.ProposalObj.Draft.details.ValueTotal;
+
+            if (a.ProposalObj.Draft.baskets.rs_basket.Count() > 0 || a.ProposalObj.Draft.opsPacks.opsManage.Count() > 0)
+            {
+                vt.ServicosRecorentesMes = a.ProposalObj.Draft.baskets.rs_basket.Sum(x => x.MonthlyFee) + a.ProposalObj.Draft.opsPacks.opsManage.Sum(x => x.UnitDiscountPrice * x.Quantity);
+                vt.ServicosRecorentesMes = Math.Round((double)vt.ServicosRecorentesMes, 2);
+            }
+            else
+            {
+                vt.ServicosRecorentesMes = 0;
+            }
+            if (a.ProposalObj.Draft.baskets.rs_basket.Count() > 0 || a.ProposalObj.Draft.opsPacks.opsManage.Count() > 0)
+            {
+                vt.ServicosRecorentesTotal = a.ProposalObj.Draft.baskets.rs_basket.Sum(x => x.TotalNetsale) + a.ProposalObj.Draft.opsPacks.opsManage.Sum(x => x.UnitDiscountPrice * x.Quantity * x.TotalMonths);
+                vt.ServicosRecorentesTotal = Math.Round((double)vt.ServicosRecorentesTotal, 2);
+            }
+            else
+            {
+                vt.ServicosRecorentesTotal = 0;
+            }
+
+
+            vt.ConfiguracaoOneShotValor = Math.Round((double)(a.ProposalObj.Draft.details.ValueTotal - vt.ServicosRecorentesTotal), 2);
+
+            double fee = (activePS != null && activePS.Fee != null ? activePS.Fee : 0);
+
+            if (activePS != null && activePS.GlobalClickVVA != null)
+            {
+                switch (activePS.GlobalClickVVA.RentBillingFrequency)
+                {
+                    case 3:
+                        //vt.RendaFinanciada = vt.RendaFinanciada * 3;
+                        vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 3;
+                        fee = fee * 3;
+                        break;
+                    case 6:
+                        //vt.RendaFinanciada = vt.RendaFinanciada * 6;
+                        vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 6;
+                        fee = fee * 6;
+                        break;
+                    default: break;
+                }
+            }
+            if (activePS != null && activePS.GlobalClickNoVolume != null)
+            {
+                switch (activePS.GlobalClickNoVolume.PageBillingFrequency)
+                {
+                    case 3:
+                        //vt.RendaFinanciada = vt.RendaFinanciada * 3;
+                        vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 3;
+                        fee = fee * 3;
+                        break;
+                    case 6:
+                        //vt.RendaFinanciada = vt.RendaFinanciada * 6;
+                        vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 6;
+                        fee = fee * 6;
+                        break;
+                    default: break;
+                }
+            }
+
+
+
+
+
+            vt.LeiCopiaPrivada = LeiDaCopiaPriada;
+            vt.RendaTotal = Math.Round((double)(vt.VVA + vt.RendaFinanciada + vt.ServicosRecorentesMes + fee), 2);
+            if (prazoDiferenciado1 != null && prazoDiferenciado1.FinancingID == 6)
+            {
+                vt.RendaTotal = vt.RendaFinanciada;
+            }
+            vt.sobrevalorizacaoTotal = sobrevalorizacao != null && sobrevalorizacao.HasValue && sobrevalorizacao.Value != 0 ? sobrevalorizacao.Value : 0;
+            vt.retomasTotal = retomas != null && retomas.HasValue && retomas.Value != 0 ? retomas.Value : 0;
+            a.ProposalObj.valoretotais = vt;
+
+            LeaseDeskBLL lDBll = new LeaseDeskBLL();
+
+            ConditionsTotais condPvp = lDBll.FinancingDetailsPerMachine(proposalID);
+
+            a.ProposalObj.ConditionsPvpPerMachine = condPvp;
+
+            //foreach(var manage in a.ProposalObj.Draft.opsPacks.opsManage)
+            //{
+            //    manage.UnitDiscountPrice = Math.Round((double)manage.UnitDiscountPrice, 3);
+            //}
+
+            List<HW_SW> configuratorInfo = GetGroupedConfigurator(proposalID);
+
+            a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
+            string delegation = "";
+            if (cliente != null)
+            {
+                switch (cliente.Territory.Substring(4, 4))
+                {
+                    case "5241":
+                        delegation = "Barcelona";
+                        break;
+                    case "5203":
+                        delegation = "Sales Area 3";
+                        break;
+                    case "5243":
+                        delegation = "Algaciras";
+                        break;
+                    case "5200":
+                        delegation = "Sales Area 0";
+                        break;
+                    case "5248":
+                        delegation = "Sevilla";
+                        break;
+                    case "5245":
+                        delegation = "Cádiz";
+                        break;
+                    case "5246":
+                        delegation = "Málaga";
+                        break;
+                    case "5242":
+                        delegation = "Valencia";
+                        break;
+                    case "5247":
+                        delegation = "Santander";
+                        break;
+                    case "5204":
+                        delegation = "Sales Area 4";
+                        break;
+                    case "5220":
+                        delegation = "Dealer Service";
+                        break;
+                    case "5201":
+                        delegation = "Sales Area 1";
+                        break;
+                    case "5202":
+                        delegation = "Sales Area 2";
+                        break;
+                    case "5244":
+                        delegation = "Bilbao";
+                        break;
+                }
+            }
+
+            string office = "";
+            if (cliente != null)
+            {
+                switch (cliente.Territory.Substring(8, 3))
+                {
+                    case "543":
+                        office = "Production Printing";
+                        break;
+                    case "5VT":
+                        office = "Inside Sales";
+                        break;
+                    case "521":
+                        office = "PREMIUM";
+                        break;
+                    case "522":
+                        office = "ADVANCED";
+                        break;
+                    case "523":
+                        office = "PARTNER";
+                        break;
+                    case "540":
+                        office = "Regular Customers";
+                        break;
+                    case "520":
+                        office = "ELITE";
+                        break;
+                    case "544":
+                        office = "Industrial Printing";
+                        break;
+                    case "541":
+                        office = "Major Accounts";
+                        break;
+                    case "542":
+                        office = "Production Printing";
+                        break;
+
+                }
+            }
+
+
+            a.ProposalObj.Draft.client.SalesGroup = cliente != null ? cliente.Territory.Substring(4, 4) + " - " + delegation : "-";
+            a.ProposalObj.Draft.client.SalesOffice = cliente != null ? cliente.Territory.Substring(8, 3) + " - " + office : "-";
+
+            a.ProposalObj.SAPNumber = pr1.Pedido_SAP == null ? "" : pr1.Pedido_SAP.Value.ToString();
+            a.ProposalObj.IsClientPublicSector = (bool)pCliente.IsPublicSector;
+
+            return a.ProposalObj;
+        }
+
+        public List<HW_SW> GetGroupedConfigurator(int? proposalID)
+        {
+            List<HW_SW> configurator = new List<HW_SW>();
+
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    //List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
+                    List<BB_Proposal_Quote_RS> pp_quote_rs = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+                    List<BB_Proposal_OPSManage> opsManage_lst = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
+
+                    List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.ToList();
+
+                    HashSet<string> equipamentosCodeRefs = equipamentos
+                    .Select(e => e.CodeRef)
+                    .ToHashSet();
+
+                    HashSet<int> locations_IDX = db.BB_Proposal_DeliveryLocation
+                        .Where(x => x.ProposalID == proposalID && x.AccountType == "Ship To")
+                        .Select(x => x.IDX)
+                        .ToHashSet(); // Melhor performance do que List para Contains()
+
+                    // todos os ItemDoBaskets que sejam Ship To
+                    List<BB_Proposal_ItemDoBasket> itemsDoBasket_lst = db.BB_Proposal_ItemDoBasket
+                        .Where(x => locations_IDX.Contains((int)x.DeliveryLocationID))
+                        .ToList();
+
+                    List<BB_Proposal_DeliveryLocationResumoModel> DeliveriesSummary_lst = PontosDeEnvioResumo(proposalID);
+
+                    foreach (var item in itemsDoBasket_lst)
+                    {
+                        HW_SW element = new HW_SW();
+
+                        // se o codeRef do ItemDoBasket existir dentro dos equipamentos
+                        // significa que é uma máquina e entao, vou criar um HW_SW
+                        if (equipamentosCodeRefs.Contains(item.CodeRef) || item.Description.Contains("MAIN MATERIAL"))
+                        {
+                            element.Family = item.Family;
+                            element.CodeRef = item.CodeRef;
+                            element.Description = item.Description;
+                            element.Group = item.Group;
+                            element.UnitDiscountPrice = (double)item.UnitDiscountPrice;
+                            element.Qty = (int)item.Qty;
+                            element.TotalNetsale = (double)item.TotalNetsale;
+                            element.IsUsed = (bool)item.IsUsedMachine;
+                            element.GroupPrice = item.UnitDiscountPrice;
+                            element.Accessories = new List<OsBasket>();
+                            element.DeliverySummary = DeliveriesSummary_lst.Where(x => x.Group == element.Group).FirstOrDefault();
+                            element.SerialNumber = item.SerialNumber != null ? item.SerialNumber : "-";
+                            configurator.Add(element);
+                        }
+                    };
+
+
+                    foreach (var configMissingItems in configurator)
+                    {
+                        // Lista dos ACESSORIOS de apenas 1 grupo em especifico
+                        List<BB_Proposal_ItemDoBasket> groupListFiltered = itemsDoBasket_lst.Where(g => g.Group == configMissingItems.Group
+                                                                                                        && g.CodeRef != configMissingItems.CodeRef
+                                                                                                        && g.Description != "MAIN MATERIAL"
+                                                                                             ).ToList();
+
+                        foreach (var item in groupListFiltered)
+                        {
+                            // Acessórios
+                            HW_SW HW_SW_GroupX = configurator.Where(x => x.Group == item.Group).FirstOrDefault();
+
+                            bool isRS = pp_quote_rs.Any(x => x.CodeRef == item.CodeRef);
+
+                            bool isOPSPackage = opsManage_lst.Any(x => x.CodeRef == item.CodeRef && x.UnitDiscountPrice != 0);
+
+                            // SERVICO RECURRENTE
+                            if (isRS == true)
+                            {
+                                BB_Proposal_Quote_RS quoteRS = pp_quote_rs.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                OsBasket basketItem = new OsBasket
+                                {
+                                    CodeRef = item.CodeRef,
+                                    Description = item.Description,
+                                    Family = item.Family,
+                                    UnitDiscountPrice = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
+                                    Qty = (int)item.Qty,
+                                    TotalNetsale = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
+                                    Group = item.Group,
+                                    IsUsed = (bool)item.IsUsedMachine,
+                                    SerialNumber = "-"
+                                };
+
+
+                                HW_SW_GroupX.GroupPrice += basketItem.TotalNetsale;
+                                HW_SW_GroupX.Accessories.Add(basketItem);
+                            }
+                            // OPS PACKAGE
+                            else if (isOPSPackage)
+                            {
+                                BB_Proposal_OPSManage opsManage = opsManage_lst.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
+                                OsBasket basketItem = new OsBasket
+                                {
+                                    CodeRef = item.CodeRef,
+                                    Description = item.Description,
+                                    Family = item.Family,
+                                    UnitDiscountPrice = (double)item.UnitDiscountPrice,
+                                    Qty = (int)item.Qty,
+                                    TotalNetsale = Math.Round((double)item.UnitDiscountPrice * (double)opsManage.TotalMonths),
+                                    Group = item.Group,
+                                    IsUsed = (bool)item.IsUsedMachine,
+                                    SerialNumber = "-"
+                                };
+
+
+                                HW_SW_GroupX.GroupPrice += Math.Round((double)item.UnitDiscountPrice * (double)opsManage.TotalMonths);
+                                HW_SW_GroupX.Accessories.Add(basketItem);
+                            }
+                            // PROPOSAL QUOTE
+                            else
+                            {
+                                OsBasket basketItem = new OsBasket
+                                {
+                                    CodeRef = item.CodeRef,
+                                    Description = item.Description,
+                                    Family = item.Family,
+                                    UnitDiscountPrice = (double)item.UnitDiscountPrice,
+                                    Qty = (int)item.Qty,
+                                    TotalNetsale = (double)item.TotalNetsale,
+                                    Group = item.Group,
+                                    IsUsed = (bool)item.IsUsedMachine,
+                                    SerialNumber = "-"
+                                };
+
+                                HW_SW_GroupX.GroupPrice += basketItem.UnitDiscountPrice;
+                                HW_SW_GroupX.Accessories.Add(basketItem);
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+
+            return configurator;
+        }
+
+        public List<BB_Proposal_DeliveryLocationResumoModel> PontosDeEnvioResumo(int? proposalID)
+        {
+            List<BB_Proposal_DeliveryLocation> lstBB_Proposal_DeliveryLocation = null;
+            List<BB_Proposal_DeliveryLocationResumoModel> lstBB_Proposal_DeliveryLocationResumoModel = null;
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    try
+                    {
+                        lstBB_Proposal_DeliveryLocation = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
+                        lstBB_Proposal_DeliveryLocationResumoModel = new List<BB_Proposal_DeliveryLocationResumoModel>();
+                        foreach (var i in lstBB_Proposal_DeliveryLocation)
+                        {
+                            Dictionary<int?, List<BB_Proposal_ItemDoBasket>> lstBB_Proposal_ItemDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == i.IDX && x.Group != null).GroupBy(x => x.Group).ToDictionary(x => x.Key, x => x.ToList());
+                            int parseID = Convert.ToInt32(i.ID);
+                            BB_LocaisEnvio currentLocal = db.BB_LocaisEnvio.Where(x => x.ID == parseID).FirstOrDefault();
+                            BB_Proposal_DL_ClientContacts contact = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == i.DeliveryContact).FirstOrDefault();
+
+                            foreach (KeyValuePair<int?, List<BB_Proposal_ItemDoBasket>> p in lstBB_Proposal_ItemDoBasket)
+                            {
+                                foreach (var it in p.Value)
+                                {
+
+                                    BB_Equipamentos isEquip = db.BB_Equipamentos.Where(x => x.CodeRef == it.CodeRef).FirstOrDefault();
+                                    if (isEquip != null || it.Description.Contains("MAIN MATERIAL"))
+                                    {
+                                        BB_Proposal_DeliveryLocationResumoModel resumo = new BB_Proposal_DeliveryLocationResumoModel();
+                                        resumo.Group = p.Key;
+                                        resumo.Adress1 = currentLocal.IsNewAddress == true ? currentLocal.RoadType + " " + currentLocal.RoadName + " " + currentLocal.RoadNumber : currentLocal.Adress1;
+                                        resumo.Adress2 = currentLocal.Adress2;
+                                        resumo.PostalCode = i.PostalCode;
+                                        resumo.City = i.City;
+                                        resumo.Contacto = contact != null ? contact.Name + " " + contact.Surname : "";
+                                        resumo.Phone = contact != null ? contact.Movil.ToString() : "";
+                                        resumo.Email = contact != null ? contact.Email : "";
+                                        resumo.AddressType = i.AccountType;
+                                        resumo.CodeRef = it.CodeRef;
+                                        resumo.Qty = it.Qty;
+                                        resumo.Description = it.Description;
+                                        resumo.IsNewAddress = currentLocal.IsNewAddress == null ? false : currentLocal.IsNewAddress;
+                                        resumo.Department = i.Department;
+                                        resumo.Floor = i.Floor;
+                                        resumo.Building = i.Building;
+                                        resumo.Room = i.Room;
+                                        resumo.Schedule = i.Schedule;
+                                        resumo.DeliveryDate = i.DeliveryDate;
+                                        resumo.IsUsedMachine = (bool)it.IsUsedMachine ? "Si" : "No";
+                                        resumo.SerialNumber = it.SerialNumber != null ? it.SerialNumber : "-";
+                                        resumo.Comments = i.Comments != null || i.Comments != "" ? i.Comments : "-";
+                                        lstBB_Proposal_DeliveryLocationResumoModel.Add(resumo);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return lstBB_Proposal_DeliveryLocationResumoModel;
+        }
+
+
     }
+
+   
 }

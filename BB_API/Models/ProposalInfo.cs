@@ -193,6 +193,21 @@ namespace WebApplication1.Models
 
     }
 
+    public class HW_SW
+    {
+        public string Family { get; set; }
+        public string CodeRef { get; set; }
+        public string Description { get; set; }
+        public int? Group { get; set; }
+        public double UnitDiscountPrice { get; set; }
+        public int Qty { get; set; }
+        public double TotalNetsale { get; set; }
+        public bool IsUsed { get; set; }
+        public List<OsBasket> Accessories { get; set; }
+        public double? GroupPrice { get; set; }
+        public BB_Proposal_DeliveryLocationResumoModel DeliverySummary { get; set; }
+        public string SerialNumber { get; set; }
+    }
     public class OPSPacks
     {
         public OPSPacks()
