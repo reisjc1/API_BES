@@ -53,6 +53,7 @@
           <Property Name="USUARIO_Sharepoint_Email" Type="nvarchar(max)" />
           <Property Name="USUARIO_Sharepoint_Nome" Type="nvarchar(max)" />
           <Property Name="AreaComercial" Type="nvarchar(max)" />
+          <Property Name="Territory" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="KM_UserRole">
           <Key>
@@ -134,6 +135,7 @@
           <Property Name="USUARIO_Sharepoint_Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="USUARIO_Sharepoint_Nome" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="AreaComercial" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Territory" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -171,6 +173,7 @@
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="masterModel.AspNetUsers">
               <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Territory" ColumnName="Territory" />
                 <ScalarProperty Name="AreaComercial" ColumnName="AreaComercial" />
                 <ScalarProperty Name="USUARIO_Sharepoint_Nome" ColumnName="USUARIO_Sharepoint_Nome" />
                 <ScalarProperty Name="USUARIO_Sharepoint_Email" ColumnName="USUARIO_Sharepoint_Email" />

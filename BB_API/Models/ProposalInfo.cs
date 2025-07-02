@@ -293,6 +293,7 @@ namespace WebApplication1.Models
         public string City { get; set; }
         public string SalesGroup { get; set; }
         public string SalesOffice { get; set; }
+        public string GestorCuenta { get; set; }
 
     }
     public class Details
