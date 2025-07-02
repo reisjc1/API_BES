@@ -4490,15 +4490,15 @@ namespace WebApplication1.Controllers
                     //WORKSHEET - BB
                     var wsBB = pck.Workbook.Worksheets["BB"];
 
-                    wsBB.Cells["B3"].Value = p.Draft.client.Name;
+                    wsBB.Cells["B6"].Value = p.Draft.client.Name;
 
-                    wsBB.Cells["B6"].Value = p.Draft.client.accountnumber;
+                    wsBB.Cells["B9"].Value = p.Draft.client.accountnumber;
 
-                    wsBB.Cells["D6"].Value = p.Draft.client.NIF;
+                    wsBB.Cells["D9"].Value = p.Draft.client.NIF;
 
-                    wsBB.Cells["F6"].Value = p.Draft.client.isPublicSector.GetValueOrDefault() ? "Publico" : "Privado";
+                    wsBB.Cells["F9"].Value = p.Draft.client.isPublicSector.GetValueOrDefault() ? "Publico" : "Privado";
 
-                    wsBB.Cells["H6"].Value = p.Draft.client.isGMA.GetValueOrDefault() ? "Si" : "No aplicable";
+                    wsBB.Cells["H9"].Value = p.Draft.client.isGMA.GetValueOrDefault() ? "Si" : "No aplicable";
 
                     string _TipoNegocio = "";
                     switch (p.Draft.details.CampaignID)
@@ -4514,7 +4514,7 @@ namespace WebApplication1.Controllers
                         default:
                             _TipoNegocio = "Negocio Tradicional"; break;
                     }
-                    wsBB.Cells["B9"].Value = _TipoNegocio;
+                    wsBB.Cells["B12"].Value = _TipoNegocio;
 
 
                     bool isUsed = false;
@@ -4542,23 +4542,23 @@ namespace WebApplication1.Controllers
                         }
                     }
 
-                    wsBB.Cells["D9"].Value = isHybrid;
+                    wsBB.Cells["D12"].Value = isHybrid;
 
 
-                    wsBB.Cells["F9"].Value = p.Draft.details.CRM_QUOTE_ID;
+                    wsBB.Cells["F12"].Value = p.Draft.details.CRM_QUOTE_ID;
 
                     BB_Proposal pr1 = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
 
-                    wsBB.Cells["H9"].Value = pr1.Pedido_SAP != null ? pr1.Pedido_SAP.GetValueOrDefault() : 0;
+                    wsBB.Cells["H12"].Value = pr1.Pedido_SAP != null ? pr1.Pedido_SAP.GetValueOrDefault() : 0;
 
 
-                    wsBB.Cells["B12"].Value = p.Draft.details.CreatedBy;
+                    wsBB.Cells["B15"].Value = p.Draft.details.CreatedBy;
 
-                    wsBB.Cells["D12"].Value = _Cliente.Branch_Id;
+                    wsBB.Cells["D15"].Value = _Cliente.Branch_Id;
 
-                    wsBB.Cells["F12"].Value = _Cliente.Erpsalesgroupid;
+                    wsBB.Cells["F15"].Value = _Cliente.Erpsalesgroupid;
 
-                    wsBB.Cells["B16"].Value = p.Draft.financingDetails.FinancingType != null && p.Draft.financingDetails.FinancingType != "" ? p.Draft.financingDetails.FinancingType : "No aplicable";
+                    wsBB.Cells["B19"].Value = p.Draft.financingDetails.FinancingType != null && p.Draft.financingDetails.FinancingType != "" ? p.Draft.financingDetails.FinancingType : "No aplicable";
 
                     string _MedotodPagamento = "";
 
@@ -4577,18 +4577,18 @@ namespace WebApplication1.Controllers
 
                     }
 
-                    wsBB.Cells["D16"].Value = _MedotodPagamento;
+                    wsBB.Cells["D19"].Value = _MedotodPagamento;
 
-                    wsBB.Cells["F16"].Value = p.Draft.financing.PaymentAfter != 0 ? p.Draft.financing.PaymentAfter + " días después de la fecha de la factura" : "No aplicable";
+                    wsBB.Cells["F19"].Value = p.Draft.financing.PaymentAfter != 0 ? p.Draft.financing.PaymentAfter + " días después de la fecha de la factura" : "No aplicable";
 
-                    wsBB.Cells["H16"].Value = p.Draft.financing.ContractTypeId != 0 && p.Draft.financingDetails.ContractType != null && p.Draft.financingDetails.ContractType != "" ? p.Draft.financingDetails.ContractType : "No aplicable";
+                    wsBB.Cells["H19"].Value = p.Draft.financing.ContractTypeId != 0 && p.Draft.financingDetails.ContractType != null && p.Draft.financingDetails.ContractType != "" ? p.Draft.financingDetails.ContractType : "No aplicable";
 
 
-                    wsBB.Cells["B19"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AgreementNumber != null && p.Draft.financing.AgreementNumber != "" ? p.Draft.financing.AgreementNumber : "No aplicable";
+                    wsBB.Cells["B22"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AgreementNumber != null && p.Draft.financing.AgreementNumber != "" ? p.Draft.financing.AgreementNumber : "No aplicable";
 
-                    wsBB.Cells["D19"].Value = p.Draft.financing != null && p.Draft.financing.DateApproval != null ? p.Draft.financing.DateApproval.Value.ToString("dd/MM/yyyy") : "No aplicable";
+                    wsBB.Cells["D22"].Value = p.Draft.financing != null && p.Draft.financing.DateApproval != null ? p.Draft.financing.DateApproval.Value.ToString("dd/MM/yyyy") : "No aplicable";
 
-                    wsBB.Cells["B23"].Value = p.Draft.financing.MaintanceContractDuration != null ? p.Draft.financing.MaintanceContractDuration.ToString() : "0";
+                    wsBB.Cells["B26"].Value = p.Draft.financing.MaintanceContractDuration != null ? p.Draft.financing.MaintanceContractDuration.ToString() : "0";
 
 
                     string _MedotodPagamento1 = "";
@@ -4610,9 +4610,9 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["D23"].Value = _MedotodPagamento1;
 
-                    wsBB.Cells["F23"].Value = p.Draft.financing.MaintanceContractPaymentAfterText != null && p.Draft.financing.MaintanceContractPaymentAfterText != "" ? p.Draft.financing.MaintanceContractPaymentAfterText : "No aplicable";
+                    wsBB.Cells["F26"].Value = p.Draft.financing.MaintanceContractPaymentAfterText != null && p.Draft.financing.MaintanceContractPaymentAfterText != "" ? p.Draft.financing.MaintanceContractPaymentAfterText : "No aplicable";
 
-                    wsBB.Cells["H23"].Value = p.Draft.financing.MaintanceContractPaymentTerms != null && p.Draft.financing.MaintanceContractPaymentTerms != "" ? p.Draft.financing.MaintanceContractPaymentTerms : "No aplicable";
+                    wsBB.Cells["H26"].Value = p.Draft.financing.MaintanceContractPaymentTerms != null && p.Draft.financing.MaintanceContractPaymentTerms != "" ? p.Draft.financing.MaintanceContractPaymentTerms : "No aplicable";
 
                     double? _TotalBRUTO = 0;
 
@@ -4627,7 +4627,7 @@ namespace WebApplication1.Controllers
 
                     }
 
-                    wsBB.Cells["B27"].Value = _TotalBRUTO.ToString() + " €";
+                    wsBB.Cells["B30"].Value = _TotalBRUTO.ToString() + " €";
 
                     double? TotalValorBrutoconLPI = 0;
                     if (p.valoretotais.ConfiguracaoOneShotValor != 0 && p.Draft.overvaluations != null && p.Draft.overvaluations.Count > 0 && p.valoretotais.LeiCopiaPrivada != 0)
@@ -4641,7 +4641,7 @@ namespace WebApplication1.Controllers
 
                     }
 
-                    wsBB.Cells["D27"].Value = TotalValorBrutoconLPI.ToString() + " €"; ;
+                    wsBB.Cells["D30"].Value = TotalValorBrutoconLPI.ToString() + " €"; ;
 
                     wsBB.Cells["B30"].Value = p.Draft.details.ValueTotal.ToString() + " €"; ;
 
@@ -4658,12 +4658,12 @@ namespace WebApplication1.Controllers
 
                     }
 
-                    wsBB.Cells["D30"].Value = _ProdutosFinanciados.ToString() + " €"; ;
+                    wsBB.Cells["D33"].Value = _ProdutosFinanciados.ToString() + " €"; ;
 
 
-                    wsBB.Cells["F30"].Value = p.valoretotais.ServicosRecorentesTotal != 0 ? p.valoretotais.ServicosRecorentesTotal : 0;
+                    wsBB.Cells["F33"].Value = p.valoretotais.ServicosRecorentesTotal != 0 ? p.valoretotais.ServicosRecorentesTotal : 0;
 
-                    wsBB.Cells["H30"].Value = p.valoretotais.LeiCopiaPrivada != 0 ? p.valoretotais.LeiCopiaPrivada : 0;
+                    wsBB.Cells["H33"].Value = p.valoretotais.LeiCopiaPrivada != 0 ? p.valoretotais.LeiCopiaPrivada : 0;
 
 
                     double? TotalCuotaCliente = p.Draft.financing.MonthlyIncome;
@@ -4673,19 +4673,19 @@ namespace WebApplication1.Controllers
                         TotalCuotaCliente += activePS.GlobalClickVVA.PVP;
                     }
 
-                    wsBB.Cells["B33"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? TotalCuotaCliente.ToString() + " €" : 0.ToString() + " €"; ;
+                    wsBB.Cells["B36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? TotalCuotaCliente.ToString() + " €" : 0.ToString() + " €"; ;
 
-                    wsBB.Cells["D33"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : 0.ToString() + " €"; ;
+                    wsBB.Cells["D36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : 0.ToString() + " €"; ;
 
-                    wsBB.Cells["F33"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountNotFinanced != 0 ? p.Draft.financing.AmountNotFinanced.ToString() + " €" : 0.ToString() + " €"; ;
+                    wsBB.Cells["F36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountNotFinanced != 0 ? p.Draft.financing.AmountNotFinanced.ToString() + " €" : 0.ToString() + " €"; ;
 
-                    wsBB.Cells["H33"].Value = activePS != null && activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP.ToString() + " €" : 0.ToString() + " €";
+                    wsBB.Cells["H36"].Value = activePS != null && activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP.ToString() + " €" : 0.ToString() + " €";
 
-                    wsBB.Cells["B36"].Value = p.Draft.overvaluations != null && p.Draft.overvaluations.Count > 0 ? p.valoretotais.sobrevalorizacaoTotal.ToString() + " €" : 0.ToString() + " €";
+                    wsBB.Cells["B39"].Value = p.Draft.overvaluations != null && p.Draft.overvaluations.Count > 0 ? p.valoretotais.sobrevalorizacaoTotal.ToString() + " €" : 0.ToString() + " €";
 
-                    wsBB.Cells["D36"].Value = p.Draft.upturns != null && p.Draft.upturns.Count > 0 ? p.valoretotais.retomasTotal.ToString() + " €" : 0.ToString() + " €";
+                    wsBB.Cells["D39"].Value = p.Draft.upturns != null && p.Draft.upturns.Count > 0 ? p.valoretotais.retomasTotal.ToString() + " €" : 0.ToString() + " €";
 
-                    wsBB.Cells["B39"].Value = p.LeasedeskComentariosGC != null && p.LeasedeskComentariosGC != "" ? p.LeasedeskComentariosGC : "No aplicable";
+                    wsBB.Cells["B42"].Value = p.LeasedeskComentariosGC != null && p.LeasedeskComentariosGC != "" ? p.LeasedeskComentariosGC : "No aplicable";
                     //KOnica Representante
                     //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
                     //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
