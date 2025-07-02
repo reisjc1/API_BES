@@ -4435,6 +4435,7 @@ namespace WebApplication1.Controllers
                     //WORKSHEET - ORDER CONTENTS
                     var wsORDERCONTENTS = pck.Workbook.Worksheets["ORDER CONTENTS"];
                     int onshotIDX = 4;
+                    double? _totalNetSale = 0;
                     foreach (var item in p.Draft.baskets.os_basket)
                     {
                         wsORDERCONTENTS.Cells["B" + onshotIDX].Value = item.Family;
@@ -4450,7 +4451,13 @@ namespace WebApplication1.Controllers
                         wsORDERCONTENTS.Cells["L" + onshotIDX].Value = "0";
                         wsORDERCONTENTS.Cells["M" + onshotIDX].Value = item.TotalNetsale;
                         onshotIDX++;
+                        _totalNetSale += item.TotalNetsale;
                     }
+
+                    onshotIDX++;
+
+                    wsORDERCONTENTS.Cells["I" + onshotIDX].Value = "Total NetSale:";
+                    wsORDERCONTENTS.Cells["J" + onshotIDX].Value = _totalNetSale.ToString() + " €";
 
                     //TOTAIS por linha
 
@@ -4489,6 +4496,10 @@ namespace WebApplication1.Controllers
 
                     //WORKSHEET - BB
                     var wsBB = pck.Workbook.Worksheets["BB"];
+
+                    wsBB.Cells["B3"].Value = p.Draft.details.ID;
+
+                    wsBB.Cells["D3"].Value = p.Draft.details.ID;
 
                     wsBB.Cells["B6"].Value = p.Draft.client.Name;
 
@@ -4552,7 +4563,25 @@ namespace WebApplication1.Controllers
                     wsBB.Cells["H12"].Value = pr1.Pedido_SAP != null ? pr1.Pedido_SAP.GetValueOrDefault() : 0;
 
 
-                    wsBB.Cells["B15"].Value = p.Draft.details.CreatedBy;
+                    string gestor = "";
+                    using (var dbMaster = new masterEntities())
+                    {
+
+                        AspNetUsers user = dbMaster.AspNetUsers.Where(x => x.Territory == cliente.Territory).FirstOrDefault();
+
+                        if (user != null)
+                        {
+                            gestor = user.DisplayName;
+                        }
+                        else
+                        {
+                            gestor = cliente.Owner;
+                        }
+
+                    }
+
+
+                    wsBB.Cells["B15"].Value = gestor;
 
                     wsBB.Cells["D15"].Value = _Cliente.Branch_Id;
 
@@ -4726,6 +4755,119 @@ namespace WebApplication1.Controllers
                     }
 
 
+                    //WORKSHEET - INVOICES
+                    var wsINVOICES = pck.Workbook.Worksheets["INVOICES"];
+                    List<BB_Proposal_DeliveryLocation> bb_pp_dl_lst = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
+
+
+                    List<DL_Table_Info> DL_Table_Info_Lst = new List<DL_Table_Info>();
+
+                    foreach (var deliverLocation in bb_pp_dl_lst)
+                    {
+                        int? deliverLocationID = Int32.Parse(deliverLocation.ID);
+                        BB_LocaisEnvio bb_local_envio = db.BB_LocaisEnvio.Where(x => x.ID == deliverLocationID).FirstOrDefault();
+                        DL_Table_Info dl_info = new DL_Table_Info();
+
+                        dl_info.ProposalID = (int)proposalID;
+
+                        dl_info.Tipo = deliverLocation.AccountType;
+
+                        if (bb_local_envio.Adress1 != null && bb_local_envio.Adress1 != "")
+                        {
+                            dl_info.DeliveryLocation = bb_local_envio.Adress1;
+                        }
+                        else
+                        {
+                            dl_info.DeliveryLocation = deliverLocation.Adress1;
+                        }
+                        dl_info.PostalCode = deliverLocation.PostalCode + " " + deliverLocation.City;
+                        dl_info.IDX = deliverLocation.IDX;
+
+                        BB_Clientes bb_cliente = db.BB_Clientes.Where(x => x.accountnumber == bb_local_envio.AccountNumber).FirstOrDefault();
+                        if (bb_local_envio != null)
+                        {
+                            dl_info.CIF = bb_local_envio.NIF_CIF;
+                            //dl_info.SAP_Nr = deliverLocation.SAPCustomerNr == null ? bb_local_envio.AccountNumber : deliverLocation.SAPCustomerNr;
+                            dl_info.SAP_Nr = deliverLocation.SAPCustomerNr;
+                            dl_info.CompanyName = bb_local_envio.BusinessCode == null ? bb_local_envio.NomeCliente : bb_local_envio.BusinessCode;
+                            dl_info.SAP_Company = bb_local_envio.BusinessCode == null ? bb_local_envio.NomeCliente : bb_local_envio.BusinessCode;
+                            dl_info.Address = bb_local_envio.Adress1;
+                            dl_info.IsNewAddress = bb_local_envio.IsNewAddress == null ? false : bb_local_envio.IsNewAddress;
+                        }
+
+                        BB_Proposal_DL_ClientContacts bb_dl_contact = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliverLocation.DeliveryContact).FirstOrDefault();
+
+                        if (bb_dl_contact != null)
+                        {
+                            dl_info.Contacto = bb_dl_contact.Name + bb_dl_contact.Surname;
+                            dl_info.Phone = bb_dl_contact.Movil.ToString();
+                            dl_info.Email = bb_dl_contact.Email;
+                        }
+
+                        //BB_Proposal_ItemDoBasket bB_Proposal_ItemDoBasket = dbX.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliverLocation.IDX).
+                        //dl_info.Description = it.Description;
+                        dl_info.Department = deliverLocation.Department;
+                        dl_info.Floor = deliverLocation.Floor;
+                        dl_info.Building = deliverLocation.Building;
+                        dl_info.Room = deliverLocation.Room;
+                        dl_info.Schedule = deliverLocation.Schedule;
+                        dl_info.DeliveryDate = deliverLocation.DeliveryDate;
+
+                        DL_Table_Info_Lst.Add(dl_info);
+
+                        if (deliverLocation.AccountType == "Bill To")
+                        {
+                            if (deliverLocation.BillReceiver != null && deliverLocation.Payer != null)
+                            {
+                                if (!deliverLocation.BillReceiver.Value && deliverLocation.Payer.Value)
+                                {
+                                    dl_info.Tipo = "Payer";
+                                }
+                                else if (deliverLocation.BillReceiver.Value && deliverLocation.Payer.Value)
+                                {
+                                    DL_Table_Info dl_Info_Payer = new DL_Table_Info
+                                    {
+                                        ProposalID = dl_info.ProposalID,
+                                        Address = dl_info.Address,
+                                        CIF = dl_info.CIF,
+                                        CompanyName = dl_info.CompanyName,
+                                        Contacto = dl_info.Contacto,
+                                        DeliveryLocation = dl_info.DeliveryLocation,
+                                        Email = dl_info.Email,
+                                        IDX = dl_info.IDX,
+                                        Phone = dl_info.Phone,
+                                        SAP_Company = dl_info.SAP_Company,
+                                        SAP_Nr = dl_info.SAP_Nr,
+                                        PostalCode = dl_info.PostalCode,
+                                        Tipo = "Payer"
+                                    };
+
+                                    DL_Table_Info_Lst.Add(dl_Info_Payer);
+                                }
+                            }
+                        }
+
+                    }
+                    idxPontoEnvio = 2;
+                    foreach (var item in DL_Table_Info_Lst)
+                    {
+                        wsINVOICES.Cells["A" + idxPontoEnvio].Value = item.IsNewAddress.GetValueOrDefault()? "Si" : "NO" ;
+                        wsINVOICES.Cells["B" + idxPontoEnvio].Value = item.SAP_Company;
+                        wsINVOICES.Cells["C" + idxPontoEnvio].Value = item.CIF;
+                        wsINVOICES.Cells["D" + idxPontoEnvio].Value = item.DeliveryLocation;
+                        wsINVOICES.Cells["E" + idxPontoEnvio].Value = item.PostalCode;
+                        wsINVOICES.Cells["F" + idxPontoEnvio].Value = item.Tipo;
+                        wsINVOICES.Cells["G" + idxPontoEnvio].Value = item.SAP_Nr;
+                        wsINVOICES.Cells["H" + idxPontoEnvio].Value = item.Contacto;
+                        wsINVOICES.Cells["I" + idxPontoEnvio].Value = item.Phone;
+                        wsINVOICES.Cells["J" + idxPontoEnvio].Value = item.Email;
+
+
+                        idxPontoEnvio++;
+
+                    }
+
+
                     //WORKSHEET - PUNTOS DE ENVIO
                     var wsFINANCIAL_INFORMATION = pck.Workbook.Worksheets["FINANCIAL INFORMATION"];
 
@@ -4799,12 +4941,21 @@ namespace WebApplication1.Controllers
                         foreach (var itemConditions in _ItemMachine.Conditions)
                         {
                             wsFINANCIAL_INFORMATION.Cells["A" + idxMachine].Value = itemConditions.ConditionCode;
-                            wsFINANCIAL_INFORMATION.Cells["B" + idxMachine].Value = itemConditions.PVP;
+                            wsFINANCIAL_INFORMATION.Cells["B" + idxMachine].Value = itemConditions.PVP.ToString() + " €";
                             idxMachine++;
                         }
 
                         idxMachine++; idxMachine++;
                     }
+
+                    int idxTotalCondition = 19;
+                    foreach(var item1 in _ConditionsTotais.ConditionsTotal)
+                    {
+                        wsFINANCIAL_INFORMATION.Cells["D" + idxTotalCondition].Value = item1.ConditionCode;
+                        wsFINANCIAL_INFORMATION.Cells["E" + idxTotalCondition].Value = item1.PVP.ToString() + " €"; 
+                        idxTotalCondition++;
+                    }
+
 
                     //WORKSHEET - SERVICE
                     var wsSERVICE = pck.Workbook.Worksheets["SERVICE"];
@@ -4814,23 +4965,39 @@ namespace WebApplication1.Controllers
                     wsSERVICE.Cells["C4"].Value = activePS != null && activePS.SEObservations != null ? activePS.SEObservations.ToString() : "No Aplicable";
                     wsSERVICE.Cells["C5"].Value = activePS != null && activePS.SCObservations != null ? activePS.SCObservations.ToString() : "No Aplicable";
 
-                    
+
+                    wsSERVICE.Cells["C5"].Value = pr1.IsMultipleContract.GetValueOrDefault() == true ? "Agrupado" : "Individual";
+
 
                     if (activePS != null && activePS.GlobalClickVVA != null)
                     {
-                        wsSERVICE.Cells["C7"].Value = "Volumen Incluido";
-                        int idxActive = 10;
+                        switch (activePS.GlobalClickVVA.RentBillingFrequency)
+                        {
+                            case 3:
+                                wsSERVICE.Cells["C7"].Value = "Trimestral";
+                                break;
+                            case 6:
+                                wsSERVICE.Cells["C7"].Value = "Semestral";
+                                break;
+                            default:
+                                wsSERVICE.Cells["C7"].Value = "Mensual";
+                                break;
+                        }
+
+                        wsSERVICE.Cells["C8"].Value = "Volumen Incluido";
+                        wsSERVICE.Cells["D8"].Value = (activePS.CVolume + activePS.BWVolume).ToString() +" Copias Incluidas";
+                        int idxActive = 11;
                         foreach (var item in activePS.Machines)
                         {
                             wsSERVICE.Cells["D" + idxActive].Value = item.Description;
                             wsSERVICE.Cells["E" + idxActive].Value = item.Qty;
                             wsSERVICE.Cells["F" + idxActive].Value = item.BWVolume;
-                            wsSERVICE.Cells["G" + idxActive].Value = item.RequestedBWClickPrice + " €";
-                            wsSERVICE.Cells["H" + idxActive].Value = item.ClickPriceBW + " €";
+                            wsSERVICE.Cells["G" + idxActive].Value = item.ClickPriceBW + " €";
+                            wsSERVICE.Cells["H" + idxActive].Value = item.ApprovedBW + " €";
                             wsSERVICE.Cells["I" + idxActive].Value = activePS.GlobalClickVVA.BWExcessPVP + " €";
                             wsSERVICE.Cells["J" + idxActive].Value = item.CVolume;
-                            wsSERVICE.Cells["K" + idxActive].Value = item.RequestedCClickPrice + " €";
-                            wsSERVICE.Cells["L" + idxActive].Value = item.ClickPriceC + " €";
+                            wsSERVICE.Cells["K" + idxActive].Value = item.ClickPriceC + " €";
+                            wsSERVICE.Cells["L" + idxActive].Value = item.ApprovedC + " €";
                             wsSERVICE.Cells["M" + idxActive].Value = activePS.GlobalClickVVA.CExcessPVP + " €";
                             idxActive++;
                         }
@@ -4838,19 +5005,32 @@ namespace WebApplication1.Controllers
 
                     if (activePS != null && activePS.GlobalClickNoVolume != null)
                     {
-                        wsSERVICE.Cells["C7"].Value = " Sin Volumen Incluido";
-                        int idxActive = 10;
+                        switch (activePS.GlobalClickNoVolume.PageBillingFrequency)
+                        {
+                            case 3:
+                                wsSERVICE.Cells["C7"].Value = "Trimestral";
+                                break;
+                            case 6:
+                                wsSERVICE.Cells["C7"].Value = "Semestral";
+                                break;
+                            default:
+                                wsSERVICE.Cells["C7"].Value = "Mensual";
+                                break;
+                        }
+
+                        wsSERVICE.Cells["C8"].Value = " Sin Volumen Incluido";
+                        int idxActive = 11;
                         foreach (var item in activePS.Machines)
                         {
                             wsSERVICE.Cells["D" + idxActive].Value = item.Description;
                             wsSERVICE.Cells["E" + idxActive].Value = item.Qty;
                             wsSERVICE.Cells["F" + idxActive].Value = item.BWVolume;
-                            wsSERVICE.Cells["G" + idxActive].Value = item.RequestedBWClickPrice + " €";
-                            wsSERVICE.Cells["H" + idxActive].Value = item.ClickPriceBW + " €";
+                            wsSERVICE.Cells["G" + idxActive].Value = item.ClickPriceBW + " €";
+                            wsSERVICE.Cells["H" + idxActive].Value = item.ApprovedBW + " €";
                             wsSERVICE.Cells["I" + idxActive].Value = activePS.GlobalClickVVA.BWExcessPVP + " €";
                             wsSERVICE.Cells["J" + idxActive].Value = item.CVolume;
-                            wsSERVICE.Cells["K" + idxActive].Value = item.RequestedCClickPrice + " €";
-                            wsSERVICE.Cells["L" + idxActive].Value = item.ClickPriceC + " €";
+                            wsSERVICE.Cells["K" + idxActive].Value = item.ClickPriceC + " €";
+                            wsSERVICE.Cells["L" + idxActive].Value = item.ApprovedC + " €";
                             wsSERVICE.Cells["M" + idxActive].Value = activePS.GlobalClickVVA.CExcessPVP + " €";
                             idxActive++;
                         }
@@ -4858,19 +5038,31 @@ namespace WebApplication1.Controllers
 
                     if (activePS != null && activePS.ClickPerModel != null)
                     {
-                        wsSERVICE.Cells["C7"].Value = "Click por Modelo";
-                        int idxActive = 10;
+                        switch (activePS.ClickPerModel.PageBillingFrequency)
+                        {
+                            case 3:
+                                wsSERVICE.Cells["C7"].Value = "Trimestral";
+                                break;
+                            case 6:
+                                wsSERVICE.Cells["C7"].Value = "Semestral";
+                                break;
+                            default:
+                                wsSERVICE.Cells["C7"].Value = "Mensual";
+                                break;
+                        }
+                        wsSERVICE.Cells["C8"].Value = "Click por Modelo";
+                        int idxActive = 11;
                         foreach (var item in activePS.Machines)
                         {
                             wsSERVICE.Cells["D" + idxActive].Value = item.Description;
                             wsSERVICE.Cells["E" + idxActive].Value = item.Qty;
                             wsSERVICE.Cells["F" + idxActive].Value = item.BWVolume;
-                            wsSERVICE.Cells["G" + idxActive].Value = item.RequestedBWClickPrice + " €";
-                            wsSERVICE.Cells["H" + idxActive].Value = item.ClickPriceBW + " €";
+                            wsSERVICE.Cells["G" + idxActive].Value = item.ClickPriceBW + " €";
+                            wsSERVICE.Cells["H" + idxActive].Value = item.ApprovedBW + " €";
                             wsSERVICE.Cells["I" + idxActive].Value = "---";
                             wsSERVICE.Cells["J" + idxActive].Value = item.CVolume;
-                            wsSERVICE.Cells["K" + idxActive].Value = item.RequestedCClickPrice + " €";
-                            wsSERVICE.Cells["L" + idxActive].Value = item.ClickPriceC + " €";
+                            wsSERVICE.Cells["K" + idxActive].Value = item.ClickPriceC + " €";
+                            wsSERVICE.Cells["L" + idxActive].Value = item.ApprovedC + " €";
                             wsSERVICE.Cells["M" + idxActive].Value = "---";
                             idxActive++;
                         }
@@ -6663,6 +6855,36 @@ namespace WebApplication1.Controllers
             }
             return filePath;
         }
+
+    }
+
+    public class DL_Table_Info
+    {
+        public int IDX { get; set; }
+        public int ProposalID { get; set; }
+        public string Tipo { get; set; }
+        public string Address { get; set; }
+        public string CompanyName { get; set; }
+        public string CIF { get; set; }
+        public string DeliveryLocation { get; set; }
+        public string PostalCode { get; set; }
+        public string SAP_Nr { get; set; }
+        public string SAP_Company { get; set; }
+        public string Contacto { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Payer { get; set; }
+        public string BillReceiver { get; set; }
+        public string Family { get; set; }
+        public string CodeRef { get; set; }
+        public string Description { get; set; }
+        public Nullable<bool> IsNewAddress { get; set; }
+        public string Department { get; set; }
+        public string Floor { get; set; }
+        public string Building { get; set; }
+        public string Room { get; set; }
+        public string Schedule { get; set; }
+        public Nullable<System.DateTime> DeliveryDate { get; set; }
 
     }
 }
