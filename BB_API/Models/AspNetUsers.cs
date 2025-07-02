@@ -42,5 +42,6 @@ namespace WebApplication1.Models
         public string USUARIO_Sharepoint_Email { get; set; }
         public string USUARIO_Sharepoint_Nome { get; set; }
         public string AreaComercial { get; set; }
+        public string Territory { get; set; }
     }
 }

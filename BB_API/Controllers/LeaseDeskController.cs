@@ -2685,6 +2685,22 @@ namespace WebApplication1.Controllers
             a.ProposalObj.SAPNumber = pr1.Pedido_SAP == null ? "" : pr1.Pedido_SAP.Value.ToString();
             a.ProposalObj.IsClientPublicSector = (bool)pCliente.IsPublicSector;
 
+            using (var dbMaster = new masterEntities())
+            {
+
+                AspNetUsers user = dbMaster.AspNetUsers.Where(x => x.Territory == cliente.Territory).FirstOrDefault();
+                
+                if(user != null)
+                {
+                    a.ProposalObj.Draft.client.GestorCuenta = user.DisplayName;
+                }
+                else
+                {
+                    a.ProposalObj.Draft.client.GestorCuenta = cliente.Owner;
+                }
+
+            }
+
             return Ok(a.ProposalObj);
         }
 
