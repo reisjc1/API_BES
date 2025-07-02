@@ -2483,6 +2483,11 @@ namespace WebApplication1.Controllers
 
                     machine.RequestedBWClickPrice = machine.RequestedBWClickPrice != null ? Math.Round((double)machine.RequestedBWClickPrice, 5) : 0;
                     machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ?  Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
+
+
+                    machine.ApprovedBW = machine.ApprovedBW.HasValue ? Math.Round(machine.ApprovedBW.Value, 5) : (double?)0;
+                    machine.ApprovedC = machine.ApprovedC.HasValue ? Math.Round(machine.ApprovedC.Value, 5) : (double?)0;
+
                 }
 
             }

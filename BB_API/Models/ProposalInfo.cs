@@ -323,7 +323,7 @@ namespace WebApplication1.Models
 
         public bool? IsMultipleContract { get; set; }
         public string ExistanteContractNumber { get; set; }
-
+    
     }
 
     public class CRObservations

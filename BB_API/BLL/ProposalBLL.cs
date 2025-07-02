@@ -1617,6 +1617,10 @@ namespace WebApplication1.BLL
                             };
                             newPS.ClickPerModel = cpm;
                         }
+
+                        List<BB_Equipamentos> equipamentos = new List<BB_Equipamentos>();
+                        equipamentos = db.BB_Equipamentos.ToList();
+
                         foreach (BB_PrintingService_Machines machine in ps.BB_PrintingService_Machines)
                         {
                             Machine psMachine = new Machine()
@@ -1629,10 +1633,13 @@ namespace WebApplication1.BLL
                                 ID = machine.ID,
                                 RequestedBWClickPrice = machine.RequestedBWClickPrice,
                                 RequestedCClickPrice = machine.RequestedCClickPrice,
-                                ClickPriceBW = machine.ApprovedBW,
-                                ClickPriceC = machine.ApprovedC,
+                                ClickPriceBW = equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.ClickPriceBW).FirstOrDefault() ?? 0,
+                                ClickPriceC = equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.ClickPriceC).FirstOrDefault() ?? 0,
                                 BWPVP = machine.BWPVP,
-                                CPVP = machine.CPVP
+                                CPVP = machine.CPVP,
+                                ApprovedBW = machine.ApprovedBW,
+                                ApprovedC = machine.ApprovedC,
+
                             };
                             newPS.Machines.Add(psMachine);
                         }
