@@ -714,6 +714,10 @@ namespace WebApplication1.Models
 
         public string City { get; set; }
 
+        public string telephone1 { get; set; }
+        public string SalesGroup { get; set; }
+        public string SalesOffice { get; set; }
+
     }
     public class Campanhas
     {

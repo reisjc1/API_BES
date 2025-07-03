@@ -237,6 +237,10 @@ namespace WebApplication1.Controllers
                                 Holding = rdr["Holding"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Holding")) : "",
                                 Blocked = rdr["Blocked"] != DBNull.Value ? (bool?)rdr["Blocked"] : null,
                                 City = rdr["City"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("City")) : "",
+                                telephone1 = rdr["telephone1"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("telephone1")) : "",
+                                emailaddress1 = rdr["emailaddress1"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("emailaddress1")) : "",
+                                SalesGroup = rdr["SalesGroup"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SalesGroup")) : "",
+                                SalesOffice = rdr["SalesOffice"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SalesOffice")) : ""
                             };
 
                             lst_Clients.Add(client);
@@ -282,6 +286,10 @@ namespace WebApplication1.Controllers
                                     Holding = rdr["Holding"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("Holding")) : "",
                                     Blocked = rdr["Blocked"] != DBNull.Value ? (bool?)rdr["Blocked"] : null,
                                     City = rdr["City"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("City")) : "",
+                                    telephone1 = rdr["telephone1"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("telephone1")) : "",
+                                    emailaddress1 = rdr["emailaddress1"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("emailaddress1")) : "",
+                                    SalesGroup = rdr["SalesGroup"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SalesGroup")) : "",
+                                    SalesOffice = rdr["SalesOffice"] != DBNull.Value ? rdr.GetString(rdr.GetOrdinal("SalesOffice")) : ""
                                 };
 
                                 lst_Clients.Add(client);
@@ -332,7 +340,7 @@ namespace WebApplication1.Controllers
         [ActionName("ClientesAll")]
         public List<BB_Clientes_> ClientesAll()
         {
-            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
+            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, GMAIdentifier = x.GMA_Identifier, Blocked = x.Blocked }).ToList();
         }
 
         [AcceptVerbs("GET", "POST")]
@@ -341,7 +349,7 @@ namespace WebApplication1.Controllers
         {
             //if(accountNumber != null || accountNumber != "")
             //{
-                return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.accountnumber.Contains(accountNumber)).ToList();
+            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.accountnumber.Contains(accountNumber)).ToList();
             //}
 
         }
@@ -350,9 +358,9 @@ namespace WebApplication1.Controllers
         [ActionName("FilteredClientsNIF")]
         public List<BB_Clientes_> FilteredClientsNIF(string nif)
         {
-            
+
             return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.NIF.Contains(nif)).ToList();
-           
+
         }
 
         [AcceptVerbs("GET", "POST")]
