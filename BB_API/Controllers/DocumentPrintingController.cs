@@ -4583,11 +4583,13 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["B15"].Value = gestor;
 
-                    wsBB.Cells["D15"].Value = _Cliente.Branch_Id;
+                    wsBB.Cells["D15"].Value = p.Draft.client.SalesGroup;  //_Cliente.Branch_Id + " - " + _Cliente.City;
 
                     wsBB.Cells["F15"].Value = _Cliente.Erpsalesgroupid;
 
                     wsBB.Cells["B19"].Value = p.Draft.financingDetails.FinancingType != null && p.Draft.financingDetails.FinancingType != "" ? p.Draft.financingDetails.FinancingType : "No aplicable";
+
+                    wsBB.Cells["H15"].Value = p.Draft.baskets.IsNP ? "Sí" : "No";
 
                     string _MedotodPagamento = "";
 
@@ -4637,7 +4639,7 @@ namespace WebApplication1.Controllers
 
                     }
 
-                    wsBB.Cells["D23"].Value = _MedotodPagamento1;
+                    wsBB.Cells["D26"].Value = _MedotodPagamento1;
 
                     wsBB.Cells["F26"].Value = p.Draft.financing.MaintanceContractPaymentAfterText != null && p.Draft.financing.MaintanceContractPaymentAfterText != "" ? p.Draft.financing.MaintanceContractPaymentAfterText : "No aplicable";
 
@@ -4919,8 +4921,9 @@ namespace WebApplication1.Controllers
 
                     wsFINANCIAL_INFORMATION.Cells["B9"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.Months != 0 ? p.Draft.financing.Months.ToString() + " MONTHS" : "No Aplicable";
 
+                    wsFINANCIAL_INFORMATION.Cells["B10"].Value = p.Draft.financing.AgreementNumber;
 
-                    wsFINANCIAL_INFORMATION.Cells["B13"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : "No Aplicable";
+                   wsFINANCIAL_INFORMATION.Cells["B13"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : "No Aplicable";
 
                     wsFINANCIAL_INFORMATION.Cells["B14"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountNotFinanced != 0 ? p.Draft.financing.AmountNotFinanced.ToString() + " €" : "No Aplicable";
 
@@ -4966,7 +4969,7 @@ namespace WebApplication1.Controllers
                     wsSERVICE.Cells["C5"].Value = activePS != null && activePS.SCObservations != null ? activePS.SCObservations.ToString() : "No Aplicable";
 
 
-                    wsSERVICE.Cells["C5"].Value = pr1.IsMultipleContract.GetValueOrDefault() == true ? "Agrupado" : "Individual";
+                    wsSERVICE.Cells["C6"].Value = pr1.IsMultipleContract.GetValueOrDefault() == true ? "Agrupado" : "Individual";
 
 
                     if (activePS != null && activePS.GlobalClickVVA != null)
