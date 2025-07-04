@@ -1339,10 +1339,11 @@ namespace WebApplication1.Controllers
                             // Regras InsideSales
                             string modifiedByRole = dbUsers.AspNetUsers.Where(x => x.Email == proposal.ModifiedBy.ToString()).Select(x => x.FunctionSimpleDeal).FirstOrDefault();
 
+                            BB_Clientes client = new BB_Clientes();
 
                             using (var dbC = new BB_DB_DEVEntities2())
                             {
-                                var client = dbC.BB_Clientes
+                                client = dbC.BB_Clientes
                                                         .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
                                                         .FirstOrDefault();
 
@@ -1377,7 +1378,19 @@ namespace WebApplication1.Controllers
 
                             bb_commission_general.Delegacion = bb_commission_general.Delegacion.ToUpper();
 
-                            bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;
+                            //bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;
+
+                            AspNetUsers userByDelegation = dbUsers.AspNetUsers.Where(x => x.Territory == client.Territory).FirstOrDefault();
+
+                            if (userByDelegation != null)
+                            {
+                                bb_commission_general.Comercial = userByDelegation.DisplayName;
+                            }
+                            else
+                            {
+                                bb_commission_general.Comercial = client.Owner;
+                            }
+
                             bb_commission_general.N_Trab = user.N_TRABAJADOR;
                             bb_commission_general.Manager_Nombre = user.Manager;
                             bb_commission_general.Usuario_Sharepoint = user.USUARIO_Sharepoint_Email;
