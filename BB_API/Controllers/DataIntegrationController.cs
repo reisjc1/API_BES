@@ -340,7 +340,7 @@ namespace WebApplication1.Controllers
         [ActionName("ClientesAll")]
         public List<BB_Clientes_> ClientesAll()
         {
-            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, GMAIdentifier = x.GMA_Identifier, Blocked = x.Blocked }).ToList();
+            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).ToList();
         }
 
         [AcceptVerbs("GET", "POST")]
