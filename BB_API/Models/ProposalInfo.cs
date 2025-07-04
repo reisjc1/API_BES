@@ -294,6 +294,8 @@ namespace WebApplication1.Models
         public string SalesGroup { get; set; }
         public string SalesOffice { get; set; }
         public string GestorCuenta { get; set; }
+        public string Owner { get; set; }
+        public string telephone1 { get; set; }
 
     }
     public class Details
