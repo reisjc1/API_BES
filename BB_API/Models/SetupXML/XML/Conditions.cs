@@ -1162,7 +1162,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 //base de dados (ex: ZVBI, ZVBM, etc) caso não exista nos servicos recurrentes entao tem que ser adicionado o valor
                                 // ao ZVBA
 
-                                if ((rsShot == null && rsShot.Count == 0) && financingType == "005")
+                                if ((rsShot == null || rsShot.Count == 0) && financingType == "005")
                                 {
                                     financingCode = "ZVBA";
                                 }

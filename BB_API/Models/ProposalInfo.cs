@@ -207,6 +207,7 @@ namespace WebApplication1.Models
         public double? GroupPrice { get; set; }
         public BB_Proposal_DeliveryLocationResumoModel DeliverySummary { get; set; }
         public string SerialNumber { get; set; }
+
     }
     public class OPSPacks
     {
