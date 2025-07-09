@@ -1033,7 +1033,7 @@ namespace WebApplication1.Controllers
 
                     // Calculo da comissao a aplicar a familias do dicionario protocolDictionary
 
-                    List<Machine> machines = new List<Machine>();
+                    List<MachineX> machines = new List<MachineX>();
 
                     double? pvpClick_BW;
                     double? pvpClick_Color;
@@ -1113,21 +1113,22 @@ namespace WebApplication1.Controllers
                                 // Por Modelo ----------------------------
                                 else
                                 {
-                                    BB_PrintingService_Machines ps_m = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == ps.ID && x.CodeRef == equipamento.CodeRef).FirstOrDefault();
+                                    //BB_PrintingService_Machines ps_m = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == ps.ID && x.CodeRef == equipamento.CodeRef).FirstOrDefault();
+                                    Machine machineS = activePS.Machines.Where(x => x.CodeRef == quote.CodeRef).FirstOrDefault();
 
                                     if (equipamento.PHC4 == "BW")
                                     {
                                         pvpClick_BW = equipamento.ClickPriceBW;
-                                        vendaClick_BW = ps_m.ApprovedBW;
+                                        vendaClick_BW = machineS.ApprovedBW;
                                         pvpClick_Color = 0;
                                         vendaClick_Color = 0;
                                     }
                                     else
                                     {
                                         pvpClick_Color = equipamento.ClickPriceC;
-                                        vendaClick_Color = ps_m.ApprovedC;
+                                        vendaClick_Color = machineS.ApprovedC;
                                         pvpClick_BW = equipamento.ClickPriceBW;
-                                        vendaClick_BW = ps_m.ApprovedBW;
+                                        vendaClick_BW = machineS.ApprovedBW;
                                     }
                                 }
 
@@ -1164,7 +1165,7 @@ namespace WebApplication1.Controllers
                                     DescPerClick = discount_Color + discount_BW;
                                 }
 
-                                Machine machine = new Machine
+                                MachineX machine = new MachineX
                                 {
                                     CodeRef = quote.CodeRef,
                                     Description = quote.Description,
@@ -1393,8 +1394,8 @@ namespace WebApplication1.Controllers
 
                             bb_commission_general.N_Trab = user.N_TRABAJADOR;
                             bb_commission_general.Manager_Nombre = user.Manager;
-                            bb_commission_general.Usuario_Sharepoint = user.USUARIO_Sharepoint_Email;
-                            bb_commission_general.Usuario_Sharepoint_Nombre = user.USUARIO_Sharepoint_Nome;
+                            bb_commission_general.Usuario_Sharepoint = userByDelegation.USUARIO_Sharepoint_Email;
+                            bb_commission_general.Usuario_Sharepoint_Nombre = userByDelegation.USUARIO_Sharepoint_Nome;
 
 
                             // VALIDAR SE O NEGOCIO É HIBRIDO ---------------------
@@ -1567,7 +1568,7 @@ namespace WebApplication1.Controllers
                     }
 
                     // Calculo da comission -----------------------------------------------------------------------------------------------
-                    double GetCommission(string area, int? campaignIDX, string tipoCliente)
+                    double GetCommission(string area, int? financingType, string tipoCliente)
                     {
                         var Dict_NO_Alquiler = new Dictionary<string, (double prospecto, double newBusiness, double client)>
                         {
@@ -1584,7 +1585,7 @@ namespace WebApplication1.Controllers
                         };
 
                         // devolver o dicionario com base ca condicao "Alquiler"
-                        var selectedTable = campaignIDX == 5 ? Dict_Alquiler : Dict_NO_Alquiler;
+                        var selectedTable = financingType == 5 ? Dict_Alquiler : Dict_NO_Alquiler;
 
                         string key = "";
                         if (area != null)
@@ -1638,7 +1639,7 @@ namespace WebApplication1.Controllers
                         }
                     }
 
-                    bb_commission_general.Comision = GetCommission(bb_commission_general.Area, campaignID, bb_commission_general.Tipo_Cliente);
+                    bb_commission_general.Comision = GetCommission(bb_commission_general.Area, Financing_Type, bb_commission_general.Tipo_Cliente);
 
 
                     if (bb_commission_general.Comision != 0)
@@ -1823,7 +1824,7 @@ namespace WebApplication1.Controllers
                     // ----------------------------------------------------------------------------------------------------
                     // só devo gerar comissões para Negocio tradicional (VENTA), Aluguer e Nao se deve ter em conta o que seja "Cesion" nem as "Retiradas"
 
-                    if (campaignID == 1 || campaignID == 5 && financingTypeCode != 4 && esRetoma == 0)
+                    if ((campaignID == 1 || campaignID == 5) && financingTypeCode != 4 && esRetoma == 0)
                     {
                         List<BB_Commission_General> lastCommission = db.BB_Commission_General.Where(x => x.BB_Numero == proposalID.ToString()).ToList();
                         if (lastCommission.Any())
@@ -2280,10 +2281,10 @@ namespace WebApplication1.Controllers
             //(penalizacao/bonificacao)
             public int? Adjustment { get; set; }
             public double? CalculatedCommission { get; set; }
-            public List<Machine> Machines { get; set; }
+            public List<MachineX> Machines { get; set; }
         }
 
-        public class Machine
+        public class MachineX
         {
             public string CodeRef { get; set; }
             public string Description { get; set; }
