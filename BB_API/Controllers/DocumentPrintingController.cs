@@ -4047,11 +4047,11 @@ namespace WebApplication1.Controllers
                 {
                     BB_Clientes cliente = new BB_Clientes();
 
-                    //using (var db = new BB_DB_DEVEntities2())
-                    //{
-                    //    cliente = db.BB_Clientes.Where(x => x.accountnumber == acocuntNumber).FirstOrDefault();
-                    //    lstBB_Proposal_Contacts_Signing = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == proposalID).ToList();
-                    //}
+                    using (var db1 = new BB_DB_DEVEntities2())
+                    {
+                        cliente = db1.BB_Clientes.Where(x => x.accountnumber == p.Draft.client.accountnumber).FirstOrDefault();
+                        //lstBB_Proposal_Contacts_Signing = db.BB_Proposal_Contacts_Signing.Where(x => x.ProposalID == proposalID).ToList();
+                    }
 
                     FileInfo newFile = new FileInfo(path);
 
@@ -4497,7 +4497,7 @@ namespace WebApplication1.Controllers
                     //WORKSHEET - BB
                     var wsBB = pck.Workbook.Worksheets["BB"];
 
-                    wsBB.Cells["B3"].Value = p.Draft.details.ID;
+                    wsBB.Cells["B3"].Value = "BB" + p.Draft.details.ID;
 
                     wsBB.Cells["D3"].Value = p.Draft.details.ID;
 
@@ -4583,7 +4583,7 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["B15"].Value = gestor;
 
-                    wsBB.Cells["D15"].Value = p.Draft.client.SalesGroup;  //_Cliente.Branch_Id + " - " + _Cliente.City;
+                    wsBB.Cells["D15"].Value = p.Draft.client.SalesGroup  + p.Draft.client.City;  //_Cliente.Branch_Id + " - " + _Cliente.City;
 
                     wsBB.Cells["F15"].Value = _Cliente.Erpsalesgroupid;
 
@@ -4725,7 +4725,7 @@ namespace WebApplication1.Controllers
                     //WORKSHEET - PUNTOS DE ENVIO
                     var wsPUNTOSDEENVIO = pck.Workbook.Worksheets["PUNTOS DE ENVIO"];
 
-                    int idxPontoEnvio = 2;
+                    int idxPontoEnvio = 3;
                     foreach (var item in p.Draft.configuratorInfo)
                     {
                         wsPUNTOSDEENVIO.Cells["A" + idxPontoEnvio].Value = item.DeliverySummary.Group;
@@ -4750,11 +4750,73 @@ namespace WebApplication1.Controllers
                             _date = DateTime.TryParse(item.DeliverySummary.DeliveryDate?.ToString(), out var parsedDate) ? parsedDate.ToString("dd/MM/yyyy") : "";
 
                         }
+
                         wsPUNTOSDEENVIO.Cells["P" + idxPontoEnvio].Value = _date;
 
+
+
+                        BB_Proposal_DeliveryLocation _BB_Proposal_DeliveryLocation = db.BB_Proposal_DeliveryLocation.Where(z => z.IDX == item.DeliverySummary.IDX).FirstOrDefault();
+                        if (_BB_Proposal_DeliveryLocation != null)
+                        {
+                            if (_BB_Proposal_DeliveryLocation.DeliveryContact != null)
+                            {
+                                BB_Proposal_DL_ClientContacts bb_dl_contact1 = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == _BB_Proposal_DeliveryLocation.DeliveryContact).FirstOrDefault();
+                                if (bb_dl_contact1 != null)
+                                {
+                                    wsPUNTOSDEENVIO.Cells["R" + idxPontoEnvio].Value = bb_dl_contact1.Name;
+                                    wsPUNTOSDEENVIO.Cells["S" + idxPontoEnvio].Value = bb_dl_contact1.Surname;
+                                    wsPUNTOSDEENVIO.Cells["T" + idxPontoEnvio].Value = bb_dl_contact1.Movil;
+                                    wsPUNTOSDEENVIO.Cells["U" + idxPontoEnvio].Value = bb_dl_contact1.Tel;
+                                    wsPUNTOSDEENVIO.Cells["V" + idxPontoEnvio].Value = bb_dl_contact1.Email;
+                                }
+                            }
+                            if (_BB_Proposal_DeliveryLocation.ITContact != null)
+                            {
+                                BB_Proposal_DL_ClientContacts bb_dl_contact2 = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == _BB_Proposal_DeliveryLocation.ITContact).FirstOrDefault();
+                                if (bb_dl_contact2 != null)
+                                {
+                                    wsPUNTOSDEENVIO.Cells["X" + idxPontoEnvio].Value = bb_dl_contact2.Name;
+                                    wsPUNTOSDEENVIO.Cells["Y" + idxPontoEnvio].Value = bb_dl_contact2.Surname;
+                                    wsPUNTOSDEENVIO.Cells["Z" + idxPontoEnvio].Value = bb_dl_contact2.Movil;
+                                    wsPUNTOSDEENVIO.Cells["AA" + idxPontoEnvio].Value = bb_dl_contact2.Tel;
+                                    wsPUNTOSDEENVIO.Cells["AB" + idxPontoEnvio].Value = bb_dl_contact2.Email;
+                                }
+                            }
+
+                            if (_BB_Proposal_DeliveryLocation.ServiceContact != null)
+                            {
+                                BB_Proposal_DL_ClientContacts bb_dl_contact3 = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == _BB_Proposal_DeliveryLocation.ServiceContact).FirstOrDefault();
+                                if (bb_dl_contact3 != null)
+                                {
+                                    wsPUNTOSDEENVIO.Cells["AD" + idxPontoEnvio].Value = bb_dl_contact3.Name;
+                                    wsPUNTOSDEENVIO.Cells["AE" + idxPontoEnvio].Value = bb_dl_contact3.Surname;
+                                    wsPUNTOSDEENVIO.Cells["AF" + idxPontoEnvio].Value = bb_dl_contact3.Movil;
+                                    wsPUNTOSDEENVIO.Cells["AG" + idxPontoEnvio].Value = bb_dl_contact3.Tel;
+                                    wsPUNTOSDEENVIO.Cells["AH" + idxPontoEnvio].Value = bb_dl_contact3.Email;
+                                }
+                            }
+
+                            if (_BB_Proposal_DeliveryLocation.CopiesContact != null)
+                            {
+                                BB_Proposal_DL_ClientContacts bb_dl_contact4 = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == _BB_Proposal_DeliveryLocation.CopiesContact).FirstOrDefault();
+                                if (bb_dl_contact4 != null)
+                                {
+                                    wsPUNTOSDEENVIO.Cells["AJ" + idxPontoEnvio].Value = bb_dl_contact4.Name;
+                                    wsPUNTOSDEENVIO.Cells["AK" + idxPontoEnvio].Value = bb_dl_contact4.Surname;
+                                    wsPUNTOSDEENVIO.Cells["AL" + idxPontoEnvio].Value = bb_dl_contact4.Movil;
+                                    wsPUNTOSDEENVIO.Cells["AM" + idxPontoEnvio].Value = bb_dl_contact4.Tel;
+                                    wsPUNTOSDEENVIO.Cells["AN" + idxPontoEnvio].Value = bb_dl_contact4.Email;
+                                }
+                            }
+                        }
                         idxPontoEnvio++;
 
                     }
+
+
+
+
+
 
 
                     //WORKSHEET - INVOICES
@@ -4853,7 +4915,7 @@ namespace WebApplication1.Controllers
                     idxPontoEnvio = 2;
                     foreach (var item in DL_Table_Info_Lst)
                     {
-                        wsINVOICES.Cells["A" + idxPontoEnvio].Value = item.IsNewAddress.GetValueOrDefault()? "Si" : "NO" ;
+                        wsINVOICES.Cells["A" + idxPontoEnvio].Value = item.IsNewAddress.GetValueOrDefault() ? "Si" : "NO";
                         wsINVOICES.Cells["B" + idxPontoEnvio].Value = item.SAP_Company;
                         wsINVOICES.Cells["C" + idxPontoEnvio].Value = item.CIF;
                         wsINVOICES.Cells["D" + idxPontoEnvio].Value = item.DeliveryLocation;
@@ -4864,13 +4926,12 @@ namespace WebApplication1.Controllers
                         wsINVOICES.Cells["I" + idxPontoEnvio].Value = item.Phone;
                         wsINVOICES.Cells["J" + idxPontoEnvio].Value = item.Email;
 
-
                         idxPontoEnvio++;
 
                     }
 
 
-                    //WORKSHEET - PUNTOS DE ENVIO
+                    //WORKSHEET - FINANCIAL INFORMATION
                     var wsFINANCIAL_INFORMATION = pck.Workbook.Worksheets["FINANCIAL INFORMATION"];
 
                     string _Produtofinanceiro = "";
@@ -4923,7 +4984,7 @@ namespace WebApplication1.Controllers
 
                     wsFINANCIAL_INFORMATION.Cells["B10"].Value = p.Draft.financing.AgreementNumber;
 
-                   wsFINANCIAL_INFORMATION.Cells["B13"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : "No Aplicable";
+                    wsFINANCIAL_INFORMATION.Cells["B13"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : "No Aplicable";
 
                     wsFINANCIAL_INFORMATION.Cells["B14"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountNotFinanced != 0 ? p.Draft.financing.AmountNotFinanced.ToString() + " €" : "No Aplicable";
 
@@ -4952,10 +5013,10 @@ namespace WebApplication1.Controllers
                     }
 
                     int idxTotalCondition = 19;
-                    foreach(var item1 in _ConditionsTotais.ConditionsTotal)
+                    foreach (var item1 in _ConditionsTotais.ConditionsTotal)
                     {
                         wsFINANCIAL_INFORMATION.Cells["D" + idxTotalCondition].Value = item1.ConditionCode;
-                        wsFINANCIAL_INFORMATION.Cells["E" + idxTotalCondition].Value = item1.PVP.ToString() + " €"; 
+                        wsFINANCIAL_INFORMATION.Cells["E" + idxTotalCondition].Value = item1.PVP.ToString() + " €";
                         idxTotalCondition++;
                     }
 
@@ -4988,7 +5049,7 @@ namespace WebApplication1.Controllers
                         }
 
                         wsSERVICE.Cells["C8"].Value = "Volumen Incluido";
-                        wsSERVICE.Cells["D8"].Value = (activePS.CVolume + activePS.BWVolume).ToString() +" Copias Incluidas";
+                        wsSERVICE.Cells["D8"].Value = (activePS.CVolume + activePS.BWVolume).ToString() + " Copias Incluidas";
                         int idxActive = 11;
                         foreach (var item in activePS.Machines)
                         {

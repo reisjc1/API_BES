@@ -3393,6 +3393,7 @@ namespace WebApplication1.BLL
                                         resumo.IsUsedMachine = (bool)it.IsUsedMachine ? "Si" : "No";
                                         resumo.SerialNumber = it.SerialNumber != null ? it.SerialNumber : "-";
                                         resumo.Comments = i.Comments != null || i.Comments != "" ? i.Comments : "-";
+                                        resumo.IDX = i.IDX;
                                         lstBB_Proposal_DeliveryLocationResumoModel.Add(resumo);
                                     }
                                 }
