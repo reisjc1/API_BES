@@ -719,7 +719,7 @@ namespace WebApplication1.Controllers
                             ld.Retorno = false;
                             ld.SystemAssinaturaID = assnaturaID;
                             ld.StatusID = 1;
-                            ld.DevolucaoMotivoID = 5;
+                            ld.DevolucaoMotivoID = null;
                             db.Entry(ld).State = EntityState.Modified;
                             db.SaveChanges();
                             isRetorno = true;
