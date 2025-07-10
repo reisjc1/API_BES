@@ -464,16 +464,16 @@ namespace WebApplication1.Models.SetupXML.XML
                                             if (pf.Factor >= 1)
                                             {
 
-                                                conditionPvp.PVP = Math.Round(((cPVP * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = (cPVP * (pf.Factor / 100)) + conditionPvp.PVP;
                                             }
                                             else if (pf.Factor > 0 && pf.Factor < 1)
                                             {
-                                                conditionPvp.PVP = Math.Round(((cPVP * pf.Factor) + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = (cPVP * pf.Factor) + conditionPvp.PVP;
                                             }
                                         }
                                         else
                                         {
-                                            conditionPvp.PVP = Math.Round(((quote1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months) + conditionPvp.PVP) ?? 0.0, 2);
+                                            conditionPvp.PVP = (quote1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months) + conditionPvp.PVP;
                                         }
                                     }
                                     else
@@ -502,16 +502,16 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                             if (pf.Factor >= 1)
                                             {
-                                                condPvp.PVP = Math.Round((cPVP * (pf.Factor / 100)) ?? 0.0, 2);
+                                                condPvp.PVP = cPVP * (pf.Factor / 100);
                                             }
                                             else if (pf.Factor > 0 && pf.Factor < 1)
                                             {
-                                                condPvp.PVP = Math.Round((cPVP * pf.Factor) ?? 0.0, 2);
+                                                condPvp.PVP = cPVP * pf.Factor;
                                             }
                                         }
                                         else
                                         {
-                                            condPvp.PVP = Math.Round((quote1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months) ?? 0.0, 2);
+                                            condPvp.PVP = ((quote1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY) / pf.Months));
                                         }
 
                                         condPvp.ConditionCode = financingCode;
@@ -532,11 +532,11 @@ namespace WebApplication1.Models.SetupXML.XML
                                             {
                                                 if (pf.Factor >= 1)
                                                 {
-                                                    conditionPvp.PVP = Math.Round(((quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                    conditionPvp.PVP = (quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * (pf.Factor / 100)) + conditionPvp.PVP;
                                                 }
                                                 else if (pf.Factor > 0 && pf.Factor < 1)
                                                 {
-                                                    conditionPvp.PVP = Math.Round(((quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * pf.Factor) + conditionPvp.PVP) ?? 0.0, 2);
+                                                    conditionPvp.PVP = (quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * pf.Factor) + conditionPvp.PVP;
                                                 }
                                             }
                                             else
@@ -552,7 +552,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 {
                                                     cPVPRS = quoteRS1.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY);
                                                 }
-                                                conditionPvp.PVP = Math.Round((cPVPRS + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = cPVPRS + conditionPvp.PVP;
                                             }
                                         }
                                         else
@@ -563,11 +563,11 @@ namespace WebApplication1.Models.SetupXML.XML
                                             {
                                                 if (pf.Factor >= 1)
                                                 {
-                                                    condPvp.PVP = Math.Round(((quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                    condPvp.PVP = (quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100);
                                                 }
                                                 else if (pf.Factor > 0 && pf.Factor < 1)
                                                 {
-                                                    condPvp.PVP = Math.Round((quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * (pf.Factor)) ?? 0.0, 2);
+                                                    condPvp.PVP = (quoteRS1.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * pf.Factor;
                                                 }
                                             }
                                             else
@@ -604,16 +604,16 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 if (pf.Factor >= 1)
                                                 {
                                                     //Talvez falte multiplicar pelos meses
-                                                    conditionPvp.PVP = Math.Round(((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * (pf.Factor / 100)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                    conditionPvp.PVP = (opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * (pf.Factor / 100)) + conditionPvp.PVP;
                                                 }
                                                 else if (pf.Factor > 0 && pf.Factor < 1)
                                                 {
-                                                    conditionPvp.PVP = Math.Round(((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * pf.Factor) + conditionPvp.PVP) ?? 0.0, 2);
+                                                    conditionPvp.PVP = (opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * pf.Factor) + conditionPvp.PVP;
                                                 }
                                             }
                                             else
                                             {
-                                                conditionPvp.PVP = Math.Round(((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) + conditionPvp.PVP) ?? 0.0, 2);
+                                                conditionPvp.PVP = (opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) + conditionPvp.PVP;
                                             }
                                         }
                                         else
@@ -626,17 +626,17 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 if (pf.Factor >= 1)
                                                 {
                                                     //Talvez falte multiplicar pelos meses
-                                                    condPvp.PVP = Math.Round((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * (pf.Factor / 100)) ?? 0.0, 2);
+                                                    condPvp.PVP = (opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * (pf.Factor / 100);
                                                 }
                                                 else if (pf.Factor > 0 && pf.Factor < 1)
                                                 {
-                                                    condPvp.PVP = Math.Round((opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY) * pf.Factor) ?? 0.0, 2);
+                                                    condPvp.PVP = (opsM.UnitDiscountPrice * Convert.ToDouble(item.REQ_QTY)) * pf.Factor;
                                                 }
 
                                             }
                                             else
                                             {
-                                                condPvp.PVP = Math.Round((opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY)) ?? 0.0, 2);
+                                                condPvp.PVP = (opsM.UnitDiscountPrice / Convert.ToDouble(item.REQ_QTY));
                                             }
 
                                             condPvp.ConditionCode = financingCode;
