@@ -1,5 +1,4 @@
 ﻿using Microsoft.Office.Interop.Excel;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Numeric;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1323,77 +1322,68 @@ namespace WebApplication1.Controllers
                     bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
                     bb_commission_general.Comision_Copias = 0;
 
+                    BB_Clientes client = new BB_Clientes();
+
+                    using (var dbC = new BB_DB_DEVEntities2())
+                    {
+                        client = dbC.BB_Clientes
+                                 .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
+                                 .FirstOrDefault();
+                    }
+
+
                     using (var dbUsers = new masterEntities())
                     {
-                        AspNetUsers user = dbUsers.AspNetUsers
-                                            .Where(x => x.Email == proposal.AccountManager)
-                                            .FirstOrDefault();
-                        if (user != null)
+                        AspNetUsers userByDelegation = new AspNetUsers();
+
+                        userByDelegation = dbUsers.AspNetUsers.Where(x => x.Territory == client.Territory).FirstOrDefault();
+
+                        if (userByDelegation == null)
                         {
+                            userByDelegation = dbUsers.AspNetUsers.Where(x => x.DisplayName == client.Owner).FirstOrDefault();
+                        }
 
-                            bb_commission_general.Manager = dbUsers.AspNetUsers
-                                                                    .Where(x => x.Email == user.ManagerEmail)
-                                                                    .Select(x => x.ErpNumber)
-                                                                    .FirstOrDefault();
-
+                            bb_commission_general.Manager = userByDelegation.Manager;
 
                             // Regras InsideSales
                             string modifiedByRole = dbUsers.AspNetUsers.Where(x => x.Email == proposal.ModifiedBy.ToString()).Select(x => x.FunctionSimpleDeal).FirstOrDefault();
 
-                            BB_Clientes client = new BB_Clientes();
-
-                            using (var dbC = new BB_DB_DEVEntities2())
-                            {
-                                client = dbC.BB_Clientes
-                                                        .Where(x => x.accountnumber == loadProposal.ProposalObj.Draft.client.accountnumber)
-                                                        .FirstOrDefault();
 
                                 if (modifiedByRole == "DRV - Inside Sales - BES")
                                 {                                 
 
-                                        if (client != null)
-                                        {
-                                            if (client.Territory != null || client.Territory != "BF-724I7TH2" || client.Territory != "Javier Gomez Garcia")
-                                                bb_commission_general.Delegacion = client.Territory;
-                                        }                                      
+                                        //if (client != null)
+                                        //{
+                                        //    if (client.Territory != null || client.Territory != "BF-724I7TH2" || client.Territory != "Javier Gomez Garcia")
+                                        //        bb_commission_general.Delegacion = client.Territory;
+                                        //}                                      
 
                                         bb_commission_general.Es_InsideSales = true;
                                 }
                                 else
                                 {
-                                        bb_commission_general.Delegacion = user.Location;
+                                        //bb_commission_general.Delegacion = user.Location;
                                         bb_commission_general.Es_InsideSales = false;
                                 }
 
-                                string areaClient = dbUsers.AspNetUsers.Where(x => x.DisplayName == client.Owner).Select(x => x.AreaComercial).FirstOrDefault();
+                                string areaClient = userByDelegation.AreaComercial;
 
-                                if(areaClient != null)
-                                {
-                                    bb_commission_general.Area = areaClient;
-                                }
-                                else
-                                {
-                                    bb_commission_general.Area = "VD";
-                                }
-                            }
+                                bb_commission_general.Area = areaClient;
+
+
+
+                            //bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;                          
+
+                            bb_commission_general.Comercial = userByDelegation.DisplayName;
+
+                            bb_commission_general.Delegacion = userByDelegation.Location;
 
                             bb_commission_general.Delegacion = bb_commission_general.Delegacion.ToUpper();
-
-                            //bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;
-
-                            AspNetUsers userByDelegation = dbUsers.AspNetUsers.Where(x => x.Territory == client.Territory).FirstOrDefault();
-
-                            if (userByDelegation != null)
-                            {
-                                bb_commission_general.Comercial = userByDelegation.DisplayName;
-                            }
-                            else
-                            {
-                                bb_commission_general.Comercial = client.Owner;
-                            }
-
-                            bb_commission_general.N_Trab = user.N_TRABAJADOR;
-                            bb_commission_general.Manager_Nombre = user.Manager;
+                            
+     
+                            
+                            bb_commission_general.N_Trab = userByDelegation.N_TRABAJADOR;
+                            bb_commission_general.Manager_Nombre = userByDelegation.Manager;
                             bb_commission_general.Usuario_Sharepoint = userByDelegation.USUARIO_Sharepoint_Email;
                             bb_commission_general.Usuario_Sharepoint_Nombre = userByDelegation.USUARIO_Sharepoint_Nome;
 
@@ -1420,7 +1410,6 @@ namespace WebApplication1.Controllers
                                     break;
                                 }
                             }
-                        }
                     }
 
 
@@ -2031,6 +2020,7 @@ namespace WebApplication1.Controllers
                     // campo.Key é o nome original do campo
                     // campo.Value é o nome que será exibido no Excel
                     worksheet.Cells[line, column] = campo.Value;
+                    worksheet.Columns[column].AutoFit();
                     column++;
                 }
 
@@ -2091,18 +2081,19 @@ namespace WebApplication1.Controllers
                                     // se o campo for do tipo Date, devo formatar apara que aparece apenas a data sem horas e dd-MM-yyyy
                                     if (prop.PropertyType == typeof(DateTime?))
                                     {
-                                        object value = (DateTime?)prop.GetValue(commission);
+                                        DateTime? value = (DateTime?)prop.GetValue(commission);
 
-                                        // Verifica se o valor não é null e formata a data
-                                        if (value != null)
+                                        var cell = worksheet.Cells[line, column];
+                                        cell.Clear(); // limpa valor e formatação anteriores
+
+                                        if (value.HasValue)
                                         {
-                                            var formattedDate = ((DateTime)value).ToString("dd-MM-yyyy");
-                                            worksheet.Cells[line, column] = formattedDate;
+                                            cell.NumberFormat = "@"; // Definir como texto antes
+                                            cell.Value = value.Value.ToString("dd/MM/yyyy");
                                         }
                                         else
                                         {
-                                            // Caso o valor seja null, deixa a célula vazia
-                                            worksheet.Cells[line, column] = "";
+                                            cell.Value = "";
                                         }
                                     }
                                     else
