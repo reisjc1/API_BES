@@ -1463,7 +1463,11 @@ namespace WebApplication1.Controllers
 
                     var Percent_10_CNHard = bb_commission_general.CN_Hard * 0.1;
 
-                    if (bb_commission_general.GP_Hard < Percent_10_CNHard && bb_commission_general.CN_Hard > 0 && !(bool)bb_commission_general.Es_GMA)
+                    if(bb_commission_general.GMA_10 == "GMA")
+                    {
+                        bb_commission_general.GP_Hard = Percent_10_CNHard;
+                    }
+                    else if (bb_commission_general.GP_Hard < Percent_10_CNHard && bb_commission_general.CN_Hard > 0 && !(bool)bb_commission_general.Es_GMA)
                     {
                         // Definir o campo "Tipo_Operacion"
                         bb_commission_general.GMA_10 = "10%";
