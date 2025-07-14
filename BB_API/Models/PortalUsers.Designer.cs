@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\PTLX0087\Source\Repos\API_BES\BB_API\Models\PortalUsers.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\BB\BES\API_BES\BB_API\Models\PortalUsers.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

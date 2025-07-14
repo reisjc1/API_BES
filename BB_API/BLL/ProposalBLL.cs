@@ -1300,7 +1300,7 @@ namespace WebApplication1.BLL
                 });
 
                 IMapper iMapper = config.CreateMapper();
-
+                LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ProposalID == i.ProposalId).FirstOrDefault();
                 BB_Proposal_Status statusProp = db.BB_Proposal_Status.Where(x => x.ID == proposal.StatusID).FirstOrDefault();
                 err.ProposalObj.Draft.details = iMapper.Map<BB_Proposal, Details>(proposal);
                 err.ProposalObj.Draft.details.Status = new ProposalStatus();
@@ -1312,6 +1312,7 @@ namespace WebApplication1.BLL
 
                 err.ProposalObj.Draft.details.IsMultipleContract = proposal.IsMultipleContract ?? false;
                 err.ProposalObj.Draft.details.ExistanteContractNumber = proposal.ContractNumberPai ?? "";
+                err.ProposalObj.Draft.details.AdministrationComments = lD_Contrato.ComentariosDevolucao;
 
                 err.ProposalObj.Draft.baskets = new Baskets();
 
@@ -1471,6 +1472,16 @@ namespace WebApplication1.BLL
                     if (infCliente.Territory != null && infCliente.Territory.Length >= 11)
                     {
                         c.SalesOffice = infCliente.Territory != null ? infCliente.Territory.Substring(8, 3) : "-";
+                    }
+
+                    if(infCliente.GMA == null)
+                    {
+                        c.GMA = "N/A";
+                    }
+
+                    if(infCliente.GMA_Identifier == null)
+                    {
+                        c.GMA_Identifier = "N/A";
                     }
 
                     c.modeId = infCliente.IsClienteBB == true ? 1
