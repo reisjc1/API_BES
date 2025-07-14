@@ -833,7 +833,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
                                         REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
                                         //REF_1 = order.Key.Name, //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
-                                        PURCH_NO_C = proposalId.ToString(),  //Nome interno da oferta
+                                        PURCH_NO_C = "BB" + DateTime.Today.Year + proposalId.ToString(),  //Nome interno da oferta
                                         SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
                                         PMNTTRMS = LEAS_ZTERM, //TODO: manter  || FinancingPaymentMethods.
                                         CONTRACT_DOC = contractDoc, //$"C_{c.ID}_1_{randomLetterNunber}",   //contractDoc,
