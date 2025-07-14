@@ -832,19 +832,7 @@ namespace WebApplication1.Controllers
                     {
                         if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
                         {
-                            // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
-                            // assim, nunca vai cair no else
-                            if (isGMA == true)
-                            {
-                                var GMA_Amout = amount * 0.1;
-                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0);
-                            }
-
-                            //// se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
-                            else
-                            {
-                                profitDictionary["HW"].GPTotal += (amount ?? 0);
-                            }
+                            profitDictionary["HW"].GPTotal += (amount ?? 0);
                         }
 
                         if (family.Contains("IMS") || family.Contains("WPH"))
@@ -930,19 +918,7 @@ namespace WebApplication1.Controllers
                     {
                         if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
                         {
-                            // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
-                            // assim, nunca vai cair no else
-                            if (isGMA == true)
-                            {
-                                var GMA_Amout = (totalNetsale - unitPriceCost) * 0.1;
-                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0);
-                            }
-
-                            //// se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
-                            else
-                            {
-                                profitDictionary["HW"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
-                            }
+                            profitDictionary["HW"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
                         }
 
                         if (family.Contains("IMS") || family.Contains("WPH"))
