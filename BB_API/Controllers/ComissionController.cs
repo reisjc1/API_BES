@@ -832,19 +832,7 @@ namespace WebApplication1.Controllers
                     {
                         if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
                         {
-                            // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
-                            // assim, nunca vai cair no else
-                            if (isGMA == true)
-                            {
-                                var GMA_Amout = amount * 0.1;
-                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0);
-                            }
-
-                            //// se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
-                            else
-                            {
-                                profitDictionary["HW"].GPTotal += (amount ?? 0);
-                            }
+                            profitDictionary["HW"].GPTotal += (amount ?? 0);
                         }
 
                         if (family.Contains("IMS") || family.Contains("WPH"))
@@ -871,44 +859,6 @@ namespace WebApplication1.Controllers
 
                     foreach (var oneShot_Item in oneShot)
                     {
-                        if (oneShot_Item.Family.Contains("HW"))
-                        {
-                            // Alquileres (no aplicable a los vendedores de GGCC)
-                            //if (actionCampaignId == 5 && financingTypeCode != 3)
-                            //{
-                            //    var result = (oneShot_Item.TotalNetsale - oneShot_Item.TotalCost) * 0.75;
-
-                            //    AddProfit(oneShot_Item.Family, result, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            //}
-                            // Máquinas usadas
-                            //if (oneShot_Item.IsUsed == true)
-                            //{
-                            //    var resultX = oneShot_Item.TotalNetsale;
-
-                            //    AddProfit(oneShot_Item.Family, resultX, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            //}
-                            //// Ampliación/Transición a Renting
-                            //else if (actionCampaignId == 3)
-                            //{
-                            //    var resultY = oneShot_Item.TotalNetsale * 0.75;
-
-                            //    AddProfit(oneShot_Item.Family, resultY, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            //}
-                            //else
-                            //{
-                            AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            //}
-                            // Finalización de Renting con venta
-                            //else if (financingTypeCode == 2 || )
-                            //{
-                            //    // esclarecer com Espanha
-                            //    // Possivelmente nem acontece pelo BB
-                            //}
-                        }
-                        else
-                        {
-                            // conta default
-
                             if (oneShot_Item.Description.Contains("MOBOTIX"))
                             {
                                 profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal;
@@ -922,27 +872,14 @@ namespace WebApplication1.Controllers
                             else
                             {
                                 AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            }
-                        }
+                            }                       
                     }
 
                     void AddProfit_RS(string family, double? totalNetsale, double? unitPriceCost)
                     {
                         if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
                         {
-                            // se o cliente for GMA, vou somar tudo o que é HW e multiplicar por 0.1
-                            // assim, nunca vai cair no else
-                            if (isGMA == true)
-                            {
-                                var GMA_Amout = (totalNetsale - unitPriceCost) * 0.1;
-                                profitDictionary["HW"].GPTotal += (GMA_Amout ?? 0);
-                            }
-
-                            //// se o cliente NAO for GMA, soma-se o GPTotal normalmente, sem aplicar uma regra especial
-                            else
-                            {
-                                profitDictionary["HW"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
-                            }
+                            profitDictionary["HW"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
                         }
 
                         if (family.Contains("IMS") || family.Contains("WPH"))
@@ -982,50 +919,6 @@ namespace WebApplication1.Controllers
 
                     bool isNewClient = proposal.ClientAccountNumber.StartsWith("P");
                     bool isNewBusinessLine = loadProposal.ProposalObj.Draft.baskets.newBusinessLine ?? false;
-
-                    // Definicao da percentagem de comissao a aplicar a cada familia ----> ANTIGO CÁLCULO
-                    //if (!isNewClient)
-                    //{
-                    //    profit_OfficeHW.ComissionPercentage = 9;
-                    //    profit_IMS_VSS.ComissionPercentage = 9;
-                    //    profit_PRS.ComissionPercentage = 9;
-                    //    profit_MCS_BPS.ComissionPercentage = 9;
-                    //    profit_MOBOTIX.ComissionPercentage = 9;
-                    //}
-                    //else if (isNewBusinessLine)
-                    //{
-                    //    profit_OfficeHW.ComissionPercentage = 12.5;
-                    //    profit_IMS_VSS.ComissionPercentage = 12.5;
-                    //    profit_PRS.ComissionPercentage = 12.5;
-                    //    profit_MCS_BPS.ComissionPercentage = 12.5;
-                    //    profit_MOBOTIX.ComissionPercentage = 12.5;
-                    //}
-                    //else
-                    //{
-                    //    profit_OfficeHW.ComissionPercentage = 15.5;
-                    //    profit_IMS_VSS.ComissionPercentage = 15.5;
-                    //    profit_PRS.ComissionPercentage = 15.5;
-                    //    profit_MCS_BPS.ComissionPercentage = 15.5;
-                    //    profit_MOBOTIX.ComissionPercentage = 15.5;
-                    //}
-
-
-                    //// Valor do GPTotal acrescido da comissao definida acima
-                    //// Exemplo: CalculatedCommission = GPTotal * 0.09
-
-                    //profit_PRS.CalculatedCommission = profit_PRS.GPTotal * (profit_PRS.ComissionPercentage / 100);
-                    //profit_OfficeHW.CalculatedCommission = profit_OfficeHW.GPTotal * (profit_OfficeHW.ComissionPercentage / 100);
-                    //profit_MOBOTIX.CalculatedCommission = profit_MOBOTIX.GPTotal * (profit_MOBOTIX.ComissionPercentage / 100);
-                    //profit_IMS_VSS.CalculatedCommission = profit_IMS_VSS.GPTotal * (profit_IMS_VSS.ComissionPercentage / 100);
-                    //profit_MCS_BPS.CalculatedCommission = profit_MCS_BPS.GPTotal * (profit_MCS_BPS.ComissionPercentage / 100);
-
-                    //// Soma da CalculatedCommission todas as familias
-                    //bb_commission_general.Comision = profit_OfficeHW.CalculatedCommission +
-                    //                                 profit_PRS.CalculatedCommission +
-                    //                                 profit_MOBOTIX.CalculatedCommission +
-                    //                                 profit_IMS_VSS.CalculatedCommission +
-                    //                                 profit_MCS_BPS.CalculatedCommission;
-
 
 
                     // --------------- PONTO 4 -------------->
@@ -1366,9 +1259,14 @@ namespace WebApplication1.Controllers
                                         bb_commission_general.Es_InsideSales = false;
                                 }
 
-                                string areaClient = userByDelegation.AreaComercial;
+                        string areaClient = userByDelegation.AreaComercial;
 
-                                bb_commission_general.Area = areaClient;
+                        bb_commission_general.Area = areaClient;
+
+                        if(bb_commission_general.Area == "MA")
+                        {
+                            bb_commission_general.Area = "GC";
+                        }
 
 
 
@@ -1482,12 +1380,16 @@ namespace WebApplication1.Controllers
                         bb_commission_general.GMA_10 = "X";
                     }
 
-                    // Soma de todos os GP daquele proposalID (incluindo RS)
+                    
                     bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key == "HW").Sum(x => x.Value.GPTotal);
 
                     var Percent_10_CNHard = bb_commission_general.CN_Hard * 0.1;
 
-                    if (bb_commission_general.GP_Hard < Percent_10_CNHard && bb_commission_general.CN_Hard > 0 && !(bool)bb_commission_general.Es_GMA)
+                    if(bb_commission_general.GMA_10 == "GMA")
+                    {
+                        bb_commission_general.GP_Hard = Percent_10_CNHard;
+                    }
+                    else if (bb_commission_general.GP_Hard < Percent_10_CNHard && bb_commission_general.CN_Hard > 0 && !(bool)bb_commission_general.Es_GMA)
                     {
                         // Definir o campo "Tipo_Operacion"
                         bb_commission_general.GMA_10 = "10%";
