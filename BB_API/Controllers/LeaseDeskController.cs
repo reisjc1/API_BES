@@ -2693,13 +2693,10 @@ namespace WebApplication1.Controllers
                 if(user != null)
                 {
                     a.ProposalObj.Draft.client.GestorCuenta = user.DisplayName;
-                    //a.ProposalObj.IsAdministration = user.FunctionSimpleDeal == "Adminstracao - BES" ? true : false;
                 }
                 else
                 {
                     a.ProposalObj.Draft.client.GestorCuenta = cliente.Owner;
-                    //a.ProposalObj.IsAdministration = user.FunctionSimpleDeal == "Adminstracao - BES" ? true : false;
-
                 }
 
 
@@ -4352,13 +4349,16 @@ namespace WebApplication1.Controllers
 
                             lD_Contrato.InvoiceList = invoiceList;
 
-                            BB_FinancingContractType contractType = db.BB_FinancingContractType.Where(x => x.CompanyCode == financingcompany).FirstOrDefault();
+                            if(financingcompany != null) { 
+                                BB_FinancingContractType contractType = db.BB_FinancingContractType.Where(x => x.CompanyCode == financingcompany).FirstOrDefault();
 
-                            BB_Proposal_Financing proposal_Financing = db.BB_Proposal_Financing.Where(x => x.ProposalID == contractProposal).FirstOrDefault();
+                                BB_Proposal_Financing proposal_Financing = db.BB_Proposal_Financing.Where(x => x.ProposalID == contractProposal).FirstOrDefault();
 
-                            proposal_Financing.ContractTypeId = contractType.ID;
+                                proposal_Financing.ContractTypeId = contractType.ID;
 
-                            bb_proposal.CodArrend = contractType.Company + " - " + contractType.CompanyCode;
+                                bb_proposal.CodArrend = contractType.Company + " - " + contractType.CompanyCode;
+                                db.Entry(proposal_Financing).State = EntityState.Modified;
+                            }
                             //using( var db2 = new BB_DB_DEVEntities2())
                             //{
 
@@ -4382,7 +4382,7 @@ namespace WebApplication1.Controllers
 
                             db.Entry(bb_proposal).State = EntityState.Modified;
                             db.Entry(lD_Contrato).State = EntityState.Modified;
-                            db.Entry(proposal_Financing).State = EntityState.Modified;
+
 
                             db.SaveChanges();
                         }

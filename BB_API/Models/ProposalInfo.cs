@@ -61,7 +61,6 @@ namespace WebApplication1.Models
         public bool IsClientPublicSector { get; set; }
 
         //public List<BB_Equipamentos> Equipamentos { get; set; }
-        public bool IsAdministration { get; set; }
     }
 
 
