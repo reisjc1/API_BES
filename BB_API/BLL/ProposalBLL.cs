@@ -1312,7 +1312,7 @@ namespace WebApplication1.BLL
 
                 err.ProposalObj.Draft.details.IsMultipleContract = proposal.IsMultipleContract ?? false;
                 err.ProposalObj.Draft.details.ExistanteContractNumber = proposal.ContractNumberPai ?? "";
-                err.ProposalObj.Draft.details.AdministrationComments = lD_Contrato.ComentariosDevolucao;
+                err.ProposalObj.Draft.details.AdministrationComments = lD_Contrato!= null ? lD_Contrato.ComentariosDevolucao : "";
 
                 err.ProposalObj.Draft.baskets = new Baskets();
 
