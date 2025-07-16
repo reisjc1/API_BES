@@ -35,5 +35,6 @@ namespace WebApplication1.Models
         public string ARTICLE_TYPE { get; set; }
         public string COND_TYPE_RENTAL { get; set; }
         public string COND_TYPE_AL { get; set; }
+        public Nullable<double> C_Cost { get; set; }
     }
 }

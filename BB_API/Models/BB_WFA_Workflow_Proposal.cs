@@ -22,5 +22,6 @@ namespace WebApplication1.Models
         public Nullable<bool> Finished { get; set; }
         public Nullable<bool> IsApproved { get; set; }
         public Nullable<bool> IsCompleted { get; set; }
+        public string ClientNumber { get; set; }
     }
 }

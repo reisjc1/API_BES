@@ -330,6 +330,7 @@
           <Property Name="ARTICLE_TYPE" Type="nvarchar(max)" />
           <Property Name="COND_TYPE_RENTAL" Type="nchar" MaxLength="10" />
           <Property Name="COND_TYPE_AL" Type="nchar" MaxLength="10" />
+          <Property Name="_Cost" Type="float" />
         </EntityType>
         <EntityType Name="BB_DeliveryContactsInfo">
           <Key>
@@ -1702,6 +1703,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Finished" Type="bit" />
           <Property Name="IsApproved" Type="bit" />
           <Property Name="IsCompleted" Type="bit" />
+          <Property Name="ClientNumber" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="BB_WorkSheet_Metadata">
           <Key>
@@ -2303,7 +2305,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_RD_WFA" EntityType="BB_DB_DEVModel.BB_RD_WFA" />
           <EntitySet Name="BB_RD_WFA_Approvers" EntityType="BB_DB_DEVModel.BB_RD_WFA_Approvers" />
           <EntitySet Name="BB_RD_WFA_Exception_Action" EntityType="BB_DB_DEVModel.BB_RD_WFA_Exception_Action" />
-          <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="BB_DB_DEVModel.BB_WFA_Workflow_Proposal" />
           <EntitySet Name="BB_WFA_Comments_Business" EntityType="BB_DB_DEVModel.BB_WFA_Comments_Business" />
           <EntitySet Name="BB_RD_WFA_Customer_Type" EntityType="BB_DB_DEVModel.BB_RD_WFA_Customer_Type" />
           <EntitySet Name="BB_WFA_Control" EntityType="BB_DB_DEVModel.BB_WFA_Control" />
@@ -2345,6 +2346,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_Clientes" EntityType="BB_DB_DEVModel.BB_Clientes" />
           <EntitySet Name="BB_Commission_General" EntityType="BB_DB_DEVModel.BB_Commission_General" />
           <EntitySet Name="BB_Proposal_Financing" EntityType="BB_DB_DEVModel.BB_Proposal_Financing" />
+          <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="BB_DB_DEVModel.BB_WFA_Workflow_Proposal" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -2411,6 +2413,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="ARTICLE_TYPE" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="COND_TYPE_RENTAL" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="COND_TYPE_AL" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="C_Cost" Type="Double" />
         </EntityType>
         <EntityType Name="BB_Equipamentos">
           <Key>
@@ -3629,19 +3632,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="BB_WFA_Workflow_Proposal">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Proposal_ID" Type="Int32" />
-          <Property Name="Created_Date" Type="DateTime" Precision="3" />
-          <Property Name="Finished_Date" Type="DateTime" Precision="3" />
-          <Property Name="Started" Type="Boolean" />
-          <Property Name="Finished" Type="Boolean" />
-          <Property Name="IsApproved" Type="Boolean" />
-          <Property Name="IsCompleted" Type="Boolean" />
-        </EntityType>
         <EntityType Name="BB_WFA_Comments_Business">
           <Key>
             <PropertyRef Name="ID" />
@@ -4283,6 +4273,20 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="MaintanceContractPaymentAfterText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="MaintanceContractPaymentTerms" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="BB_WFA_Workflow_Proposal">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Proposal_ID" Type="Int32" />
+          <Property Name="Created_Date" Type="DateTime" Precision="3" />
+          <Property Name="Finished_Date" Type="DateTime" Precision="3" />
+          <Property Name="Started" Type="Boolean" />
+          <Property Name="Finished" Type="Boolean" />
+          <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="IsCompleted" Type="Boolean" />
+          <Property Name="ClientNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         
         </Schema>
     </edmx:ConceptualModels>
@@ -4335,6 +4339,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_Data_Integration">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Data_Integration">
               <MappingFragment StoreEntitySet="BB_Data_Integration">
+                <ScalarProperty Name="C_Cost" ColumnName="_Cost" />
                 <ScalarProperty Name="COND_TYPE_AL" ColumnName="COND_TYPE_AL" />
                 <ScalarProperty Name="COND_TYPE_RENTAL" ColumnName="COND_TYPE_RENTAL" />
                 <ScalarProperty Name="ARTICLE_TYPE" ColumnName="ARTICLE_TYPE" />
@@ -5591,20 +5596,6 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BB_WFA_Workflow_Proposal">
-            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Workflow_Proposal">
-              <MappingFragment StoreEntitySet="BB_WFA_Workflow_Proposal">
-                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
-                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
-                <ScalarProperty Name="Finished" ColumnName="Finished" />
-                <ScalarProperty Name="Started" ColumnName="Started" />
-                <ScalarProperty Name="Finished_Date" ColumnName="Finished_Date" />
-                <ScalarProperty Name="Created_Date" ColumnName="Created_Date" />
-                <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BB_WFA_Comments_Business">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Comments_Business">
               <MappingFragment StoreEntitySet="BB_WFA_Comments_Business">
@@ -6228,6 +6219,21 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
                 <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
                 <ScalarProperty Name="FinancingTypeCode1" ColumnName="FinancingTypeCode1" />
                 <ScalarProperty Name="ContractTypeId" ColumnName="ContractTypeId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_WFA_Workflow_Proposal">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_WFA_Workflow_Proposal">
+              <MappingFragment StoreEntitySet="BB_WFA_Workflow_Proposal">
+                <ScalarProperty Name="ClientNumber" ColumnName="ClientNumber" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="Finished" ColumnName="Finished" />
+                <ScalarProperty Name="Started" ColumnName="Started" />
+                <ScalarProperty Name="Finished_Date" ColumnName="Finished_Date" />
+                <ScalarProperty Name="Created_Date" ColumnName="Created_Date" />
+                <ScalarProperty Name="Proposal_ID" ColumnName="Proposal_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
