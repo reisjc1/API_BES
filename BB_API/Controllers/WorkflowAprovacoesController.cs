@@ -2096,7 +2096,7 @@ namespace WebApplication1.Controllers
 
                             if (aux != null)
                             {
-                                var existsCodeRef = db.BB_WFA_Proposal_OneShot_History.Where(x => x.CodeRef == bbp_quote.CodeRef).FirstOrDefault();
+                                var existsCodeRef = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == bbp_quote.Proposal_ID && x.CodeRef == bbp_quote.CodeRef).FirstOrDefault();
 
                                 if (existsCodeRef != null)
                                 {
