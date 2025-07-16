@@ -207,8 +207,30 @@ namespace WebApplication1.Models
         public double? GroupPrice { get; set; }
         public BB_Proposal_DeliveryLocationResumoModel DeliverySummary { get; set; }
         public string SerialNumber { get; set; }
+        public ContactListByIDX ContactList { get; set; }
 
     }
+
+    public class ContactListByIDX
+    {
+        public int IDX;
+        public List<DeliveryLocation_ClientContacts> ContactList { get; set; }
+
+    }
+
+    public partial class DeliveryLocation_ClientContacts
+    {
+        public int ID { get; set; }
+        public string ClientID { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public Nullable<int> Tel { get; set; }
+        public Nullable<int> Movil { get; set; }
+        public string Email { get; set; }
+        public string ContactType { get; set; }
+    }
+
+
     public class OPSPacks
     {
         public OPSPacks()
@@ -282,6 +304,7 @@ namespace WebApplication1.Models
         public bool? Blocked { get; set; }
         public string Holding { get; set; }
         public string GMA { get; set; }
+        public string GMA_Identifier { get; set; }
         public bool? isNewClient { get; set; }
         public bool? isPublicSector { get; set; }
         public bool? isGMA { get; set; }
@@ -326,6 +349,7 @@ namespace WebApplication1.Models
 
         public bool? IsMultipleContract { get; set; }
         public string ExistanteContractNumber { get; set; }
+        public string AdministrationComments { get; set; }
     
     }
 
