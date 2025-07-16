@@ -859,20 +859,20 @@ namespace WebApplication1.Controllers
 
                     foreach (var oneShot_Item in oneShot)
                     {
-                            if (oneShot_Item.Description.Contains("MOBOTIX"))
-                            {
-                                profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal;
+                        if (oneShot_Item.Description.Contains("MOBOTIX"))
+                        {
+                            profitDictionary["MOBOTIX"].GPTotal += oneShot_Item.GPTotal;
 
-                            }
-                            else if (oneShot_Item.Description.Contains("BPS"))
-                            {
-                                profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal;
+                        }
+                        else if (oneShot_Item.Description.Contains("BPS"))
+                        {
+                            profitDictionary["MCS_BPS"].GPTotal += oneShot_Item.GPTotal;
 
-                            }
-                            else
-                            {
-                                AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
-                            }                       
+                        }
+                        else
+                        {
+                            AddProfit(oneShot_Item.Family, oneShot_Item.GPTotal, oneShot_Item.CodeRef, oneShot_Item.Qty);
+                        }
                     }
 
                     void AddProfit_RS(string family, double? totalNetsale, double? unitPriceCost)
@@ -1229,85 +1229,94 @@ namespace WebApplication1.Controllers
                     {
                         AspNetUsers userByDelegation = new AspNetUsers();
 
-                        userByDelegation = dbUsers.AspNetUsers.Where(x => x.Territory == client.Territory).FirstOrDefault();
+                        userByDelegation = dbUsers.AspNetUsers.Where(x => x.Territory.Contains(client.Territory)).FirstOrDefault();
 
                         if (userByDelegation == null)
                         {
                             userByDelegation = dbUsers.AspNetUsers.Where(x => x.DisplayName == client.Owner).FirstOrDefault();
                         }
 
-                            bb_commission_general.Manager = userByDelegation.Manager;
+                        bb_commission_general.Manager = userByDelegation.Manager;
 
-                            // Regras InsideSales
-                            string modifiedByRole = dbUsers.AspNetUsers.Where(x => x.Email == proposal.ModifiedBy.ToString()).Select(x => x.FunctionSimpleDeal).FirstOrDefault();
+                        // Regras InsideSales
+                        string modifiedByRole = dbUsers.AspNetUsers.Where(x => x.Email == proposal.ModifiedBy.ToString()).Select(x => x.FunctionSimpleDeal).FirstOrDefault();
 
 
-                                if (modifiedByRole == "DRV - Inside Sales - BES")
-                                {                                 
+                        if (modifiedByRole == "DRV - Inside Sales - BES")
+                        {
 
-                                        //if (client != null)
-                                        //{
-                                        //    if (client.Territory != null || client.Territory != "BF-724I7TH2" || client.Territory != "Javier Gomez Garcia")
-                                        //        bb_commission_general.Delegacion = client.Territory;
-                                        //}                                      
+                            //if (client != null)
+                            //{
+                            //    if (client.Territory != null || client.Territory != "BF-724I7TH2" || client.Territory != "Javier Gomez Garcia")
+                            //        bb_commission_general.Delegacion = client.Territory;
+                            //}                                      
 
-                                        bb_commission_general.Es_InsideSales = true;
-                                }
-                                else
-                                {
-                                        //bb_commission_general.Delegacion = user.Location;
-                                        bb_commission_general.Es_InsideSales = false;
-                                }
+                            bb_commission_general.Es_InsideSales = true;
+                        }
+                        else
+                        {
+                            //bb_commission_general.Delegacion = user.Location;
+                            bb_commission_general.Es_InsideSales = false;
+                        }
 
                         string areaClient = userByDelegation.AreaComercial;
 
                         bb_commission_general.Area = areaClient;
 
-                        if(bb_commission_general.Area == "MA")
+                        if (bb_commission_general.Area == "MA")
                         {
                             bb_commission_general.Area = "GC";
                         }
 
 
 
-                            //bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;                          
+                        //bb_commission_general.Comercial = user.USUARIO_Sharepoint_Nome;                          
 
-                            bb_commission_general.Comercial = userByDelegation.DisplayName;
+                        bb_commission_general.Comercial = userByDelegation.DisplayName;
 
+                        if (userByDelegation.Territory.Contains("5VT"))
+                        {
+                            bb_commission_general.Delegacion = client.Branch_Local;
+                           
+                        }
+                        else
+                        {
                             bb_commission_general.Delegacion = userByDelegation.Location;
+                        }
+                       
 
-                            bb_commission_general.Delegacion = bb_commission_general.Delegacion.ToUpper();
-                            
-     
-                            
-                            bb_commission_general.N_Trab = userByDelegation.N_TRABAJADOR;
-                            bb_commission_general.Manager_Nombre = userByDelegation.Manager;
-                            bb_commission_general.Usuario_Sharepoint = userByDelegation.USUARIO_Sharepoint_Email;
-                            bb_commission_general.Usuario_Sharepoint_Nombre = userByDelegation.USUARIO_Sharepoint_Nome;
+                        bb_commission_general.Delegacion = bb_commission_general.Delegacion.ToUpper();
 
 
-                            // VALIDAR SE O NEGOCIO É HIBRIDO ---------------------
-                            bool hasUsed = false;
-                            bool hasNew = false;
-                            bb_commission_general.Es_Hibrida = false;
 
-                            foreach (var item in oneShot)
+                        bb_commission_general.N_Trab = userByDelegation.N_TRABAJADOR;
+                        bb_commission_general.Manager_Nombre = userByDelegation.Manager;
+                        bb_commission_general.Usuario_Sharepoint = userByDelegation.USUARIO_Sharepoint_Email;
+                        bb_commission_general.Usuario_Sharepoint_Nombre = userByDelegation.USUARIO_Sharepoint_Nome;
+
+
+                        // VALIDAR SE O NEGOCIO É HIBRIDO ---------------------
+                        bool hasUsed = false;
+                        bool hasNew = false;
+                        bb_commission_general.Es_Hibrida = false;
+
+                        foreach (var item in oneShot)
+                        {
+                            if ((bool)item.IsUsed)
                             {
-                                if ((bool)item.IsUsed)
-                                {
-                                    hasUsed = true;
-                                }
-                                else
-                                {
-                                    hasNew = true;
-                                }
-
-                                if (hasUsed && hasNew)
-                                {
-                                    bb_commission_general.Es_Hibrida = true;
-                                    break;
-                                }
+                                hasUsed = true;
                             }
+                            else
+                            {
+                                hasNew = true;
+                            }
+
+                            if (hasUsed && hasNew)
+                            {
+                                bb_commission_general.Es_Hibrida = true;
+                                break;
+                            }
+                        }
                     }
 
 
@@ -1380,12 +1389,12 @@ namespace WebApplication1.Controllers
                         bb_commission_general.GMA_10 = "X";
                     }
 
-                    
+
                     bb_commission_general.GP_Hard = profitDictionary.Where(d => d.Key == "HW").Sum(x => x.Value.GPTotal);
 
                     var Percent_10_CNHard = bb_commission_general.CN_Hard * 0.1;
 
-                    if(bb_commission_general.GMA_10 == "GMA")
+                    if (bb_commission_general.GMA_10 == "GMA")
                     {
                         bb_commission_general.GP_Hard = Percent_10_CNHard;
                     }
@@ -1551,7 +1560,7 @@ namespace WebApplication1.Controllers
                     {
                         bb_commission_general.Comision_Copias = 0;
                     }
-    
+
                     bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
                     bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
 

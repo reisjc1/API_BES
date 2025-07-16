@@ -4497,9 +4497,9 @@ namespace WebApplication1.Controllers
                     //WORKSHEET - BB
                     var wsBB = pck.Workbook.Worksheets["BB"];
 
-                    wsBB.Cells["B3"].Value = "BB" + p.Draft.details.ID;
+                    wsBB.Cells["B3"].Value = "BB" + DateTime.Today.Year + p.Draft.details.ID;
 
-                    wsBB.Cells["D3"].Value = p.Draft.details.ID;
+                    wsBB.Cells["D3"].Value = "BB" + DateTime.Today.Year + p.Draft.details.ID;
 
                     wsBB.Cells["B6"].Value = p.Draft.client.Name;
 
@@ -4509,7 +4509,8 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["F9"].Value = p.Draft.client.isPublicSector.GetValueOrDefault() ? "Publico" : "Privado";
 
-                    wsBB.Cells["H9"].Value = p.Draft.client.isGMA.GetValueOrDefault() ? "Si" : "No aplicable";
+
+                    wsBB.Cells["H9"].Value =_Cliente.GMA_Identifier != null && _Cliente.GMA_Identifier != "" ? _Cliente.GMA_Identifier : "N/A";
 
                     string _TipoNegocio = "";
                     switch (p.Draft.details.CampaignID)
@@ -4583,11 +4584,11 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["B15"].Value = gestor;
 
-                    wsBB.Cells["D15"].Value = p.Draft.client.SalesGroup  + p.Draft.client.City;  //_Cliente.Branch_Id + " - " + _Cliente.City;
+                    wsBB.Cells["D15"].Value = p.Draft.client.SalesGroup;  //_Cliente.Branch_Id + " - " + _Cliente.City;
 
                     wsBB.Cells["F15"].Value = _Cliente.Erpsalesgroupid;
 
-                    wsBB.Cells["B19"].Value = p.Draft.financingDetails.FinancingType != null && p.Draft.financingDetails.FinancingType != "" ? p.Draft.financingDetails.FinancingType : "No aplicable";
+                    wsBB.Cells["B19"].Value = p.Draft.financingDetails.FinancingType != null && p.Draft.financingDetails.FinancingType != "" ? p.Draft.financingDetails.FinancingType : "N/A";
 
                     wsBB.Cells["H15"].Value = p.Draft.baskets.IsNP ? "Sí" : "No";
 
@@ -4596,7 +4597,7 @@ namespace WebApplication1.Controllers
                     switch (p.Draft.financing.PaymentMethodId)
                     {
                         case 1:
-                            _MedotodPagamento = "No Aplicable"; break;
+                            _MedotodPagamento = "N/A"; break;
                         case 2:
                             _MedotodPagamento = "Debito Directo"; break;
                         case 3:
@@ -4604,20 +4605,20 @@ namespace WebApplication1.Controllers
                         case 4:
                             _MedotodPagamento = "Outro"; break;
                         default:
-                            _MedotodPagamento = "No Aplicable"; break;
+                            _MedotodPagamento = "N/A"; break;
 
                     }
 
                     wsBB.Cells["D19"].Value = _MedotodPagamento;
 
-                    wsBB.Cells["F19"].Value = p.Draft.financing.PaymentAfter != 0 ? p.Draft.financing.PaymentAfter + " días después de la fecha de la factura" : "No aplicable";
+                    wsBB.Cells["F19"].Value = p.Draft.financing.PaymentAfter != 0 ? p.Draft.financing.PaymentAfter + " días después de la fecha de la factura" : "N/A";
 
-                    wsBB.Cells["H19"].Value = p.Draft.financing.ContractTypeId != 0 && p.Draft.financingDetails.ContractType != null && p.Draft.financingDetails.ContractType != "" ? p.Draft.financingDetails.ContractType : "No aplicable";
+                    wsBB.Cells["H19"].Value = p.Draft.financing.ContractTypeId != 0 && p.Draft.financingDetails.ContractType != null && p.Draft.financingDetails.ContractType != "" ? p.Draft.financingDetails.ContractType : "N/A";
 
 
-                    wsBB.Cells["B22"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AgreementNumber != null && p.Draft.financing.AgreementNumber != "" ? p.Draft.financing.AgreementNumber : "No aplicable";
+                    wsBB.Cells["B22"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AgreementNumber != null && p.Draft.financing.AgreementNumber != "" ? p.Draft.financing.AgreementNumber : "N/A";
 
-                    wsBB.Cells["D22"].Value = p.Draft.financing != null && p.Draft.financing.DateApproval != null ? p.Draft.financing.DateApproval.Value.ToString("dd/MM/yyyy") : "No aplicable";
+                    wsBB.Cells["D22"].Value = p.Draft.financing != null && p.Draft.financing.DateApproval != null ? p.Draft.financing.DateApproval.Value.ToString("dd/MM/yyyy") : "N/A";
 
                     wsBB.Cells["B26"].Value = p.Draft.financing.MaintanceContractDuration != null ? p.Draft.financing.MaintanceContractDuration.ToString() : "0";
 
@@ -4627,7 +4628,7 @@ namespace WebApplication1.Controllers
                     switch (p.Draft.financing.MaintanceContractPaymentMethodID)
                     {
                         case 1:
-                            _MedotodPagamento1 = "No Aplicable"; break;
+                            _MedotodPagamento1 = "N/A"; break;
                         case 2:
                             _MedotodPagamento1 = "Debito Directo"; break;
                         case 3:
@@ -4635,15 +4636,15 @@ namespace WebApplication1.Controllers
                         case 4:
                             _MedotodPagamento1 = "Outro"; break;
                         default:
-                            _MedotodPagamento1 = "No Aplicable"; break;
+                            _MedotodPagamento1 = "N/A"; break;
 
                     }
 
                     wsBB.Cells["D26"].Value = _MedotodPagamento1;
 
-                    wsBB.Cells["F26"].Value = p.Draft.financing.MaintanceContractPaymentAfterText != null && p.Draft.financing.MaintanceContractPaymentAfterText != "" ? p.Draft.financing.MaintanceContractPaymentAfterText : "No aplicable";
+                    wsBB.Cells["F26"].Value = p.Draft.financing.MaintanceContractPaymentAfterText != null && p.Draft.financing.MaintanceContractPaymentAfterText != "" ? p.Draft.financing.MaintanceContractPaymentAfterText : "N/A";
 
-                    wsBB.Cells["H26"].Value = p.Draft.financing.MaintanceContractPaymentTerms != null && p.Draft.financing.MaintanceContractPaymentTerms != "" ? p.Draft.financing.MaintanceContractPaymentTerms : "No aplicable";
+                    wsBB.Cells["H26"].Value = p.Draft.financing.MaintanceContractPaymentTerms != null && p.Draft.financing.MaintanceContractPaymentTerms != "" ? p.Draft.financing.MaintanceContractPaymentTerms : "N/A";
 
                     double? _TotalBRUTO = 0;
 
@@ -4674,7 +4675,7 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["D30"].Value = TotalValorBrutoconLPI.ToString() + " €"; ;
 
-                    wsBB.Cells["B30"].Value = p.Draft.details.ValueTotal.ToString() + " €"; ;
+                    wsBB.Cells["B33"].Value = p.Draft.details.ValueTotal.ToString() + " €"; ;
 
 
                     double? _ProdutosFinanciados = 0;
@@ -4692,9 +4693,9 @@ namespace WebApplication1.Controllers
                     wsBB.Cells["D33"].Value = _ProdutosFinanciados.ToString() + " €"; ;
 
 
-                    wsBB.Cells["F33"].Value = p.valoretotais.ServicosRecorentesTotal != 0 ? p.valoretotais.ServicosRecorentesTotal : 0;
+                    wsBB.Cells["F33"].Value = p.valoretotais.ServicosRecorentesTotal != 0 ? p.valoretotais.ServicosRecorentesTotal + " €" : "N/A";
 
-                    wsBB.Cells["H33"].Value = p.valoretotais.LeiCopiaPrivada != 0 ? p.valoretotais.LeiCopiaPrivada : 0;
+                    wsBB.Cells["H33"].Value = p.valoretotais.LeiCopiaPrivada != 0 ? (p.valoretotais.LeiCopiaPrivada + "€").ToString(): "N/A";
 
 
                     double? TotalCuotaCliente = p.Draft.financing.MonthlyIncome;
@@ -4704,19 +4705,19 @@ namespace WebApplication1.Controllers
                         TotalCuotaCliente += activePS.GlobalClickVVA.PVP;
                     }
 
-                    wsBB.Cells["B36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? TotalCuotaCliente.ToString() + " €" : 0.ToString() + " €"; ;
+                    wsBB.Cells["B36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? TotalCuotaCliente.ToString() + " €" : "N/A"; ;
 
-                    wsBB.Cells["D36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : 0.ToString() + " €"; ;
+                    wsBB.Cells["D36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : "N/A"; ;
 
-                    wsBB.Cells["F36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountNotFinanced != 0 ? p.Draft.financing.AmountNotFinanced.ToString() + " €" : 0.ToString() + " €"; ;
+                    wsBB.Cells["F36"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountNotFinanced != 0 ? p.Draft.financing.AmountNotFinanced.ToString() + " €" : "N/A"; ;
 
-                    wsBB.Cells["H36"].Value = activePS != null && activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP.ToString() + " €" : 0.ToString() + " €";
+                    wsBB.Cells["H36"].Value = activePS != null && activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP.ToString() + " €" : "N/A";
 
-                    wsBB.Cells["B39"].Value = p.Draft.overvaluations != null && p.Draft.overvaluations.Count > 0 ? p.valoretotais.sobrevalorizacaoTotal.ToString() + " €" : 0.ToString() + " €";
+                    wsBB.Cells["B39"].Value = p.Draft.overvaluations != null && p.Draft.overvaluations.Count > 0 ? p.valoretotais.sobrevalorizacaoTotal.ToString() + " €" : "N/A";
 
-                    wsBB.Cells["D39"].Value = p.Draft.upturns != null && p.Draft.upturns.Count > 0 ? p.valoretotais.retomasTotal.ToString() + " €" : 0.ToString() + " €";
+                    wsBB.Cells["D39"].Value = p.Draft.upturns != null && p.Draft.upturns.Count > 0 ? p.valoretotais.retomasTotal.ToString() + " €" :"N/A";
 
-                    wsBB.Cells["B42"].Value = p.LeasedeskComentariosGC != null && p.LeasedeskComentariosGC != "" ? p.LeasedeskComentariosGC : "No aplicable";
+                    wsBB.Cells["B42"].Value = p.LeasedeskComentariosGC != null && p.LeasedeskComentariosGC != "" ? p.LeasedeskComentariosGC : "N/A";
                     //KOnica Representante
                     //ws.Cells["A54"].Value = "Sede: Edifício Sagres - Rua Prof. Henrique de Barros, 4-10ºB   2685-338 PRIOR VELHO    Tel. 219 492 108  Fax 219 492 198";
                     //ws.Cells["A55"].Value = "NIB: 003300000000521753405 - Cont. nº 502 120 070 - Cap.Soc.Euros 2.750.100 - Matrícula na CRC de Loures sob o nº 20563";
@@ -4952,7 +4953,7 @@ namespace WebApplication1.Controllers
                         case 6:
                             _Produtofinanceiro = "Head Lease sub lease"; break;
                         default:
-                            _Produtofinanceiro = "No aplicable"; break;
+                            _Produtofinanceiro = "N/A"; break;
 
                     }
 
@@ -4961,34 +4962,34 @@ namespace WebApplication1.Controllers
                     string _PagamentoMethod = "";
                     switch (p.Draft.financing.PaymentMethodId)
                     {
-                        case 1: _PagamentoMethod = "No Aplicable"; break;
+                        case 1: _PagamentoMethod = "N/A"; break;
                         case 2: _PagamentoMethod = "Debito Directo"; break;
                         case 3: _PagamentoMethod = "Transferencia Bancaria"; break;
                         case 4: _PagamentoMethod = "Outro"; break;
-                        default: _PagamentoMethod = "No Aplicable"; break;
+                        default: _PagamentoMethod = "N/A"; break;
                     }
 
                     wsFINANCIAL_INFORMATION.Cells["B3"].Value = _PagamentoMethod;
 
-                    wsFINANCIAL_INFORMATION.Cells["B4"].Value = p.Draft.financing != null && p.Draft.financing.MaintanceContractPaymentTerms != null ? p.Draft.financing.MaintanceContractPaymentTerms : "No Aplicable";
+                    wsFINANCIAL_INFORMATION.Cells["B4"].Value = p.Draft.financing != null && p.Draft.financing.MaintanceContractPaymentTerms != null ? p.Draft.financing.MaintanceContractPaymentTerms : "N/A";
 
-                    wsFINANCIAL_INFORMATION.Cells["B5"].Value = p.Draft.financing.ContractTypeId != 0 && p.Draft.financingDetails.ContractType != null && p.Draft.financingDetails.ContractType != "" ? p.Draft.financingDetails.ContractType : "No Aplicable";
+                    wsFINANCIAL_INFORMATION.Cells["B5"].Value = p.Draft.financing.ContractTypeId != 0 && p.Draft.financingDetails.ContractType != null && p.Draft.financingDetails.ContractType != "" ? p.Draft.financingDetails.ContractType : "N/A";
 
-                    wsFINANCIAL_INFORMATION.Cells["B6"].Value = p.Draft.financing.Factor != 0 && p.Draft.financing.Factor != 0 ? p.Draft.financing.Factor.ToString() + "%" : "No Aplicable";
+                    wsFINANCIAL_INFORMATION.Cells["B6"].Value = p.Draft.financing.Factor != 0 && p.Draft.financing.Factor != 0 ? p.Draft.financing.Factor.ToString() + "%" : "N/A";
 
                     wsFINANCIAL_INFORMATION.Cells["B7"].Value = "MONTHLY";
 
                     wsFINANCIAL_INFORMATION.Cells["B8"].Value = "DUE IN ADVANCE";
 
-                    wsFINANCIAL_INFORMATION.Cells["B9"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.Months != 0 ? p.Draft.financing.Months.ToString() + " MONTHS" : "No Aplicable";
+                    wsFINANCIAL_INFORMATION.Cells["B9"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.Months != 0 ? p.Draft.financing.Months.ToString() + " MONTHS" : "N/A";
 
                     wsFINANCIAL_INFORMATION.Cells["B10"].Value = p.Draft.financing.AgreementNumber;
 
-                    wsFINANCIAL_INFORMATION.Cells["B13"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : "No Aplicable";
+                    wsFINANCIAL_INFORMATION.Cells["B13"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountFinanced != 0 ? p.Draft.financing.AmountFinanced.ToString() + " €" : "N/A";
 
-                    wsFINANCIAL_INFORMATION.Cells["B14"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountNotFinanced != 0 ? p.Draft.financing.AmountNotFinanced.ToString() + " €" : "No Aplicable";
+                    wsFINANCIAL_INFORMATION.Cells["B14"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.AmountNotFinanced != 0 ? p.Draft.financing.AmountNotFinanced.ToString() + " €" : "N/A";
 
-                    wsFINANCIAL_INFORMATION.Cells["B15"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.MonthlyIncome != 0 ? p.Draft.financing.MonthlyIncome.ToString() + " €" : "No Aplicable";
+                    wsFINANCIAL_INFORMATION.Cells["B15"].Value = p.Draft.financing.FinancingTypeCode != 0 && p.Draft.financing.MonthlyIncome != 0 ? p.Draft.financing.MonthlyIncome.ToString() + " €" : "N/A";
 
 
                     LeaseDeskBLL _LeaseDeskBLL = new LeaseDeskBLL();
@@ -5024,10 +5025,10 @@ namespace WebApplication1.Controllers
                     //WORKSHEET - SERVICE
                     var wsSERVICE = pck.Workbook.Worksheets["SERVICE"];
 
-                    wsSERVICE.Cells["C2"].Value = activePS != null ? activePS.ContractDuration.ToString() + " Meses" : "No Aplicable";
+                    wsSERVICE.Cells["C2"].Value = activePS != null ? activePS.ContractDuration.ToString() + " Meses" : "N/A";
                     wsSERVICE.Cells["C3"].Value = p.Draft.printingServices2.PrintingCondition.ToString() + " €";
-                    wsSERVICE.Cells["C4"].Value = activePS != null && activePS.SEObservations != null ? activePS.SEObservations.ToString() : "No Aplicable";
-                    wsSERVICE.Cells["C5"].Value = activePS != null && activePS.SCObservations != null ? activePS.SCObservations.ToString() : "No Aplicable";
+                    wsSERVICE.Cells["C4"].Value = activePS != null && activePS.SEObservations != null ? activePS.SEObservations.ToString() : "N/A";
+                    wsSERVICE.Cells["C5"].Value = activePS != null && activePS.SCObservations != null ? activePS.SCObservations.ToString() : "N/A";
 
 
                     wsSERVICE.Cells["C6"].Value = pr1.IsMultipleContract.GetValueOrDefault() == true ? "Agrupado" : "Individual";
@@ -5056,13 +5057,17 @@ namespace WebApplication1.Controllers
                             wsSERVICE.Cells["D" + idxActive].Value = item.Description;
                             wsSERVICE.Cells["E" + idxActive].Value = item.Qty;
                             wsSERVICE.Cells["F" + idxActive].Value = item.BWVolume;
-                            wsSERVICE.Cells["G" + idxActive].Value = item.ClickPriceBW + " €";
-                            wsSERVICE.Cells["H" + idxActive].Value = item.ApprovedBW + " €";
+                            wsSERVICE.Cells["G" + idxActive].Value = item.BWVolume.GetValueOrDefault() * item.ApprovedBW.GetValueOrDefault() + " €";
+                            wsSERVICE.Cells["H" + idxActive].Value = item.BWCost + " €"; 
                             wsSERVICE.Cells["I" + idxActive].Value = activePS.GlobalClickVVA.BWExcessPVP + " €";
                             wsSERVICE.Cells["J" + idxActive].Value = item.CVolume;
-                            wsSERVICE.Cells["K" + idxActive].Value = item.ClickPriceC + " €";
-                            wsSERVICE.Cells["L" + idxActive].Value = item.ApprovedC + " €";
+                            wsSERVICE.Cells["K" + idxActive].Value = item.CVolume.GetValueOrDefault() * item.ApprovedC.GetValueOrDefault() + " €";
+                            wsSERVICE.Cells["L" + idxActive].Value = item.CCost + " €"; 
                             wsSERVICE.Cells["M" + idxActive].Value = activePS.GlobalClickVVA.CExcessPVP + " €";
+                            wsSERVICE.Cells["N" + idxActive].Value = item.ApprovedBW +" €" ;
+                            wsSERVICE.Cells["O" + idxActive].Value = item.ClickPriceBW + "€";
+                            wsSERVICE.Cells["P" + idxActive].Value = item.ApprovedC+ " €" ;
+                            wsSERVICE.Cells["Q" + idxActive].Value = item.ClickPriceC + "€";
                             idxActive++;
                         }
                     }
@@ -5089,13 +5094,17 @@ namespace WebApplication1.Controllers
                             wsSERVICE.Cells["D" + idxActive].Value = item.Description;
                             wsSERVICE.Cells["E" + idxActive].Value = item.Qty;
                             wsSERVICE.Cells["F" + idxActive].Value = item.BWVolume;
-                            wsSERVICE.Cells["G" + idxActive].Value = item.ClickPriceBW + " €";
-                            wsSERVICE.Cells["H" + idxActive].Value = item.ApprovedBW + " €";
-                            wsSERVICE.Cells["I" + idxActive].Value = activePS.GlobalClickVVA.BWExcessPVP + " €";
+                            wsSERVICE.Cells["G" + idxActive].Value = "---";
+                            wsSERVICE.Cells["H" + idxActive].Value = item.BWCost + " €";
+                            wsSERVICE.Cells["I" + idxActive].Value = "---";
                             wsSERVICE.Cells["J" + idxActive].Value = item.CVolume;
-                            wsSERVICE.Cells["K" + idxActive].Value = item.ClickPriceC + " €";
-                            wsSERVICE.Cells["L" + idxActive].Value = item.ApprovedC + " €";
-                            wsSERVICE.Cells["M" + idxActive].Value = activePS.GlobalClickVVA.CExcessPVP + " €";
+                            wsSERVICE.Cells["K" + idxActive].Value = " ---";
+                            wsSERVICE.Cells["L" + idxActive].Value = item.CCost + " €";
+                            wsSERVICE.Cells["M" + idxActive].Value = " ---";
+                            wsSERVICE.Cells["N" + idxActive].Value = item.ClickPriceBW +" €";
+                            wsSERVICE.Cells["O" + idxActive].Value = item.ClickPriceBW + " €";
+                            wsSERVICE.Cells["P" + idxActive].Value = item.ClickPriceC +" €" ;
+                            wsSERVICE.Cells["Q" + idxActive].Value = item.ClickPriceC + " €";
                             idxActive++;
                         }
                     }
@@ -5121,13 +5130,17 @@ namespace WebApplication1.Controllers
                             wsSERVICE.Cells["D" + idxActive].Value = item.Description;
                             wsSERVICE.Cells["E" + idxActive].Value = item.Qty;
                             wsSERVICE.Cells["F" + idxActive].Value = item.BWVolume;
-                            wsSERVICE.Cells["G" + idxActive].Value = item.ClickPriceBW + " €";
-                            wsSERVICE.Cells["H" + idxActive].Value = item.ApprovedBW + " €";
+                            wsSERVICE.Cells["G" + idxActive].Value = "---";
+                            wsSERVICE.Cells["H" + idxActive].Value = item.BWCost + " €";
                             wsSERVICE.Cells["I" + idxActive].Value = "---";
                             wsSERVICE.Cells["J" + idxActive].Value = item.CVolume;
-                            wsSERVICE.Cells["K" + idxActive].Value = item.ClickPriceC + " €";
-                            wsSERVICE.Cells["L" + idxActive].Value = item.ApprovedC + " €";
-                            wsSERVICE.Cells["M" + idxActive].Value = "---";
+                            wsSERVICE.Cells["K" + idxActive].Value = " ---";
+                            wsSERVICE.Cells["L" + idxActive].Value = item.CCost + " €";
+                            wsSERVICE.Cells["M" + idxActive].Value = " ---";
+                            wsSERVICE.Cells["N" + idxActive].Value = item.ApprovedBW + " €";
+                            wsSERVICE.Cells["O" + idxActive].Value = item.ClickPriceBW + " €";
+                            wsSERVICE.Cells["P" + idxActive].Value = item.ApprovedC + " €";
+                            wsSERVICE.Cells["Q" + idxActive].Value = item.ClickPriceC + " €";
                             idxActive++;
                         }
                     }
