@@ -1991,6 +1991,7 @@ namespace WebApplication1.Controllers
                                         if (value.HasValue)
                                         {
                                             cell.NumberFormat = "@"; // Definir como texto antes
+                                            string txt = value.Value.ToString("dd/MM/yyyy");
                                             cell.Value = value.Value.ToString("dd/MM/yyyy");
                                         }
                                         else
