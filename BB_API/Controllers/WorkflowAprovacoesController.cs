@@ -1956,9 +1956,8 @@ namespace WebApplication1.Controllers
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     List<BB_WFA_Workflow_Proposal> checkExistent = db.BB_WFA_Workflow_Proposal
-                                                          .Where(w => w.Proposal_ID == proposalID && w.Finished == false)
+                                                          .Where(w => w.Proposal_ID == proposalID)
                                                           .ToList();
-
 
                     //Verifica se já existe um pedido iniciado
                     if (checkExistent.Find(x => x.Started == true) != null)
