@@ -964,7 +964,7 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("GET", "POST")]
         [ActionName("InitiateWFAProcess")]
 
-        public IHttpActionResult InitiateWFAProcess(int ProposalID)
+        public IHttpActionResult InitiateWFAProcess(int ProposalID, string clientNumber)
         {
             string message = "";
             try
@@ -979,39 +979,26 @@ namespace WebApplication1.Controllers
                     //Verifica se já existe um pedido iniciado
                     if (checkExistent.Find(x => x.Started == true) != null)
                     {
+
+                        bool isClientDifferent = false;
+
+                        var lastWFA = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == ProposalID).OrderByDescending(x => x.Proposal_ID).FirstOrDefault();
+
+
+                        if (lastWFA.ClientNumber != clientNumber)
+                        {
+                            isClientDifferent = true;
+                        }
+
                         bool configDif = checkHistoryConfigurator_Quote(ProposalID);
                         bool configDif_RS = checkHistoryConfigurator_Quote_RS(ProposalID);
-
-
-
-
-
-
-                        //var areMoreLinesAddedOrRemoved = false;
-
-                        //var linhasAbordadasWFA = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == ProposalID && x.AsBeenInWFA == true).ToList();
-                        //var linhasDoConfig = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == ProposalID).ToList();
-
-                        //var linhasAbordadasWFA_RS = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == ProposalID && x.AsBeenInWFA == true).ToList();
-                        //var linhasDoConfig_RS = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == ProposalID).ToList();
-
-                        //if (linhasDoConfig.Count != linhasAbordadasWFA.Count || linhasDoConfig_RS.Count != linhasDoConfig_RS.Count)
-                        //{
-                        //    areMoreLinesAddedOrRemoved = true;
-                        //}
-
-
-
-
-
-
 
 
                         // SE o último ID da lastQuote para este proposalID for > BB_Quote_ID da History,
                         // entao areMoreLinesAdded = true;
 
                         // Se houver diferenças, apagar
-                        if (configDif || configDif_RS)
+                        if (configDif || configDif_RS || isClientDifferent)
                         {
                             // E SE HOUVER ALTERAÇÕES ENTRE O HISTORICO E A QUOTE
                             // ENTAO AÍ É QUE VOU APAGAR TUDO DESTE WORKFLOW
@@ -1039,7 +1026,8 @@ namespace WebApplication1.Controllers
                                 Started = false,
                                 Finished = false,
                                 IsApproved = null,
-                                IsCompleted = false
+                                IsCompleted = false,
+                                ClientNumber = clientNumber
                             };
 
                             db.BB_WFA_Workflow_Proposal.Add(toInsert);
@@ -1061,7 +1049,8 @@ namespace WebApplication1.Controllers
                             Started = false,
                             Finished = false,
                             IsApproved = null,
-                            IsCompleted = false
+                            IsCompleted = false,
+                            ClientNumber = clientNumber
                         };
 
                         db.BB_WFA_Workflow_Proposal.Add(toInsert);
@@ -1954,7 +1943,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("ValidateWFARules")]
-        public IHttpActionResult ValidateWFARules(int proposalID)
+        public IHttpActionResult ValidateWFARules(int proposalID, string clientNumber)
         {
             WFAValidations_OneShot wrp = new WFAValidations_OneShot();
             wrp.Lst_BBP_Quote = new List<BB_Proposal_Quote_WFA>();
@@ -1962,11 +1951,27 @@ namespace WebApplication1.Controllers
 
             try
             {
+                wrp.isClientDifferent = false;
 
-                // ------------------------------------ VALIDACAO DO NO PRODUCCION ------------------------------------
                 using (var db = new BB_DB_DEVEntities2())
                 {
+                    List<BB_WFA_Workflow_Proposal> checkExistent = db.BB_WFA_Workflow_Proposal
+                                                          .Where(w => w.Proposal_ID == proposalID)
+                                                          .ToList();
 
+                    //Verifica se já existe um pedido iniciado
+                    if (checkExistent.Find(x => x.Started == true) != null)
+                    {
+                        var lastWFA = db.BB_WFA_Workflow_Proposal.Where(x => x.Proposal_ID == proposalID).OrderByDescending(x => x.Proposal_ID).FirstOrDefault();
+
+                        if (lastWFA.ClientNumber != clientNumber)
+                        {
+                            wrp.isClientDifferent = true;
+                        }
+                    }
+
+
+                    // ------------------------------------ VALIDACAO DO NO PRODUCCION ------------------------------------
                     bool? isNP = db.BB_Proposal.Where(x => x.ID == proposalID).Select(x => x.IsNP).FirstOrDefault();
                     wrp.IsNP = isNP ?? false;
 
@@ -1990,8 +1995,8 @@ namespace WebApplication1.Controllers
                             wrp.IsPassedNP = true;
                         }
                     }
+                    // ----------------------------------------------------------------------------------------------------
                 }
-                // ----------------------------------------------------------------------------------------------------
 
                 //bool configDif = checkHistoryConfigurator_Quote(proposalID);
                 //bool configDif_RS = checkHistoryConfigurator_Quote_RS(proposalID);
@@ -2089,7 +2094,7 @@ namespace WebApplication1.Controllers
 
 
 
-                        
+
                         using (var db = new BB_DB_DEVEntities2())
                         {
                             var aux = db.BB_WFA_Proposal_OneShot_History.Where(x => x.Proposal_ID == bbp_quote.Proposal_ID).FirstOrDefault();
@@ -2866,6 +2871,7 @@ namespace WebApplication1.Controllers
             public List<string> Pending_Approvers_Lst { get; set; }
             public bool? IsNP { get; set; }
             public bool? IsPassedNP { get; set; }
+            public bool? isClientDifferent { get; set; }
         }
 
 
