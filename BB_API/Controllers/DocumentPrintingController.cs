@@ -4568,7 +4568,7 @@ namespace WebApplication1.Controllers
                     using (var dbMaster = new masterEntities())
                     {
 
-                        AspNetUsers user = dbMaster.AspNetUsers.Where(x => x.Territory == cliente.Territory).FirstOrDefault();
+                        AspNetUsers user = dbMaster.AspNetUsers.Where(x => x.Territory.Contains(cliente.Territory)).FirstOrDefault();
 
                         if (user != null)
                         {
