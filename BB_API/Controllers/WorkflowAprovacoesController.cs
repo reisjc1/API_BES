@@ -1234,28 +1234,29 @@ namespace WebApplication1.Controllers
 
 
 
-                        string subject = IsNewProcess ? "Worflow Aprovações - Pedido para Analisar" : "Workflow Aprovações - Análise Terminada";
-                        string body = IsNewProcess ? $"Bom dia,{Environment.NewLine}{Environment.NewLine}" +
-                            $"Tem um novo pedido de Workflow para analisar. " +
-                            $"Poderá aceder ao mesmo através do menu Área Comercial > Oportunidades na apicação Business Builder. {Environment.NewLine}{Environment.NewLine} " +
-                            $"Muito Obrigado,{Environment.NewLine}Bom trabalho"
+                        string subject = IsNewProcess ? "Workflow de Aprobaciones - Solicitud en Revisión" : "Workflow de Aprobaciones - Análisis Terminado";
+                        string body = IsNewProcess ? $"Buenos dias,{Environment.NewLine}{Environment.NewLine}" +
+                            $"Hay una nueva solicitud de Workflow de Aprobaciones para analizar. " +
+                            $"Podrá acceder al mismo a través del menú Business Builder > Oportunidades en la aplicación Business Builder. {Environment.NewLine}{Environment.NewLine} " +
+                            $"Muchas gracias,{Environment.NewLine}Buen trabajo."
                             :
-                            string.Format("Bom dia, {0}{0}Informamos que o pedido de aprovação já foi terminado. " +
-                            "O pedido foi {1}.{0}" +
-                            "Poderá verificar o mesmo no menu Área Comercial > Oportunidades. {0} " +
-                            "Muito Obrigado,{0}Bom trabalho", Environment.NewLine, (bool)IsApproved ? "aprovado" : "rejeitado");
+                            string.Format("Buenos dias, {0}{0}Informamos que la solicitud de aprobación ya ha sido finalizada. " +
+                            "La solicitud fue {1}.{0}" +
+                            "Podrá acceder al mismo a través del menú Business Builder > Oportunidades en la aplicación Business Builder. {0} " +
+                            "Muchas gracias,{0}Buen trabajo.", Environment.NewLine, (bool)IsApproved ? "aprovado" : "rejeitado");
 
-                        //approvers.ForEach(a =>
-                        //{
-                        //    EmailMesage email = new EmailMesage() {
-                        //        Body = body,
-                        //        Subject = subject,
-                        //        //Destination = IsNewProcess ? a.Email : a.CreatedBy
-                        //        Destination = "antonio.simoes@konicaminolta.pt", //TESTES
-                        //        CC = "tiago.simoes@konicaminolta.pt" //TESTES
-                        //    };
-                        //    emailService.SendEmailaync(email);
-                        //});
+                        approvers.ForEach(a =>
+                        {
+                            EmailMesage email = new EmailMesage()
+                            {
+                                Body = body,
+                                Subject = subject,
+                                //Destination = IsNewProcess ? a.Email : a.CreatedBy
+                                Destination = "tiago.simoes@konicaminolta.pt", //TESTES
+                                //CC = "tiago.simoes@konicaminolta.pt" //TESTES
+                            };
+                            emailService.SendEmailaync(email);
+                        });
                     }
 
                 }
