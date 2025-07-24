@@ -673,193 +673,215 @@ namespace WebApplication1.Controllers
 
                     //db.SaveChanges();
 
-
-
-                    LD_Contrato ld = new LD_Contrato();
-                    using (var db = new BB_DB_DEV_LeaseDesk())
+                    BB_Clientes bB_Clientes = new BB_Clientes();
+                    using (var db2 = new BB_DB_DEVEntities2())
                     {
-                        int? assnaturaID = db.LD_Assinatura_System.Where(x => x.System == SigningType).Select(x => x.ID).FirstOrDefault();
-                        ld = db.LD_Contrato.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).FirstOrDefault();
-                        if (ld == null)
+                        bB_Clientes = db2.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).FirstOrDefault();
+
+                        AspNetUsers user = new AspNetUsers();
+                        string createdBy = "";
+                        using (var dbMaster = new masterEntities())
                         {
-                            ld = new LD_Contrato();
-                            ld.ProposalID = proposal.ID;
-                            ld.QuoteNumber = proposal.CRM_QUOTE_ID;
-                            ld.CreatedBy = proposal.CreatedBy;
-                            //ld.ModifiedBy = proposal.CreatedBy;
-                            ld.CreatedTime = DateTime.Now;
-                            ld.ModifiedTime = DateTime.Now;
-                            ld.TipoContratoID = ContractType;
-                            ld.SystemAssinaturaID = assnaturaID;
-                            if(Observations == "null")
+
+                            user = dbMaster.AspNetUsers.Where(x => x.Territory.Contains(bB_Clientes.Territory)).FirstOrDefault();
+
+                            if (user != null)
                             {
-                                ld.ComentariosGC = "Sin comentarios";
+                                createdBy = user.DisplayName;
                             }
                             else
                             {
-                                ld.ComentariosGC = Observations;
+                                createdBy = bB_Clientes.Owner;
                             }
-                            ld.IsClosed = false;
-                            ld.Retorno = false;
-                            ld.StatusID = 1;
-                            ld.InvoiceList = true;
-                            db.LD_Contrato.Add(ld);
-                            db.SaveChanges();
-                            ContractoId = ld.ID;
-                            isFirstTime = true;
+
+
+
                         }
-                        else
+
+                        LD_Contrato ld = new LD_Contrato();
+                        using (var db = new BB_DB_DEV_LeaseDesk())
                         {
-                            ld.ProposalID = proposal.ID;
-                            ld.ModifiedBy = proposal.CreatedBy;
-                            ld.ModifiedTime = DateTime.Now;
-                            ld.TipoContratoID = ContractType;
-                            ld.ComentariosGC = ld.ComentariosGC != Observations ? ld.ComentariosGC + " " + Observations : Observations;
-                            ld.IsClosed = false;
-                            ld.Retorno = false;
-                            ld.SystemAssinaturaID = assnaturaID;
-                            ld.StatusID = 1;
-                            ld.DevolucaoMotivoID = null;
-                            db.Entry(ld).State = EntityState.Modified;
-                            db.SaveChanges();
-                            isRetorno = true;
-                            ContractoId = ld.ID;
+                            int? assnaturaID = db.LD_Assinatura_System.Where(x => x.System == SigningType).Select(x => x.ID).FirstOrDefault();
+                            ld = db2.LD_Contrato.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).FirstOrDefault();
+                            if (ld == null)
+                            {
+                                ld = new LD_Contrato();
+                                ld.ProposalID = proposal.ID;
+                                ld.QuoteNumber = proposal.CRM_QUOTE_ID;
+                                ld.CreatedBy = proposal.CreatedBy;
+                                //ld.ModifiedBy = proposal.CreatedBy;
+                                ld.CreatedTime = DateTime.Now;
+                                ld.ModifiedTime = DateTime.Now;
+                                ld.TipoContratoID = ContractType;
+                                ld.SystemAssinaturaID = assnaturaID;
+                                if(Observations == "null")
+                                {
+                                    ld.ComentariosGC = "Sin comentarios";
+                                }
+                                else
+                                {
+                                    ld.ComentariosGC = Observations;
+                                }
+                                ld.IsClosed = false;
+                                ld.Retorno = false;
+                                ld.StatusID = 1;
+                                ld.InvoiceList = true;
+                                ld.AccountOwnerTerritory = createdBy;
+                                db2.LD_Contrato.Add(ld);
+                                db2.SaveChanges();
+                                ContractoId = ld.ID;
+                                isFirstTime = true;
+                            }
+                            else
+                            {
+                                ld.ProposalID = proposal.ID;
+                                ld.ModifiedBy = proposal.CreatedBy;
+                                ld.ModifiedTime = DateTime.Now;
+                                ld.TipoContratoID = ContractType;
+                                ld.ComentariosGC = ld.ComentariosGC != Observations ? ld.ComentariosGC + " " + Observations : Observations;
+                                ld.IsClosed = false;
+                                ld.Retorno = false;
+                                ld.SystemAssinaturaID = assnaturaID;
+                                ld.StatusID = 1;
+                                ld.DevolucaoMotivoID = null;
+                                db2.Entry(ld).State = EntityState.Modified;
+                                db2.SaveChanges();
+                                isRetorno = true;
+                                ContractoId = ld.ID;
+                            }
                         }
-                    }
-                    BB_Proposal p = new BB_Proposal();
-                    using (var db = new BB_DB_DEVEntities2())
-                    {
-                        p = db.BB_Proposal.Where(x => x.ID == ProposalID).FirstOrDefault();
+                        BB_Proposal p = new BB_Proposal();
+                        p = db2.BB_Proposal.Where(x => x.ID == ProposalID).FirstOrDefault();
                         if (p != null)
                         {
                             p.StatusID = 11;
-                            db.Entry(p).State = EntityState.Modified;
-                            db.SaveChanges();
+                            db2.Entry(p).State = EntityState.Modified;
+                            db2.SaveChanges();
                         }
-                    }
 
 
 
-                    List<LD_DocumentProposal> lstDocumentProposal = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
-                    foreach (var item in lstDocumentProposal)
-                    {
-                        item.ContratoID = ld.ID;
-                        using (var db = new BB_DB_DEV_LeaseDesk())
+                        List<LD_DocumentProposal> lstDocumentProposal = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID).ToList();
+                        foreach (var item in lstDocumentProposal)
                         {
-                            db.Entry(item).State = EntityState.Modified;
-                            db.SaveChanges();
+                            item.ContratoID = ld.ID;
+                            using (var db = new BB_DB_DEV_LeaseDesk())
+                            {
+                                db.Entry(item).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
                         }
+
+
+                        //List<String> contactsArray = JsonConvert.DeserializeObject<List<String>>(HttpContext.Current.Request.Params["Contacts"]);
+                        //string root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ContractoId + "\\";
+
+                        //if (!Directory.Exists(root))
+                        //    System.IO.Directory.CreateDirectory(root);
+
+                        //var docfiles = new List<string>();
+                        //int documentCount = HttpContext.Current.Request.Files.Count;
+                        //if (documentCount > 0)
+                        //{
+                        //    for (int j = 0; j < documentCount; j++)
+                        //    {
+
+                        //        var document = HttpContext.Current.Request.Files["document" + j];
+                        //        //var documentData = HttpContext.Current.Request.Params["documentData" + j];
+                        //        if (document != null)
+                        //        {
+                        //            DocumentoData documentData = JsonConvert.DeserializeObject<DocumentoData>(HttpContext.Current.Request.Params["documentData" + j]);
+
+                        //            var postedFile = document;
+                        //            var filePath = root + postedFile.FileName;
+                        //            postedFile.SaveAs(filePath);
+                        //            docfiles.Add(filePath);
+
+                        //            using (var db = new BB_DB_DEV_LeaseDesk())
+                        //            {
+                        //                LD_DocumentProposal documentoSave = new LD_DocumentProposal();
+                        //                //documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
+                        //                documentoSave.ClassificationID = documentData.Type != null ? documentData.Type : 11;
+
+                        //                documentoSave.CreatedBy = proposal.CreatedBy;
+                        //                documentoSave.CreatedTime = DateTime.Now;
+                        //                documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
+                        //                documentoSave.SystemID = 1;
+                        //                documentoSave.FileFullPath = filePath;
+                        //                documentoSave.DocumentIsValid = false;
+                        //                documentoSave.DocumentIsProcess = false;
+                        //                documentoSave.FileName = Path.GetFileName(filePath);
+                        //                documentoSave.ContratoID = ContractoId;
+                        //                documentoSave.Comments = documentData != null ? documentData.Comments : "";
+                        //                db.LD_DocumentProposal.Add(documentoSave);
+                        //                db.SaveChanges();
+                        //            }
+                        //        }
+                        //    }
+                        //}
+
+                        ////Contracts
+                        //root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ProposalID + "\\";
+
+                        //var contractfiles = new List<string>();
+                        //int contractCount = HttpContext.Current.Request.Files.Count;
+                        //if(contractCount > 0)
+                        //{
+                        //    if (!Directory.Exists(root))
+                        //        System.IO.Directory.CreateDirectory(root);
+
+                        //    for (int k = 0; k < documentCount; k++)
+                        //    {
+
+                        //        var contract = HttpContext.Current.Request.Files["contract" + k];
+                        //        if (contract != null)
+                        //        {
+                        //            DocumentoData contractData = JsonConvert.DeserializeObject<DocumentoData>(
+                        //                                            HttpContext.Current.Request.Params["contractData" + k]);
+
+                        //            var postedFile = contract;
+                        //            var filePath = root + postedFile.FileName;
+                        //            postedFile.SaveAs(filePath);
+                        //            contractfiles.Add(filePath);
+
+                        //            using (var db = new BB_DB_DEV_LeaseDesk())
+                        //            {
+                        //                LD_DocumentProposal exists = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.FileName == postedFile.FileName).FirstOrDefault();
+
+                        //                if(exists != null)
+                        //                {
+                        //                    exists.ContratoID = ContractoId;
+                        //                    db.Entry(exists).State = EntityState.Modified;
+                        //                    db.SaveChanges();
+                        //                }
+                        //                else
+                        //                {
+                        //                    LD_DocumentProposal contractSave = new LD_DocumentProposal();
+                        //                    //contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
+                        //                    contractSave.ClassificationID = contractData.Type != null ? contractData.Type : 5;
+
+                        //                    contractSave.CreatedBy = proposal.CreatedBy;
+                        //                    contractSave.CreatedTime = DateTime.Now;
+                        //                    contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
+                        //                    contractSave.SystemID = 1;
+                        //                    contractSave.FileFullPath = filePath;
+                        //                    contractSave.DocumentIsValid = false;
+                        //                    contractSave.DocumentIsProcess = false;
+                        //                    contractSave.FileName = Path.GetFileName(filePath);
+                        //                    contractSave.ContratoID = ContractoId;
+                        //                    contractSave.Comments = contractData != null ? contractData.Comments : "";
+                        //                    db.LD_DocumentProposal.Add(contractSave);
+                        //                    db.SaveChanges();
+                        //                }
+
+                        //            }
+                        //        }
+                        //    }
+
+                        //}
                     }
 
-
-                    //List<String> contactsArray = JsonConvert.DeserializeObject<List<String>>(HttpContext.Current.Request.Params["Contacts"]);
-                    //string root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ContractoId + "\\";
-
-                    //if (!Directory.Exists(root))
-                    //    System.IO.Directory.CreateDirectory(root);
-
-                    //var docfiles = new List<string>();
-                    //int documentCount = HttpContext.Current.Request.Files.Count;
-                    //if (documentCount > 0)
-                    //{
-                    //    for (int j = 0; j < documentCount; j++)
-                    //    {
-
-                    //        var document = HttpContext.Current.Request.Files["document" + j];
-                    //        //var documentData = HttpContext.Current.Request.Params["documentData" + j];
-                    //        if (document != null)
-                    //        {
-                    //            DocumentoData documentData = JsonConvert.DeserializeObject<DocumentoData>(HttpContext.Current.Request.Params["documentData" + j]);
-
-                    //            var postedFile = document;
-                    //            var filePath = root + postedFile.FileName;
-                    //            postedFile.SaveAs(filePath);
-                    //            docfiles.Add(filePath);
-
-                    //            using (var db = new BB_DB_DEV_LeaseDesk())
-                    //            {
-                    //                LD_DocumentProposal documentoSave = new LD_DocumentProposal();
-                    //                //documentoSave.ClassificationID = documentData.Type != null ? documentData.Type.ID : 11;
-                    //                documentoSave.ClassificationID = documentData.Type != null ? documentData.Type : 11;
-
-                    //                documentoSave.CreatedBy = proposal.CreatedBy;
-                    //                documentoSave.CreatedTime = DateTime.Now;
-                    //                documentoSave.QuoteNumber = proposal.CRM_QUOTE_ID;
-                    //                documentoSave.SystemID = 1;
-                    //                documentoSave.FileFullPath = filePath;
-                    //                documentoSave.DocumentIsValid = false;
-                    //                documentoSave.DocumentIsProcess = false;
-                    //                documentoSave.FileName = Path.GetFileName(filePath);
-                    //                documentoSave.ContratoID = ContractoId;
-                    //                documentoSave.Comments = documentData != null ? documentData.Comments : "";
-                    //                db.LD_DocumentProposal.Add(documentoSave);
-                    //                db.SaveChanges();
-                    //            }
-                    //        }
-                    //    }
-                    //}
-
-                    ////Contracts
-                    //root = @AppSettingsGet.LeaseDesk_UploadFile_Contrato + ProposalID + "\\";
-
-                    //var contractfiles = new List<string>();
-                    //int contractCount = HttpContext.Current.Request.Files.Count;
-                    //if(contractCount > 0)
-                    //{
-                    //    if (!Directory.Exists(root))
-                    //        System.IO.Directory.CreateDirectory(root);
-
-                    //    for (int k = 0; k < documentCount; k++)
-                    //    {
-
-                    //        var contract = HttpContext.Current.Request.Files["contract" + k];
-                    //        if (contract != null)
-                    //        {
-                    //            DocumentoData contractData = JsonConvert.DeserializeObject<DocumentoData>(
-                    //                                            HttpContext.Current.Request.Params["contractData" + k]);
-
-                    //            var postedFile = contract;
-                    //            var filePath = root + postedFile.FileName;
-                    //            postedFile.SaveAs(filePath);
-                    //            contractfiles.Add(filePath);
-
-                    //            using (var db = new BB_DB_DEV_LeaseDesk())
-                    //            {
-                    //                LD_DocumentProposal exists = db.LD_DocumentProposal.Where(x => x.QuoteNumber == proposal.CRM_QUOTE_ID && x.FileName == postedFile.FileName).FirstOrDefault();
-
-                    //                if(exists != null)
-                    //                {
-                    //                    exists.ContratoID = ContractoId;
-                    //                    db.Entry(exists).State = EntityState.Modified;
-                    //                    db.SaveChanges();
-                    //                }
-                    //                else
-                    //                {
-                    //                    LD_DocumentProposal contractSave = new LD_DocumentProposal();
-                    //                    //contractSave.ClassificationID = contractData.Type != null ? contractData.Type.ID : 5;
-                    //                    contractSave.ClassificationID = contractData.Type != null ? contractData.Type : 5;
-
-                    //                    contractSave.CreatedBy = proposal.CreatedBy;
-                    //                    contractSave.CreatedTime = DateTime.Now;
-                    //                    contractSave.QuoteNumber = proposal.CRM_QUOTE_ID;
-                    //                    contractSave.SystemID = 1;
-                    //                    contractSave.FileFullPath = filePath;
-                    //                    contractSave.DocumentIsValid = false;
-                    //                    contractSave.DocumentIsProcess = false;
-                    //                    contractSave.FileName = Path.GetFileName(filePath);
-                    //                    contractSave.ContratoID = ContractoId;
-                    //                    contractSave.Comments = contractData != null ? contractData.Comments : "";
-                    //                    db.LD_DocumentProposal.Add(contractSave);
-                    //                    db.SaveChanges();
-                    //                }
-
-                    //            }
-                    //        }
-                    //    }
-
-                    //}
                 }
-
 
 
                 if (isFirstTime)

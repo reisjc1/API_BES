@@ -42,5 +42,6 @@ namespace WebApplication1.Models
         public Nullable<int> SapVersion { get; set; }
         public Nullable<bool> InvoiceList { get; set; }
         public string SAPDocumentCode { get; set; }
+        public string AccountOwnerTerritory { get; set; }
     }
 }
