@@ -1245,18 +1245,18 @@ namespace WebApplication1.Controllers
                             "Podrá acceder al mismo a través del menú Business Builder > Oportunidades en la aplicación Business Builder. {0} " +
                             "Muchas gracias,{0}Buen trabajo.", Environment.NewLine, (bool)IsApproved ? "aprovado" : "rejeitado");
 
-                        approvers.ForEach(a =>
-                        {
-                            EmailMesage email = new EmailMesage()
-                            {
-                                Body = body,
-                                Subject = subject,
-                                //Destination = IsNewProcess ? a.Email : a.CreatedBy
-                                //Destination = "tiago.simoes@konicaminolta.pt", //TESTES
-                                //CC = "tiago.simoes@konicaminolta.pt" //TESTES
-                            };
-                            emailService.SendEmailaync(email);
-                        });
+                        //approvers.ForEach(a =>
+                        //{
+                        //    EmailMesage email = new EmailMesage()
+                        //    {
+                        //        Body = body,
+                        //        Subject = subject,
+                        //        //Destination = IsNewProcess ? a.Email : a.CreatedBy
+                        //        //Destination = "tiago.simoes@konicaminolta.pt", //TESTES
+                        //        //CC = "tiago.simoes@konicaminolta.pt" //TESTES
+                        //    };
+                        //    emailService.SendEmailaync(email);
+                        //});
                     }
 
                 }
