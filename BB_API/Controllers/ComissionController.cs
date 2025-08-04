@@ -1,4 +1,6 @@
-﻿using Microsoft.Office.Interop.Excel;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1205,11 +1207,15 @@ namespace WebApplication1.Controllers
 
                     if (modifiedDate.HasValue)
                     {
+
                         // exemplo:  01-02-2023 => 2302
-                        bb_commission_general.Production = ((modifiedDate.Value.Year % 100) * 100) + modifiedDate.Value.Month;
+                        bb_commission_general.Production = ObterPeriodoPersonalizado((DateTime)modifiedDate);
+
+                        //old tech
+                        //bb_commission_general.Production = ((modifiedDate.Value.Year % 100) * 100) + modifiedDate.Value.Month;
                     }
 
-                    bb_commission_general.Pedido = proposal.CreatedTime.Value.Year + proposalID.ToString();
+                    bb_commission_general.Pedido = "BB" + proposal.CreatedTime.Value.Year + proposalID.ToString();
                     bb_commission_general.Pedido_SAP = proposal.Pedido_SAP;
                     bb_commission_general.Cliente = loadProposal.ProposalObj.Draft.client.accountnumber;
                     bb_commission_general.Nombre_Cliente = loadProposal.ProposalObj.Draft.client.Name;
@@ -1236,7 +1242,7 @@ namespace WebApplication1.Controllers
                             userByDelegation = dbUsers.AspNetUsers.Where(x => x.DisplayName == client.Owner).FirstOrDefault();
                         }
 
-                        bb_commission_general.Manager = userByDelegation.Manager;
+                        bb_commission_general.Manager = dbUsers.AspNetUsers.Where(x => x.DisplayName == userByDelegation.Manager).Select(x => x.USUARIO_Sharepoint_Email).FirstOrDefault();
 
                         // Regras InsideSales
                         string modifiedByRole = dbUsers.AspNetUsers.Where(x => x.Email == proposal.ModifiedBy.ToString()).Select(x => x.FunctionSimpleDeal).FirstOrDefault();
@@ -1277,20 +1283,20 @@ namespace WebApplication1.Controllers
                         if (userByDelegation.Territory.Contains("5VT"))
                         {
                             bb_commission_general.Delegacion = client.Branch_Local;
-                           
+
                         }
                         else
                         {
                             bb_commission_general.Delegacion = userByDelegation.Location;
                         }
-                       
+
 
                         bb_commission_general.Delegacion = bb_commission_general.Delegacion.ToUpper();
 
 
 
                         bb_commission_general.N_Trab = userByDelegation.N_TRABAJADOR;
-                        bb_commission_general.Manager_Nombre = userByDelegation.Manager;
+                        bb_commission_general.Manager_Nombre = dbUsers.AspNetUsers.Where(x => x.DisplayName == userByDelegation.Manager).Select(x => x.USUARIO_Sharepoint_Nome).FirstOrDefault();
                         bb_commission_general.Usuario_Sharepoint = userByDelegation.USUARIO_Sharepoint_Email;
                         bb_commission_general.Usuario_Sharepoint_Nombre = userByDelegation.USUARIO_Sharepoint_Nome;
 
@@ -1547,7 +1553,6 @@ namespace WebApplication1.Controllers
                         bb_commission_general.Percentage_Comision = $"{bb_commission_general.Comision}%";
 
                         bb_commission_general.Comision = (bb_commission_general.Comision * bb_commission_general.GP_Total) / 100;
-                        bb_commission_general.Comision = Math.Round((double)bb_commission_general.Comision, 2);
                     }
                     else
                     {
@@ -1560,6 +1565,9 @@ namespace WebApplication1.Controllers
                     {
                         bb_commission_general.Comision_Copias = 0;
                     }
+
+                    bb_commission_general.Comision = Math.Round((double)bb_commission_general.Comision, 2);
+                    bb_commission_general.Comision_Copias = Math.Round((double)bb_commission_general.Comision_Copias, 2);
 
                     bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
                     bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
@@ -1673,14 +1681,14 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Calculo = "MOTOR";
                     bb_commission_general.Estado_Factura = "PENDIENTE";
+                    bb_commission_general.CN_MRR = 0;
+                    bb_commission_general.GP_MRR = 0;
 
                     // Empty Info ON PURPOSE -------------------------------------------------
                     bb_commission_general.Factura_SAP = null;
                     bb_commission_general.Fecha_Factura = null;
                     bb_commission_general.Fecha_Pago_Comision = null;
                     bb_commission_general.Fecha_Registro = null;
-                    bb_commission_general.CN_MRR = null;
-                    bb_commission_general.GP_MRR = null;
                     bb_commission_general.Manager_Nombre_2 = null;
                     bb_commission_general.Manager_2 = null;
                     bb_commission_general.Incidencias = null;
@@ -1975,6 +1983,21 @@ namespace WebApplication1.Controllers
                                 {
                                     worksheet.Cells[line, column] = ((bool)prop.GetValue(commission)) ? "Sí" : "No";
                                 }
+                                else if (campo.Key == "Fecha_Registro")
+                                {
+                                    DateTime todaysDate = DateTime.Now;
+
+                                    var cell = worksheet.Cells[line, column]; // Aqui cell é do tipo Range (Interop.Excel)
+                                    cell.Clear();
+
+                                    // Definir o formato como texto
+                                    cell.NumberFormat = "@";
+
+                                    // Atribuir o valor formatado como string
+                                    cell.Value2 = todaysDate.ToString("dd/MM/yyyy");
+
+
+                                }
                                 else if (campo.Key == "Area")
                                 {
                                     object value = prop.GetValue(commission);
@@ -2000,12 +2023,12 @@ namespace WebApplication1.Controllers
                                         if (value.HasValue)
                                         {
                                             cell.NumberFormat = "@"; // Definir como texto antes
-                                            string txt = value.Value.ToString("dd/MM/yyyy");
-                                            cell.Value = value.Value.ToString("dd/MM/yyyy");
+
+                                            cell.Value2 = value.Value.ToString("dd/MM/yyyy");
                                         }
                                         else
                                         {
-                                            cell.Value = "";
+                                            cell.Value2 = "";
                                         }
                                     }
                                     else
@@ -2160,6 +2183,73 @@ namespace WebApplication1.Controllers
                 default:
                     return 0;
             }
+        }
+
+        // ----------------
+
+        //private static int ObterPeriodo(DateTime data)
+        //{
+        //    // Se o dia da data for menor que 16, o período corresponde ao mês anterior
+        //    int ano = data.Year % 100;
+        //    int mes = data.Month;
+
+        //    if (data.Day < 16)
+        //    {
+        //        mes--; // Volta um mês
+        //        if (mes == 0)
+        //        {
+        //            mes = 12;
+        //            ano--; // Volta um ano se o mês virou dezembro do ano anterior
+        //        }
+        //    }
+
+        //    return ano * 100 + mes;
+        //}
+
+        // Representa um período personalizado
+        public class Periodo
+        {
+            public int Codigo { get; set; }        // Ex: 2509
+            public DateTime Inicio { get; set; }   // Ex: 16/07/2025
+            public DateTime Fim { get; set; }      // Ex: 15/09/2025
+        }
+
+        public static int ObterPeriodoPersonalizado(DateTime data)
+        {
+            int ano = data.Year;
+
+            // Gerar a lista de períodos para o ano anterior, atual e próximo (para cobrir datas como jan/ano seguinte)
+            var periodos = GerarPeriodosParaAnos(ano - 1, ano, ano + 1);
+
+            foreach (var periodo in periodos)
+            {
+                if (data >= periodo.Inicio && data <= periodo.Fim)
+                    return periodo.Codigo;
+            }
+
+            throw new Exception("Data fora de intervalo definido.");
+        }
+
+        public static List<Periodo> GerarPeriodosParaAnos(params int[] anos)
+        {
+            var periodos = new List<Periodo>();
+
+            foreach (var ano in anos)
+            {
+                periodos.Add(new Periodo { Codigo = (ano % 100) * 100 + 10, Inicio = new DateTime(ano, 9, 16), Fim = new DateTime(ano, 10, 15) });
+                periodos.Add(new Periodo { Codigo = (ano % 100) * 100 + 11, Inicio = new DateTime(ano, 10, 16), Fim = new DateTime(ano, 11, 15) });
+                periodos.Add(new Periodo { Codigo = (ano % 100) * 100 + 12, Inicio = new DateTime(ano, 11, 16), Fim = new DateTime(ano, 12, 15) });
+                periodos.Add(new Periodo { Codigo = ((ano + 1) % 100) * 100 + 1, Inicio = new DateTime(ano, 12, 16), Fim = new DateTime(ano + 1, 1, 15) });
+                periodos.Add(new Periodo { Codigo = ((ano + 1) % 100) * 100 + 2, Inicio = new DateTime(ano + 1, 1, 16), Fim = new DateTime(ano + 1, 2, 15) });
+                periodos.Add(new Periodo { Codigo = ((ano + 1) % 100) * 100 + 3, Inicio = new DateTime(ano + 1, 2, 16), Fim = new DateTime(ano + 1, 3, 15) });
+                periodos.Add(new Periodo { Codigo = ((ano + 1) % 100) * 100 + 4, Inicio = new DateTime(ano + 1, 3, 16), Fim = new DateTime(ano + 1, 4, 15) });
+                periodos.Add(new Periodo { Codigo = ((ano + 1) % 100) * 100 + 5, Inicio = new DateTime(ano + 1, 4, 16), Fim = new DateTime(ano + 1, 5, 15) });
+                periodos.Add(new Periodo { Codigo = ((ano + 1) % 100) * 100 + 6, Inicio = new DateTime(ano + 1, 5, 16), Fim = new DateTime(ano + 1, 6, 15) });
+                periodos.Add(new Periodo { Codigo = ((ano + 1) % 100) * 100 + 7, Inicio = new DateTime(ano + 1, 6, 16), Fim = new DateTime(ano + 1, 7, 15) });
+                periodos.Add(new Periodo { Codigo = ((ano + 1) % 100) * 100 + 9, Inicio = new DateTime(ano + 1, 7, 16), Fim = new DateTime(ano + 1, 9, 15) });
+            }
+
+            return periodos;
         }
 
 
