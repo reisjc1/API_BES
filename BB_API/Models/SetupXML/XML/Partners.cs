@@ -484,21 +484,43 @@ namespace WebApplication1.Models.SetupXML.XML
                             partner.CP_PHONE = bB_Proposal_DL_ClientContacts.Movil.ToString();
 
                             //partnersAdressesList.Partners.Add(partner);
-                            collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+
+                            if(idLocaisEnvio.SAPCustomerNr != null && idLocaisEnvio.SAPCustomerNr != "" && idLocaisEnvio.SAPCustomerNr != "0")
                             {
-                                SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
-                                PARTN_ROLE = order.PARTN_ROLE, //"WE",
-                                //CUSTOMER = idLocaisEnvio.SAPCustomerNr,
-                                ADDRNUMBER = addressObj.ADDRNUMBER,      //$"A_3686501_{randomLetterNumber}",  //$"A_3686499_{randomLetterNunber}",
-                                CP_NAMEV = bB_Proposal_DL_ClientContacts.Surname,     //"ALVAREZ",
-                                CP_NAME1 = bB_Proposal_DL_ClientContacts.Name,
-                                CP_PHONE = bB_Proposal_DL_ClientContacts.Movil.ToString(),
-                                CP_MAIL = bB_Proposal_DL_ClientContacts.Email,
-                                SO_BUILDING = order.BUILD_LONG,
-                                SO_FLOOR = order.FLOOR,
-                                SO_ROOMNR = order.ROOMNUMBER,
-                                SO_DEPARTMENT = order.DEPARTMENT
-                            });
+                                collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                                {
+                                    SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
+                                    PARTN_ROLE = order.PARTN_ROLE, //"WE",
+                                    CUSTOMER = idLocaisEnvio.SAPCustomerNr,
+                                    ADDRNUMBER = addressObj.ADDRNUMBER,      //$"A_3686501_{randomLetterNumber}",  //$"A_3686499_{randomLetterNunber}",
+                                    CP_NAMEV = bB_Proposal_DL_ClientContacts.Surname,     //"ALVAREZ",
+                                    CP_NAME1 = bB_Proposal_DL_ClientContacts.Name,
+                                    CP_PHONE = bB_Proposal_DL_ClientContacts.Movil.ToString(),
+                                    CP_MAIL = bB_Proposal_DL_ClientContacts.Email,
+                                    SO_BUILDING = order.BUILD_LONG,
+                                    SO_FLOOR = order.FLOOR,
+                                    SO_ROOMNR = order.ROOMNUMBER,
+                                    SO_DEPARTMENT = order.DEPARTMENT
+                                });
+                            }
+                            else
+                            {
+                                collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                                {
+                                    SD_DOC = orderDoc,  //"Teste",//order.SD_DOC,
+                                    PARTN_ROLE = order.PARTN_ROLE, //"WE",
+                                    //CUSTOMER = idLocaisEnvio.SAPCustomerNr,
+                                    ADDRNUMBER = addressObj.ADDRNUMBER,      //$"A_3686501_{randomLetterNumber}",  //$"A_3686499_{randomLetterNunber}",
+                                    CP_NAMEV = bB_Proposal_DL_ClientContacts.Surname,     //"ALVAREZ",
+                                    CP_NAME1 = bB_Proposal_DL_ClientContacts.Name,
+                                    CP_PHONE = bB_Proposal_DL_ClientContacts.Movil.ToString(),
+                                    CP_MAIL = bB_Proposal_DL_ClientContacts.Email,
+                                    SO_BUILDING = order.BUILD_LONG,
+                                    SO_FLOOR = order.FLOOR,
+                                    SO_ROOMNR = order.ROOMNUMBER,
+                                    SO_DEPARTMENT = order.DEPARTMENT
+                                });
+                            }
                             collectionAddresses.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES
                             {
                                 ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
@@ -518,35 +540,35 @@ namespace WebApplication1.Models.SetupXML.XML
                             });
                             collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
                             {
-                                TAX_NO_1 = "G48441745", //addressAddObj.TAX_NO_1,
-                                TAX_NO_2 = "G48441745",//client.NIF,
+                                TAX_NO_1 = addressAddObj.TAX_NO_1,
+                                TAX_NO_2 = client.NIF,
                                 ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
                             });
                             i++;
 
                         }
-                        if (order.POST_CODE1.StartsWith("294 ") || order.POST_CODE1.StartsWith("46") || order.POST_CODE1.StartsWith("12"))
-                        {
-                            string customerTU = "";
-                            if (order.POST_CODE1.StartsWith("294"))
-                            {
-                                customerTU = "149450";
-                            }
-                            if (order.POST_CODE1.StartsWith("46") || order.POST_CODE1.StartsWith("12"))
-                            {
-                                customerTU = "150423";
-                            }
-                            if (order.POST_CODE1 != "29470" && order.POST_CODE1 != "29470" && order.POST_CODE1 != "29490")
-                            {
-                                collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
-                                {
-                                    SD_DOC = orderDoc,
-                                    PARTN_ROLE = "TU",
-                                    CUSTOMER = order.CUSTOMER,
-                                });
-                            }
+                        //if (order.POST_CODE1.StartsWith("294 ") || order.POST_CODE1.StartsWith("46") || order.POST_CODE1.StartsWith("12"))
+                        //{
+                        //    string customerTU = "";
+                        //    if (order.POST_CODE1.StartsWith("294"))
+                        //    {
+                        //        customerTU = "149450";
+                        //    }
+                        //    if (order.POST_CODE1.StartsWith("46") || order.POST_CODE1.StartsWith("12"))
+                        //    {
+                        //        customerTU = "150423";
+                        //    }
+                        //    if (order.POST_CODE1 != "29470" && order.POST_CODE1 != "29470" && order.POST_CODE1 != "29490")
+                        //    {
+                        //        collectionPartners.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_PARTNERS
+                        //        {
+                        //            SD_DOC = orderDoc,
+                        //            PARTN_ROLE = "TU",
+                        //            CUSTOMER = order.CUSTOMER,
+                        //        });
+                        //    }
 
-                        }
+                        //}
 
 
                         List<BB_Proposal_DeliveryLocation> dl = dl_lst.Where(x => x.AccountType == "Bill To").ToList();
