@@ -1252,7 +1252,7 @@ namespace WebApplication1.Controllers
                                 Body = body,
                                 Subject = subject,
                                 //Destination = IsNewProcess ? a.Email : a.CreatedBy
-                                Destination = "tiago.simoes@konicaminolta.pt", //TESTES
+                                //Destination = "tiago.simoes@konicaminolta.pt", //TESTES
                                 //CC = "tiago.simoes@konicaminolta.pt" //TESTES
                             };
                             emailService.SendEmailaync(email);
