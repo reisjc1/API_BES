@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using Microsoft.Office.Interop.Excel;
-using OfficeOpenXml;
+﻿using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1987,14 +1985,10 @@ namespace WebApplication1.Controllers
                                 {
                                     DateTime todaysDate = DateTime.Now;
 
-                                    var cell = worksheet.Cells[line, column]; // Aqui cell é do tipo Range (Interop.Excel)
+                                    var cell = worksheet.Cells[line, column];
                                     cell.Clear();
 
-                                    // Definir o formato como texto
-                                    cell.NumberFormat = "@";
-
-                                    // Atribuir o valor formatado como string
-                                    cell.Value2 = todaysDate.ToString("dd/MM/yyyy");
+                                    cell.Value2 = "'" + todaysDate.ToString("dd/MM/yyyy");
 
 
                                 }
@@ -2015,19 +2009,24 @@ namespace WebApplication1.Controllers
                                     // se o campo for do tipo Date, devo formatar apara que aparece apenas a data sem horas e dd-MM-yyyy
                                     if (prop.PropertyType == typeof(DateTime?))
                                     {
+                                        // Obtém o valor da propriedade (DateTime?) do objeto 'commission'
                                         DateTime? value = (DateTime?)prop.GetValue(commission);
 
                                         var cell = worksheet.Cells[line, column];
-                                        cell.Clear(); // limpa valor e formatação anteriores
 
+                                        // Limpa o conteúdo e a formatação anteriores da célula
+                                        cell.Clear();
+
+                                        // Verifica se a data possui valor
                                         if (value.HasValue)
                                         {
-                                            cell.NumberFormat = "@"; // Definir como texto antes
-
-                                            cell.Value2 = value.Value.ToString("dd/MM/yyyy");
+                                            // Define o valor da célula como texto com apóstrofo para evitar formatação automática do Excel
+                                            // Garante-se o formato "dd/MM/yyyy"
+                                            cell.Value2 = "'" + value.Value.ToString("dd/MM/yyyy");
                                         }
                                         else
                                         {
+                                            // Se não houver valor, define a célula como vazia
                                             cell.Value2 = "";
                                         }
                                     }
