@@ -22,5 +22,33 @@ namespace WebApplication1.Models
         public string Contact { get; set; }
         public Nullable<int> Position { get; set; }
         public Nullable<bool> Retirada { get; set; }
+        public string Brand { get; set; }
+        public string Model { get; set; }
+        public string Equipment_Number { get; set; }
+        public string Motive { get; set; }
+        public string Client_Name { get; set; }
+        public string CIF_NIF { get; set; }
+        public string Address_And_Name { get; set; }
+        public string Street_Number { get; set; }
+        public string Complement_1 { get; set; }
+        public string Complement_2 { get; set; }
+        public string PostalCode_City { get; set; }
+        public string Country { get; set; }
+        public string SapNumber { get; set; }
+        public int ContactID { get; set; }
+        public string Schedule { get; set; }
+        public string Department { get; set; }
+        public string Plant { get; set; }
+        public bool Stairs { get; set; }
+        public bool DNI_LicensePlate { get; set; }
+        public bool DifficultAccess { get; set; }
+        public bool Elevator { get; set; }
+        public bool ServiceLift { get; set; }
+        public string Comments { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public Nullable<int> Tel { get; set; }
+        public Nullable<int> Movil { get; set; }
+        public string Email { get; set; }
     }
 }

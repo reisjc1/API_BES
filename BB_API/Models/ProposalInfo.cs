@@ -178,7 +178,7 @@ namespace WebApplication1.Models
         public PrintingServices printingServices { get; set; }
         public PrintingServices2 printingServices2 { get; set; }
 
-        public List<Upturn> upturns { get; set; }
+        public List<BB_Proposal_Upturn> upturns { get; set; }
 
         public List<DeliveryLocation> deliveryLocations { get; set; }
         public DeliveryLocationsBes deliveryLocationsBES { get; set; }
@@ -702,16 +702,6 @@ namespace WebApplication1.Models
         public Nullable<System.DateTime> CreatedTime { get; set; }
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedTime { get; set; }
-    }
-
-    public class Upturn
-    {
-        public Nullable<int> ID { get; set; }
-        public double? Total { get; set; }
-        public Boolean Retirada { get; set; }
-        public string Description { get; set; }
-        public string Type { get; set; }
-        public string Contact { get; set; }
     }
 
     public class Owner_

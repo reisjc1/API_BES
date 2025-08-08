@@ -79,7 +79,7 @@
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Pedidos" Width="1.5" PointX="7.375" PointY="17.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Gestor" Width="1.5" PointX="26.375" PointY="4.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Tecnico" Width="1.5" PointX="26.375" PointY="9.75" />
-        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Logistica" Width="1.5" PointX="23.375" PointY="27.75" />
+        <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Maquinas_Usadas_Logistica" Width="1.5" PointX="21.375" PointY="21.625" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Permissions" Width="1.5" PointX="19.375" PointY="13.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_Permissions_History" Width="1.5" PointX="27.375" PointY="0.75" />
         <EntityTypeShape EntityType="BB_DB_DEVModel.BB_SLA_History" Width="1.5" PointX="16.375" PointY="23.75" />

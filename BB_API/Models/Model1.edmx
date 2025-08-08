@@ -1404,6 +1404,34 @@
           <Property Name="Contact" Type="nvarchar(max)" />
           <Property Name="Position" Type="int" />
           <Property Name="Retirada" Type="bit" />
+          <Property Name="Brand" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Model" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Equipment_Number" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Motive" Type="varchar(max)" Nullable="false" />
+          <Property Name="Client_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="CIF_NIF" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Address_And_Name" Type="varchar(max)" Nullable="false" />
+          <Property Name="Street_Number" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Complement_1" Type="varchar" MaxLength="100" />
+          <Property Name="Complement_2" Type="varchar" MaxLength="100" />
+          <Property Name="PostalCode_City" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Country" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="SapNumber" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ContactID" Type="int" Nullable="false" />
+          <Property Name="Schedule" Type="varchar(max)" />
+          <Property Name="Department" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Plant" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Stairs" Type="bit" Nullable="false" />
+          <Property Name="DNI_LicensePlate" Type="bit" Nullable="false" />
+          <Property Name="DifficultAccess" Type="bit" Nullable="false" />
+          <Property Name="Elevator" Type="bit" Nullable="false" />
+          <Property Name="ServiceLift" Type="bit" Nullable="false" />
+          <Property Name="Comments" Type="varchar(max)" />
+          <Property Name="Name" Type="varchar" MaxLength="100" />
+          <Property Name="Surname" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Tel" Type="int" />
+          <Property Name="Movil" Type="int" />
+          <Property Name="Email" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="BB_Proposal_Vva">
           <Key>
@@ -1420,7 +1448,7 @@
           <Property Name="CExcess" Type="float" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_Estados_Fecho_CRM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_Estados_Fecho_CRM">
           <Key>
             <PropertyRef Name="ID" />
@@ -1452,7 +1480,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_Estados_Fecho_CRM' does n
           <Property Name="State" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA">
           <Key>
             <PropertyRef Name="ID" />
@@ -1461,7 +1489,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA' does not have a prim
           <Property Name="Name" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Approvers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Approvers">
           <Key>
             <PropertyRef Name="ID" />
@@ -1471,7 +1499,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Approvers' does not h
           <Property Name="Department" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_BU' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_BU">
           <Key>
             <PropertyRef Name="ID" />
@@ -1482,7 +1510,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_BU' does not have a p
           <Property Name="IsEnabled" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Condition">
           <Key>
             <PropertyRef Name="ID" />
@@ -1491,7 +1519,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition' does not h
           <Property Name="Condition" Type="varchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Condition_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Condition_Type">
           <Key>
             <PropertyRef Name="ID" />
@@ -1501,7 +1529,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Condition_Type' does 
           <Property Name="Description" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Customer_Type' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Customer_Type">
           <Key>
             <PropertyRef Name="ID" />
@@ -1510,7 +1538,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Customer_Type' does n
           <Property Name="Customer" Type="varchar" MaxLength="15" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.BB_RD_WFA_Elements' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BB_RD_WFA_Elements">
           <Key>
             <PropertyRef Name="ID" />
@@ -1807,7 +1835,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.BB_RD_WFA_Elements' does not ha
           <Property Name="Street" Type="text" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.vw_get_DataIntegration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vw_get_DataIntegration">
           <Key>
             <PropertyRef Name="ID" />
@@ -1824,7 +1852,7 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.vw_get_DataIntegration' does no
           <Property Name="BOM" Type="nvarchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BB_DB_PROD_BES.dbo.WFA_FullDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="WFA_FullDetails">
           <Key>
             <PropertyRef Name="WFA_Control_ID" />
@@ -3103,6 +3131,34 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="Contact" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Position" Type="Int32" />
           <Property Name="Retirada" Type="Boolean" />
+          <Property Name="Brand" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Model" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Equipment_Number" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Motive" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Client_Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CIF_NIF" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Address_And_Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Street_Number" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Complement_1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Complement_2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PostalCode_City" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SapNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactID" Type="Int32" Nullable="false" />
+          <Property Name="Schedule" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Department" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Plant" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Stairs" Type="Boolean" Nullable="false" />
+          <Property Name="DNI_LicensePlate" Type="Boolean" Nullable="false" />
+          <Property Name="DifficultAccess" Type="Boolean" Nullable="false" />
+          <Property Name="Elevator" Type="Boolean" Nullable="false" />
+          <Property Name="ServiceLift" Type="Boolean" Nullable="false" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Surname" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Tel" Type="Int32" />
+          <Property Name="Movil" Type="Int32" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="BB_OPS_Implement_Packs">
           <Key>
@@ -5039,6 +5095,34 @@ warning 6002: The table/view 'BB_DB_PROD_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_Proposal_Upturn">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_Proposal_Upturn">
               <MappingFragment StoreEntitySet="BB_Proposal_Upturn">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Movil" ColumnName="Movil" />
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="ServiceLift" ColumnName="ServiceLift" />
+                <ScalarProperty Name="Elevator" ColumnName="Elevator" />
+                <ScalarProperty Name="DifficultAccess" ColumnName="DifficultAccess" />
+                <ScalarProperty Name="DNI_LicensePlate" ColumnName="DNI_LicensePlate" />
+                <ScalarProperty Name="Stairs" ColumnName="Stairs" />
+                <ScalarProperty Name="Plant" ColumnName="Plant" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Schedule" ColumnName="Schedule" />
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+                <ScalarProperty Name="SapNumber" ColumnName="SapNumber" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="PostalCode_City" ColumnName="PostalCode_City" />
+                <ScalarProperty Name="Complement_2" ColumnName="Complement_2" />
+                <ScalarProperty Name="Complement_1" ColumnName="Complement_1" />
+                <ScalarProperty Name="Street_Number" ColumnName="Street_Number" />
+                <ScalarProperty Name="Address_And_Name" ColumnName="Address_And_Name" />
+                <ScalarProperty Name="CIF_NIF" ColumnName="CIF_NIF" />
+                <ScalarProperty Name="Client_Name" ColumnName="Client_Name" />
+                <ScalarProperty Name="Motive" ColumnName="Motive" />
+                <ScalarProperty Name="Equipment_Number" ColumnName="Equipment_Number" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
                 <ScalarProperty Name="Retirada" ColumnName="Retirada" />
                 <ScalarProperty Name="Position" ColumnName="Position" />
                 <ScalarProperty Name="Contact" ColumnName="Contact" />
