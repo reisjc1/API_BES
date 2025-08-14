@@ -590,7 +590,7 @@ namespace WebApplication1.BLL
 
                     // UPDATE das RETOMAS ------------------
 
-                    UpdateUpturns(p.Draft.upturns, ProposalID);
+                    UpdateUpturns(p.Draft.upturns.upturns, ProposalID);
 
                     // -------------------------------------
 
@@ -1268,8 +1268,8 @@ namespace WebApplication1.BLL
                 }
 
                 // RETOMAS -----------------------------------------
-                err.ProposalObj.Draft.upturns = new List<BB_Proposal_Upturn>();
-                err.ProposalObj.Draft.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == i.ProposalId).OrderBy(x => x.ID).ToList();
+                err.ProposalObj.Draft.upturns = new Upturns();
+                err.ProposalObj.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == i.ProposalId).OrderBy(x => x.ID).ToList();
 
                 //CLIENTE
                 BB_Proposal_Client cli = db.BB_Proposal_Client.Where(x => x.ProposalID == i.ProposalId).FirstOrDefault();
@@ -2164,7 +2164,7 @@ namespace WebApplication1.BLL
 
                     // SAVE DAS RETOMAS ----------------------------
 
-                    SaveUpturns(p.Draft.upturns);
+                    SaveUpturns(p.Draft.upturns.upturns, ProposalID);
                     // ---------------------------------------------
 
 
@@ -3247,7 +3247,7 @@ namespace WebApplication1.BLL
         }
 
 
-        public void SaveUpturns(List<BB_Proposal_Upturn> upturns)
+        public void SaveUpturns(List<BB_Proposal_Upturn> upturns, int ProposalID)
         {
             try
             {
@@ -3255,7 +3255,7 @@ namespace WebApplication1.BLL
                 {
                     var newUpturn = new BB_Proposal_Upturn
                     {
-                        ProposalID = upturn_fromDraft.ProposalID,
+                        ProposalID = ProposalID,
                         Total = upturn_fromDraft.Total,
                         Contact = upturn_fromDraft.Contact,
                         Description = upturn_fromDraft.Description,

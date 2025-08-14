@@ -178,7 +178,7 @@ namespace WebApplication1.Models
         public PrintingServices printingServices { get; set; }
         public PrintingServices2 printingServices2 { get; set; }
 
-        public List<BB_Proposal_Upturn> upturns { get; set; }
+        public Upturns upturns { get; set; }
 
         public List<DeliveryLocation> deliveryLocations { get; set; }
         public DeliveryLocationsBes deliveryLocationsBES { get; set; }
@@ -193,6 +193,10 @@ namespace WebApplication1.Models
 
     }
 
+    public class Upturns
+    {
+        public List<BB_Proposal_Upturn> upturns { get; set; }
+    }
     public class HW_SW
     {
         public string Family { get; set; }
