@@ -590,7 +590,7 @@ namespace WebApplication1.BLL
 
                     // UPDATE das RETOMAS ------------------
 
-                    UpdateUpturns(p.Draft.upturns.upturns, ProposalID);
+                    UpdateUpturns(p.Draft.upturns.upturns, ProposalID, p.Draft.client.accountnumber);
 
                     p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
 
@@ -2166,7 +2166,7 @@ namespace WebApplication1.BLL
 
                     // SAVE DAS RETOMAS ----------------------------
 
-                    SaveUpturns(p.Draft.upturns.upturns, ProposalID);
+                    SaveUpturns(p.Draft.upturns.upturns, ProposalID, p.Draft.client.accountnumber);
 
                     p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
 
@@ -3252,7 +3252,7 @@ namespace WebApplication1.BLL
         }
 
 
-        public void SaveUpturns(List<BB_Proposal_Upturn> upturns, int ProposalID)
+        public void SaveUpturns(List<BB_Proposal_Upturn> upturns, int ProposalID, string clientAccountNumber)
         {
             try
             {
@@ -3309,7 +3309,8 @@ namespace WebApplication1.BLL
                             Surname = upturn_fromDraft.Surname,
                             Tel = upturn_fromDraft.Tel,
                             Movil = upturn_fromDraft.Movil,
-                            Email = upturn_fromDraft.Email
+                            Email = upturn_fromDraft.Email,
+                            ClientID = clientAccountNumber
                         };
 
                         db.BB_Proposal_DL_ClientContacts.Add(newContact);
@@ -3336,7 +3337,7 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void UpdateUpturns(List<BB_Proposal_Upturn> upturns, int proposalID)
+        public void UpdateUpturns(List<BB_Proposal_Upturn> upturns, int proposalID, string clientAccountNumber)
         {
             using (var transaction = db.Database.BeginTransaction())
             {
@@ -3410,7 +3411,8 @@ namespace WebApplication1.BLL
                                     Surname = upturn_fromDraft.Surname,
                                     Tel = upturn_fromDraft.Tel,
                                     Movil = upturn_fromDraft.Movil,
-                                    Email = upturn_fromDraft.Email
+                                    Email = upturn_fromDraft.Email,
+                                    ClientID = clientAccountNumber
                                 };
 
                                 db.BB_Proposal_DL_ClientContacts.Add(newContact);
@@ -3483,7 +3485,8 @@ namespace WebApplication1.BLL
                                             Surname = upturn_fromDraft.Surname,
                                             Tel = upturn_fromDraft.Tel,
                                             Movil = upturn_fromDraft.Movil,
-                                            Email = upturn_fromDraft.Email
+                                            Email = upturn_fromDraft.Email,
+                                            ClientID = clientAccountNumber
                                         };
 
                                         db.BB_Proposal_DL_ClientContacts.Add(newContact);
