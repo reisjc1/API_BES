@@ -592,6 +592,8 @@ namespace WebApplication1.BLL
 
                     UpdateUpturns(p.Draft.upturns.upturns, ProposalID);
 
+                    p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
+
                     // -------------------------------------
 
 
@@ -2165,6 +2167,9 @@ namespace WebApplication1.BLL
                     // SAVE DAS RETOMAS ----------------------------
 
                     SaveUpturns(p.Draft.upturns.upturns, ProposalID);
+
+                    p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
+
                     // ---------------------------------------------
 
 
