@@ -588,16 +588,17 @@ namespace WebApplication1.BLL
                     }
 
 
-                    // UPDATE das RETOMAS ------------------
+                    // UPDATE das RETOMAS ------------------------------------------------------------------------------------------
 
                     UpdateUpturns(p.Draft.upturns.upturns, ProposalID, p.Draft.client.accountnumber);
 
                     p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
 
-                    // -------------------------------------
 
 
-                    //PRINTING SERVICES 
+                    //PRINTING SERVICES --------------------------------------------------------------------------------------------
+
+                    // ISTO ESTÁ A SER UTILIZADO???? EU ACHO QUE NAO
                     if (p.Draft.printingServices != null)
                     {
                         var configpPrintingServices = new MapperConfiguration(cfg =>
@@ -648,262 +649,47 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    PrintingServices2 printingServices2 = p.Draft.printingServices2;
-                    if (printingServices2 != null)
+
+
+                    try
                     {
-                        if (printingServices2.ID == null)
+                        PrintingServices2 printingServices2 = p.Draft.printingServices2;
+
+                        if (printingServices2 != null)
                         {
-                            BB_Proposal_PrintingServices2 db_ps2 = new BB_Proposal_PrintingServices2()
+                            // Se for um printingService NOVO, Adiciona-se tudo
+                            if (printingServices2.ID == null)
                             {
-                                ProposalID = ProposalID,
-                                ActivePrintingService = printingServices2.ActivePrintingService
-                            };
-                            db.BB_Proposal_PrintingServices2.Add(db_ps2);
-                            try
+                                AddNewPrintingService(printingServices2, ProposalID);
+                            }
+                            //Se for o printingService JÁ EXISTIR..
+                            else
                             {
+                                BB_Proposal_PrintingServices2 toUpdate = db.BB_Proposal_PrintingServices2.FirstOrDefault(x => x.ID == printingServices2.ID);
+                                toUpdate.ActivePrintingService = printingServices2.ActivePrintingService;
+
                                 db.SaveChanges();
-                                printingServices2.ID = db_ps2.ID;
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                            if (printingServices2.ApprovedPrintingServices != null)
-                            {
-                                foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
-                                {
-                                    BB_PrintingServices newPS = new BB_PrintingServices()
-                                    {
-                                        BWVolume = aps.BWVolume,
-                                        CVolume = aps.CVolume,
-                                        ContractDuration = aps.ContractDuration,
-                                        PrintingServices2ID = (int)printingServices2.ID,
-                                        IsPrecalc = aps.IsPrecalc,
-                                        Fee = 0,
-                                    };
-                                    db.BB_PrintingServices.Add(newPS);
-                                    try
-                                    {
-                                        db.SaveChanges();
-                                        aps.ID = newPS.ID;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ex.Message.ToString();
-                                    }
-                                    if (aps.GlobalClickVVA != null)
-                                    {
-                                        BB_VVA vva = new BB_VVA()
-                                        {
-                                            BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
-                                            CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
-                                            ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
-                                            PVP = aps.GlobalClickVVA.PVP,
-                                            RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
-                                            PrintingServiceID = newPS.ID,
-                                            ReturnType = aps.GlobalClickVVA.ReturnType,
-                                        };
-                                        db.BB_VVA.Add(vva);
-                                        try
-                                        {
-                                            db.SaveChanges();
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            ex.Message.ToString();
-                                        }
-                                    }
-                                    if (aps.GlobalClickNoVolume != null)
-                                    {
-                                        BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
-                                        {
-                                            GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
-                                            GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
-                                            PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
-                                            PrintingServiceID = newPS.ID,
-                                        };
-                                        db.BB_PrintingServices_NoVolume.Add(nv);
-                                        try
-                                        {
-                                            db.SaveChanges();
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            ex.Message.ToString();
-                                        }
-                                    }
-                                    if (aps.ClickPerModel != null)
-                                    {
-                                        BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
-                                        {
-                                            PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
-                                            PrintingServiceID = newPS.ID,
-                                        };
-                                        db.BB_PrintingServices_ClickPerModel.Add(cpm);
-                                        try
-                                        {
-                                            db.SaveChanges();
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            ex.Message.ToString();
-                                        }
-                                    }
-                                    if (aps.Machines != null)
-                                    {
-                                        foreach (Machine m in aps.Machines)
-                                        {
-                                            BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
-                                            {
-                                                BWVolume = m.BWVolume,
-                                                CodeRef = m.CodeRef,
-                                                CVolume = m.CVolume,
-                                                Description = m.Description,
-                                                PrintingServiceID = newPS.ID,
-                                                Quantity = m.Qty,
-                                                ApprovedBW = m.ClickPriceBW,
-                                                ApprovedC = m.ClickPriceC
-                                            };
-                                            db.BB_PrintingService_Machines.Add(machine);
-                                            try
-                                            {
-                                                db.SaveChanges();
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                ex.Message.ToString();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            BB_Proposal_PrintingServices2 toUpdate = db.BB_Proposal_PrintingServices2.FirstOrDefault(x => x.ID == printingServices2.ID);
-                            toUpdate.ActivePrintingService = printingServices2.ActivePrintingService;
-                            try
-                            {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                            if (printingServices2.ApprovedPrintingServices != null)
-                            {
-                                foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
-                                {
-                                    if (aps.ID == null)
-                                    {
-                                        BB_PrintingServices newPS = new BB_PrintingServices()
-                                        {
-                                            BWVolume = aps.BWVolume,
-                                            CVolume = aps.CVolume,
-                                            ContractDuration = aps.ContractDuration,
-                                            PrintingServices2ID = toUpdate.ID,
-                                            IsPrecalc = aps.IsPrecalc,
-                                            Fee = 0,
-                                        };
-                                        db.BB_PrintingServices.Add(newPS);
-                                        try
-                                        {
-                                            db.SaveChanges();
-                                            aps.ID = newPS.ID;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            ex.Message.ToString();
-                                        }
-                                        if (aps.GlobalClickVVA != null)
-                                        {
-                                            BB_VVA vva = new BB_VVA()
-                                            {
-                                                BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
-                                                CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
-                                                ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
-                                                PVP = aps.GlobalClickVVA.PVP,
-                                                RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
-                                                PrintingServiceID = newPS.ID,
-                                                ReturnType = aps.GlobalClickVVA.ReturnType,
-                                            };
-                                            db.BB_VVA.Add(vva);
-                                            try
-                                            {
-                                                db.SaveChanges();
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                ex.Message.ToString();
-                                            }
-                                        }
-                                        if (aps.GlobalClickNoVolume != null)
-                                        {
-                                            BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
-                                            {
-                                                GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
-                                                GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
-                                                PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
-                                                PrintingServiceID = newPS.ID,
-                                            };
-                                            db.BB_PrintingServices_NoVolume.Add(nv);
-                                            try
-                                            {
-                                                db.SaveChanges();
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                ex.Message.ToString();
-                                            }
-                                        }
-                                        if (aps.ClickPerModel != null)
-                                        {
-                                            BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
-                                            {
-                                                PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
-                                                PrintingServiceID = newPS.ID,
-                                            };
-                                            db.BB_PrintingServices_ClickPerModel.Add(cpm);
-                                            try
-                                            {
-                                                db.SaveChanges();
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                ex.Message.ToString();
-                                            }
-                                        }
-                                        if (aps.Machines != null)
-                                        {
-                                            foreach (Machine m in aps.Machines)
-                                            {
-                                                BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
-                                                {
-                                                    BWVolume = m.BWVolume,
-                                                    CodeRef = m.CodeRef,
-                                                    CVolume = m.CVolume,
-                                                    Description = m.Description,
-                                                    PrintingServiceID = newPS.ID,
-                                                    Quantity = m.Qty,
-                                                    ApprovedBW = m.ClickPriceBW,
-                                                    ApprovedC = m.ClickPriceC
-                                                };
-                                                db.BB_PrintingService_Machines.Add(machine);
-                                                try
-                                                {
-                                                    db.SaveChanges();
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    ex.Message.ToString();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+
+                                UpdatePrintingService(printingServices2, toUpdate.ID);
                             }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        ex.Message.ToString();
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
 
                     //BB_PROPOSAL_Cliente
                     BB_Proposal_Client cliente1 = new BB_Proposal_Client();
@@ -2142,7 +1928,7 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    //BB_PROPOSAL_Commission
+                    //BB_PROPOSAL_Commission --------------------------------------------------------
                     var config4 = new MapperConfiguration(cfg =>
                     {
                         cfg.CreateMap<Commission, BB_Proposal_Commission>();
@@ -2164,16 +1950,17 @@ namespace WebApplication1.BLL
                         ex.Message.ToString();
                     }
 
-                    // SAVE DAS RETOMAS ----------------------------
+                    // SAVE DAS RETOMAS --------------------------------------------------------
 
                     SaveUpturns(p.Draft.upturns.upturns, ProposalID, p.Draft.client.accountnumber);
 
                     p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
 
-                    // ---------------------------------------------
 
 
-                    //PRINTING SERVICES 
+                    //PRINTING SERVICES --------------------------------------------------------
+
+                    // ISTO ESTÁ A SER UTILIZADO???? EU ACHO QUE NAO
                     if (p.Draft.printingServices != null)
                     {
                         var configpPrintingServices = new MapperConfiguration(cfg =>
@@ -2224,167 +2011,23 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    PrintingServices2 printingServices2 = p.Draft.printingServices2;
-                    //int ps2Id = 0;
-                    if (printingServices2 != null)
+                    try
                     {
-                        BB_Proposal_PrintingServices2 db_ps2 = new BB_Proposal_PrintingServices2()
+                        PrintingServices2 printingServices2 = p.Draft.printingServices2;
+                        //int ps2Id = 0;
+                        if (printingServices2 != null)
                         {
-                            ProposalID = ProposalID,
-                            ActivePrintingService = printingServices2.ActivePrintingService
-                        };
-                        db.BB_Proposal_PrintingServices2.Add(db_ps2);
-                        try
-                        {
-                            db.SaveChanges();
-                            printingServices2.ID = db_ps2.ID;
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                        if (printingServices2.ApprovedPrintingServices != null)
-                        {
-                            foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
-                            {
-                                var currentAPSID = aps.ID;
-                                BB_PrintingServices newPS = new BB_PrintingServices()
-                                {
-                                    BWVolume = aps.BWVolume,
-                                    CVolume = aps.CVolume,
-                                    ContractDuration = aps.ContractDuration,
-                                    PrintingServices2ID = (int)printingServices2.ID,
-                                    IsPrecalc = aps.IsPrecalc,
-                                    Fee = aps.Fee,
-                                };
-                                db.BB_PrintingServices.Add(newPS);
-                                try
-                                {
-                                    db.SaveChanges();
-                                    aps.ID = newPS.ID;
-                                }
-                                catch (Exception ex)
-                                {
-                                    ex.Message.ToString();
-                                }
-                                if (aps.GlobalClickVVA != null)
-                                {
-                                    BB_VVA vva = new BB_VVA()
-                                    {
-                                        BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
-                                        CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
-                                        ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
-                                        ReturnType = aps.GlobalClickVVA.ReturnType,
-                                        PVP = aps.GlobalClickVVA.PVP,
-                                        RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
-                                        PrintingServiceID = newPS.ID,
-                                    };
-                                    db.BB_VVA.Add(vva);
-                                    try
-                                    {
-                                        db.SaveChanges();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ex.Message.ToString();
-                                    }
-                                }
-                                if (aps.GlobalClickNoVolume != null)
-                                {
-                                    BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
-                                    {
-                                        GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
-                                        GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
-                                        PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
-                                        PrintingServiceID = newPS.ID,
-                                    };
-                                    db.BB_PrintingServices_NoVolume.Add(nv);
-                                    try
-                                    {
-                                        db.SaveChanges();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ex.Message.ToString();
-                                    }
-                                }
-                                if (aps.ClickPerModel != null)
-                                {
-                                    BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
-                                    {
-                                        PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
-                                        PrintingServiceID = newPS.ID,
-                                    };
-                                    db.BB_PrintingServices_ClickPerModel.Add(cpm);
-                                    try
-                                    {
-                                        db.SaveChanges();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ex.Message.ToString();
-                                    }
-                                }
-                                if (aps.Machines != null)
-                                {
-                                    foreach (Machine m in aps.Machines)
-                                    {
-                                        BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
-                                        {
-                                            BWVolume = m.BWVolume,
-                                            CodeRef = m.CodeRef,
-                                            CVolume = m.CVolume,
-                                            Description = m.Description,
-                                            PrintingServiceID = newPS.ID,
-                                            Quantity = m.Qty,
-                                            ApprovedBW = m.ClickPriceBW,
-                                            ApprovedC = m.ClickPriceC,
-                                        };
-                                        db.BB_PrintingService_Machines.Add(machine);
-                                        try
-                                        {
-                                            db.SaveChanges();
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            ex.Message.ToString();
-                                        }
-                                    }
-                                }
-                                if (currentAPSID != null)
-                                {
-                                    BB_Proposal_PrintingServiceValidationRequest psvr = db.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == currentAPSID).FirstOrDefault();
-                                    if (psvr != null)
-                                    {
-                                        BB_Proposal_PrintingServiceValidationRequest newPSVR = new BB_Proposal_PrintingServiceValidationRequest()
-                                        {
-                                            ApprovedAt = psvr.ApprovedAt,
-                                            ApprovedBy = psvr.ApprovedBy,
-                                            IsApproved = psvr.IsApproved,
-                                            IsComplete = psvr.IsComplete,
-                                            RequestedAt = psvr.RequestedAt,
-                                            PrintingServiceID = newPS.ID,
-                                            RequestedBy = psvr.RequestedBy,
-                                            SCObservations = psvr.SCObservations,
-                                            SEObservations = psvr.SEObservations,
-                                            ToDelete = psvr.ToDelete,
-                                        };
-                                        db.BB_Proposal_PrintingServiceValidationRequest.Add(newPSVR);
-                                        try
-                                        {
-                                            db.SaveChanges();
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            ex.Message.ToString();
-                                        }
-                                    }
-                                }
-                            }
+                            AddNewPrintingService(p.Draft.printingServices2, ProposalID);
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        ex.Message.ToString();
+                    }
 
-                    //BB_PROPOSAL_Cliente
+
+
+                    //BB_PROPOSAL_Cliente --------------------------------------------------------
                     BB_Proposal_Client cliente1 = new BB_Proposal_Client();
                     cliente1.ClientID = p.Draft.client.accountnumber;
                     cliente1.IsNewClient = p.Draft.client.isNewClient;
@@ -2426,7 +2069,7 @@ namespace WebApplication1.BLL
                     }
                 }
 
-                //BB_PROPOSAL_COnsigments
+                //BB_PROPOSAL_COnsigments --------------------------------------------------------
                 var configConsigments = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<Consignment, BB_Proposal_Consignments>();
@@ -2439,16 +2082,6 @@ namespace WebApplication1.BLL
                 consignment.ProposalID = ProposalID;
 
                 db.BB_Proposal_Consignments.Add(consignment);
-
-                ////BB_Permissions
-                //if (p.Draft.shareProfileDelegation != null)
-                //{
-                //    err.ProposalObj.Draft.shareProfileDelegation = p.Draft.shareProfileDelegation;
-                //}
-                //else
-                //{
-                //    err.ProposalObj.Draft.shareProfileDelegation = new List<BB_Permissions>();
-                //}
 
                 try
                 {
@@ -3517,6 +3150,320 @@ namespace WebApplication1.BLL
                     }
 
                     db.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    string error = ex.Message;
+                    throw;
+
+                }
+            }
+        }
+
+        public void UpdatePrintingService(PrintingServices2 printingServices2, int newID)
+        {
+            try
+            {
+                if (printingServices2.ApprovedPrintingServices != null)
+                {
+                    foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
+                    {
+                        if (aps.ID == null)
+                        {
+                            BB_PrintingServices newPS = new BB_PrintingServices()
+                            {
+                                BWVolume = aps.BWVolume,
+                                CVolume = aps.CVolume,
+                                ContractDuration = aps.ContractDuration,
+                                PrintingServices2ID = newID,
+                                IsPrecalc = aps.IsPrecalc,
+                                Fee = 0,
+                            };
+
+                            db.BB_PrintingServices.Add(newPS);
+                            db.SaveChanges();
+                            aps.ID = newPS.ID;
+
+                            if (aps.GlobalClickVVA != null)
+                            {
+                                BB_VVA vva = new BB_VVA()
+                                {
+                                    BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
+                                    CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
+                                    ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
+                                    PVP = aps.GlobalClickVVA.PVP,
+                                    RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                    ReturnType = aps.GlobalClickVVA.ReturnType,
+                                };
+
+                                db.BB_VVA.Add(vva);
+                                db.SaveChanges();
+
+                            }
+                            if (aps.GlobalClickNoVolume != null)
+                            {
+                                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+                                {
+                                    GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
+                                    GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
+                                    PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                };
+
+                                db.BB_PrintingServices_NoVolume.Add(nv);
+                                db.SaveChanges();
+
+
+                            }
+                            if (aps.ClickPerModel != null)
+                            {
+                                BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
+                                {
+                                    PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                };
+
+                                db.BB_PrintingServices_ClickPerModel.Add(cpm);
+                                db.SaveChanges();
+
+                            }
+                            if (aps.Machines != null)
+                            {
+                                foreach (Machine m in aps.Machines)
+                                {
+                                    BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
+                                    {
+                                        BWVolume = m.BWVolume,
+                                        CodeRef = m.CodeRef,
+                                        CVolume = m.CVolume,
+                                        Description = m.Description,
+                                        PrintingServiceID = newPS.ID,
+                                        Quantity = m.Qty,
+                                        ApprovedBW = m.ClickPriceBW,
+                                        ApprovedC = m.ClickPriceC
+                                    };
+
+                                    db.BB_PrintingService_Machines.Add(machine);
+                                    db.SaveChanges();
+                                }
+                            }
+                            if (aps.VVA_PerModel_lst != null)
+                            {
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
+                                {
+                                    BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
+                                    {
+                                        PrintingServiceID = newPS.ID,
+                                        CodeRef = m.CodeRef,
+                                        Quantity = m.Quantity,
+                                        Description = m.Description,
+                                        BWVolume = m.BWVolume,
+                                        CVolume = m.CVolume,
+                                        BWPVP = m.BWPVP,
+                                        CPVP = m.CPVP,
+                                        BWCost = m.BWCost,
+                                        CCost = m.CCost,
+                                        ApprovedBW = m.ApprovedBW,
+                                        ApprovedC = m.ApprovedC,
+                                        IsInClient = m.IsInClient,
+                                        IsUsed = m.IsUsed,
+                                        RequestedBWClickPrice = m.RequestedBWClickPrice,
+                                        RequestedCClickPrice = m.RequestedCClickPrice,
+                                        BWExcessPVP = m.BWExcessPVP,
+                                        CExcessPVP = m.CExcessPVP,
+                                        PVP = m.PVP,
+                                        ExcessBillingFrequency = m.ExcessBillingFrequency,
+                                        RentBillingFrequency = m.RentBillingFrequency,
+                                        ReturnType = m.ReturnType,
+                                        RequestedBWExcess = m.RequestedBWExcess,
+                                        RequestedCExcess = m.RequestedCExcess,
+                                        RequestedRent = m.RequestedRent,
+                                    };
+
+                                    db.BB_PrintingServices_ClickPerModel_VVA.Add(ps_vva_model);
+                                    db.SaveChanges();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+        }
+
+        public void AddNewPrintingService(PrintingServices2 printingServices2, int proposalID)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    BB_Proposal_PrintingServices2 db_ps2 = new BB_Proposal_PrintingServices2()
+                    {
+                        ProposalID = proposalID,
+                        ActivePrintingService = printingServices2.ActivePrintingService
+                    };
+
+                    db.BB_Proposal_PrintingServices2.Add(db_ps2);
+                    db.SaveChanges();
+                    printingServices2.ID = db_ps2.ID;
+
+
+                    if (printingServices2.ApprovedPrintingServices != null)
+                    {
+                        foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
+                        {
+                            var currentAPSID = aps.ID;
+
+                            BB_PrintingServices newPS = new BB_PrintingServices()
+                            {
+                                BWVolume = aps.BWVolume,
+                                CVolume = aps.CVolume,
+                                ContractDuration = aps.ContractDuration,
+                                PrintingServices2ID = (int)printingServices2.ID,
+                                IsPrecalc = aps.IsPrecalc,
+                                Fee = 0,
+                            };
+
+                            db.BB_PrintingServices.Add(newPS);
+                            db.SaveChanges();
+                            aps.ID = newPS.ID;
+
+                            if (aps.GlobalClickVVA != null)
+                            {
+                                BB_VVA vva = new BB_VVA()
+                                {
+                                    BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
+                                    CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
+                                    ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
+                                    PVP = aps.GlobalClickVVA.PVP,
+                                    RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                    ReturnType = aps.GlobalClickVVA.ReturnType,
+                                };
+
+                                db.BB_VVA.Add(vva);
+                                db.SaveChanges();
+                            }
+                            if (aps.GlobalClickNoVolume != null)
+                            {
+                                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+                                {
+                                    GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
+                                    GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
+                                    PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                };
+
+                                db.BB_PrintingServices_NoVolume.Add(nv);
+                                db.SaveChanges();
+
+                            }
+                            if (aps.ClickPerModel != null)
+                            {
+                                BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
+                                {
+                                    PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                };
+
+                                db.BB_PrintingServices_ClickPerModel.Add(cpm);
+                                db.SaveChanges();
+
+                            }
+                            if (aps.Machines != null)
+                            {
+                                foreach (Machine m in aps.Machines)
+                                {
+                                    BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
+                                    {
+                                        BWVolume = m.BWVolume,
+                                        CodeRef = m.CodeRef,
+                                        CVolume = m.CVolume,
+                                        Description = m.Description,
+                                        PrintingServiceID = newPS.ID,
+                                        Quantity = m.Qty,
+                                        ApprovedBW = m.ClickPriceBW,
+                                        ApprovedC = m.ClickPriceC
+                                    };
+
+                                    db.BB_PrintingService_Machines.Add(machine);
+                                    db.SaveChanges();
+                                }
+                            }
+                            if (currentAPSID != null)
+                            {
+                                BB_Proposal_PrintingServiceValidationRequest psvr = db.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == currentAPSID).FirstOrDefault();
+                                if (psvr != null)
+                                {
+                                    BB_Proposal_PrintingServiceValidationRequest newPSVR = new BB_Proposal_PrintingServiceValidationRequest()
+                                    {
+                                        ApprovedAt = psvr.ApprovedAt,
+                                        ApprovedBy = psvr.ApprovedBy,
+                                        IsApproved = psvr.IsApproved,
+                                        IsComplete = psvr.IsComplete,
+                                        RequestedAt = psvr.RequestedAt,
+                                        PrintingServiceID = newPS.ID,
+                                        RequestedBy = psvr.RequestedBy,
+                                        SCObservations = psvr.SCObservations,
+                                        SEObservations = psvr.SEObservations,
+                                        ToDelete = psvr.ToDelete,
+                                    };
+                                    db.BB_Proposal_PrintingServiceValidationRequest.Add(newPSVR);
+                                    try
+                                    {
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        ex.Message.ToString();
+                                    }
+                                }
+                            }
+                            if (aps.VVA_PerModel_lst != null)
+                            {
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
+                                {
+                                    BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
+                                    {
+                                        PrintingServiceID = newPS.ID,
+                                        CodeRef = m.CodeRef,
+                                        Quantity = m.Quantity,
+                                        Description = m.Description,
+                                        BWVolume = m.BWVolume,
+                                        CVolume = m.CVolume,
+                                        BWPVP = m.BWPVP,
+                                        CPVP = m.CPVP,
+                                        BWCost = m.BWCost,
+                                        CCost = m.CCost,
+                                        ApprovedBW = m.ApprovedBW,
+                                        ApprovedC = m.ApprovedC,
+                                        IsInClient = m.IsInClient,
+                                        IsUsed = m.IsUsed,
+                                        RequestedBWClickPrice = m.RequestedBWClickPrice,
+                                        RequestedCClickPrice = m.RequestedCClickPrice,
+                                        BWExcessPVP = m.BWExcessPVP,
+                                        CExcessPVP = m.CExcessPVP,
+                                        PVP = m.PVP,
+                                        ExcessBillingFrequency = m.ExcessBillingFrequency,
+                                        RentBillingFrequency = m.RentBillingFrequency,
+                                        ReturnType = m.ReturnType,
+                                        RequestedBWExcess = m.RequestedBWExcess,
+                                        RequestedCExcess = m.RequestedCExcess,
+                                        RequestedRent = m.RequestedRent,
+                                    };
+
+                                    db.BB_PrintingServices_ClickPerModel_VVA.Add(ps_vva_model);
+                                    db.SaveChanges();
+                                }
+                            }
+                        }
+                    }
                     transaction.Commit();
                 }
                 catch (Exception ex)

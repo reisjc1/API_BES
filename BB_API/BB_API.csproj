@@ -418,6 +418,9 @@
     <Compile Include="Models\BB_PrintingServices_ClickPerModel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_PrintingServices_ClickPerModel_VVA.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_PrintingServices_NoVolume.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -985,7 +988,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties content_4bootstrap-theme_1min_1css_1map__JsonSchema="" content_4bootstrap_1min_1css_1map__JsonSchema="" />
+      <UserProperties content_4bootstrap_1min_1css_1map__JsonSchema="" content_4bootstrap-theme_1min_1css_1map__JsonSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
