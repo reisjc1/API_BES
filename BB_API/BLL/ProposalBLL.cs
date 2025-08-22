@@ -77,9 +77,6 @@ namespace WebApplication1.BLL
                     List<BB_Proposal_PrintingServices> pritningService = db.BB_Proposal_PrintingServices.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_PrintingServices.RemoveRange(pritningService);
 
-                    List<BB_Proposal_PsConfig> psconfig1 = db.BB_Proposal_PsConfig.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_PsConfig.RemoveRange(psconfig1);
-
                     //List<BB_Proposal_Financing> fin = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposal.ID).ToList();
                     //db.BB_Proposal_Financing.RemoveRange(fin);
 
@@ -145,196 +142,19 @@ namespace WebApplication1.BLL
                         db.SaveChanges();
                     }
 
-                    // ATUALIZAR A BB_PROPOSAL_QUOTE -----------------
+                    // ATUALIZAR A BB_PROPOSAL_QUOTE ------------------------------------------------------------------------------
                     p.Draft.baskets.os_basket = Update_BB_Proposal_Quote(p, ProposalID);
 
-                    // ATUALIZAR A BB_PROPOSAL_QUOTE_RS -----------------
+                    // ATUALIZAR A BB_PROPOSAL_QUOTE_RS ---------------------------------------------------------------------------
                     Update_BB_Proposal_Quote_RS(p.Draft.baskets.rs_basket, ProposalID);
 
-
-                    //BB_PROPOSAL_OPSIMPLEMENT
-                    OPSPacks opsPacks = p.Draft.opsPacks;
-                    List<OPSImplement> draftImplements = opsPacks.opsImplement.ToList();
-                    List<BB_Proposal_OPSImplement> dbImplement = proposal.BB_Proposal_OPSImplement.ToList();
-                    List<int> toDeleteImplementIds = dbImplement.Select(x => x.ID).Except(draftImplements.Select(x => x.ID.GetValueOrDefault())).ToList();
-                    if (toDeleteImplementIds.Count > 0)
-                    {
-                        db.BB_Proposal_OPSImplement.RemoveRange(db.BB_Proposal_OPSImplement.Where(x => toDeleteImplementIds.Contains(x.ID)).ToList());
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                    }
-                    int opsImplementPosition = 0;
-                    foreach (OPSImplement opsI in draftImplements)
-                    {
-                        if (opsI.ID == null)
-                        {
-                            BB_Proposal_OPSImplement newOPSI = new BB_Proposal_OPSImplement
-                            {
-                                CodeRef = opsI.CodeRef,
-                                Description = opsI.Description,
-                                Family = opsI.Family,
-                                InCatalog = opsI.InCatalog,
-                                IsFinanced = opsI.IsFinanced,
-                                MaxRange = opsI.MaxRange,
-                                MinRange = opsI.MinRange,
-                                Name = opsI.Name,
-                                Position = opsImplementPosition,
-                                PVP = opsI.PVP,
-                                ProposalID = ProposalID,
-                                Quantity = opsI.Quantity,
-                                Type = opsI.Type,
-                                IsValidated = opsI.IsValidated
-                            };
-                            if (opsI != null)
-                            {
-                                newOPSI.UnitDiscountPrice = opsI.UnitDiscountPrice;
-                            }
-                            db.BB_Proposal_OPSImplement.Add(newOPSI);
-                            try
-                            {
-                                db.SaveChanges();
-                                opsPacks.opsImplement[opsImplementPosition].ID = newOPSI.ID;
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-                        else
-                        {
-                            BB_Proposal_OPSImplement toEditImplement = db.BB_Proposal_OPSImplement.Where(x => x.ID == opsI.ID).FirstOrDefault();
-                            if (toEditImplement != null)
-                            {
-                                toEditImplement.CodeRef = opsI.CodeRef;
-                                toEditImplement.Description = opsI.Description;
-                                toEditImplement.Family = opsI.Family;
-                                toEditImplement.InCatalog = opsI.InCatalog;
-                                toEditImplement.IsFinanced = opsI.IsFinanced;
-                                toEditImplement.MaxRange = opsI.MaxRange;
-                                toEditImplement.MinRange = opsI.MinRange;
-                                toEditImplement.Name = opsI.Name;
-                                toEditImplement.PVP = opsI.PVP;
-                                toEditImplement.Position = opsImplementPosition;
-                                toEditImplement.Quantity = opsI.Quantity;
-                                toEditImplement.Type = opsI.Type;
-                                toEditImplement.IsValidated = opsI.IsValidated;
-                            }
-                            if (opsI != null)
-                            {
-                                toEditImplement.UnitDiscountPrice = opsI.UnitDiscountPrice;
-                            }
-                            try
-                            {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-                        opsImplementPosition++;
-                    }
-
-                    //BB_PROPOSAL_OPSManage
-                    List<OPSManage> draftManages = new List<OPSManage>();
-                    draftManages = opsPacks.opsManage.ToList();
-                    List<BB_Proposal_OPSManage> dbManages = proposal.BB_Proposal_OPSManage.ToList();
-                    List<int> toDeleteManageIds = dbManages.Select(x => x.ID).Except(draftManages.Select(x => x.ID.GetValueOrDefault())).ToList();
-                    if (toDeleteManageIds.Count > 0)
-                    {
-                        db.BB_Proposal_OPSManage.RemoveRange(db.BB_Proposal_OPSManage.Where(x => toDeleteManageIds.Contains(x.ID)).ToList());
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                    }
-                    int opsManagePosition = 0;
-                    foreach (OPSManage opsM in draftManages)
-                    {
-                        if (opsM.ID == null)
-                        {
-                            BB_Proposal_OPSManage newOPSM = new BB_Proposal_OPSManage
-                            {
-                                CodeRef = opsM.CodeRef,
-                                Description = opsM.Description,
-                                Family = opsM.Family,
-                                InCatalog = opsM.InCatalog,
-                                MaxRange = opsM.MaxRange,
-                                MinRange = opsM.MinRange,
-                                Name = opsM.Name,
-                                Position = opsManagePosition,
-                                PVP = opsM.PVP,
-                                ProposalID = ProposalID,
-                                Quantity = opsM.Quantity,
-                                TotalMonths = opsM.TotalMonths,
-                                Type = opsM.Type,
-                                IsValidated = opsM.IsValidated
-                            };
-                            if (opsM != null)
-                            {
-                                newOPSM.UnitDiscountPrice = opsM.UnitDiscountPrice;
-                            }
-                            db.BB_Proposal_OPSManage.Add(newOPSM);
-                            try
-                            {
-                                db.SaveChanges();
-                                opsPacks.opsManage[opsManagePosition].ID = newOPSM.ID;
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-                        else
-                        {
-                            BB_Proposal_OPSManage toEditManage = db.BB_Proposal_OPSManage.Where(x => x.ID == opsM.ID).FirstOrDefault();
-                            if (toEditManage != null)
-                            {
-                                toEditManage.CodeRef = opsM.CodeRef;
-                                toEditManage.Description = opsM.Description;
-                                toEditManage.Family = opsM.Family;
-                                toEditManage.InCatalog = opsM.InCatalog;
-                                toEditManage.MaxRange = opsM.MaxRange;
-                                toEditManage.MinRange = opsM.MinRange;
-                                toEditManage.Name = opsM.Name;
-                                toEditManage.PVP = opsM.PVP;
-                                toEditManage.Position = opsManagePosition;
-                                toEditManage.TotalMonths = opsM.TotalMonths;
-                                toEditManage.Quantity = opsM.Quantity;
-                                toEditManage.Type = opsM.Type;
-                                toEditManage.IsValidated = opsM.IsValidated;
-                            }
-                            if (opsM != null)
-                            {
-                                toEditManage.UnitDiscountPrice = opsM.UnitDiscountPrice;
-                            }
-                            try
-                            {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-                        opsManagePosition++;
-                    }
+                    Update_OPS(proposal, p.Draft, ProposalID);
 
                     UpdateFinancing(p.Draft.financing, ProposalID);
 
                     UpdateOvervaluation(p.Draft.overvaluations, ProposalID);
 
-                    // UPDATE do BB_PROPOSAL_Commission -----------------------------------------------------------------------------
+                    // UPDATE do BB_PROPOSAL_Commission ----------------------------------------------------------------------------
                     UpdateCommissions(p.Summary.commission, ProposalID);
 
                     // UPDATE das RETOMAS ------------------------------------------------------------------------------------------
@@ -396,7 +216,6 @@ namespace WebApplication1.BLL
                             }
                         }
                     }
-
 
 
                     try
@@ -2735,6 +2554,7 @@ namespace WebApplication1.BLL
                 throw;
             }
         }
+
         public void UpdateFinancing(Financing financing, int proposalID)
         {
             try
@@ -3179,184 +2999,6 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void AddNewPrintingService(PrintingServices2 printingServices2, int proposalID)
-        {
-            using (var transaction = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    BB_Proposal_PrintingServices2 db_ps2 = new BB_Proposal_PrintingServices2()
-                    {
-                        ProposalID = proposalID,
-                        ActivePrintingService = printingServices2.ActivePrintingService
-                    };
-
-                    db.BB_Proposal_PrintingServices2.Add(db_ps2);
-                    db.SaveChanges();
-                    printingServices2.ID = db_ps2.ID;
-
-
-                    if (printingServices2.ApprovedPrintingServices != null)
-                    {
-                        foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
-                        {
-                            var currentAPSID = aps.ID;
-
-                            BB_PrintingServices newPS = new BB_PrintingServices()
-                            {
-                                BWVolume = aps.BWVolume,
-                                CVolume = aps.CVolume,
-                                ContractDuration = aps.ContractDuration,
-                                PrintingServices2ID = (int)printingServices2.ID,
-                                IsPrecalc = aps.IsPrecalc,
-                                Fee = 0,
-                            };
-
-                            db.BB_PrintingServices.Add(newPS);
-                            db.SaveChanges();
-                            aps.ID = newPS.ID;
-
-                            if (aps.GlobalClickVVA != null)
-                            {
-                                BB_VVA vva = new BB_VVA()
-                                {
-                                    BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
-                                    CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
-                                    ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
-                                    PVP = aps.GlobalClickVVA.PVP,
-                                    RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
-                                    PrintingServiceID = newPS.ID,
-                                    ReturnType = aps.GlobalClickVVA.ReturnType,
-                                };
-
-                                db.BB_VVA.Add(vva);
-                                db.SaveChanges();
-                            }
-                            if (aps.GlobalClickNoVolume != null)
-                            {
-                                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
-                                {
-                                    GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
-                                    GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
-                                    PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
-                                    PrintingServiceID = newPS.ID,
-                                };
-
-                                db.BB_PrintingServices_NoVolume.Add(nv);
-                                db.SaveChanges();
-
-                            }
-                            if (aps.ClickPerModel != null)
-                            {
-                                BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
-                                {
-                                    PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
-                                    PrintingServiceID = newPS.ID,
-                                };
-
-                                db.BB_PrintingServices_ClickPerModel.Add(cpm);
-                                db.SaveChanges();
-
-                            }
-                            if (aps.Machines != null)
-                            {
-                                foreach (Machine m in aps.Machines)
-                                {
-                                    BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
-                                    {
-                                        BWVolume = m.BWVolume,
-                                        CodeRef = m.CodeRef,
-                                        CVolume = m.CVolume,
-                                        Description = m.Description,
-                                        PrintingServiceID = newPS.ID,
-                                        Quantity = m.Qty,
-                                        ApprovedBW = m.ClickPriceBW,
-                                        ApprovedC = m.ClickPriceC
-                                    };
-
-                                    db.BB_PrintingService_Machines.Add(machine);
-                                    db.SaveChanges();
-                                }
-                            }
-                            if (currentAPSID != null)
-                            {
-                                BB_Proposal_PrintingServiceValidationRequest psvr = db.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == currentAPSID).FirstOrDefault();
-                                if (psvr != null)
-                                {
-                                    BB_Proposal_PrintingServiceValidationRequest newPSVR = new BB_Proposal_PrintingServiceValidationRequest()
-                                    {
-                                        ApprovedAt = psvr.ApprovedAt,
-                                        ApprovedBy = psvr.ApprovedBy,
-                                        IsApproved = psvr.IsApproved,
-                                        IsComplete = psvr.IsComplete,
-                                        RequestedAt = psvr.RequestedAt,
-                                        PrintingServiceID = newPS.ID,
-                                        RequestedBy = psvr.RequestedBy,
-                                        SCObservations = psvr.SCObservations,
-                                        SEObservations = psvr.SEObservations,
-                                        ToDelete = psvr.ToDelete,
-                                    };
-                                    db.BB_Proposal_PrintingServiceValidationRequest.Add(newPSVR);
-                                    try
-                                    {
-                                        db.SaveChanges();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        ex.Message.ToString();
-                                    }
-                                }
-                            }
-                            if (aps.VVA_PerModel_lst != null)
-                            {
-                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
-                                {
-                                    BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
-                                    {
-                                        PrintingServiceID = newPS.ID,
-                                        CodeRef = m.CodeRef,
-                                        Quantity = m.Quantity,
-                                        Description = m.Description,
-                                        BWVolume = m.BWVolume,
-                                        CVolume = m.CVolume,
-                                        BWPVP = m.BWPVP,
-                                        CPVP = m.CPVP,
-                                        BWCost = m.BWCost,
-                                        CCost = m.CCost,
-                                        ApprovedBW = m.ApprovedBW,
-                                        ApprovedC = m.ApprovedC,
-                                        IsInClient = m.IsInClient,
-                                        IsUsed = m.IsUsed,
-                                        RequestedBWClickPrice = m.RequestedBWClickPrice,
-                                        RequestedCClickPrice = m.RequestedCClickPrice,
-                                        BWExcessPVP = m.BWExcessPVP,
-                                        CExcessPVP = m.CExcessPVP,
-                                        PVP = m.PVP,
-                                        ExcessBillingFrequency = m.ExcessBillingFrequency,
-                                        RentBillingFrequency = m.RentBillingFrequency,
-                                        ReturnType = m.ReturnType,
-                                        RequestedBWExcess = m.RequestedBWExcess,
-                                        RequestedCExcess = m.RequestedCExcess,
-                                        RequestedRent = m.RequestedRent,
-                                    };
-
-                                    db.BB_PrintingServices_ClickPerModel_VVA.Add(ps_vva_model);
-                                    db.SaveChanges();
-                                }
-                            }
-                        }
-                    }
-                    transaction.Commit();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    string error = ex.Message;
-                    throw;
-
-                }
-            }
-        }
         public List<OsBasket> Update_BB_Proposal_Quote(ProposalRootObject p, int proposalID)
         {
             try
@@ -3549,6 +3191,373 @@ namespace WebApplication1.BLL
             {
                 string error = ex.Message;
                 throw;
+            }
+        }
+
+        public void Update_OPS(BB_Proposal proposal, Draft draft, int proposalID)
+        {
+            try
+            {
+                //BB_PROPOSAL_OPSIMPLEMENT
+                OPSPacks opsPacks = draft.opsPacks;
+                List<OPSImplement> draftImplements = opsPacks.opsImplement.ToList();
+                List<BB_Proposal_OPSImplement> dbImplement = proposal.BB_Proposal_OPSImplement.ToList();
+                List<int> toDeleteImplementIds = dbImplement.Select(x => x.ID).Except(draftImplements.Select(x => x.ID.GetValueOrDefault())).ToList();
+                if (toDeleteImplementIds.Count > 0)
+                {
+                    db.BB_Proposal_OPSImplement.RemoveRange(db.BB_Proposal_OPSImplement.Where(x => toDeleteImplementIds.Contains(x.ID)).ToList());
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Message.ToString();
+                    }
+                }
+                int opsImplementPosition = 0;
+                foreach (OPSImplement opsI in draftImplements)
+                {
+                    if (opsI.ID == null)
+                    {
+                        BB_Proposal_OPSImplement newOPSI = new BB_Proposal_OPSImplement
+                        {
+                            CodeRef = opsI.CodeRef,
+                            Description = opsI.Description,
+                            Family = opsI.Family,
+                            InCatalog = opsI.InCatalog,
+                            IsFinanced = opsI.IsFinanced,
+                            MaxRange = opsI.MaxRange,
+                            MinRange = opsI.MinRange,
+                            Name = opsI.Name,
+                            Position = opsImplementPosition,
+                            PVP = opsI.PVP,
+                            ProposalID = proposalID,
+                            Quantity = opsI.Quantity,
+                            Type = opsI.Type,
+                            IsValidated = opsI.IsValidated
+                        };
+                        if (opsI != null)
+                        {
+                            newOPSI.UnitDiscountPrice = opsI.UnitDiscountPrice;
+                        }
+                        db.BB_Proposal_OPSImplement.Add(newOPSI);
+                        try
+                        {
+                            db.SaveChanges();
+                            opsPacks.opsImplement[opsImplementPosition].ID = newOPSI.ID;
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
+                    }
+                    else
+                    {
+                        BB_Proposal_OPSImplement toEditImplement = db.BB_Proposal_OPSImplement.Where(x => x.ID == opsI.ID).FirstOrDefault();
+                        if (toEditImplement != null)
+                        {
+                            toEditImplement.CodeRef = opsI.CodeRef;
+                            toEditImplement.Description = opsI.Description;
+                            toEditImplement.Family = opsI.Family;
+                            toEditImplement.InCatalog = opsI.InCatalog;
+                            toEditImplement.IsFinanced = opsI.IsFinanced;
+                            toEditImplement.MaxRange = opsI.MaxRange;
+                            toEditImplement.MinRange = opsI.MinRange;
+                            toEditImplement.Name = opsI.Name;
+                            toEditImplement.PVP = opsI.PVP;
+                            toEditImplement.Position = opsImplementPosition;
+                            toEditImplement.Quantity = opsI.Quantity;
+                            toEditImplement.Type = opsI.Type;
+                            toEditImplement.IsValidated = opsI.IsValidated;
+                        }
+                        if (opsI != null)
+                        {
+                            toEditImplement.UnitDiscountPrice = opsI.UnitDiscountPrice;
+                        }
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
+                    }
+                    opsImplementPosition++;
+                }
+
+                //BB_PROPOSAL_OPSManage
+                List<OPSManage> draftManages = new List<OPSManage>();
+                draftManages = opsPacks.opsManage.ToList();
+                List<BB_Proposal_OPSManage> dbManages = proposal.BB_Proposal_OPSManage.ToList();
+                List<int> toDeleteManageIds = dbManages.Select(x => x.ID).Except(draftManages.Select(x => x.ID.GetValueOrDefault())).ToList();
+                if (toDeleteManageIds.Count > 0)
+                {
+                    db.BB_Proposal_OPSManage.RemoveRange(db.BB_Proposal_OPSManage.Where(x => toDeleteManageIds.Contains(x.ID)).ToList());
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Message.ToString();
+                    }
+                }
+                int opsManagePosition = 0;
+                foreach (OPSManage opsM in draftManages)
+                {
+                    if (opsM.ID == null)
+                    {
+                        BB_Proposal_OPSManage newOPSM = new BB_Proposal_OPSManage
+                        {
+                            CodeRef = opsM.CodeRef,
+                            Description = opsM.Description,
+                            Family = opsM.Family,
+                            InCatalog = opsM.InCatalog,
+                            MaxRange = opsM.MaxRange,
+                            MinRange = opsM.MinRange,
+                            Name = opsM.Name,
+                            Position = opsManagePosition,
+                            PVP = opsM.PVP,
+                            ProposalID = proposalID,
+                            Quantity = opsM.Quantity,
+                            TotalMonths = opsM.TotalMonths,
+                            Type = opsM.Type,
+                            IsValidated = opsM.IsValidated
+                        };
+                        if (opsM != null)
+                        {
+                            newOPSM.UnitDiscountPrice = opsM.UnitDiscountPrice;
+                        }
+                        db.BB_Proposal_OPSManage.Add(newOPSM);
+                        try
+                        {
+                            db.SaveChanges();
+                            opsPacks.opsManage[opsManagePosition].ID = newOPSM.ID;
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
+                    }
+                    else
+                    {
+                        BB_Proposal_OPSManage toEditManage = db.BB_Proposal_OPSManage.Where(x => x.ID == opsM.ID).FirstOrDefault();
+                        if (toEditManage != null)
+                        {
+                            toEditManage.CodeRef = opsM.CodeRef;
+                            toEditManage.Description = opsM.Description;
+                            toEditManage.Family = opsM.Family;
+                            toEditManage.InCatalog = opsM.InCatalog;
+                            toEditManage.MaxRange = opsM.MaxRange;
+                            toEditManage.MinRange = opsM.MinRange;
+                            toEditManage.Name = opsM.Name;
+                            toEditManage.PVP = opsM.PVP;
+                            toEditManage.Position = opsManagePosition;
+                            toEditManage.TotalMonths = opsM.TotalMonths;
+                            toEditManage.Quantity = opsM.Quantity;
+                            toEditManage.Type = opsM.Type;
+                            toEditManage.IsValidated = opsM.IsValidated;
+                        }
+                        if (opsM != null)
+                        {
+                            toEditManage.UnitDiscountPrice = opsM.UnitDiscountPrice;
+                        }
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Message.ToString();
+                        }
+                    }
+                    opsManagePosition++;
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+            }
+        }
+        public void AddNewPrintingService(PrintingServices2 printingServices2, int proposalID)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    BB_Proposal_PrintingServices2 db_ps2 = new BB_Proposal_PrintingServices2()
+                    {
+                        ProposalID = proposalID,
+                        ActivePrintingService = printingServices2.ActivePrintingService
+                    };
+
+                    db.BB_Proposal_PrintingServices2.Add(db_ps2);
+                    db.SaveChanges();
+                    printingServices2.ID = db_ps2.ID;
+
+
+                    if (printingServices2.ApprovedPrintingServices != null)
+                    {
+                        foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
+                        {
+                            var currentAPSID = aps.ID;
+
+                            BB_PrintingServices newPS = new BB_PrintingServices()
+                            {
+                                BWVolume = aps.BWVolume,
+                                CVolume = aps.CVolume,
+                                ContractDuration = aps.ContractDuration,
+                                PrintingServices2ID = (int)printingServices2.ID,
+                                IsPrecalc = aps.IsPrecalc,
+                                Fee = 0,
+                            };
+
+                            db.BB_PrintingServices.Add(newPS);
+                            db.SaveChanges();
+                            aps.ID = newPS.ID;
+
+                            if (aps.GlobalClickVVA != null)
+                            {
+                                BB_VVA vva = new BB_VVA()
+                                {
+                                    BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
+                                    CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
+                                    ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
+                                    PVP = aps.GlobalClickVVA.PVP,
+                                    RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                    ReturnType = aps.GlobalClickVVA.ReturnType,
+                                };
+
+                                db.BB_VVA.Add(vva);
+                                db.SaveChanges();
+                            }
+                            if (aps.GlobalClickNoVolume != null)
+                            {
+                                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+                                {
+                                    GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
+                                    GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
+                                    PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                };
+
+                                db.BB_PrintingServices_NoVolume.Add(nv);
+                                db.SaveChanges();
+
+                            }
+                            if (aps.ClickPerModel != null)
+                            {
+                                BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
+                                {
+                                    PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                };
+
+                                db.BB_PrintingServices_ClickPerModel.Add(cpm);
+                                db.SaveChanges();
+
+                            }
+                            if (aps.Machines != null)
+                            {
+                                foreach (Machine m in aps.Machines)
+                                {
+                                    BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
+                                    {
+                                        BWVolume = m.BWVolume,
+                                        CodeRef = m.CodeRef,
+                                        CVolume = m.CVolume,
+                                        Description = m.Description,
+                                        PrintingServiceID = newPS.ID,
+                                        Quantity = m.Qty,
+                                        ApprovedBW = m.ClickPriceBW,
+                                        ApprovedC = m.ClickPriceC
+                                    };
+
+                                    db.BB_PrintingService_Machines.Add(machine);
+                                    db.SaveChanges();
+                                }
+                            }
+                            if (currentAPSID != null)
+                            {
+                                BB_Proposal_PrintingServiceValidationRequest psvr = db.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == currentAPSID).FirstOrDefault();
+                                if (psvr != null)
+                                {
+                                    BB_Proposal_PrintingServiceValidationRequest newPSVR = new BB_Proposal_PrintingServiceValidationRequest()
+                                    {
+                                        ApprovedAt = psvr.ApprovedAt,
+                                        ApprovedBy = psvr.ApprovedBy,
+                                        IsApproved = psvr.IsApproved,
+                                        IsComplete = psvr.IsComplete,
+                                        RequestedAt = psvr.RequestedAt,
+                                        PrintingServiceID = newPS.ID,
+                                        RequestedBy = psvr.RequestedBy,
+                                        SCObservations = psvr.SCObservations,
+                                        SEObservations = psvr.SEObservations,
+                                        ToDelete = psvr.ToDelete,
+                                    };
+                                    db.BB_Proposal_PrintingServiceValidationRequest.Add(newPSVR);
+                                    try
+                                    {
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        ex.Message.ToString();
+                                    }
+                                }
+                            }
+                            if (aps.VVA_PerModel_lst != null)
+                            {
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
+                                {
+                                    BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
+                                    {
+                                        PrintingServiceID = newPS.ID,
+                                        CodeRef = m.CodeRef,
+                                        Quantity = m.Quantity,
+                                        Description = m.Description,
+                                        BWVolume = m.BWVolume,
+                                        CVolume = m.CVolume,
+                                        BWPVP = m.BWPVP,
+                                        CPVP = m.CPVP,
+                                        BWCost = m.BWCost,
+                                        CCost = m.CCost,
+                                        ApprovedBW = m.ApprovedBW,
+                                        ApprovedC = m.ApprovedC,
+                                        IsInClient = m.IsInClient,
+                                        IsUsed = m.IsUsed,
+                                        RequestedBWClickPrice = m.RequestedBWClickPrice,
+                                        RequestedCClickPrice = m.RequestedCClickPrice,
+                                        BWExcessPVP = m.BWExcessPVP,
+                                        CExcessPVP = m.CExcessPVP,
+                                        PVP = m.PVP,
+                                        ExcessBillingFrequency = m.ExcessBillingFrequency,
+                                        RentBillingFrequency = m.RentBillingFrequency,
+                                        ReturnType = m.ReturnType,
+                                        RequestedBWExcess = m.RequestedBWExcess,
+                                        RequestedCExcess = m.RequestedCExcess,
+                                        RequestedRent = m.RequestedRent,
+                                    };
+
+                                    db.BB_PrintingServices_ClickPerModel_VVA.Add(ps_vva_model);
+                                    db.SaveChanges();
+                                }
+                            }
+                        }
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    string error = ex.Message;
+                    throw;
+
+                }
             }
         }
     }
