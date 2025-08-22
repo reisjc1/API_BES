@@ -145,7 +145,6 @@ namespace WebApplication1.BLL
                     // ATUALIZAR A BB_PROPOSAL_QUOTE ------------------------------------------------------------------------------
                     p.Draft.baskets.os_basket = Update_BB_Proposal_Quote(p, ProposalID);
 
-                    // ATUALIZAR A BB_PROPOSAL_QUOTE_RS ---------------------------------------------------------------------------
                     Update_BB_Proposal_Quote_RS(p.Draft.baskets.rs_basket, ProposalID);
 
                     Update_OPS(proposal, p.Draft, ProposalID);
@@ -154,10 +153,7 @@ namespace WebApplication1.BLL
 
                     UpdateOvervaluation(p.Draft.overvaluations, ProposalID);
 
-                    // UPDATE do BB_PROPOSAL_Commission ----------------------------------------------------------------------------
                     UpdateCommissions(p.Summary.commission, ProposalID);
-
-                    // UPDATE das RETOMAS ------------------------------------------------------------------------------------------
 
                     UpdateUpturns(p.Draft.upturns.upturns, ProposalID, p.Draft.client.accountnumber);
 
@@ -217,7 +213,7 @@ namespace WebApplication1.BLL
                         }
                     }
 
-
+                    UpdatePrintingService
                     try
                     {
                         PrintingServices2 printingServices2 = p.Draft.printingServices2;
@@ -237,7 +233,7 @@ namespace WebApplication1.BLL
 
                                 db.SaveChanges();
 
-                                UpdatePrintingService(printingServices2, toUpdate.ID);
+                                ModifyPrintingService(printingServices2, toUpdate.ID);
                             }
                         }
                     }
@@ -2864,7 +2860,7 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void UpdatePrintingService(PrintingServices2 printingServices2, int newID)
+        public void ModifyPrintingService(PrintingServices2 printingServices2, int newID)
         {
             try
             {
