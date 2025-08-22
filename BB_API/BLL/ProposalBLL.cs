@@ -13,6 +13,7 @@ using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using WebApplication1.App_Start;
 using WebApplication1.Controllers;
@@ -55,20 +56,18 @@ namespace WebApplication1.BLL
                     proposal.ContractNumberPai = p.Draft.details.ExistanteContractNumber;
 
 
-                    List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposal.ID).ToList();
-                    db.BB_Proposal_Quote.RemoveRange(quotes);
+                    //List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposal.ID).ToList();
+                    //db.BB_Proposal_Quote.RemoveRange(quotes);
 
-                    List<BB_Proposal_Quote_RS> quotesRS = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_Quote_RS.RemoveRange(quotesRS);
+                    //List<BB_Proposal_Quote_RS> quotesRS = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposal.ID).ToList();
+                    //db.BB_Proposal_Quote_RS.RemoveRange(quotesRS);
 
-                    List<BB_Proposal_Commission> commision = db.BB_Proposal_Commission.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_Commission.RemoveRange(commision);
+                    //List<BB_Proposal_Commission> commision = db.BB_Proposal_Commission.Where(x => x.ProposalID == proposal.ID).ToList();
+                    //db.BB_Proposal_Commission.RemoveRange(commision);
 
                     List<BB_Proposal_PsConfig> psConfi = db.BB_Proposal_PsConfig.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_PsConfig.RemoveRange(psConfi);
 
-                    List<BB_Proposal_Financing> fin = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_Financing.RemoveRange(fin);
 
                     List<BB_Proposal_Overvaluation> over = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_Overvaluation.RemoveRange(over);
@@ -82,11 +81,14 @@ namespace WebApplication1.BLL
                     List<BB_Proposal_PsConfig> psconfig1 = db.BB_Proposal_PsConfig.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_PsConfig.RemoveRange(psconfig1);
 
-                    List<BB_Proposal_FinancingMonthly> financingMOntlhy = db.BB_Proposal_FinancingMonthly.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_FinancingMonthly.RemoveRange(financingMOntlhy);
+                    //List<BB_Proposal_Financing> fin = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposal.ID).ToList();
+                    //db.BB_Proposal_Financing.RemoveRange(fin);
 
-                    List<BB_Proposal_FinancingTrimestral> financingtri = db.BB_Proposal_FinancingTrimestral.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_FinancingTrimestral.RemoveRange(financingtri);
+                    //List<BB_Proposal_FinancingMonthly> financingMOntlhy = db.BB_Proposal_FinancingMonthly.Where(x => x.ProposalID == proposal.ID).ToList();
+                    //db.BB_Proposal_FinancingMonthly.RemoveRange(financingMOntlhy);
+
+                    //List<BB_Proposal_FinancingTrimestral> financingtri = db.BB_Proposal_FinancingTrimestral.Where(x => x.ProposalID == proposal.ID).ToList();
+                    //db.BB_Proposal_FinancingTrimestral.RemoveRange(financingtri);
 
                     List<BB_Proposal_Client> lstCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_Client.RemoveRange(lstCliente);
@@ -94,16 +96,7 @@ namespace WebApplication1.BLL
                     List<BB_Proposal_Consignments> lstConsignacoes = db.BB_Proposal_Consignments.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_Consignments.RemoveRange(lstConsignacoes);
 
-                    //List<BB_Proposal_DeliveryLocation> lstd = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposal.ID).ToList();
 
-                    //foreach (var item in lstd)
-                    //{
-                    //    List<BB_Proposal_ItemDoBasket> bb_Proposal_ItemDoBasket1 = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == item.IDX).ToList();
-
-                    //    db.BB_Proposal_ItemDoBasket.RemoveRange(bb_Proposal_ItemDoBasket1);
-
-                    //}
-                    //db.BB_Proposal_DeliveryLocation.RemoveRange(lstd);
                     db.Entry(proposal).State = proposal.ID == 0 ? EntityState.Added : EntityState.Modified;
                     db.SaveChanges();
 
@@ -151,6 +144,7 @@ namespace WebApplication1.BLL
                     int ProposalID = proposal.ID;
 
                     //BB_PROPOSAL_QUOTE
+
                     List<BB_Maquinas_Usadas_Gestor> lstmaquinsaudasGestor = db.BB_Maquinas_Usadas_Gestor.Where(x => x.ProposalID == ProposalID).ToList();
                     foreach (var item in lstmaquinsaudasGestor)
                     {
@@ -159,115 +153,13 @@ namespace WebApplication1.BLL
                         db.Entry(item).State = item.ID == 0 ? EntityState.Added : EntityState.Modified;
                         db.SaveChanges();
                     }
-                    foreach (var _Quote in p.Draft.baskets.os_basket)
-                    {
-                        var config1 = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<OsBasket, BB_Proposal_Quote>();
-                        });
 
-                        IMapper iMapper1 = config1.CreateMapper();
+                    // ATUALIZAR A BB_PROPOSAL_QUOTE -----------------
+                    p.Draft.baskets.os_basket = Update_BB_Proposal_Quote(p, ProposalID);
 
-                        BB_Proposal_Quote quote = iMapper1.Map<OsBasket, BB_Proposal_Quote>(_Quote);
+                    // ATUALIZAR A BB_PROPOSAL_QUOTE_RS -----------------
+                    Update_BB_Proposal_Quote_RS(p.Draft.baskets.rs_basket, ProposalID);
 
-                        quote.Proposal_ID = ProposalID;
-                        quote.CreatedBy = p.Draft.details.CreatedBy;
-                        quote.CreatedTime = DateTime.Now;
-                        quote.ModifiedBy = p.Draft.details.CreatedBy;
-                        quote.ModifiedTime = DateTime.Now;
-
-                        db.BB_Proposal_Quote.Add(quote);
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-
-                        //BB_PROPOSAL_Counters
-
-                        if (_Quote.counters != null)
-                        {
-                            foreach (var counter in _Quote.counters)
-                            {
-                                var config10 = new MapperConfiguration(cfg =>
-                                {
-                                    cfg.CreateMap<Counter, BB_Proposal_Counters>();
-                                });
-                                IMapper iMapper10 = config10.CreateMapper();
-                                BB_Proposal_Counters counters = iMapper10.Map<Counter, BB_Proposal_Counters>(counter);
-
-                                counters.ProposalID = ProposalID;
-                                counters.OSID = quote.ID;
-                                db.BB_Proposal_Counters.Add(counters);
-                                try
-                                {
-                                    db.SaveChanges();
-                                }
-                                catch (Exception ex)
-                                {
-                                    ex.Message.ToString();
-                                }
-
-                                BB_Maquinas_Usadas_Gestor g = db.BB_Maquinas_Usadas_Gestor.Where(x => x.NrSerie == counter.serialNumber).FirstOrDefault();
-                                if (g != null)
-                                {
-                                    g.ProposalID = ProposalID;
-                                    g.IsReserved = true;
-                                    db.Entry(g).State = g.ID == 0 ? EntityState.Added : EntityState.Modified;
-                                    db.SaveChanges();
-                                }
-                            }
-                        }
-                        //PS_CONFIG
-                        if (_Quote.psConfig != null)
-                        {
-                            var configPSConfig = new MapperConfiguration(cfg =>
-                            {
-                                cfg.CreateMap<PsConfig, BB_Proposal_PsConfig>();
-                            });
-
-                            IMapper iMapperPSConfig = configPSConfig.CreateMapper();
-
-                            BB_Proposal_PsConfig psconfig = iMapperPSConfig.Map<PsConfig, BB_Proposal_PsConfig>(_Quote.psConfig);
-
-                            psconfig.ProposalID = ProposalID;
-                            psconfig.ItemID = quote.ID;
-                            db.BB_Proposal_PsConfig.Add(psconfig);
-                            try
-                            {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-
-                    }
-
-                    //BB_PROPOSAL_QUOTE_RS
-                    foreach (var _Quote in p.Draft.baskets.rs_basket)
-                    {
-                        var config2 = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<RsBasket, BB_Proposal_Quote_RS>();
-                        });
-                        IMapper iMapper2 = config2.CreateMapper();
-                        BB_Proposal_Quote_RS quote = iMapper2.Map<RsBasket, BB_Proposal_Quote_RS>(_Quote);
-                        quote.ProposalID = ProposalID;
-                        db.BB_Proposal_Quote_RS.Add(quote);
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                    }
 
                     //BB_PROPOSAL_OPSIMPLEMENT
                     OPSPacks opsPacks = p.Draft.opsPacks;
@@ -447,97 +339,7 @@ namespace WebApplication1.BLL
                         opsManagePosition++;
                     }
 
-                    //BB_PROPOSAL_QUOTE_Financing
-                    var config = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<Financing, BB_Proposal_Financing>();
-                        });
-
-                    IMapper iMapper = config.CreateMapper();
-
-                    BB_Proposal_Financing fin = iMapper.Map<Financing, BB_Proposal_Financing>(p.Draft.financing);
-
-                    if (fin != null)
-                    {
-                        // Função auxiliar para validar e corrigir valores NaN
-                        double Sanitize(double value) => double.IsNaN(value) ? 0 : value;
-
-                        // Validação dos campos
-                        fin.AmountFinanced = Sanitize((double)fin.AmountFinanced);
-                        fin.AmountNotFinanced = Sanitize((double)fin.AmountNotFinanced);
-                        fin.MonthlyIncome = Sanitize((double)fin.MonthlyIncome);
-
-                        fin.ProposalID = ProposalID;
-                        fin.AmountFinanced = Math.Round((double)fin.AmountFinanced, 2);
-                        fin.AmountNotFinanced = Math.Round((double)fin.AmountNotFinanced, 2);
-                        fin.MonthlyIncome = Math.Round((double)fin.MonthlyIncome, 2);
-
-
-                        db.BB_Proposal_Financing.Add(fin);
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                    }
-
-
-                    //BB_PROPOSAL_QUOTE_FinancingFactores Monthly
-                    foreach (var monthly in p.Draft.financing.FinancingFactors.Monthly)
-                    {
-
-                        var configmonthly = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<Monthly, BB_Proposal_FinancingMonthly>();
-                        });
-
-                        IMapper iMappermonthly = configmonthly.CreateMapper();
-
-                        BB_Proposal_FinancingMonthly m1 = iMappermonthly.Map<Monthly, BB_Proposal_FinancingMonthly>(monthly);
-
-                        m1.ProposalID = ProposalID;
-                        m1.FinancingID = fin.ID;
-
-                        db.BB_Proposal_FinancingMonthly.Add(m1);
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                    }
-
-                    //BB_PROPOSAL_QUOTE_FinancingFactores Trimestral
-                    foreach (var trimestral in p.Draft.financing.FinancingFactors.Trimestral)
-                    {
-
-                        var configmonthly = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<Trimestral, BB_Proposal_FinancingTrimestral>();
-                        });
-
-                        IMapper iMappermonthly = configmonthly.CreateMapper();
-
-                        BB_Proposal_FinancingTrimestral t1 = iMappermonthly.Map<Trimestral, BB_Proposal_FinancingTrimestral>(trimestral);
-
-                        t1.ProposalID = ProposalID;
-                        t1.FinancingID = fin.ID;
-
-                        db.BB_Proposal_FinancingTrimestral.Add(t1);
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                    }
+                    UpdateFinancing(p.Draft.financing, ProposalID);
 
                     //BB_PROPOSAL_Overvaluation
                     foreach (var _overvaluation in p.Draft.overvaluations)
@@ -565,35 +367,15 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    //BB_PROPOSAL_Commission
-                    var config4 = new MapperConfiguration(cfg =>
-                    {
-                        cfg.CreateMap<Commission, BB_Proposal_Commission>();
-                    });
 
-                    IMapper iMapper4 = config4.CreateMapper();
-
-                    BB_Proposal_Commission commission1 = iMapper4.Map<Commission, BB_Proposal_Commission>(p.Summary.commission);
-
-                    commission1.ProposalID = ProposalID;
-
-                    db.BB_Proposal_Commission.Add(commission1);
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Message.ToString();
-                    }
-
+                    // UPDATE do BB_PROPOSAL_Commission -----------------------------------------------------------------------------
+                    UpdateCommissions(p.Summary.commission, ProposalID);
 
                     // UPDATE das RETOMAS ------------------------------------------------------------------------------------------
 
                     UpdateUpturns(p.Draft.upturns.upturns, ProposalID, p.Draft.client.accountnumber);
 
                     p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
-
 
 
                     //PRINTING SERVICES --------------------------------------------------------------------------------------------
@@ -678,17 +460,6 @@ namespace WebApplication1.BLL
                     {
                         ex.Message.ToString();
                     }
-
-
-
-
-
-
-
-
-
-
-
 
 
                     //BB_PROPOSAL_Cliente
@@ -2970,6 +2741,119 @@ namespace WebApplication1.BLL
             }
         }
 
+        public void UpdateCommissions(Commission commission, int proposalID)
+        {
+            try
+            {
+                var config4 = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Commission, BB_Proposal_Commission>();
+                });
+
+                IMapper iMapper4 = config4.CreateMapper();
+
+                List<BB_Proposal_Commission> commision = db.BB_Proposal_Commission.Where(x => x.ProposalID == proposalID).ToList();
+                db.BB_Proposal_Commission.RemoveRange(commision);
+
+
+                BB_Proposal_Commission commission1 = iMapper4.Map<Commission, BB_Proposal_Commission>(commission);
+
+                commission1.ProposalID = proposalID;
+
+                db.BB_Proposal_Commission.Add(commission1);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+            }
+        }
+        public void UpdateFinancing(Financing financing, int proposalID)
+        {         
+            try
+            {
+                List<BB_Proposal_Financing> finToDel = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalID).ToList();
+                db.BB_Proposal_Financing.RemoveRange(finToDel);
+
+                List<BB_Proposal_FinancingMonthly> financingMontlhyToDel = db.BB_Proposal_FinancingMonthly.Where(x => x.ProposalID == proposalID).ToList();
+                db.BB_Proposal_FinancingMonthly.RemoveRange(financingMontlhyToDel);
+
+                List<BB_Proposal_FinancingTrimestral> financingtriToDel = db.BB_Proposal_FinancingTrimestral.Where(x => x.ProposalID == proposalID).ToList();
+                db.BB_Proposal_FinancingTrimestral.RemoveRange(financingtriToDel);
+
+
+                // Mappers ....
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Financing, BB_Proposal_Financing>();
+                });
+                IMapper iMapper = config.CreateMapper();
+
+
+                var configmonthly = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Monthly, BB_Proposal_FinancingMonthly>();
+                });
+                IMapper iMappermonthly = configmonthly.CreateMapper();
+
+
+                // FINANCING
+                BB_Proposal_Financing fin = iMapper.Map<Financing, BB_Proposal_Financing>(financing);
+
+                if (fin != null)
+                {
+                    // Função auxiliar para validar e corrigir valores NaN
+                    double Sanitize(double value) => double.IsNaN(value) ? 0 : value;
+
+                    // Validação dos campos
+                    fin.AmountFinanced = Sanitize((double)fin.AmountFinanced);
+                    fin.AmountNotFinanced = Sanitize((double)fin.AmountNotFinanced);
+                    fin.MonthlyIncome = Sanitize((double)fin.MonthlyIncome);
+
+                    fin.ProposalID = proposalID;
+                    fin.AmountFinanced = Math.Round((double)fin.AmountFinanced, 2);
+                    fin.AmountNotFinanced = Math.Round((double)fin.AmountNotFinanced, 2);
+                    fin.MonthlyIncome = Math.Round((double)fin.MonthlyIncome, 2);
+
+
+                    db.BB_Proposal_Financing.Add(fin);
+                    db.SaveChanges();
+                }
+
+
+                // FINANCING MONTHLY
+                foreach (var monthly in financing.FinancingFactors.Monthly)
+                {
+                    BB_Proposal_FinancingMonthly m1 = iMappermonthly.Map<Monthly, BB_Proposal_FinancingMonthly>(monthly);
+
+                    m1.ProposalID = proposalID;
+                    m1.FinancingID = fin.ID;
+
+                    db.BB_Proposal_FinancingMonthly.Add(m1);
+                    db.SaveChanges();
+                }
+
+                // FINANCING TRIMESTRAL
+                foreach (var trimestral in financing.FinancingFactors.Trimestral)
+                {
+
+                    BB_Proposal_FinancingTrimestral t1 = iMappermonthly.Map<Trimestral, BB_Proposal_FinancingTrimestral>(trimestral);
+
+                    t1.ProposalID = proposalID;
+                    t1.FinancingID = fin.ID;
+
+                    db.BB_Proposal_FinancingTrimestral.Add(t1);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+            }
+        }
+
         public void UpdateUpturns(List<BB_Proposal_Upturn> upturns, int proposalID, string clientAccountNumber)
         {
             using (var transaction = db.Database.BeginTransaction())
@@ -2991,7 +2875,7 @@ namespace WebApplication1.BLL
                     {
                         if (upturn_fromDraft.ID == 0)
                         {
-                            // Novo registro
+                            // Novo registo
                             var newUpturn = new BB_Proposal_Upturn
                             {
                                 ProposalID = proposalID,
@@ -3473,6 +3357,200 @@ namespace WebApplication1.BLL
                     throw;
 
                 }
+            }
+        }
+        public List<OsBasket> Update_BB_Proposal_Quote(ProposalRootObject p, int proposalID)
+        {
+            try
+            {
+                // ------------------------ Mappers ------------------------
+
+                var configQuote = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<OsBasket, BB_Proposal_Quote>()
+                    .ForMember(dest => dest.ID, opt => opt.Ignore());
+                });
+
+                IMapper iMapper1 = configQuote.CreateMapper();
+
+                var configCounter = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Counter, BB_Proposal_Counters>()
+                    .ForMember(dest => dest.ID, opt => opt.Ignore());
+                });
+
+                IMapper iMapper10 = configCounter.CreateMapper();
+
+                var configPSConfig = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<PsConfig, BB_Proposal_PsConfig>()
+                    .ForMember(dest => dest.ID, opt => opt.Ignore());
+                });
+
+                IMapper iMapperPSConfig = configPSConfig.CreateMapper();
+
+
+                // BB_PROPOSAL_QUOTE ----------------------------------------------------
+
+                // configurador guardado na Base de dados
+                List<BB_Proposal_Quote> proposal_quote_lst = db.BB_Proposal_Quote.Where(q => q.Proposal_ID == proposalID).ToList();
+
+                // Obter os IDs incomming
+                var incomingQuoteIDs = new HashSet<int>(
+                    p.Draft.baskets.os_basket
+                        .Where(q => q.ID > 0)
+                        .Select(q => q.ID)
+                );
+
+                // registos que devem ser removidos
+                var quotesToDelete = proposal_quote_lst
+                    .Where(q => !incomingQuoteIDs.Contains(q.ID))
+                    .ToList();
+
+                // Remover e guardar
+                if (quotesToDelete.Any())
+                {
+                    // trabalhar apenas com os registos reais
+                    proposal_quote_lst = proposal_quote_lst.Where(q => incomingQuoteIDs.Contains(q.ID)).ToList();
+                    db.BB_Proposal_Quote.RemoveRange(quotesToDelete);
+                    db.SaveChanges();
+                }
+
+                var existingQuotesDict = proposal_quote_lst.ToDictionary(q => q.ID);
+                var timestamp = DateTime.Now;
+
+                foreach (var _Quote_Incomming in p.Draft.baskets.os_basket)
+                {
+                    var quote = proposal_quote_lst.FirstOrDefault(q => q.ID == _Quote_Incomming.ID);
+
+                    if (_Quote_Incomming.ID > 0 && existingQuotesDict.TryGetValue(_Quote_Incomming.ID, out var existing))
+                    {
+                        // Atualizar existente
+                        iMapper1.Map(_Quote_Incomming, existing);
+                        existing.ModifiedBy = p.Draft.details.CreatedBy;
+                        existing.ModifiedTime = timestamp;
+                        db.Entry(existing).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        // Criar novo
+                        BB_Proposal_Quote newQuote = iMapper1.Map<OsBasket, BB_Proposal_Quote>(_Quote_Incomming);
+                        newQuote.Proposal_ID = proposalID;
+                        newQuote.CreatedBy = p.Draft.details.CreatedBy;
+                        newQuote.CreatedTime = timestamp;
+                        newQuote.ModifiedBy = p.Draft.details.CreatedBy;
+                        newQuote.ModifiedTime = timestamp;
+                        db.BB_Proposal_Quote.Add(newQuote);
+
+                        db.SaveChanges();
+                        _Quote_Incomming.ID = newQuote.ID;
+                    }
+
+                    db.SaveChanges();
+
+
+                    // BB_PROPOSAL_COUNTERS ----------------------------------------------------
+
+                    if (_Quote_Incomming.counters != null)
+                    {
+                        foreach (var counter in _Quote_Incomming.counters)
+                        {
+                            var counterX = db.BB_Proposal_Counters.Where(q => q.ProposalID == proposalID).FirstOrDefault();
+
+                            if (counterX == null)
+                            {
+                                // Não existe -> criar novo
+                                counterX = iMapper10.Map<Counter, BB_Proposal_Counters>(counter);
+
+                                db.BB_Proposal_Counters.Add(counterX);
+                            }
+                            else
+                            {
+                                // Já existe -> fazer update
+                                iMapper1.Map(counter, counterX);
+                                db.Entry(counterX).State = EntityState.Modified;
+                            }
+                            db.SaveChanges();
+
+
+                            BB_Maquinas_Usadas_Gestor g = db.BB_Maquinas_Usadas_Gestor.Where(x => x.NrSerie == counter.serialNumber).FirstOrDefault();
+                            if (g != null)
+                            {
+                                g.ProposalID = proposalID;
+                                g.IsReserved = true;
+                                db.Entry(g).State = g.ID == 0 ? EntityState.Added : EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+
+                    // PS_CONFIG ----------------------------------------------------
+                    if (_Quote_Incomming.psConfig != null)
+                    {
+                        var psconfig = db.BB_Proposal_PsConfig.Where(q => q.ProposalID == proposalID).FirstOrDefault();
+
+                        if (psconfig == null)
+                        {
+                            // Não existe -> criar novo
+                            psconfig = iMapper10.Map<PsConfig, BB_Proposal_PsConfig>(_Quote_Incomming.psConfig);
+
+                            psconfig.ProposalID = proposalID;
+                            psconfig.ItemID = quote.ID;
+                            db.BB_Proposal_PsConfig.Add(psconfig);
+                        }
+                        else
+                        {
+                            // Já existe -> fazer update
+                            iMapper1.Map(_Quote_Incomming.psConfig, psconfig);
+                            psconfig.ProposalID = proposalID;
+                            psconfig.ItemID = quote.ID;
+                            db.Entry(psconfig).State = EntityState.Modified;
+                        }
+                        db.SaveChanges();
+                    }
+                }
+
+                return p.Draft.baskets.os_basket;
+
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+
+            }
+        }
+
+        public void Update_BB_Proposal_Quote_RS(List<RsBasket> rs_basket, int proposalID)
+        {
+            try
+            {
+                // Mappers ----------------------------------
+                var config2 = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<RsBasket, BB_Proposal_Quote_RS>();
+                });
+                IMapper iMapper2 = config2.CreateMapper();
+
+                // Remover todos os registos ----------------
+                List<BB_Proposal_Quote_RS> quotesRS = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalID).ToList();
+                db.BB_Proposal_Quote_RS.RemoveRange(quotesRS);
+                db.SaveChanges();
+
+                // adicionar registos todos novamente -------
+                foreach (var _Quote in rs_basket)
+                {
+                    BB_Proposal_Quote_RS quote = iMapper2.Map<RsBasket, BB_Proposal_Quote_RS>(_Quote);
+                    quote.ProposalID = proposalID;
+
+                    db.BB_Proposal_Quote_RS.Add(quote);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
             }
         }
     }
