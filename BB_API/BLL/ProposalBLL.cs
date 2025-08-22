@@ -68,9 +68,8 @@ namespace WebApplication1.BLL
                     List<BB_Proposal_PsConfig> psConfi = db.BB_Proposal_PsConfig.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_PsConfig.RemoveRange(psConfi);
 
-
-                    List<BB_Proposal_Overvaluation> over = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_Overvaluation.RemoveRange(over);
+                    //List<BB_Proposal_Overvaluation> over = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposal.ID).ToList();
+                    //db.BB_Proposal_Overvaluation.RemoveRange(over);
 
                     List<BB_Proposal_Vva> vva = db.BB_Proposal_Vva.Where(x => x.ProposalID == proposal.ID).ToList();
                     db.BB_Proposal_Vva.RemoveRange(vva);
@@ -115,9 +114,7 @@ namespace WebApplication1.BLL
 
                 }
 
-
-
-                using (var context = new BB_DB_DEVEntities2())              
+                using (var context = new BB_DB_DEVEntities2())
                 {
                     BB_Proposal proposal = context.BB_Proposal.Find(p.Draft.details.ID);
                     try
@@ -126,12 +123,6 @@ namespace WebApplication1.BLL
                                                          .Where(f => f.ID == p.Draft.financing.ContractTypeId)
                                                          .Select(f => f.Company + " - " + f.CompanyCode)
                                                          .FirstOrDefault();
-                        //string financingCompanyCode = context.BB_FinancingContractType
-                        //                         .Where(f => f.ID == p.Draft.financing.ContractTypeId)
-                        //                         .FirstOrDefault()
-                        //                         .CompanyCode;
-
-
 
                         proposal.CodArrend = financingCompany;
                         context.Entry(proposal).State = EntityState.Modified;
@@ -341,32 +332,7 @@ namespace WebApplication1.BLL
 
                     UpdateFinancing(p.Draft.financing, ProposalID);
 
-                    //BB_PROPOSAL_Overvaluation
-                    foreach (var _overvaluation in p.Draft.overvaluations)
-                    {
-
-                        var config3 = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<Overvaluation, BB_Proposal_Overvaluation>();
-                        });
-
-                        IMapper iMapper3 = config3.CreateMapper();
-
-                        BB_Proposal_Overvaluation overvaluation111 = iMapper3.Map<Overvaluation, BB_Proposal_Overvaluation>(_overvaluation);
-
-                        overvaluation111.ProposalID = ProposalID;
-
-                        db.BB_Proposal_Overvaluation.Add(overvaluation111);
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-                    }
-
+                    UpdateOvervaluation(p.Draft.overvaluations, ProposalID);
 
                     // UPDATE do BB_PROPOSAL_Commission -----------------------------------------------------------------------------
                     UpdateCommissions(p.Summary.commission, ProposalID);
@@ -2770,7 +2736,7 @@ namespace WebApplication1.BLL
             }
         }
         public void UpdateFinancing(Financing financing, int proposalID)
-        {         
+        {
             try
             {
                 List<BB_Proposal_Financing> finToDel = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalID).ToList();
@@ -2845,6 +2811,38 @@ namespace WebApplication1.BLL
 
                     db.BB_Proposal_FinancingTrimestral.Add(t1);
                     db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+            }
+        }
+
+        public void UpdateOvervaluation(List<Overvaluation> overvaluations, int proposalID)
+        {
+            try
+            {
+                List<BB_Proposal_Overvaluation> over = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalID).ToList();
+                db.BB_Proposal_Overvaluation.RemoveRange(over);
+
+                var config3 = new MapperConfiguration(cfg =>
+                    {
+                        cfg.CreateMap<Overvaluation, BB_Proposal_Overvaluation>();
+                    });
+                IMapper iMapper3 = config3.CreateMapper();
+
+
+                foreach (var _overvaluation in overvaluations)
+                {
+                    BB_Proposal_Overvaluation overvaluation111 = iMapper3.Map<Overvaluation, BB_Proposal_Overvaluation>(_overvaluation);
+
+                    overvaluation111.ProposalID = proposalID;
+
+                    db.BB_Proposal_Overvaluation.Add(overvaluation111);
+                    db.SaveChanges();
+
                 }
             }
             catch (Exception ex)
