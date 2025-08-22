@@ -117,7 +117,7 @@ namespace WebApplication1.BLL
 
 
 
-                using (var context = new BB_DB_DEVEntities2())
+                using (var context = new BB_DB_DEVEntities2())              
                 {
                     BB_Proposal proposal = context.BB_Proposal.Find(p.Draft.details.ID);
                     try
@@ -143,7 +143,7 @@ namespace WebApplication1.BLL
                     }
                     int ProposalID = proposal.ID;
 
-                    //BB_PROPOSAL_QUOTE
+
 
                     List<BB_Maquinas_Usadas_Gestor> lstmaquinsaudasGestor = db.BB_Maquinas_Usadas_Gestor.Where(x => x.ProposalID == ProposalID).ToList();
                     foreach (var item in lstmaquinsaudasGestor)
