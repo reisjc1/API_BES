@@ -2797,6 +2797,12 @@ namespace WebApplication1.BLL
                 });
                 IMapper iMappermonthly = configmonthly.CreateMapper();
 
+                var configTrimestral= new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Trimestral, BB_Proposal_FinancingTrimestral>();
+                });
+                IMapper iMapperTrimestral = configTrimestral.CreateMapper();
+
 
                 // FINANCING
                 BB_Proposal_Financing fin = iMapper.Map<Financing, BB_Proposal_Financing>(financing);
@@ -2838,7 +2844,7 @@ namespace WebApplication1.BLL
                 foreach (var trimestral in financing.FinancingFactors.Trimestral)
                 {
 
-                    BB_Proposal_FinancingTrimestral t1 = iMappermonthly.Map<Trimestral, BB_Proposal_FinancingTrimestral>(trimestral);
+                    BB_Proposal_FinancingTrimestral t1 = iMapperTrimestral.Map<Trimestral, BB_Proposal_FinancingTrimestral>(trimestral);
 
                     t1.ProposalID = proposalID;
                     t1.FinancingID = fin.ID;
