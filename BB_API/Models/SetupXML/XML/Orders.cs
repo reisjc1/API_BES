@@ -473,12 +473,12 @@ namespace WebApplication1.Models.SetupXML.XML
                         collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
                         {
                             SD_DOC = orderRetiradaDoc,
-                            APLF_NAME = contactName, //"M. LUIS ALVAREZ",
-                            APLF_PHON = contactPhone,       //"66666666",
-                            APLF_OPEN = contactSchedule,//"9h 17h",
-                            APLF_INFO = contactInfo,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                            APLF_INFO2 = contactInfo2,//"Asc: Oui -Connexion: PRINTFLEET",
-                            APLF_INFO3 = "2024431493"
+                            APRT_NAME = contactName, //"M. LUIS ALVAREZ",
+                            APRT_PHON = contactPhone,       //"66666666",
+                            APRT_OPEN = contactSchedule,//"9h 17h",
+                            APRT_INFO = contactInfo,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                            APRT_INFO2 = contactInfo2,//"Asc: Oui -Connexion: PRINTFLEET",
+                            APRT_INFO3 = "2024431493"
 
                         });
                             
@@ -847,7 +847,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
                                         REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
                                         //REF_1 = order.Key.Name, //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
-                                        PURCH_NO_C = proposalId.ToString(),  //Nome interno da oferta
+                                        PURCH_NO_C = "BB" + DateTime.Today.Year + proposalId.ToString(),  //Nome interno da oferta
                                         SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
                                         PMNTTRMS = "303E", //TODO: manter  || FinancingPaymentMethods.
                                         CONTRACT_DOC = contractDoc, //$"C_{c.ID}_1_{randomLetterNunber}",   //contractDoc,
@@ -983,7 +983,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
                                     REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
                                     //REF_1 = order.Key.Name, //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
-                                    PURCH_NO_C = proposalId.ToString(),  //Nome interno da oferta
+                                    PURCH_NO_C = "BB" + DateTime.Today.Year + proposalId.ToString(),  //Nome interno da oferta
                                     SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
                                     PMNTTRMS = "303E", //TODO: manter  || FinancingPaymentMethods.
                                     CONTRACT_DOC = contractDoc, //$"C_{c.ID}_1_{randomLetterNunber}",   //contractDoc,
@@ -1046,12 +1046,12 @@ namespace WebApplication1.Models.SetupXML.XML
                                 collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
                                 {
                                     SD_DOC = orderRetiradaDoc,
-                                    APLF_NAME = contactName, //"M. LUIS ALVAREZ",
-                                    APLF_PHON = contactPhone,       //"66666666",
-                                    APLF_OPEN = contactSchedule,//"9h 17h",
-                                    APLF_INFO = contactInfo,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                    APLF_INFO2 = contactInfo2,//"Asc: Oui -Connexion: PRINTFLEET",
-                                    APLF_INFO3 = "2024431493"
+                                    APRT_NAME = contactName, //"M. LUIS ALVAREZ",
+                                    APRT_PHON = contactPhone,       //"66666666",
+                                    APRT_OPEN = contactSchedule,//"9h 17h",
+                                    APRT_INFO = contactInfo,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                    APRT_INFO2 = contactInfo2,//"Asc: Oui -Connexion: PRINTFLEET",
+                                    APRT_INFO3 = ""
 
                                 });
 
@@ -1093,7 +1093,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
                                     REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
                                     REF_1 = "SDR252146", //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
-                                    PURCH_NO_C = "RETIRAR " + upturn.Model,  //Nome interno da oferta
+                                    PURCH_NO_C = "BB" + DateTime.Today.Year + proposalId.ToString(),  //Nome interno da oferta
                                     SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
                                     PMNTTRMS = "E6CD", //TODO: manter  || FinancingPaymentMethods.
                                     MACHINE = "5R", //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
