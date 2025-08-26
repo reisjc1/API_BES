@@ -347,11 +347,42 @@ namespace WebApplication1.Controllers
         [ActionName("FilteredClientsAccountNumber")]
         public List<BB_Clientes_> FilteredClientsAccountNumber(string accountNumber)
         {
-            //if(accountNumber != null || accountNumber != "")
-            //{
-            return db.BB_Clientes.Select(x => new BB_Clientes_ { accountnumber = x.accountnumber, Name = x.Name, NIF = x.NIF, Owner = x.Owner, Segment = x.Segment, GMA = x.GMA, Holding = x.Holding, Blocked = x.Blocked }).Where(x => x.accountnumber.Contains(accountNumber)).ToList();
-            //}
+            try{
+                var clients = db.BB_Clientes
+                                .Where(c => c.accountnumber.Contains(accountNumber))
+                                .ToList();
 
+                var users = usersDB.AspNetUsers
+                                .Where(u => !string.IsNullOrEmpty(u.Territory))
+                                .ToList();
+
+                var result = clients.Select(client =>
+                {
+                    // Tenta encontrar um user cujo Territory contains o Territory do cliente
+                    var matchedUser = users
+                        .FirstOrDefault(u => !string.IsNullOrEmpty(client.Territory) &&
+                                             u.Territory.Contains(client.Territory));
+
+                    return new BB_Clientes_
+                    {
+                        accountnumber = client.accountnumber,
+                        Name = client.Name,
+                        NIF = client.NIF,
+                        Owner = matchedUser != null ? matchedUser.DisplayName : client.Owner,
+                        Segment = client.Segment,
+                        GMA = client.GMA,
+                        Holding = client.Holding,
+                        Blocked = client.Blocked
+                    };
+                }).ToList();
+
+                return result;
+
+            }catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+            return null;
         }
 
         [AcceptVerbs("GET", "POST")]
