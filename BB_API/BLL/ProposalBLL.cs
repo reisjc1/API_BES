@@ -55,44 +55,6 @@ namespace WebApplication1.BLL
                     proposal.IsNP = p.Draft.baskets.IsNP;
                     proposal.ContractNumberPai = p.Draft.details.ExistanteContractNumber;
 
-
-                    //List<BB_Proposal_Quote> quotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposal.ID).ToList();
-                    //db.BB_Proposal_Quote.RemoveRange(quotes);
-
-                    //List<BB_Proposal_Quote_RS> quotesRS = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposal.ID).ToList();
-                    //db.BB_Proposal_Quote_RS.RemoveRange(quotesRS);
-
-                    //List<BB_Proposal_Commission> commision = db.BB_Proposal_Commission.Where(x => x.ProposalID == proposal.ID).ToList();
-                    //db.BB_Proposal_Commission.RemoveRange(commision);
-
-                    List<BB_Proposal_PsConfig> psConfi = db.BB_Proposal_PsConfig.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_PsConfig.RemoveRange(psConfi);
-
-                    //List<BB_Proposal_Overvaluation> over = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposal.ID).ToList();
-                    //db.BB_Proposal_Overvaluation.RemoveRange(over);
-
-                    List<BB_Proposal_Vva> vva = db.BB_Proposal_Vva.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_Vva.RemoveRange(vva);
-
-                    List<BB_Proposal_PrintingServices> pritningService = db.BB_Proposal_PrintingServices.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_PrintingServices.RemoveRange(pritningService);
-
-                    //List<BB_Proposal_Financing> fin = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposal.ID).ToList();
-                    //db.BB_Proposal_Financing.RemoveRange(fin);
-
-                    //List<BB_Proposal_FinancingMonthly> financingMOntlhy = db.BB_Proposal_FinancingMonthly.Where(x => x.ProposalID == proposal.ID).ToList();
-                    //db.BB_Proposal_FinancingMonthly.RemoveRange(financingMOntlhy);
-
-                    //List<BB_Proposal_FinancingTrimestral> financingtri = db.BB_Proposal_FinancingTrimestral.Where(x => x.ProposalID == proposal.ID).ToList();
-                    //db.BB_Proposal_FinancingTrimestral.RemoveRange(financingtri);
-
-                    List<BB_Proposal_Client> lstCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_Client.RemoveRange(lstCliente);
-
-                    List<BB_Proposal_Consignments> lstConsignacoes = db.BB_Proposal_Consignments.Where(x => x.ProposalID == proposal.ID).ToList();
-                    db.BB_Proposal_Consignments.RemoveRange(lstConsignacoes);
-
-
                     db.Entry(proposal).State = proposal.ID == 0 ? EntityState.Added : EntityState.Modified;
                     db.SaveChanges();
 
@@ -129,6 +91,7 @@ namespace WebApplication1.BLL
                     {
                         ex.Message.ToString();
                     }
+
                     int ProposalID = proposal.ID;
 
 
@@ -142,7 +105,6 @@ namespace WebApplication1.BLL
                         db.SaveChanges();
                     }
 
-                    // ATUALIZAR A BB_PROPOSAL_QUOTE ------------------------------------------------------------------------------
                     p.Draft.baskets.os_basket = Update_BB_Proposal_Quote(p, ProposalID);
 
                     Update_BB_Proposal_Quote_RS(p.Draft.baskets.rs_basket, ProposalID);
@@ -159,12 +121,12 @@ namespace WebApplication1.BLL
 
                     p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
 
-
-                    //PRINTING SERVICES --------------------------------------------------------------------------------------------
-
                     // ISTO ESTÁ A SER UTILIZADO???? EU ACHO QUE NAO
                     if (p.Draft.printingServices != null)
                     {
+                        List<BB_Proposal_PrintingServices> pritningService_lst = db.BB_Proposal_PrintingServices.Where(x => x.ProposalID == proposal.ID).ToList();
+                        db.BB_Proposal_PrintingServices.RemoveRange(pritningService_lst);
+
                         var configpPrintingServices = new MapperConfiguration(cfg =>
                         {
                             cfg.CreateMap<PrintingServices, BB_Proposal_PrintingServices>();
@@ -189,11 +151,13 @@ namespace WebApplication1.BLL
                         //VVA
                         if (p.Draft.printingServices.vva != null)
                         {
+                            List<BB_Proposal_Vva> vva_lst = db.BB_Proposal_Vva.Where(x => x.ProposalID == proposal.ID).ToList();
+                            db.BB_Proposal_Vva.RemoveRange(vva_lst);
+
                             var configpVVA = new MapperConfiguration(cfg =>
                             {
                                 cfg.CreateMap<Vva, BB_Proposal_Vva>();
                             });
-
                             IMapper iMapperVVA = configpVVA.CreateMapper();
 
                             BB_Proposal_Vva vva = iMapperVVA.Map<Vva, BB_Proposal_Vva>(p.Draft.printingServices.vva);
@@ -213,76 +177,10 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    UpdatePrintingService
-                    try
-                    {
-                        PrintingServices2 printingServices2 = p.Draft.printingServices2;
+                    UpdatePrintingService(p.Draft.printingServices2, ProposalID);
 
-                        if (printingServices2 != null)
-                        {
-                            // Se for um printingService NOVO, Adiciona-se tudo
-                            if (printingServices2.ID == null)
-                            {
-                                AddNewPrintingService(printingServices2, ProposalID);
-                            }
-                            //Se for o printingService JÁ EXISTIR..
-                            else
-                            {
-                                BB_Proposal_PrintingServices2 toUpdate = db.BB_Proposal_PrintingServices2.FirstOrDefault(x => x.ID == printingServices2.ID);
-                                toUpdate.ActivePrintingService = printingServices2.ActivePrintingService;
+                    UpdateClient(p.Draft.client, p.Draft.details.CreatedBy, ProposalID);
 
-                                db.SaveChanges();
-
-                                ModifyPrintingService(printingServices2, toUpdate.ID);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Message.ToString();
-                    }
-
-
-                    //BB_PROPOSAL_Cliente
-                    BB_Proposal_Client cliente1 = new BB_Proposal_Client();
-                    cliente1.ClientID = p.Draft.client.accountnumber;
-                    cliente1.IsNewClient = p.Draft.client.isNewClient;
-                    cliente1.ProposalID = ProposalID;
-                    cliente1.Name = p.Draft.client.Name;
-                    cliente1.IsPublicSector = p.Draft.client.isPublicSector;
-                    cliente1.IsGMA = p.Draft.client.isGMA;
-                    db.BB_Proposal_Client.Add(cliente1);
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Message.ToString();
-                    }
-                    if (p.Draft.client.modeId.GetValueOrDefault() == 1)
-                    {
-                        BB_Clientes count = db.BB_Clientes.Where(x => x.accountnumber == p.Draft.client.accountnumber).FirstOrDefault();
-                        if (count == null)
-                        {
-                            string usename = "";
-                            using (var db1 = new masterEntities())
-                            {
-                                usename = db1.AspNetUsers.Where(x => x.Email == p.Draft.details.CreatedBy).Select(x => x.DisplayName).FirstOrDefault();
-                            }
-                            BB_Clientes c = new BB_Clientes();
-                            c.accountnumber = p.Draft.client.accountnumber;
-                            c.Name = p.Draft.client.Name;
-                            c.PostalCode = p.Draft.client.PostalCode;
-                            c.NIF = p.Draft.client.NIF;
-                            c.City = p.Draft.client.City;
-                            c.address1_line1 = p.Draft.client.address1_line1;
-                            c.IsClienteBB = true;
-                            c.Owner = usename;
-                            db.BB_Clientes.Add(c);
-                            db.SaveChanges();
-                        }
-                    }
 
                     var dl_BillTo = p.Draft.deliveryLocationsBES.deliveryLocationsShipToBillTo.Where(x => x.AccountType == "Bill To");
 
@@ -305,19 +203,8 @@ namespace WebApplication1.BLL
                         }
                     }
 
-                    //BB_PROPOSAL_COnsigments
-                    var configConsigments = new MapperConfiguration(cfg =>
-                    {
-                        cfg.CreateMap<Consignment, BB_Proposal_Consignments>();
-                    });
+                    UpdateConsigments(p.Draft.consignment, ProposalID);
 
-                    IMapper iMapperConsigments = configConsigments.CreateMapper();
-
-                    BB_Proposal_Consignments consignment = iMapperConsigments.Map<Consignment, BB_Proposal_Consignments>(p.Draft.consignment);
-
-                    consignment.ProposalID = ProposalID;
-
-                    db.BB_Proposal_Consignments.Add(consignment);
 
                     //BB_Permissions
                     if (p.Draft.shareProfileDelegation != null)
@@ -347,72 +234,9 @@ namespace WebApplication1.BLL
                     //Contacts_Documentation
                     CreateContactsDocumentation(p, ProposalID);
 
-                    //Add Documents
-                    //CreateDocuments(p, p.Draft.details.CRM_QUOTE_ID);
+                    UpdateTypeOfClient(p.Draft);
 
-
-                    //TYPE OF CLIENT
-                    BB_TypeOfClient typeOfClient = db.BB_TypeOfClient.Where(x => x.ProposalID == p.Draft.details.ID).FirstOrDefault();
-                    if (typeOfClient is null)
-                    {
-                        typeOfClient = new BB_TypeOfClient();
-                    }
-
-                    typeOfClient.ProposalID = p.Draft.details.ID;
-                    typeOfClient.Prospect = p.Draft.baskets.prospect;
-                    typeOfClient.NewBusinessLine = p.Draft.baskets.newBusinessLine;
-                    typeOfClient.GMA = p.Draft.baskets.GMA;
-                    typeOfClient.BEUSupport = p.Draft.baskets.BEUSupport;
-
-                    try
-                    {
-                        db.BB_TypeOfClient.AddOrUpdate(typeOfClient);
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-
-                    if (p.Draft.printingServices2.PrintingCondition != 0)
-                    {
-                        BB_Proposal_Condition_Type existPrintingCondition = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == p.Draft.details.ID && x.ConditionType == "ZVBS").FirstOrDefault();
-
-                        if (existPrintingCondition != null)
-                        {
-                            existPrintingCondition.ConditionValue = p.Draft.printingServices2.PrintingCondition;
-
-                            try
-                            {
-                                db.BB_Proposal_Condition_Type.AddOrUpdate(existPrintingCondition);
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                throw ex;
-                            }
-
-                        }
-                        else
-                        {
-                            BB_Proposal_Condition_Type printingConditionType = new BB_Proposal_Condition_Type()
-                            {
-                                ProposalID = p.Draft.details.ID,
-                                ConditionType = "ZVBS",
-                                ConditionValue = p.Draft.printingServices2.PrintingCondition
-                            };
-
-                            try
-                            {
-                                db.BB_Proposal_Condition_Type.AddOrUpdate(printingConditionType);
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                throw ex;
-                            }
-                        }
-                    }
+                    UpdateConditionType(p.Draft.printingServices2.PrintingCondition, p.Draft.details.ID);
 
 
                     err.ProposalObj = new ProposalRootObject();
@@ -2860,141 +2684,6 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void ModifyPrintingService(PrintingServices2 printingServices2, int newID)
-        {
-            try
-            {
-                if (printingServices2.ApprovedPrintingServices != null)
-                {
-                    foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
-                    {
-                        if (aps.ID == null)
-                        {
-                            BB_PrintingServices newPS = new BB_PrintingServices()
-                            {
-                                BWVolume = aps.BWVolume,
-                                CVolume = aps.CVolume,
-                                ContractDuration = aps.ContractDuration,
-                                PrintingServices2ID = newID,
-                                IsPrecalc = aps.IsPrecalc,
-                                Fee = 0,
-                            };
-
-                            db.BB_PrintingServices.Add(newPS);
-                            db.SaveChanges();
-                            aps.ID = newPS.ID;
-
-                            if (aps.GlobalClickVVA != null)
-                            {
-                                BB_VVA vva = new BB_VVA()
-                                {
-                                    BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
-                                    CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
-                                    ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
-                                    PVP = aps.GlobalClickVVA.PVP,
-                                    RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
-                                    PrintingServiceID = newPS.ID,
-                                    ReturnType = aps.GlobalClickVVA.ReturnType,
-                                };
-
-                                db.BB_VVA.Add(vva);
-                                db.SaveChanges();
-
-                            }
-                            if (aps.GlobalClickNoVolume != null)
-                            {
-                                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
-                                {
-                                    GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
-                                    GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
-                                    PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
-                                    PrintingServiceID = newPS.ID,
-                                };
-
-                                db.BB_PrintingServices_NoVolume.Add(nv);
-                                db.SaveChanges();
-
-
-                            }
-                            if (aps.ClickPerModel != null)
-                            {
-                                BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
-                                {
-                                    PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
-                                    PrintingServiceID = newPS.ID,
-                                };
-
-                                db.BB_PrintingServices_ClickPerModel.Add(cpm);
-                                db.SaveChanges();
-
-                            }
-                            if (aps.Machines != null)
-                            {
-                                foreach (Machine m in aps.Machines)
-                                {
-                                    BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
-                                    {
-                                        BWVolume = m.BWVolume,
-                                        CodeRef = m.CodeRef,
-                                        CVolume = m.CVolume,
-                                        Description = m.Description,
-                                        PrintingServiceID = newPS.ID,
-                                        Quantity = m.Qty,
-                                        ApprovedBW = m.ClickPriceBW,
-                                        ApprovedC = m.ClickPriceC
-                                    };
-
-                                    db.BB_PrintingService_Machines.Add(machine);
-                                    db.SaveChanges();
-                                }
-                            }
-                            if (aps.VVA_PerModel_lst != null)
-                            {
-                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
-                                {
-                                    BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
-                                    {
-                                        PrintingServiceID = newPS.ID,
-                                        CodeRef = m.CodeRef,
-                                        Quantity = m.Quantity,
-                                        Description = m.Description,
-                                        BWVolume = m.BWVolume,
-                                        CVolume = m.CVolume,
-                                        BWPVP = m.BWPVP,
-                                        CPVP = m.CPVP,
-                                        BWCost = m.BWCost,
-                                        CCost = m.CCost,
-                                        ApprovedBW = m.ApprovedBW,
-                                        ApprovedC = m.ApprovedC,
-                                        IsInClient = m.IsInClient,
-                                        IsUsed = m.IsUsed,
-                                        RequestedBWClickPrice = m.RequestedBWClickPrice,
-                                        RequestedCClickPrice = m.RequestedCClickPrice,
-                                        BWExcessPVP = m.BWExcessPVP,
-                                        CExcessPVP = m.CExcessPVP,
-                                        PVP = m.PVP,
-                                        ExcessBillingFrequency = m.ExcessBillingFrequency,
-                                        RentBillingFrequency = m.RentBillingFrequency,
-                                        ReturnType = m.ReturnType,
-                                        RequestedBWExcess = m.RequestedBWExcess,
-                                        RequestedCExcess = m.RequestedCExcess,
-                                        RequestedRent = m.RequestedRent,
-                                    };
-
-                                    db.BB_PrintingServices_ClickPerModel_VVA.Add(ps_vva_model);
-                                    db.SaveChanges();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                string error = ex.Message;
-            }
-        }
-
         public List<OsBasket> Update_BB_Proposal_Quote(ProposalRootObject p, int proposalID)
         {
             try
@@ -3378,6 +3067,39 @@ namespace WebApplication1.BLL
                 throw;
             }
         }
+
+        public void UpdatePrintingService(PrintingServices2 printingService, int proposalID)
+        {
+            try
+            {
+                PrintingServices2 printingServices2 = printingService;
+
+                if (printingServices2 != null)
+                {
+                    // Se for um printingService NOVO, Adiciona-se tudo
+                    if (printingServices2.ID == null)
+                    {
+                        AddNewPrintingService(printingServices2, proposalID);
+                    }
+                    //Se for o printingService JÁ EXISTIR..
+                    else
+                    {
+                        BB_Proposal_PrintingServices2 toUpdate = db.BB_Proposal_PrintingServices2.FirstOrDefault(x => x.ID == printingServices2.ID);
+                        toUpdate.ActivePrintingService = printingServices2.ActivePrintingService;
+
+                        db.SaveChanges();
+
+                        ModifyPrintingService(printingServices2, toUpdate.ID);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+            }
+        }
+
         public void AddNewPrintingService(PrintingServices2 printingServices2, int proposalID)
         {
             using (var transaction = db.Database.BeginTransaction())
@@ -3554,6 +3276,297 @@ namespace WebApplication1.BLL
                     throw;
 
                 }
+            }
+        }
+
+        public void ModifyPrintingService(PrintingServices2 printingServices2, int newID)
+        {
+            try
+            {
+                if (printingServices2.ApprovedPrintingServices != null)
+                {
+                    foreach (ApprovedPrintingService aps in printingServices2.ApprovedPrintingServices)
+                    {
+                        if (aps.ID == null)
+                        {
+                            BB_PrintingServices newPS = new BB_PrintingServices()
+                            {
+                                BWVolume = aps.BWVolume,
+                                CVolume = aps.CVolume,
+                                ContractDuration = aps.ContractDuration,
+                                PrintingServices2ID = newID,
+                                IsPrecalc = aps.IsPrecalc,
+                                Fee = 0,
+                            };
+
+                            db.BB_PrintingServices.Add(newPS);
+                            db.SaveChanges();
+                            aps.ID = newPS.ID;
+
+                            if (aps.GlobalClickVVA != null)
+                            {
+                                BB_VVA vva = new BB_VVA()
+                                {
+                                    BWExcessPVP = aps.GlobalClickVVA.BWExcessPVP,
+                                    CExcessPVP = aps.GlobalClickVVA.CExcessPVP,
+                                    ExcessBillingFrequency = aps.GlobalClickVVA.ExcessBillingFrequency,
+                                    PVP = aps.GlobalClickVVA.PVP,
+                                    RentBillingFrequency = aps.GlobalClickVVA.RentBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                    ReturnType = aps.GlobalClickVVA.ReturnType,
+                                };
+
+                                db.BB_VVA.Add(vva);
+                                db.SaveChanges();
+
+                            }
+                            if (aps.GlobalClickNoVolume != null)
+                            {
+                                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+                                {
+                                    GlobalClickBW = aps.GlobalClickNoVolume.GlobalClickBW,
+                                    GlobalClickC = aps.GlobalClickNoVolume.GlobalClickC,
+                                    PageBillingFrequency = aps.GlobalClickNoVolume.PageBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                };
+
+                                db.BB_PrintingServices_NoVolume.Add(nv);
+                                db.SaveChanges();
+
+
+                            }
+                            if (aps.ClickPerModel != null)
+                            {
+                                BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
+                                {
+                                    PageBillingFrequency = aps.ClickPerModel.PageBillingFrequency,
+                                    PrintingServiceID = newPS.ID,
+                                };
+
+                                db.BB_PrintingServices_ClickPerModel.Add(cpm);
+                                db.SaveChanges();
+
+                            }
+                            if (aps.Machines != null)
+                            {
+                                foreach (Machine m in aps.Machines)
+                                {
+                                    BB_PrintingService_Machines machine = new BB_PrintingService_Machines()
+                                    {
+                                        BWVolume = m.BWVolume,
+                                        CodeRef = m.CodeRef,
+                                        CVolume = m.CVolume,
+                                        Description = m.Description,
+                                        PrintingServiceID = newPS.ID,
+                                        Quantity = m.Qty,
+                                        ApprovedBW = m.ClickPriceBW,
+                                        ApprovedC = m.ClickPriceC
+                                    };
+
+                                    db.BB_PrintingService_Machines.Add(machine);
+                                    db.SaveChanges();
+                                }
+                            }
+                            if (aps.VVA_PerModel_lst != null)
+                            {
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
+                                {
+                                    BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
+                                    {
+                                        PrintingServiceID = newPS.ID,
+                                        CodeRef = m.CodeRef,
+                                        Quantity = m.Quantity,
+                                        Description = m.Description,
+                                        BWVolume = m.BWVolume,
+                                        CVolume = m.CVolume,
+                                        BWPVP = m.BWPVP,
+                                        CPVP = m.CPVP,
+                                        BWCost = m.BWCost,
+                                        CCost = m.CCost,
+                                        ApprovedBW = m.ApprovedBW,
+                                        ApprovedC = m.ApprovedC,
+                                        IsInClient = m.IsInClient,
+                                        IsUsed = m.IsUsed,
+                                        RequestedBWClickPrice = m.RequestedBWClickPrice,
+                                        RequestedCClickPrice = m.RequestedCClickPrice,
+                                        BWExcessPVP = m.BWExcessPVP,
+                                        CExcessPVP = m.CExcessPVP,
+                                        PVP = m.PVP,
+                                        ExcessBillingFrequency = m.ExcessBillingFrequency,
+                                        RentBillingFrequency = m.RentBillingFrequency,
+                                        ReturnType = m.ReturnType,
+                                        RequestedBWExcess = m.RequestedBWExcess,
+                                        RequestedCExcess = m.RequestedCExcess,
+                                        RequestedRent = m.RequestedRent,
+                                    };
+
+                                    db.BB_PrintingServices_ClickPerModel_VVA.Add(ps_vva_model);
+                                    db.SaveChanges();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+        }
+
+        public void UpdateClient(Client client, string createdBy, int proposalID)
+        {
+            try
+            {
+                List<BB_Proposal_Client> lstCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == proposalID).ToList();
+                db.BB_Proposal_Client.RemoveRange(lstCliente);
+
+                BB_Proposal_Client cliente1 = new BB_Proposal_Client();
+                cliente1.ClientID = client.accountnumber;
+                cliente1.IsNewClient = client.isNewClient;
+                cliente1.ProposalID = proposalID;
+                cliente1.Name = client.Name;
+                cliente1.IsPublicSector = client.isPublicSector;
+                cliente1.IsGMA = client.isGMA;
+
+                db.BB_Proposal_Client.Add(cliente1);
+                db.SaveChanges();
+
+                if (client.modeId.GetValueOrDefault() == 1)
+                {
+                    BB_Clientes count = db.BB_Clientes.Where(x => x.accountnumber == client.accountnumber).FirstOrDefault();
+                    if (count == null)
+                    {
+                        string usename = "";
+                        using (var db1 = new masterEntities())
+                        {
+                            usename = db1.AspNetUsers.Where(x => x.Email == createdBy).Select(x => x.DisplayName).FirstOrDefault();
+                        }
+
+                        BB_Clientes c = new BB_Clientes();
+                        c.accountnumber = client.accountnumber;
+                        c.Name = client.Name;
+                        c.PostalCode = client.PostalCode;
+                        c.NIF = client.NIF;
+                        c.City = client.City;
+                        c.address1_line1 = client.address1_line1;
+                        c.IsClienteBB = true;
+                        c.Owner = usename;
+
+                        db.BB_Clientes.Add(c);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+            }
+        }
+
+        public void UpdateConsigments(Consignment consignmentReceived, int proposalID)
+        {
+            try
+            {
+                List<BB_Proposal_Consignments> lstConsignacoes = db.BB_Proposal_Consignments.Where(x => x.ProposalID == proposalID).ToList();
+                db.BB_Proposal_Consignments.RemoveRange(lstConsignacoes);
+
+                var configConsigments = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Consignment, BB_Proposal_Consignments>();
+                });
+                IMapper iMapperConsigments = configConsigments.CreateMapper();
+
+                BB_Proposal_Consignments consignment = iMapperConsigments.Map<Consignment, BB_Proposal_Consignments>(consignmentReceived);
+
+                consignment.ProposalID = proposalID;
+
+                db.BB_Proposal_Consignments.Add(consignment);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+            }
+        }
+
+        public void UpdateConditionType(double? printingCondition, int detailsID)
+        {
+            try
+            {
+                if (printingCondition != 0)
+                {
+                    BB_Proposal_Condition_Type existPrintingCondition = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == detailsID && x.ConditionType == "ZVBS").FirstOrDefault();
+
+                    if (existPrintingCondition != null)
+                    {
+                        existPrintingCondition.ConditionValue = printingCondition;
+
+                        try
+                        {
+                            db.BB_Proposal_Condition_Type.AddOrUpdate(existPrintingCondition);
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                        }
+
+                    }
+                    else
+                    {
+                        BB_Proposal_Condition_Type printingConditionType = new BB_Proposal_Condition_Type()
+                        {
+                            ProposalID = detailsID,
+                            ConditionType = "ZVBS",
+                            ConditionValue = printingCondition
+                        };
+
+                        try
+                        {
+                            db.BB_Proposal_Condition_Type.AddOrUpdate(printingConditionType);
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
+            }
+        }
+
+        public void UpdateTypeOfClient(Draft draft)
+        {
+            try
+            {
+                //TYPE OF CLIENT
+                BB_TypeOfClient typeOfClient = db.BB_TypeOfClient.Where(x => x.ProposalID == draft.details.ID).FirstOrDefault();
+                if (typeOfClient is null)
+                {
+                    typeOfClient = new BB_TypeOfClient();
+                }
+
+                typeOfClient.ProposalID = draft.details.ID;
+                typeOfClient.Prospect = draft.baskets.prospect;
+                typeOfClient.NewBusinessLine = draft.baskets.newBusinessLine;
+                typeOfClient.GMA = draft.baskets.GMA;
+                typeOfClient.BEUSupport = draft.baskets.BEUSupport;
+
+                db.BB_TypeOfClient.AddOrUpdate(typeOfClient);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                throw;
             }
         }
     }
