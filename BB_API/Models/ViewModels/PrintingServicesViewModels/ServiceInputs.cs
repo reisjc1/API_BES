@@ -27,5 +27,6 @@ namespace WebApplication1.Models.ViewModels.PrintingServicesViewModels
         public int CVolume { get; set; }
         public int ContractDuration { get; set; }
         public int ReturnType { get; set; }
+        public int PSModeId { get; set; }
     }
 }
