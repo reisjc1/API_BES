@@ -28,5 +28,10 @@ namespace WebApplication1.Models.ViewModels
         public Nullable<double> ApprovedC { get; set; }
         public Nullable<double> RequestedBWClickPrice { get; set; }
         public Nullable<double> RequestedCClickPrice { get; set; }
+        public Nullable<double> RequestedBWExcess { get; set; }
+        public Nullable<double> RequestedCExcess { get; set; }
+        public Nullable<double> BWExcessPVP { get; set; }
+        public Nullable<double> CExcessPVP { get; set; }
+        public Nullable<double> RequestedRent { get; set; }
     }
 }
