@@ -19,7 +19,7 @@ namespace WebApplication1.Models
         {
             this.BB_Proposal_PrintingServiceValidationRequest = new HashSet<BB_Proposal_PrintingServiceValidationRequest>();
             this.BB_PrintingService_Machines = new HashSet<BB_PrintingService_Machines>();
-            this.BB_PrintingServices_ClickPerModel_VVA = new HashSet<BB_PrintingServices_ClickPerModel_VVA>();
+            this.BB_PrintingServices_ClickPerModel_VVA = new List<BB_PrintingServices_ClickPerModel_VVA>();
         }
     
         public int PrintingServices2ID { get; set; }
@@ -39,6 +39,6 @@ namespace WebApplication1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BB_PrintingService_Machines> BB_PrintingService_Machines { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BB_PrintingServices_ClickPerModel_VVA> BB_PrintingServices_ClickPerModel_VVA { get; set; }
+        public virtual List<BB_PrintingServices_ClickPerModel_VVA> BB_PrintingServices_ClickPerModel_VVA { get; set; }
     }
 }

@@ -3234,9 +3234,9 @@ namespace WebApplication1.BLL
                                     }
                                 }
                             }
-                            if (aps.VVA_PerModel_lst != null)
+                            if (aps.VVAClickPerModel != null)
                             {
-                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.ps_basket)
                                 {
                                     BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
                                     {
@@ -3373,9 +3373,9 @@ namespace WebApplication1.BLL
                                     db.SaveChanges();
                                 }
                             }
-                            if (aps.VVA_PerModel_lst != null)
+                            if (aps.VVAClickPerModel != null)
                             {
-                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.ps_basket)
                                 {
                                     BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
                                     {

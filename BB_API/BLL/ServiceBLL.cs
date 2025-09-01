@@ -146,6 +146,19 @@ namespace WebApplication1.BLL
                                 RequestedGlobalClickC = newPS.BB_PrintingServices_NoVolume.RequestedGlobalClickC.Value,
                             };
                         }
+                        else if (newPS.BB_PrintingServices_ClickPerModel_VVA != null)
+                        {
+                            serviceType = 4;
+                            pendingQuoteRequest.ps_basket = newPS.BB_PrintingServices_ClickPerModel_VVA;
+                            pendingQuoteRequest.VVAClickPerModel = new VVAClickPerModel
+                            {
+                                PageBillingFrequency = si.PageBillingFrequency.Value,
+                                ExcessBillingFrequency = si.ExcessBillingFrequency.Value,
+                                RequestedRent = si.RequestedRent.Value,
+                                RentBillingFrequency = si.RentBillingFrequency.Value,
+                                ReturnType = si.ReturnType,
+                            };
+                        }
                         else
                         {
                             serviceType = 3;
@@ -217,7 +230,7 @@ namespace WebApplication1.BLL
             {
                 ex.Message.ToString();
             }
-            if (si.ExcessBillingFrequency != null && si.RentBillingFrequency != null)
+            if(si.PSModeId == 1)
             {
                 BB_VVA vva = new BB_VVA()
                 {
@@ -243,7 +256,29 @@ namespace WebApplication1.BLL
                     ex.Message.ToString();
                 }
             }
-            else if (si.PS_Basket != null)
+            else if (si.PSModeId == 2)
+            {
+                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+                {
+                    GlobalClickBW = si.RecommendedGlobalClickBW,
+                    GlobalClickC = si.RecommendedGlobalClickC,
+                    RequestedGlobalClickBW = si.RequestedGlobalClickBW,
+                    RequestedGlobalClickC = si.RequestedGlobalClickC,
+                    PageBillingFrequency = si.PageBillingFrequency,
+                    PrintingServiceID = newPS.ID,
+                };
+                db.BB_PrintingServices_NoVolume.Add(nv);
+                try
+                {
+                    db.SaveChanges();
+                    newPS.BB_PrintingServices_NoVolume = nv;
+                }
+                catch (Exception ex)
+                {
+                    ex.Message.ToString();
+                }
+            }
+            else if (si.PSModeId == 3)
             {
                 BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
                 {
@@ -291,28 +326,148 @@ namespace WebApplication1.BLL
                     }
                 }
             }
-            else if (si.PageBillingFrequency != null)
+            else if(si.PSModeId == 4)
             {
-                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+                List<BB_PrintingServices_ClickPerModel_VVA> lst_VVAClickpermodel = new List<BB_PrintingServices_ClickPerModel_VVA>();
+                foreach (Machine m in si.PS_Basket)
                 {
-                    GlobalClickBW = si.RecommendedGlobalClickBW,
-                    GlobalClickC = si.RecommendedGlobalClickC,
-                    RequestedGlobalClickBW = si.RequestedGlobalClickBW,
-                    RequestedGlobalClickC = si.RequestedGlobalClickC,
-                    PageBillingFrequency = si.PageBillingFrequency,
-                    PrintingServiceID = newPS.ID,
-                };
-                db.BB_PrintingServices_NoVolume.Add(nv);
+                    BB_PrintingServices_ClickPerModel_VVA vvaClickPerModel = new BB_PrintingServices_ClickPerModel_VVA()
+                    {
+                        PrintingServiceID = newPS.ID,
+                        CodeRef = m.CodeRef,
+                        Quantity = m.Qty,
+
+                        BWVolume = m.bwPages,
+                        CVolume = m.cPages,
+                        BWPVP = m.ClickPriceBW,
+                        CPVP = m.ClickPriceC,
+                        BWCost = m.BWCost,
+                        CCost = m.CCost,
+                        ApprovedBW = 0,
+                        ApprovedC = 0,
+                        IsInClient = (bool)m.IsInClient ? 1 : 0,
+                        IsUsed = (bool)m.IsUsed ? 1 : 0,
+                        RequestedBWClickPrice = m.RequestedBWClickPrice,
+                        RequestedCClickPrice = m.RequestedCClickPrice,
+                        BWExcessPVP = 0,
+                        CExcessPVP = 0,
+                        PVP = si.RecommendedRent,
+                        ExcessBillingFrequency = si.ExcessBillingFrequency,
+                        RentBillingFrequency = si.RentBillingFrequency,
+                        ReturnType = si.ReturnType,
+                        RequestedBWExcess = m.RequestedBWExcessPrice,
+                        RequestedCExcess = m.RequestedCExcessPrice,
+                        RequestedRent = si.RequestedRent
+                    };
+                    db.BB_PrintingServices_ClickPerModel_VVA.Add(vvaClickPerModel);
+                    lst_VVAClickpermodel.Add(vvaClickPerModel);
+                }
                 try
                 {
                     db.SaveChanges();
-                    newPS.BB_PrintingServices_NoVolume = nv;
+                    newPS.BB_PrintingServices_ClickPerModel_VVA = lst_VVAClickpermodel;
                 }
                 catch (Exception ex)
                 {
                     ex.Message.ToString();
                 }
             }
+            //if (si.ExcessBillingFrequency != null && si.RentBillingFrequency != null)
+            //{
+            //    BB_VVA vva = new BB_VVA()
+            //    {
+            //        BWExcessPVP = si.RecommendedBWExcess,
+            //        CExcessPVP = si.RecommendedCExcess,
+            //        ExcessBillingFrequency = si.ExcessBillingFrequency,
+            //        PVP = si.RecommendedRent,
+            //        RentBillingFrequency = si.RentBillingFrequency,
+            //        PrintingServiceID = newPS.ID,
+            //        ReturnType = si.ReturnType,
+            //        RequestedBWExcess = si.RequestedBWExcess,
+            //        RequestedCExcess = si.RequestedCExcess,
+            //        RequestedRent = si.RequestedRent,
+            //    };
+            //    db.BB_VVA.Add(vva);
+            //    try
+            //    {
+            //        db.SaveChanges();
+            //        newPS.BB_VVA = vva;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        ex.Message.ToString();
+            //    }
+            //}
+            //else if (si.PS_Basket != null)
+            //{
+            //    BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
+            //    {
+            //        PageBillingFrequency = si.PageBillingFrequency,
+            //        PrintingServiceID = newPS.ID
+            //    };
+            //    db.BB_PrintingServices_ClickPerModel.Add(cpm);
+            //    try
+            //    {
+            //        db.SaveChanges();
+            //        newPS.BB_PrintingServices_ClickPerModel = cpm;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        ex.Message.ToString();
+            //    }
+            //    foreach (Machine m in si.PS_Basket)
+            //    {
+            //        BB_PrintingService_Machines newMachine = new BB_PrintingService_Machines()
+            //        {
+            //            PrintingServiceID = newPS.ID,
+            //            BWCost = m.BWCost,
+            //            CCost = m.CCost,
+            //            BWPVP = m.ClickPriceBW,
+            //            CPVP = m.ClickPriceC,
+            //            CodeRef = m.CodeRef,
+            //            BWVolume = m.bwPages,
+            //            CVolume = m.cPages,
+            //            Description = m.Description,
+            //            IsInClient = m.IsInClient,
+            //            IsUsed = m.IsUsed,
+            //            Quantity = m.Qty,
+            //            RequestedBWClickPrice = m.RequestedBWClickPrice,
+            //            RequestedCClickPrice = m.RequestedCClickPrice,
+            //        };
+            //        db.BB_PrintingService_Machines.Add(newMachine);
+            //        try
+            //        {
+            //            db.SaveChanges();
+            //            newPS.BB_PrintingService_Machines.Add(newMachine);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            ex.Message.ToString();
+            //        }
+            //    }
+            //}
+            //else if (si.PageBillingFrequency != null)
+            //{
+            //    BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+            //    {
+            //        GlobalClickBW = si.RecommendedGlobalClickBW,
+            //        GlobalClickC = si.RecommendedGlobalClickC,
+            //        RequestedGlobalClickBW = si.RequestedGlobalClickBW,
+            //        RequestedGlobalClickC = si.RequestedGlobalClickC,
+            //        PageBillingFrequency = si.PageBillingFrequency,
+            //        PrintingServiceID = newPS.ID,
+            //    };
+            //    db.BB_PrintingServices_NoVolume.Add(nv);
+            //    try
+            //    {
+            //        db.SaveChanges();
+            //        newPS.BB_PrintingServices_NoVolume = nv;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        ex.Message.ToString();
+            //    }
+            //}
             BB_Proposal_PrintingServiceValidationRequest serviceRequest = new BB_Proposal_PrintingServiceValidationRequest()
             {
                 IsApproved = false,
