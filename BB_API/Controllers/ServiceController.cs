@@ -171,6 +171,22 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
         }
+
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("ProcessClickPerModelVVAServiceValidationReply")]
+        public IHttpActionResult ProcessClickPerModelVVAServiceValidationReply(ServiceValidationReply svr)
+        {
+            try
+            {
+                serviceBLL.ProcessClickPerModelVVAServiceValidationReplyAsync(svr);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
     }
 
     public class ServiceRequest

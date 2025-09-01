@@ -121,62 +121,6 @@ namespace WebApplication1.BLL
 
                     p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
 
-                    // ISTO ESTÁ A SER UTILIZADO???? EU ACHO QUE NAO
-                    if (p.Draft.printingServices != null)
-                    {
-                        List<BB_Proposal_PrintingServices> pritningService_lst = db.BB_Proposal_PrintingServices.Where(x => x.ProposalID == proposal.ID).ToList();
-                        db.BB_Proposal_PrintingServices.RemoveRange(pritningService_lst);
-
-                        var configpPrintingServices = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<PrintingServices, BB_Proposal_PrintingServices>();
-                        });
-
-                        IMapper iMapperPrintinfServices = configpPrintingServices.CreateMapper();
-
-                        BB_Proposal_PrintingServices printingService = iMapperPrintinfServices.Map<PrintingServices, BB_Proposal_PrintingServices>(p.Draft.printingServices);
-
-                        printingService.ProposalID = ProposalID;
-
-                        db.BB_Proposal_PrintingServices.Add(printingService);
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-
-                        //VVA
-                        if (p.Draft.printingServices.vva != null)
-                        {
-                            List<BB_Proposal_Vva> vva_lst = db.BB_Proposal_Vva.Where(x => x.ProposalID == proposal.ID).ToList();
-                            db.BB_Proposal_Vva.RemoveRange(vva_lst);
-
-                            var configpVVA = new MapperConfiguration(cfg =>
-                            {
-                                cfg.CreateMap<Vva, BB_Proposal_Vva>();
-                            });
-                            IMapper iMapperVVA = configpVVA.CreateMapper();
-
-                            BB_Proposal_Vva vva = iMapperVVA.Map<Vva, BB_Proposal_Vva>(p.Draft.printingServices.vva);
-
-                            vva.ProposalID = ProposalID;
-
-
-                            db.BB_Proposal_Vva.Add(vva);
-                            try
-                            {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-                    }
-
                     UpdatePrintingService(p.Draft.printingServices2, ProposalID);
 
                     UpdateClient(p.Draft.client, p.Draft.details.CreatedBy, ProposalID);

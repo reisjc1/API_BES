@@ -70,4 +70,19 @@ namespace WebApplication1.Models.ViewModels
         public double AverageCostBW { get; set; }
         public double AverageCostC { get; set; }
     }
+
+    public class ClickPerModelVVAServiceValidationRequest : ServiceValidationRequest
+    {
+        public double RequestedPVP { get; set; }
+        public double RequestedExcessBWPVP { get; set; }
+        public double RequestedExcessCPVP { get; set; }
+        public double RecommendedPVP { get; set; }
+        public double RecommendedExcessBWPVP { get; set; }
+        public double RecommendedExcessCPVP { get; set; }
+        public double AverageCostBW { get; set; }
+        public double AverageCostC { get; set; }
+        public int ExcessBillingFrequency { get; set; }
+        public int RentBillingFrequency { get; set; }
+        public int PageBillingFrequency { get; set; }
+    }
 }
