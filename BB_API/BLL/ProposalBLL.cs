@@ -471,6 +471,7 @@ namespace WebApplication1.BLL
                 BB_Proposal_PrintingServices2 printingServices2 = db.BB_Proposal_PrintingServices2
                     .Include(x => x.BB_PrintingServices.Select(ps => ps.BB_VVA))
                     .Include(a => a.BB_PrintingServices.Select(m => m.BB_PrintingService_Machines))
+                    .Include(b => b.BB_PrintingServices.Select(ps => ps.BB_PrintingServices_ClickPerModel_VVA))
                     .FirstOrDefault(x => x.ProposalID == proposal.ID);
                 BB_Proposal_Condition_Type existPrintingCondition = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposal.ID && x.ConditionType == "ZVBS").FirstOrDefault();
 
@@ -538,6 +539,23 @@ namespace WebApplication1.BLL
                                 PageBillingFrequency = ps.BB_PrintingServices_ClickPerModel.PageBillingFrequency.Value,
                             };
                             newPS.ClickPerModel = cpm;
+                        }
+                        if (ps.BB_PrintingServices_ClickPerModel_VVA != null)
+                        {
+                            List<BB_PrintingServices_ClickPerModel_VVA> lst = ps.BB_PrintingServices_ClickPerModel_VVA.ToList();
+                            BB_PrintingServices_ClickPerModel_VVA firtsElem = ps.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault();
+                            VVAClickPerModel vVAClickPerModel = new VVAClickPerModel()
+                            {
+                                ExcessBillingFrequency = Convert.ToInt32(firtsElem.ExcessBillingFrequency.Value),
+                                PageBillingFrequency = Convert.ToInt32(firtsElem.ExcessBillingFrequency.Value),
+                                RentBillingFrequency = Convert.ToInt32(firtsElem.RentBillingFrequency.Value),
+                                ReturnType = Convert.ToInt32(firtsElem.ReturnType.Value),
+                                RecommendedRent = 0,
+                                RequestedRent = 0,
+                                ps_basket = lst
+
+                            };
+                            newPS.VVAClickPerModel = vVAClickPerModel;
                         }
 
                         List<BB_Equipamentos> equipamentos = new List<BB_Equipamentos>();
