@@ -1948,7 +1948,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BB_PrintingServices_ClickPerModel_VVA_PrintingServiceID">
+        <Association Name="FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices">
           <End Role="BB_PrintingServices" Type="Self.BB_PrintingServices" Multiplicity="0..1" />
           <End Role="BB_PrintingServices_ClickPerModel_VVA" Type="Self.BB_PrintingServices_ClickPerModel_VVA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -2240,7 +2240,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingServices_ClickPerModel" EntitySet="BB_PrintingServices_ClickPerModel" />
           </AssociationSet>
-          <AssociationSet Name="FK_BB_PrintingServices_ClickPerModel_VVA_PrintingServiceID" Association="Self.FK_BB_PrintingServices_ClickPerModel_VVA_PrintingServiceID">
+          <AssociationSet Name="FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices" Association="Self.FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingServices_ClickPerModel_VVA" EntitySet="BB_PrintingServices_ClickPerModel_VVA" />
           </AssociationSet>
@@ -2425,7 +2425,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_WFA_Workflow_Proposal" EntityType="BB_DB_DEVModel.BB_WFA_Workflow_Proposal" />
           <EntitySet Name="LD_Contrato" EntityType="BB_DB_DEVModel.LD_Contrato" />
           <EntitySet Name="BB_PrintingServices_ClickPerModel_VVA" EntityType="BB_DB_DEVModel.BB_PrintingServices_ClickPerModel_VVA" />
-          <AssociationSet Name="FK_BB_PrintingServices_ClickPerModel_VVA_PrintingServiceID" Association="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_VVA_PrintingServiceID">
+          <AssociationSet Name="FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices" Association="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices">
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingServices_ClickPerModel_VVA" EntitySet="BB_PrintingServices_ClickPerModel_VVA" />
           </AssociationSet>
@@ -2986,7 +2986,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <NavigationProperty Name="BB_PrintingServices_NoVolume" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_NoVolume_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_PrintingServices_NoVolume" />
           <NavigationProperty Name="BB_PrintingServices_ClickPerModel" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_BB_PrintingServices_ClickPerModel" FromRole="BB_PrintingServices" ToRole="BB_PrintingServices_ClickPerModel" />
           <NavigationProperty Name="BB_PrintingService_Machines" Relationship="BB_DB_DEVModel.FK_BB_PrintingService_Machines_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_PrintingService_Machines" />
-          <NavigationProperty Name="BB_PrintingServices_ClickPerModel_VVA" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_VVA_PrintingServiceID" FromRole="BB_PrintingServices" ToRole="BB_PrintingServices_ClickPerModel_VVA" />
+          <NavigationProperty Name="BB_PrintingServices_ClickPerModel_VVA" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices" FromRole="BB_PrintingServices" ToRole="BB_PrintingServices_ClickPerModel_VVA" />
         </EntityType>
         <EntityType Name="BB_Proposal_PrintingServices2">
           <Key>
@@ -4429,9 +4429,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="RequestedBWExcess" Type="Double" />
           <Property Name="RequestedCExcess" Type="Double" />
           <Property Name="RequestedRent" Type="Double" />
-          <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_VVA_PrintingServiceID" FromRole="BB_PrintingServices_ClickPerModel_VVA" ToRole="BB_PrintingServices" />
+          <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices" FromRole="BB_PrintingServices_ClickPerModel_VVA" ToRole="BB_PrintingServices" />
         </EntityType>
-        <Association Name="FK_BB_PrintingServices_ClickPerModel_VVA_PrintingServiceID">
+        <Association Name="FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices">
           <End Type="BB_DB_DEVModel.BB_PrintingServices" Role="BB_PrintingServices" Multiplicity="0..1" />
           <End Type="BB_DB_DEVModel.BB_PrintingServices_ClickPerModel_VVA" Role="BB_PrintingServices_ClickPerModel_VVA" Multiplicity="*" />
           <ReferentialConstraint>

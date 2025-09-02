@@ -18,7 +18,6 @@ namespace WebApplication1.Models.ViewModels
         public string SCObservations { get; set; }
         public Nullable<DateTime> RequestedAt { get; set; }
         public List<Machine> Machines { get; set; }
-        public List<BB_PrintingServices_ClickPerModel_VVA> ps_basket { get; set; }
         public GlobalClickVVA GlobalClickVVA { get; set; }
         public GlobalClickNoVolume GlobalClickNoVolume { get; set; }
         public ClickPerModel ClickPerModel { get; set; }

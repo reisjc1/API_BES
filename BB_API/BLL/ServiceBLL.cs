@@ -156,15 +156,17 @@ namespace WebApplication1.BLL
                         else if (newPS.BB_PrintingServices_ClickPerModel_VVA != null)
                         {
                             serviceType = 4;
-                            pendingQuoteRequest.ps_basket = newPS.BB_PrintingServices_ClickPerModel_VVA;
-                            pendingQuoteRequest.VVAClickPerModel = new VVAClickPerModel
-                            {
-                                PageBillingFrequency = si.PageBillingFrequency.Value,
-                                ExcessBillingFrequency = si.ExcessBillingFrequency.Value,
-                                RequestedRent = si.RequestedRent.Value,
-                                RentBillingFrequency = si.RentBillingFrequency.Value,
-                                ReturnType = si.ReturnType,
-                            };
+                            pendingQuoteRequest.VVAClickPerModel = new VVAClickPerModel();
+
+                            pendingQuoteRequest.VVAClickPerModel.PageBillingFrequency = si.PageBillingFrequency.Value;
+                            pendingQuoteRequest.VVAClickPerModel.ExcessBillingFrequency = si.ExcessBillingFrequency.Value;
+                            pendingQuoteRequest.VVAClickPerModel.RequestedRent = si.RequestedRent.Value;
+                            pendingQuoteRequest.VVAClickPerModel.RentBillingFrequency = si.RentBillingFrequency.Value;
+                            pendingQuoteRequest.VVAClickPerModel.ReturnType = si.ReturnType;
+                            pendingQuoteRequest.VVAClickPerModel.RecommendedRent = 88;
+
+                            pendingQuoteRequest.VVAClickPerModel.ps_basket = (List<BB_PrintingServices_ClickPerModel_VVA>)newPS.BB_PrintingServices_ClickPerModel_VVA;
+
                         }
                         else
                         {
@@ -1938,6 +1940,7 @@ namespace WebApplication1.BLL
                 try
                 {
                     db.SaveChanges();
+
                     SendServiceRequestEmail(request.RequestedBy, rr.ID, 1);
                 }
                 catch (Exception ex)

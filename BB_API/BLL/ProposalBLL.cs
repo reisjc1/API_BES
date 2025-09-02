@@ -2381,6 +2381,7 @@ namespace WebApplication1.BLL
                 // FINANCING MONTHLY
                 foreach (var monthly in financing.FinancingFactors.Monthly)
                 {
+
                     BB_Proposal_FinancingMonthly m1 = iMappermonthly.Map<Monthly, BB_Proposal_FinancingMonthly>(monthly);
 
                     m1.ProposalID = proposalID;
@@ -3180,7 +3181,7 @@ namespace WebApplication1.BLL
                             }
                             if (aps.VVAClickPerModel != null)
                             {
-                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.ps_basket)
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVAClickPerModel.ps_basket)
                                 {
                                     BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
                                     {
@@ -3319,7 +3320,7 @@ namespace WebApplication1.BLL
                             }
                             if (aps.VVAClickPerModel != null)
                             {
-                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.ps_basket)
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVAClickPerModel.ps_basket)
                                 {
                                     BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
                                     {
