@@ -544,18 +544,22 @@ namespace WebApplication1.BLL
                         {
                             List<BB_PrintingServices_ClickPerModel_VVA> lst = ps.BB_PrintingServices_ClickPerModel_VVA.ToList();
                             BB_PrintingServices_ClickPerModel_VVA firtsElem = ps.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault();
-                            VVAClickPerModel vVAClickPerModel = new VVAClickPerModel()
-                            {
-                                ExcessBillingFrequency = Convert.ToInt32(firtsElem.ExcessBillingFrequency.Value),
-                                PageBillingFrequency = Convert.ToInt32(firtsElem.ExcessBillingFrequency.Value),
-                                RentBillingFrequency = Convert.ToInt32(firtsElem.RentBillingFrequency.Value),
-                                ReturnType = Convert.ToInt32(firtsElem.ReturnType.Value),
-                                RecommendedRent = 0,
-                                RequestedRent = 0,
-                                ps_basket = lst
 
-                            };
-                            newPS.VVAClickPerModel = vVAClickPerModel;
+                            if (firtsElem != null)
+                            {
+                                VVAClickPerModel vVAClickPerModel = new VVAClickPerModel()
+                                {
+                                    ExcessBillingFrequency = Convert.ToInt32(firtsElem.ExcessBillingFrequency.Value),
+                                    PageBillingFrequency = Convert.ToInt32(firtsElem.ExcessBillingFrequency.Value),
+                                    RentBillingFrequency = Convert.ToInt32(firtsElem.RentBillingFrequency.Value),
+                                    ReturnType = Convert.ToInt32(firtsElem.ReturnType.Value),
+                                    RecommendedRent = 0,
+                                    RequestedRent = 0,
+                                    ps_basket = lst
+
+                                };
+                                newPS.VVAClickPerModel = vVAClickPerModel;
+                            }
                         }
 
                         List<BB_Equipamentos> equipamentos = new List<BB_Equipamentos>();
