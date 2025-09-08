@@ -167,7 +167,14 @@ namespace WebApplication1.Controllers
                 err.Message = ex.Message.ToString();
                 err.InnerException = ex.InnerException.ToString();
             }
-            return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err); ;
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            var response = Request.CreateResponse(HttpStatusCode.OK, err);
+            response.Content = new StringContent(JsonConvert.SerializeObject(err, settings), Encoding.UTF8, "application/json");
+            return response;
+            //return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err); 
         }
 
 
