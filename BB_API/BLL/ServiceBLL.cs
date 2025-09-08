@@ -163,7 +163,7 @@ namespace WebApplication1.BLL
                             pendingQuoteRequest.VVAClickPerModel.RequestedRent = si.RequestedRent.Value;
                             pendingQuoteRequest.VVAClickPerModel.RentBillingFrequency = si.RentBillingFrequency.Value;
                             pendingQuoteRequest.VVAClickPerModel.ReturnType = si.ReturnType;
-                            pendingQuoteRequest.VVAClickPerModel.RecommendedRent = 88;
+                            pendingQuoteRequest.VVAClickPerModel.RecommendedRent = si.RecommendedRent.Value;
 
                             pendingQuoteRequest.VVAClickPerModel.ps_basket = (List<BB_PrintingServices_ClickPerModel_VVA>)newPS.BB_PrintingServices_ClickPerModel_VVA;
 
@@ -2108,7 +2108,9 @@ namespace WebApplication1.BLL
                 };
                 svr.ContractDuration = validationRequest.BB_PrintingServices.ContractDuration.GetValueOrDefault();
                 svr.Equipments = new List<ServiceValidationRequestEquipment>();
-                svr.PageBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                //svr.PageBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                svr.RentBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                svr.ExcessBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().ExcessBillingFrequency;
                 svr.AverageCostBW = 0;
                 svr.AverageCostC = 0;
                 svr.ID = validationRequest.ID;
