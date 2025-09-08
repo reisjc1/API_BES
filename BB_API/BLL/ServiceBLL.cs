@@ -2137,8 +2137,8 @@ namespace WebApplication1.BLL
                                 ClickPriceC = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
                                 BWCoefficient = 0,
                                 CCoefficient = 0,
-                                BWPages = 0,
-                                CPages = 0,
+                                BWPages = (int?)m.BWVolume,
+                                CPages = (int?)m.CVolume,
                                 RequestedBWClickPrice = m.RequestedBWClickPrice,
                                 RequestedCClickPrice = m.RequestedCClickPrice,
                                 Type = e.PHC5 == null ? "" : (e.PHC5.Contains("(MF)") ? "MFP" : "Printer"),
@@ -2152,47 +2152,47 @@ namespace WebApplication1.BLL
                 svrEquipments = query.ToList();
                 int totalRecBW = (int)svrEquipments.Sum(x => x.RecBWVolume * x.Quantity);
                 int totalRecC = (int)svrEquipments.Sum(x => x.RecCVolume * x.Quantity);
-                int totalUsedBW = 0;
-                int totalUsedC = 0;
-                foreach (ServiceValidationRequestEquipment svre in svrEquipments)
-                {
-                    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null)
-                    {
-                        svre.BWCoefficient = ((double)svre.RecBWVolume / totalRecBW) * svre.Quantity * 100;
-                        int toAddBW = (int)Math.Floor((double)(svr.Volumes.BWVolume * (svre.BWCoefficient / 100)));
-                        svre.BWPages += toAddBW;
-                        totalUsedBW += toAddBW;
-                    }
-                    if (svr.Volumes.CVolume != 0 && svre.RecCVolume != null)
-                    {
-                        svre.CCoefficient = ((double)svre.RecCVolume / totalRecC) * svre.Quantity * 100;
-                        int toAddC = (int)Math.Floor((double)(svr.Volumes.CVolume * (svre.CCoefficient / 100)));
-                        svre.CPages += toAddC;
-                        totalUsedC += toAddC;
-                    }
-                }
+                //int totalUsedBW = 0;
+                //int totalUsedC = 0;
+                //foreach (ServiceValidationRequestEquipment svre in svrEquipments)
+                //{
+                //    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null)
+                //    {
+                //        svre.BWCoefficient = ((double)svre.RecBWVolume / totalRecBW) * svre.Quantity * 100;
+                //        int toAddBW = (int)Math.Floor((double)(svr.Volumes.BWVolume * (svre.BWCoefficient / 100)));
+                //        svre.BWPages += toAddBW;
+                //        totalUsedBW += toAddBW;
+                //    }
+                //    if (svr.Volumes.CVolume != 0 && svre.RecCVolume != null)
+                //    {
+                //        svre.CCoefficient = ((double)svre.RecCVolume / totalRecC) * svre.Quantity * 100;
+                //        int toAddC = (int)Math.Floor((double)(svr.Volumes.CVolume * (svre.CCoefficient / 100)));
+                //        svre.CPages += toAddC;
+                //        totalUsedC += toAddC;
+                //    }
+                //}
 
-                int toUseBW = svr.Volumes.BWVolume - totalUsedBW;
-                int toUseC = svr.Volumes.CVolume - totalUsedC;
-                foreach (ServiceValidationRequestEquipment svre in svrEquipments)
-                {
-                    if (totalUsedBW == totalRecBW && totalUsedC == totalRecC)
-                    {
-                        break;
-                    }
-                    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null && totalUsedBW != totalRecBW)
-                    {
-                        int toAddBW = (int)Math.Round((double)(toUseBW * (svre.BWCoefficient / 100)));
-                        svre.BWPages += toAddBW;
-                        totalUsedBW += toAddBW;
-                    }
-                    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null && totalUsedC != totalRecC)
-                    {
-                        int toAddC = (int)Math.Round((double)(toUseC * (svre.CCoefficient / 100)));
-                        svre.CPages += toAddC;
-                        totalUsedC += toAddC;
-                    }
-                }
+                //int toUseBW = svr.Volumes.BWVolume - totalUsedBW;
+                //int toUseC = svr.Volumes.CVolume - totalUsedC;
+                //foreach (ServiceValidationRequestEquipment svre in svrEquipments)
+                //{
+                //    if (totalUsedBW == totalRecBW && totalUsedC == totalRecC)
+                //    {
+                //        break;
+                //    }
+                //    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null && totalUsedBW != totalRecBW)
+                //    {
+                //        int toAddBW = (int)Math.Round((double)(toUseBW * (svre.BWCoefficient / 100)));
+                //        svre.BWPages += toAddBW;
+                //        totalUsedBW += toAddBW;
+                //    }
+                //    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null && totalUsedC != totalRecC)
+                //    {
+                //        int toAddC = (int)Math.Round((double)(toUseC * (svre.CCoefficient / 100)));
+                //        svre.CPages += toAddC;
+                //        totalUsedC += toAddC;
+                //    }
+                //}
                 svr.AverageCostBW = (double)(svrEquipments.Sum(x => x.BWBaseCost * x.RecBWVolume) / svrEquipments.Sum(x => x.RecBWVolume));
                 svr.AverageCostC = (double)(svrEquipments.Where(x => x.CBaseCost != 0).Sum(x => x.CBaseCost * x.RecCVolume) / svrEquipments.Sum(x => x.RecCVolume));
                 svr.Equipments = svrEquipments;
