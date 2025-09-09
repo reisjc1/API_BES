@@ -365,13 +365,13 @@ namespace WebApplication1.BLL
                         RequestedCClickPrice = m.RequestedCClickPrice,
                         BWExcessPVP = m.RequestedBWExcessPrice,
                         CExcessPVP = m.RequestedCExcessPrice,
-                        PVP = si.RecommendedRent,
+                        PVP = m.RecommendedRent,
                         ExcessBillingFrequency = si.ExcessBillingFrequency,
                         RentBillingFrequency = si.RentBillingFrequency,
                         ReturnType = si.ReturnType,
                         RequestedBWExcess = m.RequestedBWExcessPrice,
                         RequestedCExcess = m.RequestedCExcessPrice,
-                        RequestedRent = si.RequestedRent
+                        RequestedRent = m.RequestedRent
                     };
                     db.BB_PrintingServices_ClickPerModel_VVA.Add(vvaClickPerModel);
                     lst_VVAClickpermodel.Add(vvaClickPerModel);

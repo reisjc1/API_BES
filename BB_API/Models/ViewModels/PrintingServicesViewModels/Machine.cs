@@ -29,5 +29,7 @@ namespace WebApplication1.Models.ViewModels
         public Nullable<double> CCost { get; set; }
         public Nullable<double> ApprovedBW { get; set; }
         public Nullable<double> ApprovedC { get; set; }
+        public Nullable<double> RequestedRent { get; set; }
+        public Nullable<double> RecommendedRent { get; set; }
     }
 }
