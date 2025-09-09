@@ -12,6 +12,7 @@ using WebApplication1.Models.ViewModels.PrintingServicesViewModels;
 using System.Data.SqlClient;
 using System.Data;
 using WebApplication1.App_Start;
+using DocumentFormat.OpenXml.ExtendedProperties;
 
 namespace WebApplication1.BLL
 {
@@ -51,7 +52,7 @@ namespace WebApplication1.BLL
                 }
                 else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA != null)
                 {
-                    serviceType = "Click Por Modelo - Com Volume Incluído";
+                    serviceType = "Click Por Modelo - VVA";
                     serviceTypeId = 4;
                 }
 
@@ -68,7 +69,11 @@ namespace WebApplication1.BLL
                 };
                 indexEntries.Add(indexEntry);
             }
-            return indexEntries;
+            var orderedEntries = indexEntries
+                .OrderBy(e => e.RequestedAt)
+                .ToList();
+
+            return orderedEntries;
         }
 
 
@@ -2117,6 +2122,9 @@ namespace WebApplication1.BLL
                 svr.RequestedBy = validationRequest.RequestedBy;
                 svr.SEObservations = validationRequest.SEObservations;
                 svr.Type = "Click Por Modelo - Com Volume Incluído";
+                svr.RecommendedPVP = (double)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().PVP;
+                svr.RequestedPVP = (double)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RequestedRent;
+
 
                 List<ServiceValidationRequestEquipment> svrEquipments = new List<ServiceValidationRequestEquipment>();
                 var query = from m in validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA
@@ -2146,31 +2154,50 @@ namespace WebApplication1.BLL
                                 IsInClient = false,
                                 RequestedBWExcess = m.RequestedBWExcess,
                                 RequestedCExcess = m.RequestedCExcess,
-                                BWExcessPVP = m.RequestedBWExcess,
-                                CExcessPVP = m.RequestedCExcess,
+                                BWExcessPVP = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                CExcessPVP = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
                             };
+
                 svrEquipments = query.ToList();
-                int totalRecBW = (int)svrEquipments.Sum(x => x.RecBWVolume * x.Quantity);
-                int totalRecC = (int)svrEquipments.Sum(x => x.RecCVolume * x.Quantity);
-                //int totalUsedBW = 0;
-                //int totalUsedC = 0;
-                //foreach (ServiceValidationRequestEquipment svre in svrEquipments)
-                //{
-                //    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null)
-                //    {
-                //        svre.BWCoefficient = ((double)svre.RecBWVolume / totalRecBW) * svre.Quantity * 100;
-                //        int toAddBW = (int)Math.Floor((double)(svr.Volumes.BWVolume * (svre.BWCoefficient / 100)));
-                //        svre.BWPages += toAddBW;
-                //        totalUsedBW += toAddBW;
-                //    }
-                //    if (svr.Volumes.CVolume != 0 && svre.RecCVolume != null)
-                //    {
-                //        svre.CCoefficient = ((double)svre.RecCVolume / totalRecC) * svre.Quantity * 100;
-                //        int toAddC = (int)Math.Floor((double)(svr.Volumes.CVolume * (svre.CCoefficient / 100)));
-                //        svre.CPages += toAddC;
-                //        totalUsedC += toAddC;
-                //    }
-                //}
+
+                // volume total de copias a PRETO
+                int totalRecBW = (int)svrEquipments.Sum(x => x.BWPages * x.Quantity);
+
+                // volume total de copias a COR
+                int totalRecC = (int)svrEquipments.Sum(x => x.CPages * x.Quantity);
+
+                svr.Volumes.BWVolume = totalRecBW;
+                svr.Volumes.CVolume = totalRecC;
+
+                foreach (ServiceValidationRequestEquipment svre in svrEquipments)
+                {
+                    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null)
+                    {
+                        int totalBWEquip = (int)(svre.BWPages * svre.Quantity);
+                        if(totalRecBW > 0)
+                        {
+                            svre.BWCoefficient = ((double)svre.BWPages / totalRecBW) * svre.Quantity;
+                        }
+                        else
+                        {
+                            svre.BWCoefficient = 0;
+                        }
+                    }
+
+                    if (svr.Volumes.CVolume != 0 && svre.RecCVolume != null)
+                    {
+                        int totalCEquip = (int)(svre.CPages * svre.Quantity);
+                        if (totalRecC > 0)
+                        {
+                            svre.CCoefficient = ((double)svre.CPages / totalRecC) * svre.Quantity;
+                        }
+                        else
+                        {
+                            svre.CCoefficient = 0;
+                        }
+                    }
+                }
+
 
                 //int toUseBW = svr.Volumes.BWVolume - totalUsedBW;
                 //int toUseC = svr.Volumes.CVolume - totalUsedC;
@@ -2183,13 +2210,13 @@ namespace WebApplication1.BLL
                 //    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null && totalUsedBW != totalRecBW)
                 //    {
                 //        int toAddBW = (int)Math.Round((double)(toUseBW * (svre.BWCoefficient / 100)));
-                //        svre.BWPages += toAddBW;
+                //        //svre.BWPages += toAddBW;
                 //        totalUsedBW += toAddBW;
                 //    }
                 //    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null && totalUsedC != totalRecC)
                 //    {
                 //        int toAddC = (int)Math.Round((double)(toUseC * (svre.CCoefficient / 100)));
-                //        svre.CPages += toAddC;
+                //        //svre.CPages += toAddC;
                 //        totalUsedC += toAddC;
                 //    }
                 //}
