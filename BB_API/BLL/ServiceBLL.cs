@@ -365,12 +365,12 @@ namespace WebApplication1.BLL
                         RequestedCClickPrice = m.RequestedCClickPrice,
                         BWExcessPVP = m.RequestedBWExcessPrice,
                         CExcessPVP = m.RequestedCExcessPrice,
-                        PVP = m.RecommendedRent,
                         ExcessBillingFrequency = si.ExcessBillingFrequency,
                         RentBillingFrequency = si.RentBillingFrequency,
                         ReturnType = si.ReturnType,
                         RequestedBWExcess = m.RequestedBWExcessPrice,
                         RequestedCExcess = m.RequestedCExcessPrice,
+                        PVP = m.RecommendedRent,
                         RequestedRent = m.RequestedRent
                     };
                     db.BB_PrintingServices_ClickPerModel_VVA.Add(vvaClickPerModel);
@@ -2121,9 +2121,7 @@ namespace WebApplication1.BLL
                 svr.ID = validationRequest.ID;
                 svr.RequestedBy = validationRequest.RequestedBy;
                 svr.SEObservations = validationRequest.SEObservations;
-                svr.Type = "Click Por Modelo - Com Volume Incluído";
-                svr.RecommendedPVP = (double)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().PVP;
-                svr.RequestedPVP = (double)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RequestedRent;
+                svr.Type = "Click Por Modelo - Com Volume Incluído";              
 
 
                 List<ServiceValidationRequestEquipment> svrEquipments = new List<ServiceValidationRequestEquipment>();
@@ -2156,9 +2154,14 @@ namespace WebApplication1.BLL
                                 RequestedCExcess = m.RequestedCExcess,
                                 BWExcessPVP = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
                                 CExcessPVP = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                RequestedPVP = m.RequestedRent,
+                                RecommendedPVP = m.PVP                     
                             };
 
                 svrEquipments = query.ToList();
+
+                svr.RecommendedPVP = (double)svrEquipments.Sum(x => x.RecommendedPVP);
+                svr.RequestedPVP = (double)svrEquipments.Sum(x => x.RequestedPVP);
 
                 // volume total de copias a PRETO
                 int totalRecBW = (int)svrEquipments.Sum(x => x.BWPages * x.Quantity);

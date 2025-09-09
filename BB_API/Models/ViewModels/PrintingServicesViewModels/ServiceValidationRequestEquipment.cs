@@ -32,6 +32,7 @@ namespace WebApplication1.Models.ViewModels
         public Nullable<double> RequestedCExcess { get; set; }
         public Nullable<double> BWExcessPVP { get; set; }
         public Nullable<double> CExcessPVP { get; set; }
-        public Nullable<double> RequestedRent { get; set; }
+        public Nullable<double> RequestedPVP { get; set; }
+        public Nullable<double> RecommendedPVP { get; set; }
     }
 }
