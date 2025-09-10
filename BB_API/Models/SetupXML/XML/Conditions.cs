@@ -318,6 +318,8 @@ namespace WebApplication1.Models.SetupXML.XML
                     List<BB_PrintingServices> bB_PrintingServices_lst = db.BB_PrintingServices.AsNoTracking().ToList();
                     List<BB_VVA> bB_VVA_lst = db.BB_VVA.AsNoTracking().ToList();
                     List<BB_PrintingService_Machines> bB_PrintingService_Machine = db.BB_PrintingService_Machines.AsNoTracking().ToList();
+                    List<BB_PrintingServices_ClickPerModel_VVA> listClickPerModelVVAMachines = db.BB_PrintingServices_ClickPerModel_VVA.AsNoTracking().ToList();
+
                     BB_Proposal_OPSManage opsM = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     //BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal_Overvaluation overvaluation = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalId).FirstOrDefault();
@@ -676,6 +678,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             BB_VVA bB_VVA = bB_VVA_lst.FirstOrDefault(x => x.PrintingServiceID == bB_PrintingServices.ID);
                             List<BB_PrintingService_Machines> machines = bB_PrintingService_Machine.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
+                            List<BB_PrintingServices_ClickPerModel_VVA> clickPerModelVVAMachines = listClickPerModelVVAMachines.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
 
                             if (bB_VVA != null)
                             {
@@ -694,6 +697,22 @@ namespace WebApplication1.Models.SetupXML.XML
                                     //Cálculo do valor do PVP do ZVBS é sempre o volume BW * click preto aprovador + volume C * click cor aprovado
                                     double? pvpZVBS = (machineItem.BWVolume * machineItem.ApprovedBW) + (machineItem.CVolume * machineItem.ApprovedC);
 
+                                    collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                                    {
+                                        DOC = order.SD_DOC,
+                                        COND_FLAG = "A",
+                                        KSCHL = "ZVBS",
+                                        KBETR = Math.Round(pvpZVBS ?? 0.0, 2).ToString("F2").Replace(",", ".")
+                                    });
+                                }
+                            }
+                            else if (clickPerModelVVAMachines != null)
+                            {
+                                BB_PrintingServices_ClickPerModel_VVA machineItem = clickPerModelVVAMachines.FirstOrDefault(x => x.CodeRef == order.MACHINE);
+
+                                if (machineItem != null)
+                                {
+                                    double? pvpZVBS = (machineItem.BWVolume * machineItem.ApprovedBW) + (machineItem.CVolume * machineItem.ApprovedC);
                                     collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
                                     {
                                         DOC = order.SD_DOC,
@@ -1004,6 +1023,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     if (bB_PrintingServices != null)
                     {
                         BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
+                        List<BB_PrintingServices_ClickPerModel_VVA> ClickPerModelVVA_lst = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
 
                         if (bB_VVA != null)
                         {
@@ -1011,6 +1031,18 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             ConditionPVP condPvp = new ConditionPVP();
                             condPvp.PVP = Convert.ToDouble(Math.Round(bB_VVA.PVP ?? 0.0, 2).ToString("F2"));
+                            condPvp.ConditionCode = "ZVBS";
+                            conditionsPvp.Add(condPvp);
+                        }
+                        else if (ClickPerModelVVA_lst != null)
+                        {
+                            double? totalZVBS = 0;
+                            foreach (var cMVVA in ClickPerModelVVA_lst)
+                            {
+                                totalZVBS += (cMVVA.BWVolume * cMVVA.ApprovedBW) + (cMVVA.CVolume * cMVVA.ApprovedC);
+                            }
+                            ConditionPVP condPvp = new ConditionPVP();
+                            condPvp.PVP = totalZVBS == null ? 0 : Math.Round(totalZVBS ?? 0.0, 2);
                             condPvp.ConditionCode = "ZVBS";
                             conditionsPvp.Add(condPvp);
                         }
@@ -1302,6 +1334,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
                                     BB_PrintingService_Machines machine = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == bB_PrintingServices.ID && x.CodeRef == item.CodeRef).FirstOrDefault();
+                                    BB_PrintingServices_ClickPerModel_VVA perModel_VVA = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID && x.CodeRef == item.CodeRef).FirstOrDefault();
                                     if (machineName != null && machine != null)
                                     {
                                         if (bB_VVA != null)
@@ -1310,6 +1343,17 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                             ConditionPVP condPvp = new ConditionPVP();
                                             condPvp.PVP = Convert.ToDouble(Math.Round((machine.BWVolume * machine.ApprovedBW) + (machine.ApprovedC * machine.CVolume) ?? 0.0, 2).ToString("F2"));
+                                            condPvp.ConditionCode = "ZVBS";
+                                            conditionPVPPerMachine.Conditions.Add(condPvp);
+                                        }
+                                    }
+                                    else if (machineName != null && perModel_VVA != null)
+                                    {
+                                        if (perModel_VVA != null)
+                                        {
+                                            double valueZVBS = 0;
+                                            ConditionPVP condPvp = new ConditionPVP();
+                                            condPvp.PVP = condPvp.PVP = Convert.ToDouble(Math.Round((perModel_VVA.BWVolume * perModel_VVA.ApprovedBW) + (perModel_VVA.ApprovedC * perModel_VVA.CVolume) ?? 0.0, 2).ToString("F2"));
                                             condPvp.ConditionCode = "ZVBS";
                                             conditionPVPPerMachine.Conditions.Add(condPvp);
                                         }

@@ -1215,19 +1215,44 @@ namespace WebApplication1.Models.SetupXML.XML
                                     kBETR = formatNumber.Replace(",", ".");
                                     copiasIncludias = pSM.BWVolume;
                                     kSTBM = copiasIncludias.ToString();
+                                }else if(activePS.VVAClickPerModel != null)
+                                {
+                                    string formatNumber = "";
+                                    BB_PrintingServices_ClickPerModel_VVA pSM = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = pSM.BWExcessPVP?.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = Convert.ToInt32(pSM.BWVolume);
+                                    kSTBM = copiasIncludias.ToString();
                                 }
 
 
-                                collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
-                                {
-                                    SD_DOC = orderDoc,
-                                    MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
-                                    KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
-                                    DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
-                                    DATBI = "99991231", // data de até quando é válido -- deixar default
-                                    KSTBM = kSTBM, //copias incluidas 
-                                    KBETR = kBETR //preço do excedente 
-                                });
+                                    collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                                    {
+                                        SD_DOC = orderDoc,
+                                        MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                        KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                        DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                        DATBI = "99991231", // data de até quando é válido -- deixar default
+                                        KSTBM = kSTBM, //copias incluidas 
+                                        KBETR = kBETR //preço do excedente 
+                                    });
 
                                 mATNR = "TOCO";
                                 kLFN = "2";
@@ -1274,6 +1299,32 @@ namespace WebApplication1.Models.SetupXML.XML
                                     formatNumber = activePS.GlobalClickVVA.CExcessPVP.ToString("F5");
                                     kBETR = formatNumber.Replace(",", ".");
                                     copiasIncludias = pSM.CVolume;
+                                    kSTBM = copiasIncludias.ToString();
+                                }
+                                else if (activePS.VVAClickPerModel != null)
+                                {
+                                    string formatNumber = "";
+                                    BB_PrintingServices_ClickPerModel_VVA pSM = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = pSM.CExcessPVP?.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = Convert.ToInt32(pSM.CVolume);
                                     kSTBM = copiasIncludias.ToString();
                                 }
 
@@ -1332,6 +1383,32 @@ namespace WebApplication1.Models.SetupXML.XML
                                     formatNumber = activePS.GlobalClickVVA.BWExcessPVP.ToString("F5");
                                     kBETR = formatNumber.Replace(",", ".");
                                     copiasIncludias = pSM.BWVolume;
+                                    kSTBM = copiasIncludias.ToString();
+                                }
+                                else if (activePS.VVAClickPerModel != null)
+                                {
+                                    string formatNumber = "";
+                                    BB_PrintingServices_ClickPerModel_VVA pSM = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = pSM.BWExcessPVP?.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = Convert.ToInt32(pSM.BWVolume);
                                     kSTBM = copiasIncludias.ToString();
                                 }
 

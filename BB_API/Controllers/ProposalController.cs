@@ -134,7 +134,15 @@ namespace WebApplication1.Controllers
                 lpi.ProposalId = p.Draft.details.ID;
                 ac = pBLL.LoadProposal(lpi);
                 ac.Message = "¡Propuesta en borrador!";
-                return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, ac);
+
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+                var response = Request.CreateResponse(HttpStatusCode.OK, ac);
+                response.Content = new StringContent(JsonConvert.SerializeObject(ac, settings), Encoding.UTF8, "application/json");
+                return response;
+                //return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, ac);
             }
             catch (Exception ex)
             {
@@ -920,9 +928,15 @@ namespace WebApplication1.Controllers
 
             err.Message = "Proceso concluido y transferido al administración.";
 
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            var response = Request.CreateResponse(HttpStatusCode.OK, err);
+            response.Content = new StringContent(JsonConvert.SerializeObject(err, settings), Encoding.UTF8, "application/json");
+            return response;
 
-
-            return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
+            //return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
         }
 
         [AcceptVerbs("GET", "POST")]
