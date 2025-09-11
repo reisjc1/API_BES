@@ -371,7 +371,8 @@ namespace WebApplication1.BLL
                         RequestedBWExcess = m.RequestedBWExcessPrice,
                         RequestedCExcess = m.RequestedCExcessPrice,
                         PVP = m.RecommendedRent,
-                        RequestedRent = m.RequestedRent
+                        RequestedRent = m.RequestedRent,
+                        Description = m.Description,
                     };
                     db.BB_PrintingServices_ClickPerModel_VVA.Add(vvaClickPerModel);
                     lst_VVAClickpermodel.Add(vvaClickPerModel);
