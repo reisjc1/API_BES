@@ -669,7 +669,10 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                         var condZVBA = conditionsPvp.Where(x => x.ConditionCode == "ZVBA" || x.ConditionCode == "ZVBR").FirstOrDefault();
                                         double? upturnValue = (upturn.Total / numberOfMachines) * factorValue;
-                                        condZVBA.PVP = condZVBA.PVP - upturnValue;
+                                        if(condZVBA != null)
+                                        {
+                                            condZVBA.PVP = condZVBA.PVP - upturnValue;
+                                        }
 
                                         //Retirar valor ao ZPD4
                                         var condZPD4 = conditionsPvp.Where(x => x.ConditionCode == "ZPD4").FirstOrDefault();
