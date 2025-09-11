@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Office.Interop.Word;
+using Newtonsoft.Json;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
 using System.Collections.Generic;
@@ -2092,7 +2093,7 @@ namespace WebApplication1.Controllers
                                     m.Financiamento = db2.BB_FinancingType.Where(x => x.Code == f.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
                                 }
 
-                                    m.TipoNegocio = db2.BB_Campanha.Where(x => x.ID == b.CampaignID).Select(x => x.Campanha).FirstOrDefault();
+                                m.TipoNegocio = db2.BB_Campanha.Where(x => x.ID == b.CampaignID).Select(x => x.Campanha).FirstOrDefault();
 
                                 if (f != null && f.FinancingTypeCode != null && f.FinancingTypeCode == 0)
                                 {
@@ -2457,41 +2458,6 @@ namespace WebApplication1.Controllers
                 //sobrevalorizacao = a.ProposalObj.Draft.overvaluations.Select(x => x.Total).FirstOrDefault();
                 double? OPSHWvalorTotal = 0;
                 double? OPSHWUnti = 0;
-                //if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0 && sobrevalorizacao1 > 0)
-                //{
-                //    if (a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").Count() > 0)
-                //    {
-
-
-                //        OPSHWvalorTotal = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.TotalNetsale)).First();
-
-                //        OPSHWUnti = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.UnitDiscountPrice)).First();
-                //    }
-                //}
-
-                //if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0)
-                //{
-
-                //    a.ProposalObj.Draft.details.ValueTotal = 0;
-                //    foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
-                //    {
-                //        quote.TotalNetsale = sobrevalorizacao1 != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao1) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
-                //        quote.UnitDiscountPrice = Math.Round((quote.TotalNetsale / quote.Qty), 2);
-                //        //quote.TotalNetsale = sobrevalorizacao != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
-
-                //        a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
-                //    }
-                //    a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
-                //}
-                //else
-                //{
-                //    //a.ProposalObj.Draft.details.ValueTotal = 0;
-                //    //foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
-                //    //{
-                //    //    a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
-                //    //}
-                //    //a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
-                //}
 
                 using (var db1 = new BB_DB_DEV_LeaseDesk())
                 {
@@ -2540,20 +2506,9 @@ namespace WebApplication1.Controllers
                             default: break;
                         }
 
-                        //switch (activePS.GlobalClickVVA.RentBillingFrequency)
-                        //{
-                        //    case 3:
-                        //        activePS.GlobalClickVVA.PVP = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP * 3 : 0;
-                        //        break;
-                        //    case 6:
-                        //        activePS.GlobalClickVVA.PVP = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP * 6 : 0;
-                        //        break;
-                        //    default: break;
-                        //}
-                        //vt.VVA = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP : 0;
                     }
 
-                    foreach(var machine in activePS.Machines)
+                    foreach (var machine in activePS.Machines)
                     {
                         machine.BWCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.BWBaseCost).FirstOrDefault();
                         machine.CCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.CBaseCost).FirstOrDefault();
@@ -2565,7 +2520,7 @@ namespace WebApplication1.Controllers
                         machine.ClickPriceC = machine.ClickPriceC.HasValue ? Math.Round(machine.ClickPriceC.Value, 5) : (double?)0;
 
                         machine.RequestedBWClickPrice = machine.RequestedBWClickPrice != null ? Math.Round((double)machine.RequestedBWClickPrice, 5) : 0;
-                        machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ?  Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
+                        machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ? Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
 
 
                         machine.ApprovedBW = machine.ApprovedBW.HasValue ? Math.Round(machine.ApprovedBW.Value, 5) : (double?)0;
@@ -2670,9 +2625,9 @@ namespace WebApplication1.Controllers
 
                 a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
                 string delegation = "";
-                if(cliente != null)
+                if (cliente != null)
                 {
-                    switch(cliente.Territory.Substring(4, 4))
+                    switch (cliente.Territory.Substring(4, 4))
                     {
                         case "5241":
                             delegation = "Barcelona";
@@ -2760,9 +2715,9 @@ namespace WebApplication1.Controllers
 
                     }
                 }
-           
 
-                a.ProposalObj.Draft.client.SalesGroup =  cliente != null ? cliente.Territory.Substring(4, 4) + " - " + delegation : "-";
+
+                a.ProposalObj.Draft.client.SalesGroup = cliente != null ? cliente.Territory.Substring(4, 4) + " - " + delegation : "-";
                 a.ProposalObj.Draft.client.SalesOffice = cliente != null ? cliente.Territory.Substring(8, 3) + " - " + office : "-";
 
                 a.ProposalObj.SAPNumber = pr1.Pedido_SAP == null ? "" : pr1.Pedido_SAP.Value.ToString();
@@ -2787,10 +2742,27 @@ namespace WebApplication1.Controllers
                 }
 
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 string error = ex.Message;
             }
-            return Ok(a.ProposalObj);
+
+            var json = JsonConvert.SerializeObject(
+                a.ProposalObj,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    PreserveReferencesHandling = PreserveReferencesHandling.None
+                });
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            return ResponseMessage(response);
+
         }
 
 
@@ -2806,7 +2778,8 @@ namespace WebApplication1.Controllers
         {
             List<HW_SW> configurator = new List<HW_SW>();
 
-            try {
+            try
+            {
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     //List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
@@ -2882,15 +2855,15 @@ namespace WebApplication1.Controllers
                                 BB_Proposal_Quote_RS quoteRS = pp_quote_rs.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
                                 OsBasket basketItem = new OsBasket
                                 {
-                                        CodeRef = item.CodeRef,
-                                        Description = item.Description,
-                                        Family = item.Family,
-                                        UnitDiscountPrice = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
-                                        Qty = (int)item.Qty,
-                                        TotalNetsale = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
-                                        Group = item.Group,
-                                        IsUsed = (bool)item.IsUsedMachine,
-                                        SerialNumber = "-"
+                                    CodeRef = item.CodeRef,
+                                    Description = item.Description,
+                                    Family = item.Family,
+                                    UnitDiscountPrice = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
+                                    Qty = (int)item.Qty,
+                                    TotalNetsale = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
+                                    Group = item.Group,
+                                    IsUsed = (bool)item.IsUsedMachine,
+                                    SerialNumber = "-"
                                 };
 
 
@@ -2942,7 +2915,7 @@ namespace WebApplication1.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string error = ex.Message;
             }
@@ -2989,7 +2962,7 @@ namespace WebApplication1.Controllers
                 try
                 {
                     BB_Proposal_DeliveryLocation dlToEdit = db.BB_Proposal_DeliveryLocation.Where(x => x.IDX == ti.IDX).FirstOrDefault();
-                    if(dlToEdit != null)
+                    if (dlToEdit != null)
                     {
                         dlToEdit.SAPCustomerNr = ti.SAP_Nr;
                         db.SaveChanges();
@@ -3036,7 +3009,7 @@ namespace WebApplication1.Controllers
                                 {
 
                                     BB_Equipamentos isEquip = db.BB_Equipamentos.Where(x => x.CodeRef == it.CodeRef).FirstOrDefault();
-                                    if(isEquip != null || it.Description.Contains("MAIN MATERIAL"))
+                                    if (isEquip != null || it.Description.Contains("MAIN MATERIAL"))
                                     {
                                         BB_Proposal_DeliveryLocationResumoModel resumo = new BB_Proposal_DeliveryLocationResumoModel();
                                         resumo.Group = p.Key;
@@ -3045,8 +3018,8 @@ namespace WebApplication1.Controllers
                                         resumo.PostalCode = i.PostalCode;
                                         resumo.City = i.City;
                                         resumo.Contacto = contact != null ? contact.Name + " " + contact.Surname : "";
-                                        resumo.Phone = contact != null ? contact.Movil.ToString(): "";
-                                        resumo.Email = contact != null ? contact.Email: "";
+                                        resumo.Phone = contact != null ? contact.Movil.ToString() : "";
+                                        resumo.Email = contact != null ? contact.Email : "";
                                         resumo.AddressType = i.AccountType;
                                         resumo.CodeRef = it.CodeRef;
                                         resumo.Qty = it.Qty;
@@ -4222,7 +4195,7 @@ namespace WebApplication1.Controllers
                             data.AccordNumber = accorNumber;
 
                             List<BB_Proposal_DeliveryLocation> bb_pp_dl_lst = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
-                            
+
 
                             data.DL_Table_Info_Lst = new List<DL_Table_Info>();
 
@@ -4422,7 +4395,7 @@ namespace WebApplication1.Controllers
                             if (soldTo != null)
                             {
                                 BB_Proposal_Client bb_Proposal_Client = db.BB_Proposal_Client.Where(x => x.ProposalID == bb_proposal.ID).FirstOrDefault();
-                                if(bb_Proposal_Client.ClientID != soldTo)
+                                if (bb_Proposal_Client.ClientID != soldTo)
                                 {
                                     bb_Proposal_Client.ClientID = soldTo;
                                     bb_proposal.ClientAccountNumber = soldTo;
@@ -4430,13 +4403,14 @@ namespace WebApplication1.Controllers
                             }
                             bb_proposal.Plant = plant;
                             bb_proposal.ContractNumberPai = contractNumberPai;
-                            
+
 
                             LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractID).FirstOrDefault();
 
                             lD_Contrato.InvoiceList = invoiceList;
 
-                            if(financingcompany != null) { 
+                            if (financingcompany != null)
+                            {
                                 BB_FinancingContractType contractType = db.BB_FinancingContractType.Where(x => x.CompanyCode == financingcompany).FirstOrDefault();
 
                                 BB_Proposal_Financing proposal_Financing = db.BB_Proposal_Financing.Where(x => x.ProposalID == contractProposal).FirstOrDefault();
@@ -4582,7 +4556,7 @@ namespace WebApplication1.Controllers
 
         }
 
-        
+
 
 
         public class PrazoDiferenciado
