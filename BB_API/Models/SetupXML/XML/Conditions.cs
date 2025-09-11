@@ -1083,7 +1083,10 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
                             double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
                             var condZVBA = conditionsPvp.Where(x => x.ConditionCode == "ZVBA" || x.ConditionCode == "ZVBR").FirstOrDefault();
-                            condZVBA.PVP -= (upturns.Sum(x => x.Total) * factorValue);
+                            if(condZVBA != null)
+                            {
+                                condZVBA.PVP -= (upturns.Sum(x => x.Total) * factorValue);
+                            }
 
                             //Retirar valor ao ZPD4
                             var condZPD4 = conditionsPvp.Where(x => x.ConditionCode == "ZPD4").FirstOrDefault();
@@ -1365,8 +1368,11 @@ namespace WebApplication1.Models.SetupXML.XML
                                 {
                                     double? factorValue = pf.Factor >= 1 ? (pf.Factor / 100) : pf.Factor;
                                     var condZVBA = conditionPVPPerMachine.Conditions.Where(x => x.ConditionCode == "ZVBA" || x.ConditionCode == "ZVBR").FirstOrDefault();
-                                    double? upturnsValue = (upturns.Sum(x => x.Total) / numberOfMachines) * factorValue;
-                                    condZVBA.PVP = condZVBA.PVP - upturnsValue;
+                                    if(condZVBA != null)
+                                    {
+                                        double? upturnsValue = (upturns.Sum(x => x.Total) / numberOfMachines) * factorValue;
+                                        condZVBA.PVP = condZVBA.PVP - upturnsValue;
+                                    }
 
                                     //Retirar valor ao ZPD4
                                     var condZPD4 = conditionPVPPerMachine.Conditions.Where(x => x.ConditionCode == "ZPD4").FirstOrDefault();
