@@ -837,7 +837,7 @@ namespace WebApplication1.BLL
                         }
                         return srh;
                     }
-                    else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA != null)
+                    else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA != null && validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.Count > 0)
                     {
                         ClickPerModelVVAServiceRequestHistory srh = new ClickPerModelVVAServiceRequestHistory();
 
