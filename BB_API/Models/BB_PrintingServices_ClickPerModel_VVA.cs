@@ -40,6 +40,7 @@ namespace WebApplication1.Models
         public Nullable<double> RequestedBWExcess { get; set; }
         public Nullable<double> RequestedCExcess { get; set; }
         public Nullable<double> RequestedRent { get; set; }
+        public Nullable<int> PageBillingFrequency { get; set; }
     
         public virtual BB_PrintingServices BB_PrintingServices { get; set; }
     }

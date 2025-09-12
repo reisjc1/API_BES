@@ -777,6 +777,7 @@
           <Property Name="RequestedBWExcess" Type="float" />
           <Property Name="RequestedCExcess" Type="float" />
           <Property Name="RequestedRent" Type="float" />
+          <Property Name="PageBillingFrequency" Type="int" />
         </EntityType>
         <EntityType Name="BB_PrintingServices_NoVolume">
           <Key>
@@ -4429,6 +4430,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <Property Name="RequestedBWExcess" Type="Double" />
           <Property Name="RequestedCExcess" Type="Double" />
           <Property Name="RequestedRent" Type="Double" />
+          <Property Name="PageBillingFrequency" Type="Int32" />
           <NavigationProperty Name="BB_PrintingServices" Relationship="BB_DB_DEVModel.FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices" FromRole="BB_PrintingServices_ClickPerModel_VVA" ToRole="BB_PrintingServices" />
         </EntityType>
         <Association Name="FK_BB_PrintingServices_ClickPerModel_VVA_BB_PrintingServices">
@@ -6426,6 +6428,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySetMapping Name="BB_PrintingServices_ClickPerModel_VVA">
             <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_PrintingServices_ClickPerModel_VVA">
               <MappingFragment StoreEntitySet="BB_PrintingServices_ClickPerModel_VVA">
+                <ScalarProperty Name="PageBillingFrequency" ColumnName="PageBillingFrequency" />
                 <ScalarProperty Name="RequestedRent" ColumnName="RequestedRent" />
                 <ScalarProperty Name="RequestedCExcess" ColumnName="RequestedCExcess" />
                 <ScalarProperty Name="RequestedBWExcess" ColumnName="RequestedBWExcess" />

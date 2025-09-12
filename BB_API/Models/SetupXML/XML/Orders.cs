@@ -1335,7 +1335,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
                                     DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
                                     DATBI = "99991231", // data de até quando é válido -- deixar default
-                                    KSTBM = activePS.GlobalClickVVA != null ? kSTBM : "0", //copias incluidas 
+                                    KSTBM = activePS.GlobalClickVVA != null || activePS.VVAClickPerModel != null ? kSTBM : "0", //copias incluidas 
                                     KBETR = kBETR //preço do excedente 
                                 });
 
@@ -1420,7 +1420,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
                                     DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
                                     DATBI = "99991231", // data de até quando é válido -- deixar default
-                                    KSTBM = activePS.GlobalClickVVA != null ? kSTBM : "0", //copias incluidas 
+                                    KSTBM = activePS.GlobalClickVVA != null || activePS.VVAClickPerModel != null ? kSTBM : "0", //copias incluidas 
                                     KBETR = kBETR //preço do excedente 
                                 });
                             }
@@ -1540,6 +1540,23 @@ namespace WebApplication1.Models.SetupXML.XML
                                     CPVP = machine.CPVP
                                 };
                                 newPS.Machines.Add(psMachine);
+                            }
+
+                            if(ps.BB_PrintingServices_ClickPerModel_VVA != null)
+                            {
+                                BB_PrintingServices_ClickPerModel_VVA psVVAcpm = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
+                                List<BB_PrintingServices_ClickPerModel_VVA> ps_basket = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == ps.ID).ToList();
+                                VVAClickPerModel vvaCPM = new VVAClickPerModel()
+                                {
+                                    PageBillingFrequency = psVVAcpm.PageBillingFrequency != null ? psVVAcpm.PageBillingFrequency.Value : 0,
+                                    ExcessBillingFrequency = (int)(psVVAcpm.ExcessBillingFrequency != null ? psVVAcpm.ExcessBillingFrequency.Value : 0),
+                                    RequestedRent = 0,
+                                    RecommendedRent = 0,
+                                    RentBillingFrequency = (int)(psVVAcpm.RentBillingFrequency != null ? psVVAcpm.RentBillingFrequency.Value : 0),
+                                    ReturnType = 0,
+                                    ps_basket = ps_basket
+                                };
+                                newPS.VVAClickPerModel = vvaCPM;
                             }
                             BB_Proposal_PrintingServiceValidationRequest validationRequest = ps.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == ps.ID && x.ToDelete == false).FirstOrDefault();
                             if (validationRequest != null)
