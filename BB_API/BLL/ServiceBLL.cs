@@ -688,7 +688,7 @@ namespace WebApplication1.BLL
                             SCObservations = validationRequest.SCObservations,
                             PVP = 0,
                             TotalCost = 0,
-                            Type = "Click Global - VVA",
+                            Type = "Click Global con Volumen Incluido (VVA)",
                         };
                         var query = from pe in historyEquipments
                                     join e in equipments on pe.CodeRef equals e.CodeRef
@@ -774,7 +774,7 @@ namespace WebApplication1.BLL
                             SCObservations = validationRequest.SCObservations,
                             PageBillingFrequency = validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.PageBillingFrequency.GetValueOrDefault(),
                             TotalCost = 0,
-                            Type = "Click Global - Sem Volume Incluído",
+                            Type = "Click Global sim Volumen Incluido",
                         };
                         var query = from pe in historyEquipments
                                     join e in equipments on pe.CodeRef equals e.CodeRef
@@ -836,6 +836,156 @@ namespace WebApplication1.BLL
                         }
                         return srh;
                     }
+                    else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA != null)
+                    {
+                        ClickPerModelVVAServiceRequestHistory srh = new ClickPerModelVVAServiceRequestHistory();
+
+                        SVRClient svrClient = new SVRClient();
+                        if (client != null)
+                        {
+                            svrClient.ClientAccountNumber = client.accountnumber;
+                            svrClient.ClientName = client.Name;
+                            svrClient.IsNewClient = false;
+                            if (client.accountnumber != null && client.accountnumber.ToLower().StartsWith("p"))
+                            {
+                                svrClient.IsNewClient = true;
+                            }
+                        }
+
+                        srh.Client = svrClient;
+                        srh.ClientName = client.Name;
+                        srh.Volumes = new SVRVolumes()
+                        {
+                            BWVolume = validationRequest.BB_PrintingServices.BWVolume.GetValueOrDefault(),
+                            CVolume = validationRequest.BB_PrintingServices.CVolume.GetValueOrDefault(),
+                        };
+                        srh.ContractDuration = validationRequest.BB_PrintingServices.ContractDuration.GetValueOrDefault();
+                        srh.Equipments = new List<ServiceValidationRequestEquipment>();
+                        //svr.PageBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                        srh.RentBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                        srh.ExcessBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().ExcessBillingFrequency;
+                        srh.AverageCostBW = 0;
+                        srh.AverageCostC = 0;
+                        srh.ID = validationRequest.ID;
+                        srh.RequestedBy = validationRequest.RequestedBy;
+                        srh.SEObservations = validationRequest.SEObservations;
+                        srh.Type = "Click Por Modelo com Volumen Incluido";
+
+
+                        List<ServiceValidationRequestEquipment> svrEquipments = new List<ServiceValidationRequestEquipment>();
+                        var query = from m in validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA
+                                    join e in equipments on m.CodeRef equals e.CodeRef
+                                    select new ServiceValidationRequestEquipment
+                                    {
+                                        ID = m.ID,
+                                        ApprovedBW = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                        ApprovedC = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                        CodeRef = e.CodeRef,
+                                        Description = e.Description != null ? e.Description : m.Description,
+                                        Quantity = (int)m.Quantity,
+                                        RecBWVolume = e.RecBWVolume,
+                                        BWBaseCost = e.BWBaseCost,
+                                        RecCVolume = e.RecCVolume,
+                                        CBaseCost = e.CBaseCost,
+                                        ClickPriceBW = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                        ClickPriceC = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                        BWCoefficient = 0,
+                                        CCoefficient = 0,
+                                        BWPages = (int?)m.BWVolume,
+                                        CPages = (int?)m.CVolume,
+                                        RequestedBWClickPrice = m.RequestedBWClickPrice,
+                                        RequestedCClickPrice = m.RequestedCClickPrice,
+                                        Type = e.PHC5 == null ? "" : (e.PHC5.Contains("(MF)") ? "MFP" : "Printer"),
+                                        IsUsed = false,
+                                        IsInClient = false,
+                                        RequestedBWExcess = m.RequestedBWExcess,
+                                        RequestedCExcess = m.RequestedCExcess,
+                                        BWExcessPVP = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                        CExcessPVP = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                        RequestedPVP = m.RequestedRent,
+                                        RecommendedPVP = m.PVP
+                                    };
+
+                        svrEquipments = query.ToList();
+
+                        srh.RecommendedPVP = (double)svrEquipments.Sum(x => x.RecommendedPVP);
+                        srh.RequestedPVP = (double)svrEquipments.Sum(x => x.RequestedPVP);
+
+                        // volume total de copias a PRETO
+                        int totalRecBW = (int)svrEquipments.Sum(x => x.BWPages * x.Quantity);
+
+                        // volume total de copias a COR
+                        int totalRecC = (int)svrEquipments.Sum(x => x.CPages * x.Quantity);
+
+                        srh.Volumes.BWVolume = totalRecBW;
+                        srh.Volumes.CVolume = totalRecC;
+
+                        foreach (ServiceValidationRequestEquipment svre in svrEquipments)
+                        {
+                            if (srh.Volumes.BWVolume != 0 && svre.RecBWVolume != null)
+                            {
+                                int totalBWEquip = (int)(svre.BWPages * svre.Quantity);
+                                if (totalRecBW > 0)
+                                {
+                                    svre.BWCoefficient = ((double)svre.BWPages / totalRecBW) * svre.Quantity;
+                                }
+                                else
+                                {
+                                    svre.BWCoefficient = 0;
+                                }
+                            }
+
+                            if (srh.Volumes.CVolume != 0 && svre.RecCVolume != null)
+                            {
+                                int totalCEquip = (int)(svre.CPages * svre.Quantity);
+                                if (totalRecC > 0)
+                                {
+                                    svre.CCoefficient = ((double)svre.CPages / totalRecC) * svre.Quantity;
+                                }
+                                else
+                                {
+                                    svre.CCoefficient = 0;
+                                }
+                            }
+                        }
+
+                        srh.AverageCostBW = (double)(svrEquipments.Sum(x => x.BWBaseCost * x.RecBWVolume) / svrEquipments.Sum(x => x.RecBWVolume));
+                        srh.AverageCostC = (double)(svrEquipments.Where(x => x.CBaseCost != 0).Sum(x => x.CBaseCost * x.RecCVolume) / svrEquipments.Sum(x => x.RecCVolume));
+                        srh.Equipments = svrEquipments;
+
+                        List<BB_Proposal_OPSImplement> opsImplement = db.BB_Proposal_OPSImplement.Where(x => x.ProposalID == proposalID).ToList();
+                        foreach (BB_Proposal_OPSImplement implementPack in opsImplement)
+                        {
+                            OPSImplement item = new OPSImplement
+                            {
+                                CodeRef = implementPack.CodeRef,
+                                Description = implementPack.Description,
+                                ID = implementPack.ID,
+                                Name = implementPack.Name,
+                                PVP = implementPack.PVP,
+                                Quantity = implementPack.Quantity,
+                                UnitDiscountPrice = implementPack.UnitDiscountPrice,
+                            };
+                            srh.OPSImplement.Add(item);
+                        }
+                        List<BB_Proposal_OPSManage> opsManage = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
+                        foreach (BB_Proposal_OPSManage managePack in opsManage)
+                        {
+                            OPSManage item = new OPSManage
+                            {
+                                CodeRef = managePack.CodeRef,
+                                Description = managePack.Description,
+                                ID = managePack.ID,
+                                Name = managePack.Name,
+                                PVP = managePack.PVP,
+                                Quantity = managePack.Quantity,
+                                UnitDiscountPrice = managePack.UnitDiscountPrice,
+                                TotalMonths = managePack.TotalMonths
+                            };
+                            srh.OPSManage.Add(item);
+                        }
+                        return srh;
+                    }
                     else
                     {
                         ClickPerModelServiceRequestHistory srh = new ClickPerModelServiceRequestHistory()
@@ -855,7 +1005,7 @@ namespace WebApplication1.BLL
                             SEObservations = validationRequest.SEObservations,
                             SCObservations = validationRequest.SCObservations,
                             PageBillingFrequency = validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel.PageBillingFrequency.GetValueOrDefault(),
-                            Type = "Click Por Modelo - Sem Volume Incluído",
+                            Type = "Click Por Modelo sin Volumen Incluido",
                         };
                         var query = from pe in historyEquipments
                                     join e in equipments on pe.CodeRef equals e.CodeRef
