@@ -2506,27 +2506,34 @@ namespace WebApplication1.Controllers
                             default: break;
                         }
 
-                    }
-
-                    foreach (var machine in activePS.Machines)
+                    }else if(activePS != null && activePS.VVAClickPerModel != null)
                     {
-                        machine.BWCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.BWBaseCost).FirstOrDefault();
-                        machine.CCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.CBaseCost).FirstOrDefault();
 
-                        machine.BWCost = machine.BWCost.HasValue ? Math.Round(machine.BWCost.Value, 5) : (double?)0;
-                        machine.CCost = machine.CCost.HasValue ? Math.Round(machine.CCost.Value, 5) : (double?)0;
-
-                        machine.ClickPriceBW = machine.ClickPriceBW.HasValue ? Math.Round(machine.ClickPriceBW.Value, 5) : (double?)0;
-                        machine.ClickPriceC = machine.ClickPriceC.HasValue ? Math.Round(machine.ClickPriceC.Value, 5) : (double?)0;
-
-                        machine.RequestedBWClickPrice = machine.RequestedBWClickPrice != null ? Math.Round((double)machine.RequestedBWClickPrice, 5) : 0;
-                        machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ? Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
-
-
-                        machine.ApprovedBW = machine.ApprovedBW.HasValue ? Math.Round(machine.ApprovedBW.Value, 5) : (double?)0;
-                        machine.ApprovedC = machine.ApprovedC.HasValue ? Math.Round(machine.ApprovedC.Value, 5) : (double?)0;
-
+                        foreach (var item in activePS.VVAClickPerModel.ps_basket)
+                        {
+                            vt.VVA += ((item.BWVolume * item.ApprovedBW) + (item.CVolume * item.ApprovedC)) * item.Quantity;
+                        }
                     }
+
+                        foreach (var machine in activePS.Machines)
+                        {
+                            machine.BWCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.BWBaseCost).FirstOrDefault();
+                            machine.CCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.CBaseCost).FirstOrDefault();
+
+                            machine.BWCost = machine.BWCost.HasValue ? Math.Round(machine.BWCost.Value, 5) : (double?)0;
+                            machine.CCost = machine.CCost.HasValue ? Math.Round(machine.CCost.Value, 5) : (double?)0;
+
+                            machine.ClickPriceBW = machine.ClickPriceBW.HasValue ? Math.Round(machine.ClickPriceBW.Value, 5) : (double?)0;
+                            machine.ClickPriceC = machine.ClickPriceC.HasValue ? Math.Round(machine.ClickPriceC.Value, 5) : (double?)0;
+
+                            machine.RequestedBWClickPrice = machine.RequestedBWClickPrice != null ? Math.Round((double)machine.RequestedBWClickPrice, 5) : 0;
+                            machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ? Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
+
+
+                            machine.ApprovedBW = machine.ApprovedBW.HasValue ? Math.Round(machine.ApprovedBW.Value, 5) : (double?)0;
+                            machine.ApprovedC = machine.ApprovedC.HasValue ? Math.Round(machine.ApprovedC.Value, 5) : (double?)0;
+
+                        }
 
                 }
 

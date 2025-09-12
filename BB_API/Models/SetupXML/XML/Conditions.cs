@@ -1079,7 +1079,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             double? totalZVBS = 0;
                             foreach (var cMVVA in ClickPerModelVVA_lst)
                             {
-                                totalZVBS += (cMVVA.BWVolume * cMVVA.ApprovedBW) + (cMVVA.CVolume * cMVVA.ApprovedC);
+                                totalZVBS += ((cMVVA.BWVolume * cMVVA.ApprovedBW) + (cMVVA.CVolume * cMVVA.ApprovedC)) * cMVVA.Quantity;
                             }
                             ConditionPVP condPvp = new ConditionPVP();
                             condPvp.PVP = totalZVBS == null ? 0 : Math.Round(totalZVBS ?? 0.0, 2);
