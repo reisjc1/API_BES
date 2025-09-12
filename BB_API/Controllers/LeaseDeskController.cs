@@ -2643,7 +2643,7 @@ namespace WebApplication1.Controllers
 
 
 
-            vt.LeiCopiaPrivada = LeiDaCopiaPriada;
+            vt.LeiCopiaPrivada = LeiDaCopiaPriada != 0 ? Math.Round(LeiDaCopiaPriada.Value, 2) : 0;
             vt.RendaTotal = Math.Round((double)(vt.VVA + vt.RendaFinanciada + vt.ServicosRecorentesMes + fee), 2);
             if (prazoDiferenciado1 != null && prazoDiferenciado1.FinancingID == 6)
             {
