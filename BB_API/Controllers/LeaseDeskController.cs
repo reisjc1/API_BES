@@ -2600,15 +2600,15 @@ namespace WebApplication1.Controllers
 
 
 
-                vt.LeiCopiaPrivada = LeiDaCopiaPriada;
-                vt.RendaTotal = Math.Round((double)(vt.VVA + vt.RendaFinanciada + vt.ServicosRecorentesMes + fee), 2);
-                if (prazoDiferenciado1 != null && prazoDiferenciado1.FinancingID == 6)
-                {
-                    vt.RendaTotal = vt.RendaFinanciada;
-                }
-                vt.sobrevalorizacaoTotal = sobrevalorizacao != null && sobrevalorizacao.HasValue && sobrevalorizacao.Value != 0 ? sobrevalorizacao.Value : 0;
-                vt.retomasTotal = retomas != null && retomas.HasValue && retomas.Value != 0 ? retomas.Value : 0;
-                a.ProposalObj.valoretotais = vt;
+            vt.LeiCopiaPrivada = LeiDaCopiaPriada != 0 ? Math.Round(LeiDaCopiaPriada.Value, 2) : 0;
+            vt.RendaTotal = Math.Round((double)(vt.VVA + vt.RendaFinanciada + vt.ServicosRecorentesMes + fee), 2);
+            if (prazoDiferenciado1 != null && prazoDiferenciado1.FinancingID == 6)
+            {
+                vt.RendaTotal = vt.RendaFinanciada;
+            }
+            vt.sobrevalorizacaoTotal = sobrevalorizacao != null && sobrevalorizacao.HasValue && sobrevalorizacao.Value != 0 ? sobrevalorizacao.Value : 0;
+            vt.retomasTotal = retomas != null && retomas.HasValue && retomas.Value != 0 ? retomas.Value : 0;
+            a.ProposalObj.valoretotais = vt;
 
                 LeaseDeskBLL lDBll = new LeaseDeskBLL();
 

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Razor.Parser.SyntaxTree;
 using WebApplication1.BLL;
 using WebApplication1.Controllers;
 using WebApplication1.Models;
@@ -1039,11 +1040,37 @@ namespace WebApplication1.Models.SetupXML.XML
                                 string contactName = upturn.Name + " " + upturn.Surname;
                                 string contactPhone = upturn.Tel.ToString();
                                 string contactSchedule = upturn.Schedule;
-                                string contactInfo = "Depart: " + upturn.Department + " -Plant: " + upturn.Plant;
-                                string contactInfo2 = "Marque/Modèle: " + upturn.Brand + " / " + upturn.Model + "-N°:" + upturn.Equipment_Number;
-                                //string contactInfo3 = "";
+                                string contactInfo = "Depart: " + upturn.Department + " - Plant: " + upturn.Plant;
+                                string contactInfo2 = "";
 
-                                collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                            if(upturn.Comments != null && upturn.Comments != "")
+                            {
+                                contactInfo2 += upturn.Comments + " - ";
+                            }
+                            if (upturn.Stairs)
+                            {
+                                contactInfo2 += "ESC ";
+                            }
+                            if (upturn.DifficultAccess)
+                            {
+                                contactInfo2 += "COM ";
+                            }
+                            if (upturn.DNI_LicensePlate)
+                            {
+                                contactInfo2 += "ID ";
+                            }
+                            if (upturn.Elevator)
+                            {
+                                contactInfo2 += "ASC ";
+                            }
+                            if (upturn.DifficultAccess)
+                            {
+                                contactInfo2 += "MON";
+                            }
+
+                            //string contactInfo3 = "";
+
+                            collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
                                 {
                                     SD_DOC = orderRetiradaDoc,
                                     APRT_NAME = contactName, //"M. LUIS ALVAREZ",
