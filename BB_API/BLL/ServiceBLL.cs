@@ -869,7 +869,7 @@ namespace WebApplication1.BLL
                         srh.ID = validationRequest.ID;
                         srh.RequestedBy = validationRequest.RequestedBy;
                         srh.SEObservations = validationRequest.SEObservations;
-                        srh.Type = "Click Por Modelo com Volumen Incluido";
+                        srh.Type = "Click por Modelo com Volumen Incluido";
 
 
                         List<ServiceValidationRequestEquipment> svrEquipments = new List<ServiceValidationRequestEquipment>();
