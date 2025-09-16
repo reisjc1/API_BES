@@ -13,6 +13,8 @@ using System.Data.SqlClient;
 using System.Data;
 using WebApplication1.App_Start;
 using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Spreadsheet;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Numeric;
 
 namespace WebApplication1.BLL
 {
@@ -65,6 +67,7 @@ namespace WebApplication1.BLL
                     RequestedBy = validationRequest.RequestedBy,
                     RequestedAt = (DateTime)validationRequest.RequestedAt,
                     Observations = validationRequest.SEObservations,
+                    BBNumber = (int)validationRequest.BB_PrintingServices.BB_Proposal_PrintingServices2.ProposalID,
 
                 };
                 indexEntries.Add(indexEntry);
@@ -388,113 +391,39 @@ namespace WebApplication1.BLL
                     ex.Message.ToString();
                 }
             }
-            //if (si.ExcessBillingFrequency != null && si.RentBillingFrequency != null)
-            //{
-            //    BB_VVA vva = new BB_VVA()
-            //    {
-            //        BWExcessPVP = si.RecommendedBWExcess,
-            //        CExcessPVP = si.RecommendedCExcess,
-            //        ExcessBillingFrequency = si.ExcessBillingFrequency,
-            //        PVP = si.RecommendedRent,
-            //        RentBillingFrequency = si.RentBillingFrequency,
-            //        PrintingServiceID = newPS.ID,
-            //        ReturnType = si.ReturnType,
-            //        RequestedBWExcess = si.RequestedBWExcess,
-            //        RequestedCExcess = si.RequestedCExcess,
-            //        RequestedRent = si.RequestedRent,
-            //    };
-            //    db.BB_VVA.Add(vva);
-            //    try
-            //    {
-            //        db.SaveChanges();
-            //        newPS.BB_VVA = vva;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        ex.Message.ToString();
-            //    }
-            //}
-            //else if (si.PS_Basket != null)
-            //{
-            //    BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
-            //    {
-            //        PageBillingFrequency = si.PageBillingFrequency,
-            //        PrintingServiceID = newPS.ID
-            //    };
-            //    db.BB_PrintingServices_ClickPerModel.Add(cpm);
-            //    try
-            //    {
-            //        db.SaveChanges();
-            //        newPS.BB_PrintingServices_ClickPerModel = cpm;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        ex.Message.ToString();
-            //    }
-            //    foreach (Machine m in si.PS_Basket)
-            //    {
-            //        BB_PrintingService_Machines newMachine = new BB_PrintingService_Machines()
-            //        {
-            //            PrintingServiceID = newPS.ID,
-            //            BWCost = m.BWCost,
-            //            CCost = m.CCost,
-            //            BWPVP = m.ClickPriceBW,
-            //            CPVP = m.ClickPriceC,
-            //            CodeRef = m.CodeRef,
-            //            BWVolume = m.bwPages,
-            //            CVolume = m.cPages,
-            //            Description = m.Description,
-            //            IsInClient = m.IsInClient,
-            //            IsUsed = m.IsUsed,
-            //            Quantity = m.Qty,
-            //            RequestedBWClickPrice = m.RequestedBWClickPrice,
-            //            RequestedCClickPrice = m.RequestedCClickPrice,
-            //        };
-            //        db.BB_PrintingService_Machines.Add(newMachine);
-            //        try
-            //        {
-            //            db.SaveChanges();
-            //            newPS.BB_PrintingService_Machines.Add(newMachine);
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            ex.Message.ToString();
-            //        }
-            //    }
-            //}
-            //else if (si.PageBillingFrequency != null)
-            //{
-            //    BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
-            //    {
-            //        GlobalClickBW = si.RecommendedGlobalClickBW,
-            //        GlobalClickC = si.RecommendedGlobalClickC,
-            //        RequestedGlobalClickBW = si.RequestedGlobalClickBW,
-            //        RequestedGlobalClickC = si.RequestedGlobalClickC,
-            //        PageBillingFrequency = si.PageBillingFrequency,
-            //        PrintingServiceID = newPS.ID,
-            //    };
-            //    db.BB_PrintingServices_NoVolume.Add(nv);
-            //    try
-            //    {
-            //        db.SaveChanges();
-            //        newPS.BB_PrintingServices_NoVolume = nv;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        ex.Message.ToString();
-            //    }
-            //}
-            BB_Proposal_PrintingServiceValidationRequest serviceRequest = new BB_Proposal_PrintingServiceValidationRequest()
+
+            string responsable = "";
+                
+            using (var dbX = new BB_DB_DEVEntities2())
             {
-                IsApproved = false,
-                ApprovedBy = null,
-                RequestedAt = DateTime.Now,
-                IsComplete = false,
-                PrintingServiceID = newPS.ID,
-                RequestedBy = proposal.Draft.details.ModifiedBy,
-                SEObservations = si.Observations,
-                ToDelete = false
-            };
+                var clientAccountNumber = db.BB_Proposal.Where(x => x.ID == proposal.Draft.details.ID).Select(x => x.ClientAccountNumber).FirstOrDefault();
+
+                var client = db.BB_Clientes.Where(x => x.accountnumber == clientAccountNumber).FirstOrDefault();
+
+
+                using (var masterEntities = new masterEntities())
+                {
+                    AspNetUsers userByDelegation = new AspNetUsers();
+                    responsable = masterEntities.AspNetUsers.Where(x => x.Territory.Contains(client.Territory)).Select(x => x.USUARIO_Sharepoint_Email).FirstOrDefault();
+
+                    if (responsable == null)
+                    {
+                        responsable = masterEntities.AspNetUsers.Where(x => x.DisplayName == client.Owner).Select(x => x.USUARIO_Sharepoint_Email).FirstOrDefault();
+                    }              
+                }
+            }
+
+            BB_Proposal_PrintingServiceValidationRequest serviceRequest = new BB_Proposal_PrintingServiceValidationRequest()
+                {
+                    IsApproved = false,
+                    ApprovedBy = null,
+                    RequestedAt = DateTime.Now,
+                    IsComplete = false,
+                    PrintingServiceID = newPS.ID,
+                    RequestedBy = responsable,
+                    SEObservations = si.Observations,
+                    ToDelete = false
+                };
             db.BB_Proposal_PrintingServiceValidationRequest.Add(serviceRequest);
             try
             {
