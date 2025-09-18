@@ -13,6 +13,7 @@ using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Web;
 using WebApplication1.App_Start;
@@ -1824,8 +1825,6 @@ namespace WebApplication1.BLL
                     }
                 }
 
-
-
                 vt.LeiCopiaPrivada = LeiDaCopiaPriada != 0 ? Math.Round(LeiDaCopiaPriada.Value, 2) : 0;
                 vt.RendaTotal = Math.Round((double)(vt.VVA + vt.RendaFinanciada + vt.ServicosRecorentesMes + fee), 2);
                 if (prazoDiferenciado1 != null && prazoDiferenciado1.FinancingID == 6)
@@ -1842,14 +1841,15 @@ namespace WebApplication1.BLL
 
                 a.ProposalObj.ConditionsPvpPerMachine = condPvp;
 
+                //foreach(var manage in a.ProposalObj.Draft.opsPacks.opsManage)
+                //{
+                //    manage.UnitDiscountPrice = Math.Round((double)manage.UnitDiscountPrice, 3);
+                //}
+
                 List<HW_SW> configuratorInfo = GetGroupedConfigurator(proposalID);
 
                 a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
                 string delegation = "";
-
-                //NAO É PARA FAZER COM TERRITORY
-                // SACAR O OWNER DO CLIENTE E SACAR A LOCATION DO OWNER
-
                 if (cliente != null)
                 {
                     switch (cliente.Territory.Substring(4, 4))
@@ -1859,6 +1859,45 @@ namespace WebApplication1.BLL
                             break;
                         case "5203":
                             delegation = "Sales Area 3";
+                            break;
+                        case "5243":
+                            delegation = "Algaciras";
+                            break;
+                        case "5200":
+                            delegation = "Sales Area 0";
+                            break;
+                        case "5248":
+                            delegation = "Sevilla";
+                            break;
+                        case "5245":
+                            delegation = "Cádiz";
+                            break;
+                        case "5246":
+                            delegation = "Málaga";
+                            break;
+                        case "5242":
+                            delegation = "Valencia";
+                            break;
+                        case "5247":
+                            delegation = "Santander";
+                            break;
+                        case "5204":
+                            delegation = "Sales Area 4";
+                            break;
+                        case "5220":
+                            delegation = "Dealer Service";
+                            break;
+                        case "5201":
+                            delegation = "Sales Area 1";
+                            break;
+                        case "5202":
+                            delegation = "Sales Area 2";
+                            break;
+                        case "5244":
+                            delegation = "Bilbao";
+                            break;
+                        default:
+                            delegation = "Madrid";
                             break;
                     }
                 }
@@ -1874,6 +1913,31 @@ namespace WebApplication1.BLL
                         case "5VT":
                             office = "Inside Sales";
                             break;
+                        case "521":
+                            office = "PREMIUM";
+                            break;
+                        case "522":
+                            office = "ADVANCED";
+                            break;
+                        case "523":
+                            office = "PARTNER";
+                            break;
+                        case "540":
+                            office = "Regular Customers";
+                            break;
+                        case "520":
+                            office = "ELITE";
+                            break;
+                        case "544":
+                            office = "Industrial Printing";
+                            break;
+                        case "541":
+                            office = "Major Accounts";
+                            break;
+                        case "542":
+                            office = "Production Printing";
+                            break;
+
                     }
                 }
 
@@ -1886,7 +1950,7 @@ namespace WebApplication1.BLL
 
                 using (var dbMaster = new masterEntities())
                 {
-                    // NAO HA INSIDE SALES PARA JÁ
+
                     AspNetUsers user = dbMaster.AspNetUsers.Where(x => x.Territory.Contains(cliente.Territory)).FirstOrDefault();
 
                     if (user != null)
