@@ -1907,6 +1907,12 @@ namespace WebApplication1.BLL
             return a.ProposalObj;
         }
 
+        /// <summary>
+        /// Metodo para Agrupar a info do configurador pelo grupo
+        /// De forma a facilitar a visao dos detalhs do negocio
+        /// </summary>
+        /// <param name="proposalID"></param>
+        /// <returns></returns>
         public List<HW_SW> GetGroupedConfigurator(int? proposalID)
         {
             List<HW_SW> configurator = new List<HW_SW>();
@@ -1937,6 +1943,8 @@ namespace WebApplication1.BLL
 
                     List<BB_Proposal_DeliveryLocationResumoModel> DeliveriesSummary_lst = PontosDeEnvioResumo(proposalID);
 
+                    List<ContactListByIDX> ContactListByIDX = ContactList(proposalID);
+
                     foreach (var item in itemsDoBasket_lst)
                     {
                         HW_SW element = new HW_SW();
@@ -1957,6 +1965,7 @@ namespace WebApplication1.BLL
                             element.Accessories = new List<OsBasket>();
                             element.DeliverySummary = DeliveriesSummary_lst.Where(x => x.Group == element.Group).FirstOrDefault();
                             element.SerialNumber = item.SerialNumber != null ? item.SerialNumber : "-";
+                            element.ContactList = ContactListByIDX.Where(x => x.IDX == item.DeliveryLocationID).FirstOrDefault();
                             configurator.Add(element);
                         }
                     };
@@ -2051,6 +2060,78 @@ namespace WebApplication1.BLL
             }
 
             return configurator;
+        }
+
+        public List<ContactListByIDX> ContactList(int? proposalID)
+        {
+            List<BB_Proposal_DeliveryLocation> lstBB_Proposal_DeliveryLocation = null;
+            List<ContactListByIDX> lstContactList = null;
+            try
+            {
+                using (var db = new BB_DB_DEVEntities2())
+                {
+                    lstBB_Proposal_DeliveryLocation = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID && x.AccountType == "Ship To").ToList();
+                    lstContactList = new List<ContactListByIDX>();
+                    List<BB_Proposal_DL_ClientContacts> contactList = db.BB_Proposal_DL_ClientContacts.AsNoTracking().ToList();
+                    foreach (var i in lstBB_Proposal_DeliveryLocation)
+                    {
+                        ContactListByIDX c = new ContactListByIDX();
+
+                        c.IDX = i.IDX;
+                        c.ContactList = new List<DeliveryLocation_ClientContacts>();
+
+                        BB_Proposal_DL_ClientContacts deliveryContact = contactList.Where(x => x.ID == i.DeliveryContact).FirstOrDefault();
+                        BB_Proposal_DL_ClientContacts ITContact = contactList.Where(x => x.ID == i.ITContact).FirstOrDefault();
+                        BB_Proposal_DL_ClientContacts serviceContact = contactList.Where(x => x.ID == i.ServiceContact).FirstOrDefault();
+                        BB_Proposal_DL_ClientContacts copiesContact = contactList.Where(x => x.ID == i.CopiesContact).FirstOrDefault();
+
+                        DeliveryLocation_ClientContacts DLC = new DeliveryLocation_ClientContacts();
+                        DLC.Name = deliveryContact.Name;
+                        DLC.Surname = deliveryContact.Surname;
+                        DLC.Email = deliveryContact.Email;
+                        DLC.Tel = deliveryContact.Tel;
+                        DLC.Movil = deliveryContact.Movil;
+                        DLC.ContactType = "Contacto de Entrega";
+
+                        DeliveryLocation_ClientContacts ITC = new DeliveryLocation_ClientContacts();
+                        ITC.Name = ITContact.Name;
+                        ITC.Surname = ITContact.Surname;
+                        ITC.Email = ITContact.Email;
+                        ITC.Tel = ITContact.Tel;
+                        ITC.Movil = ITContact.Movil;
+                        ITC.ContactType = "Contacto de IT";
+
+                        DeliveryLocation_ClientContacts SC = new DeliveryLocation_ClientContacts();
+                        SC.Name = serviceContact.Name;
+                        SC.Surname = serviceContact.Surname;
+                        SC.Email = serviceContact.Email;
+                        SC.Tel = serviceContact.Tel;
+                        SC.Movil = serviceContact.Movil;
+                        SC.ContactType = "Contacto de Servicio";
+
+                        DeliveryLocation_ClientContacts CC = new DeliveryLocation_ClientContacts();
+                        CC.Name = copiesContact.Name;
+                        CC.Surname = copiesContact.Surname;
+                        CC.Email = copiesContact.Email;
+                        CC.Tel = copiesContact.Tel;
+                        CC.Movil = copiesContact.Movil;
+                        CC.ContactType = "Contacto de Copias";
+
+
+                        c.ContactList.Add(DLC);
+                        c.ContactList.Add(ITC);
+                        c.ContactList.Add(SC);
+                        c.ContactList.Add(CC);
+
+                        lstContactList.Add(c);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return lstContactList;
         }
 
         public List<BB_Proposal_DeliveryLocationResumoModel> PontosDeEnvioResumo(int? proposalID)
