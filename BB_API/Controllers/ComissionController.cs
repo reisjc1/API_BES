@@ -830,7 +830,7 @@ namespace WebApplication1.Controllers
                     // função interna a ser chamada para fazer o somatório do GPTotal para cada família
                     void AddProfit(string family, double? amount, string codeRef, int? quantity)
                     {
-                        if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
+                        if (family.Contains("OPSHW") || family.Contains("PPHW") || family.Contains("PRSHW") || family.EndsWith("CS"))
                         {
                             profitDictionary["HW"].GPTotal += (amount ?? 0);
                         }
@@ -877,7 +877,7 @@ namespace WebApplication1.Controllers
 
                     void AddProfit_RS(string family, double? totalNetsale, double? unitPriceCost)
                     {
-                        if (family.Contains("OPSHW") || family.Contains("PPHW") || family.EndsWith("CS"))
+                        if (family.Contains("OPSHW") || family.Contains("PPHW") || family.Contains("PRSHW") || family.EndsWith("CS"))
                         {
                             profitDictionary["HW"].GPTotal += ((totalNetsale - unitPriceCost) ?? 0);
                         }
@@ -1243,23 +1243,21 @@ namespace WebApplication1.Controllers
                         bb_commission_general.Manager = dbUsers.AspNetUsers.Where(x => x.DisplayName == userByDelegation.Manager).Select(x => x.USUARIO_Sharepoint_Email).FirstOrDefault();
 
                         // Regras InsideSales
-                        string modifiedByRole = dbUsers.AspNetUsers.Where(x => x.Email == proposal.ModifiedBy.ToString()).Select(x => x.FunctionSimpleDeal).FirstOrDefault();
+                        string createdByManager = dbUsers.AspNetUsers.Where(x => x.Email == proposal.CreatedBy.ToString()).Select(x => x.ManagerEmail).FirstOrDefault();
 
+                        string managerTerritory = " ";
 
-                        if (modifiedByRole == "DRV - Inside Sales - BES")
+                        if (createdByManager != null)
                         {
+                            managerTerritory = dbUsers.AspNetUsers.Where(x => x.Email == createdByManager).Select(x => x.Territory).FirstOrDefault();
+                        }
 
-                            //if (client != null)
-                            //{
-                            //    if (client.Territory != null || client.Territory != "BF-724I7TH2" || client.Territory != "Javier Gomez Garcia")
-                            //        bb_commission_general.Delegacion = client.Territory;
-                            //}                                      
-
+                        if (managerTerritory.Contains("VT"))
+                        {                             
                             bb_commission_general.Es_InsideSales = true;
                         }
                         else
                         {
-                            //bb_commission_general.Delegacion = user.Location;
                             bb_commission_general.Es_InsideSales = false;
                         }
 
@@ -1345,7 +1343,7 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CN_Mobotix = basket.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
                     var basketMobotix_CN = bb_commission_general.CN_Mobotix;
 
-                    bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_Hard = basket.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.Contains("PRSHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
 
                     bb_commission_general.CN_IMS_VSS = basket.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + basketMobotix_CN;
 
@@ -1358,11 +1356,11 @@ namespace WebApplication1.Controllers
                     bb_commission_general.CN_Mobotix += servicosRecorrentes.Where(x => x.Description.Contains("Mobotix")).Sum(x => x.TotalNetsale);
                     var SR_Mobotix_CN = bb_commission_general.CN_Mobotix;
 
-                    bb_commission_general.CN_Hard += servicosRecorrentes.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_Hard += servicosRecorrentes.Where(x => x.Family.Contains("OPSHW") || x.Family.Contains("PPHW") || x.Family.Contains("PRSHW") || x.Family.EndsWith("CS")).Sum(x => x.TotalNetsale);
 
                     bb_commission_general.CN_IMS_VSS += servicosRecorrentes.Where(x => x.Family.Contains("IMS") || x.Family.Contains("WPH")).Sum(x => x.TotalNetsale) + SR_Mobotix_CN;
 
-                    bb_commission_general.CN_PRS += servicosRecorrentes.Where(x => x.Family.Contains("PRS") || x.Family.EndsWith("SV")).Sum(x => x.TotalNetsale);
+                    bb_commission_general.CN_PRS += servicosRecorrentes.Where(x => x.Family.Contains("SV")).Sum(x => x.TotalNetsale);
 
                     bb_commission_general.CN_MCS_BPS += servicosRecorrentes.Where(x => x.Family.Contains("MCS") || x.Family.Contains("BPS")).Sum(x => x.TotalNetsale);
 
@@ -1554,7 +1552,7 @@ namespace WebApplication1.Controllers
                     }
                     else
                     {
-                        bb_commission_general.Percentage_Comision = "-";
+                        bb_commission_general.Percentage_Comision = "0%";
                     }
 
                     // Fran diz que:
@@ -1569,6 +1567,17 @@ namespace WebApplication1.Controllers
 
                     bb_commission_general.Total_Comision = bb_commission_general.Comision + bb_commission_general.Comision_Copias;
                     bb_commission_general.Total_Comision = Math.Round((double)bb_commission_general.Total_Comision, 2);
+
+                    if(bb_commission_general.Total_Comision == 0)
+                    {
+                        bb_commission_general.Estado_Factura = "NO COMISIONA";
+                        bb_commission_general.Factura_SAP = "NO COMISIONA";
+                    }
+                    else
+                    {
+                        bb_commission_general.Estado_Factura = "PENDIENTE";
+                        bb_commission_general.Factura_SAP = null;
+                    }
 
 
                     // Calculo do Percentage_Comision ---------------------------------------- ANTIGO
@@ -1678,12 +1687,10 @@ namespace WebApplication1.Controllers
 
 
                     bb_commission_general.Calculo = "MOTOR";
-                    bb_commission_general.Estado_Factura = "PENDIENTE";
                     bb_commission_general.CN_MRR = 0;
                     bb_commission_general.GP_MRR = 0;
 
                     // Empty Info ON PURPOSE -------------------------------------------------
-                    bb_commission_general.Factura_SAP = null;
                     bb_commission_general.Fecha_Factura = null;
                     bb_commission_general.Fecha_Pago_Comision = null;
                     bb_commission_general.Fecha_Registro = null;
@@ -1949,6 +1956,9 @@ namespace WebApplication1.Controllers
                 {
                     if (commission.Area != null || commission.Area == "" || commission.Area == " ")
                     {
+                        var propAux = propriedades.FirstOrDefault(p => p.Name == "Total_Comision");
+                        double totalCommission = ((double)propAux.GetValue(commission));
+
                         column = 1;
                         foreach (var campo in campoParaExcel) // Itera sobre o dicionário
                         {
@@ -2004,6 +2014,28 @@ namespace WebApplication1.Controllers
                                         }
                                     }
                                 }
+                                else if (campo.Key == "Fecha_Factura" || campo.Key == "Fecha_Pago_Comision")
+                                {
+                                    if (totalCommission <= 0)
+                                    {
+                                        worksheet.Cells[line, column] = "NO COMISIONA";
+                                    }
+                                    else
+                                    {
+                                        var value = prop.GetValue(commission);
+
+                                        if (value is DateTime fechaFactura)
+                                        {
+                                            var cell = worksheet.Cells[line, column];
+                                            cell.Clear();
+
+                                            //cell.NumberFormat = "@";
+
+                                            cell.Value2 = "'" + fechaFactura.ToString("dd/MM/yyyy");
+
+                                        }
+                                    }
+                                }
                                 else
                                 {
                                     // se o campo for do tipo Date, devo formatar apara que aparece apenas a data sem horas e dd-MM-yyyy
@@ -2017,16 +2049,15 @@ namespace WebApplication1.Controllers
                                         // Limpa o conteúdo e a formatação anteriores da célula
                                         cell.Clear();
 
-                                        // Verifica se a data possui valor
+                                        //cell.NumberFormat = "@";
+
                                         if (value.HasValue)
                                         {
-                                            // Define o valor da célula como texto com apóstrofo para evitar formatação automática do Excel
-                                            // Garante-se o formato "dd/MM/yyyy"
+                                            // Escreve a data formatada como string
                                             cell.Value2 = "'" + value.Value.ToString("dd/MM/yyyy");
                                         }
                                         else
                                         {
-                                            // Se não houver valor, define a célula como vazia
                                             cell.Value2 = "";
                                         }
                                     }
