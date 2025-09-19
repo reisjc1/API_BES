@@ -376,7 +376,8 @@ namespace WebApplication1.BLL
                         PVP = m.RecommendedRent,
                         RequestedRent = m.RequestedRent,
                         Description = m.Description,
-                        PageBillingFrequency = si.PageBillingFrequency
+                        PageBillingFrequency = si.PageBillingFrequency,
+                        ID_Quote = m.ID
                     };
                     db.BB_PrintingServices_ClickPerModel_VVA.Add(vvaClickPerModel);
                     lst_VVAClickpermodel.Add(vvaClickPerModel);
