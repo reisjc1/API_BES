@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using WebApplication1.App_Start;
 using WebApplication1.BLL;
@@ -24,7 +26,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("RequestServiceController")]
-        public async System.Threading.Tasks.Task<HttpResponseMessage> RequestServiceController(ServiceRequest sr)
+        public async Task<HttpResponseMessage> RequestServiceController([FromBody] ServiceRequest sr)
         {
             ActionResponse err = new ActionResponse();
             try
@@ -34,7 +36,18 @@ namespace WebApplication1.Controllers
                 int ps2ID = sr.p.Draft.printingServices2.ID.Value;
                 ServiceBLL sBLL = new ServiceBLL();
                 err = sBLL.RequestServiceController(sr.si, err.ProposalObj);
-                return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
+
+
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+                var response = Request.CreateResponse(HttpStatusCode.OK, err);
+                response.Content = new StringContent(JsonConvert.SerializeObject(err, settings), Encoding.UTF8, "application/json");
+                return response;
+
+
+                //return Request.CreateResponse<ActionResponse>(HttpStatusCode.OK, err);
             }
             catch (Exception ex)
             {
@@ -164,6 +177,22 @@ namespace WebApplication1.Controllers
             try
             {
                 serviceBLL.ProcessClickPerModelServiceValidationReplyAsync(svr);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("ProcessClickPerModelVVAServiceValidationReply")]
+        public IHttpActionResult ProcessClickPerModelVVAServiceValidationReply(ServiceValidationReply svr)
+        {
+            try
+            {
+                serviceBLL.ProcessClickPerModelVVAServiceValidationReplyAsync(svr);
                 return Ok();
             }
             catch (Exception ex)

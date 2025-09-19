@@ -350,9 +350,6 @@ namespace WebApplication1.Models.SetupXML.XML
                             BNL_RLIST = c.InvoiceList == true ? "X" : "", //Falar com a BEU
                             SALESP = erpNumber//userOwner != null && !string.IsNullOrEmpty(userCreatedBy.ErpNumber) ? userCreatedBy.ErpNumber : "" //"50004700"               //"50004700", //código gestor de conta , adicionar campo na tabela dos utilizadores
 
-
-
-
                         },
                         Z1ZVOE_CONTRACTS = collectionContracts,
                         Z1ZVOE_ORDERS = collectionOrders,

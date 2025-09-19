@@ -789,6 +789,7 @@
     <Compile Include="Models\ViewModels\HumanResourcesViewModels\CommissionEntry.cs" />
     <Compile Include="Models\ViewModels\HumanResourcesViewModels\CommissionIndexEntry.cs" />
     <Compile Include="Models\ViewModels\PrintingServicesViewModels\ApprovedPrintingService.cs" />
+    <Compile Include="Models\ViewModels\PrintingServicesViewModels\VVAClickPerModel.cs" />
     <Compile Include="Models\ViewModels\PrintingServicesViewModels\ClickPerModel.cs" />
     <Compile Include="Models\ViewModels\PrintingServicesViewModels\ReevaluateClickPerModelRequest.cs" />
     <Compile Include="Models\ViewModels\PrintingServicesViewModels\ReevaluateGlobalClickNoVolumeRequest.cs" />

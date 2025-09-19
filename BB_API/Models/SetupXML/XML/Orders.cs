@@ -181,7 +181,8 @@ namespace WebApplication1.Models.SetupXML.XML
                             
                                 BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliveryLocationIDX.DeliveryContact).FirstOrDefault();
 
-                                collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.Key.CodeRef, 1);
+                                BB_PrintingServices_ClickPerModel_VVA psClickPerModelVVA = new BB_PrintingServices_ClickPerModel_VVA();
+                                collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.Key.CodeRef, 1, psClickPerModelVVA);
 
                                 //List<Accessories> accessories = GetAcesseries("A63R021");
                                 if (dLClient != null)
@@ -622,6 +623,29 @@ namespace WebApplication1.Models.SetupXML.XML
                     //{
                     //    count += Convert.ToInt32(used.Qty);
                     //}
+                    //Serviço de printing que está associado ao negócio
+                    var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    //Guardar número de serviço de printing ativo
+                    int indexActivePs = (int)printingService2ID.ActivePrintingService;
+                    List<BB_VVA> bB_VVA_lst = db.BB_VVA.AsNoTracking().ToList();
+                    List<BB_PrintingService_Machines> bB_PrintingService_Machine = db.BB_PrintingService_Machines.AsNoTracking().ToList();
+
+
+                    //Vamos buscar o id do serviço de printing ativo
+                    BB_PrintingServices bB_PrintingServices = null;
+                    //Caso exista mais do que um serviço de printing associado ao negócio, temos que ir buscar o que está ativo
+                    // Senão vamos o único que existe
+                    if (indexActivePs > 1)
+                    {
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
+                    }
+                    else
+                    {
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
+                    }
+
+                    //Com o serviço de printing ativo, vamos buscar as máquinas que estão associadas a esse serviço através do ID da tabela BB_PrintingServices
+                    List<BB_PrintingServices_ClickPerModel_VVA> perModel_VVA_lst = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
 
                     foreach (var order in groups)
                     {
@@ -733,11 +757,12 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 //BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == order.DeliveryContact).FirstOrDefault();
 
-                                collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.CodeRef, machineCounter);
+                                
 
-                                //List<Accessories> accessories = GetAcesseries("A63R021");
-                                //if (dLClient != null)
-                                //{
+                                BB_PrintingServices_ClickPerModel_VVA psClickPerModelVVA = perModel_VVA_lst.Where(x => x.CodeRef == order.CodeRef).FirstOrDefault();
+                                collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.CodeRef, machineCounter, psClickPerModelVVA);
+
+                                perModel_VVA_lst.Remove(psClickPerModelVVA);
                                 
                                     collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
                                     {
@@ -1155,7 +1180,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
         }
-        public System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES> ClickPrices(int proposalId, string orderDoc, string codeRef, int machineCounter)
+        public System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES> ClickPrices(int proposalId, string orderDoc, string codeRef, int machineCounter, BB_PrintingServices_ClickPerModel_VVA psClickPerModelVVA)
         {
             try
             {
@@ -1191,7 +1216,9 @@ namespace WebApplication1.Models.SetupXML.XML
                     int? copiasIncludias = 0;
                     ApprovedPrintingService activePS = null;
 
-                    if(printingServices2.ActivePrintingService != null)
+                    
+
+                    if (printingServices2.ActivePrintingService != null)
                     {
                         activePS = printingServices2.ApprovedPrintingServices[printingServices2.ActivePrintingService.Value - 1];
 
@@ -1242,19 +1269,44 @@ namespace WebApplication1.Models.SetupXML.XML
                                     kBETR = formatNumber.Replace(",", ".");
                                     copiasIncludias = pSM.BWVolume;
                                     kSTBM = copiasIncludias.ToString();
+                                }else if(activePS.VVAClickPerModel != null)
+                                {
+                                    string formatNumber = "";
+                                    //BB_PrintingServices_ClickPerModel_VVA pSM = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = psClickPerModelVVA.BWExcessPVP?.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = Convert.ToInt32(psClickPerModelVVA.BWVolume);
+                                    kSTBM = copiasIncludias.ToString();
                                 }
 
 
-                                collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
-                                {
-                                    SD_DOC = orderDoc,
-                                    MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
-                                    KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
-                                    DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
-                                    DATBI = "99991231", // data de até quando é válido -- deixar default
-                                    KSTBM = kSTBM, //copias incluidas 
-                                    KBETR = kBETR //preço do excedente 
-                                });
+                                    collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                                    {
+                                        SD_DOC = orderDoc,
+                                        MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                        KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                        DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                        DATBI = "99991231", // data de até quando é válido -- deixar default
+                                        KSTBM = kSTBM, //copias incluidas 
+                                        KBETR = kBETR //preço do excedente 
+                                    });
 
                                 mATNR = "TOCO";
                                 kLFN = "2";
@@ -1303,6 +1355,32 @@ namespace WebApplication1.Models.SetupXML.XML
                                     copiasIncludias = pSM.CVolume;
                                     kSTBM = copiasIncludias.ToString();
                                 }
+                                else if (activePS.VVAClickPerModel != null)
+                                {
+                                    string formatNumber = "";
+                                    //BB_PrintingServices_ClickPerModel_VVA pSM = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = psClickPerModelVVA.CExcessPVP?.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = Convert.ToInt32(psClickPerModelVVA.CVolume);
+                                    kSTBM = copiasIncludias.ToString();
+                                }
 
                                 collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
                                 {
@@ -1311,7 +1389,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
                                     DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
                                     DATBI = "99991231", // data de até quando é válido -- deixar default
-                                    KSTBM = activePS.GlobalClickVVA != null ? kSTBM : "0", //copias incluidas 
+                                    KSTBM = activePS.GlobalClickVVA != null || activePS.VVAClickPerModel != null ? kSTBM : "0", //copias incluidas 
                                     KBETR = kBETR //preço do excedente 
                                 });
 
@@ -1361,6 +1439,32 @@ namespace WebApplication1.Models.SetupXML.XML
                                     copiasIncludias = pSM.BWVolume;
                                     kSTBM = copiasIncludias.ToString();
                                 }
+                                else if (activePS.VVAClickPerModel != null)
+                                {
+                                    string formatNumber = "";
+                                    //BB_PrintingServices_ClickPerModel_VVA pSM = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
+                                    //if (pSM != null)
+                                    //{
+                                    //    if (pSM.ApprovedBW != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.ApprovedBW).ToString("F5");
+
+                                    //    }
+                                    //    else if (pSM.RequestedBWClickPrice != null)
+                                    //    {
+                                    //        formatNumber = ((double)pSM.RequestedBWClickPrice).ToString("F5");
+
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        formatNumber = "0,00000";
+                                    //    }
+                                    //}
+                                    formatNumber = psClickPerModelVVA.BWExcessPVP?.ToString("F5");
+                                    kBETR = formatNumber.Replace(",", ".");
+                                    copiasIncludias = Convert.ToInt32(psClickPerModelVVA.BWVolume);
+                                    kSTBM = copiasIncludias.ToString();
+                                }
 
 
                                 collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
@@ -1370,7 +1474,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
                                     DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
                                     DATBI = "99991231", // data de até quando é válido -- deixar default
-                                    KSTBM = activePS.GlobalClickVVA != null ? kSTBM : "0", //copias incluidas 
+                                    KSTBM = activePS.GlobalClickVVA != null || activePS.VVAClickPerModel != null ? kSTBM : "0", //copias incluidas 
                                     KBETR = kBETR //preço do excedente 
                                 });
                             }
@@ -1490,6 +1594,23 @@ namespace WebApplication1.Models.SetupXML.XML
                                     CPVP = machine.CPVP
                                 };
                                 newPS.Machines.Add(psMachine);
+                            }
+
+                            if(ps.BB_PrintingServices_ClickPerModel_VVA != null)
+                            {
+                                BB_PrintingServices_ClickPerModel_VVA psVVAcpm = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
+                                List<BB_PrintingServices_ClickPerModel_VVA> ps_basket = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == ps.ID).ToList();
+                                VVAClickPerModel vvaCPM = new VVAClickPerModel()
+                                {
+                                    PageBillingFrequency = psVVAcpm.PageBillingFrequency != null ? psVVAcpm.PageBillingFrequency.Value : 0,
+                                    ExcessBillingFrequency = (int)(psVVAcpm.ExcessBillingFrequency != null ? psVVAcpm.ExcessBillingFrequency.Value : 0),
+                                    RequestedRent = 0,
+                                    RecommendedRent = 0,
+                                    RentBillingFrequency = (int)(psVVAcpm.RentBillingFrequency != null ? psVVAcpm.RentBillingFrequency.Value : 0),
+                                    ReturnType = 0,
+                                    ps_basket = ps_basket
+                                };
+                                newPS.VVAClickPerModel = vvaCPM;
                             }
                             BB_Proposal_PrintingServiceValidationRequest validationRequest = ps.BB_Proposal_PrintingServiceValidationRequest.Where(x => x.PrintingServiceID == ps.ID && x.ToDelete == false).FirstOrDefault();
                             if (validationRequest != null)

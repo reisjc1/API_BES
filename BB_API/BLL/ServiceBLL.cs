@@ -12,6 +12,9 @@ using WebApplication1.Models.ViewModels.PrintingServicesViewModels;
 using System.Data.SqlClient;
 using System.Data;
 using WebApplication1.App_Start;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Spreadsheet;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Numeric;
 
 namespace WebApplication1.BLL
 {
@@ -24,6 +27,7 @@ namespace WebApplication1.BLL
             List<BB_Proposal_PrintingServiceValidationRequest> validationRequests = db.BB_Proposal_PrintingServiceValidationRequest
                 .Include(x => x.BB_PrintingServices.BB_VVA)
                 .Include(x => x.BB_PrintingServices.BB_PrintingServices_NoVolume)
+                .Include(x => x.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA)
                 .Where(x => x.IsComplete == false && x.ToDelete == false)
                 .ToList();
             List<ServiceValidationRequestIndexEntry> indexEntries = new List<ServiceValidationRequestIndexEntry>();
@@ -43,11 +47,17 @@ namespace WebApplication1.BLL
                     serviceType = "Click Global - Sem Volume Incluído";
                     serviceTypeId = 2;
                 }
-                else
+                else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel != null)
                 {
                     serviceType = "Click Por Modelo - Sem Volume Incluído";
                     serviceTypeId = 3;
                 }
+                else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA != null)
+                {
+                    serviceType = "Click Por Modelo - VVA";
+                    serviceTypeId = 4;
+                }
+
                 ServiceValidationRequestIndexEntry indexEntry = new ServiceValidationRequestIndexEntry()
                 {
                     ID = validationRequest.ID,
@@ -57,15 +67,20 @@ namespace WebApplication1.BLL
                     RequestedBy = validationRequest.RequestedBy,
                     RequestedAt = (DateTime)validationRequest.RequestedAt,
                     Observations = validationRequest.SEObservations,
+                    BBNumber = (int)validationRequest.BB_PrintingServices.BB_Proposal_PrintingServices2.ProposalID,
 
                 };
                 indexEntries.Add(indexEntry);
             }
-            return indexEntries;
+            var orderedEntries = indexEntries
+                .OrderBy(e => e.RequestedAt)
+                .ToList();
+
+            return orderedEntries;
         }
 
 
-        public void DeleteServiceById (int id)
+        public void DeleteServiceById(int id)
         {
             try
             {
@@ -78,12 +93,12 @@ namespace WebApplication1.BLL
                     db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ex.Message.ToString();
             }
 
-         
+
         }
 
         public ActionResponse RequestServiceController(ServiceInputs si, ProposalRootObject proposal)
@@ -145,6 +160,21 @@ namespace WebApplication1.BLL
                                 RequestedGlobalClickBW = newPS.BB_PrintingServices_NoVolume.RequestedGlobalClickBW.Value,
                                 RequestedGlobalClickC = newPS.BB_PrintingServices_NoVolume.RequestedGlobalClickC.Value,
                             };
+                        }
+                        else if (newPS.BB_PrintingServices_ClickPerModel_VVA != null)
+                        {
+                            serviceType = 4;
+                            pendingQuoteRequest.VVAClickPerModel = new VVAClickPerModel();
+
+                            pendingQuoteRequest.VVAClickPerModel.PageBillingFrequency = si.PageBillingFrequency.Value;
+                            pendingQuoteRequest.VVAClickPerModel.ExcessBillingFrequency = si.ExcessBillingFrequency.Value;
+                            pendingQuoteRequest.VVAClickPerModel.RequestedRent = si.RequestedRent.Value;
+                            pendingQuoteRequest.VVAClickPerModel.RentBillingFrequency = si.RentBillingFrequency.Value;
+                            pendingQuoteRequest.VVAClickPerModel.ReturnType = si.ReturnType;
+                            pendingQuoteRequest.VVAClickPerModel.RecommendedRent = si.RecommendedRent.Value;
+
+                            pendingQuoteRequest.VVAClickPerModel.ps_basket = (List<BB_PrintingServices_ClickPerModel_VVA>)newPS.BB_PrintingServices_ClickPerModel_VVA;
+
                         }
                         else
                         {
@@ -217,7 +247,7 @@ namespace WebApplication1.BLL
             {
                 ex.Message.ToString();
             }
-            if (si.ExcessBillingFrequency != null && si.RentBillingFrequency != null)
+            if(si.PSModeId == 1)
             {
                 BB_VVA vva = new BB_VVA()
                 {
@@ -243,7 +273,29 @@ namespace WebApplication1.BLL
                     ex.Message.ToString();
                 }
             }
-            else if (si.PS_Basket != null)
+            else if (si.PSModeId == 2)
+            {
+                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+                {
+                    GlobalClickBW = si.RecommendedGlobalClickBW,
+                    GlobalClickC = si.RecommendedGlobalClickC,
+                    RequestedGlobalClickBW = si.RequestedGlobalClickBW,
+                    RequestedGlobalClickC = si.RequestedGlobalClickC,
+                    PageBillingFrequency = si.PageBillingFrequency,
+                    PrintingServiceID = newPS.ID,
+                };
+                db.BB_PrintingServices_NoVolume.Add(nv);
+                try
+                {
+                    db.SaveChanges();
+                    newPS.BB_PrintingServices_NoVolume = nv;
+                }
+                catch (Exception ex)
+                {
+                    ex.Message.ToString();
+                }
+            }
+            else if (si.PSModeId == 3)
             {
                 BB_PrintingServices_ClickPerModel cpm = new BB_PrintingServices_ClickPerModel()
                 {
@@ -291,39 +343,88 @@ namespace WebApplication1.BLL
                     }
                 }
             }
-            else if (si.PageBillingFrequency != null)
+            else if(si.PSModeId == 4)
             {
-                BB_PrintingServices_NoVolume nv = new BB_PrintingServices_NoVolume()
+                List<BB_PrintingServices_ClickPerModel_VVA> lst_VVAClickpermodel = new List<BB_PrintingServices_ClickPerModel_VVA>();
+                foreach (Machine m in si.PS_Basket)
                 {
-                    GlobalClickBW = si.RecommendedGlobalClickBW,
-                    GlobalClickC = si.RecommendedGlobalClickC,
-                    RequestedGlobalClickBW = si.RequestedGlobalClickBW,
-                    RequestedGlobalClickC = si.RequestedGlobalClickC,
-                    PageBillingFrequency = si.PageBillingFrequency,
-                    PrintingServiceID = newPS.ID,
-                };
-                db.BB_PrintingServices_NoVolume.Add(nv);
+                    BB_PrintingServices_ClickPerModel_VVA vvaClickPerModel = new BB_PrintingServices_ClickPerModel_VVA()
+                    {
+                        PrintingServiceID = newPS.ID,
+                        CodeRef = m.CodeRef,
+                        Quantity = m.Qty,
+
+                        BWVolume = m.bwPages,
+                        CVolume = m.cPages,
+                        BWPVP = m.ClickPriceBW,
+                        CPVP = m.ClickPriceC,
+                        BWCost = m.BWCost,
+                        CCost = m.CCost,
+                        ApprovedBW = 0,
+                        ApprovedC = 0,
+                        IsInClient = (bool)m.IsInClient ? 1 : 0,
+                        IsUsed = (bool)m.IsUsed ? 1 : 0,
+                        RequestedBWClickPrice = m.RequestedBWClickPrice,
+                        RequestedCClickPrice = m.RequestedCClickPrice,
+                        BWExcessPVP = m.RequestedBWExcessPrice,
+                        CExcessPVP = m.RequestedCExcessPrice,
+                        ExcessBillingFrequency = si.ExcessBillingFrequency,
+                        RentBillingFrequency = si.RentBillingFrequency,
+                        ReturnType = si.ReturnType,
+                        RequestedBWExcess = m.RequestedBWExcessPrice,
+                        RequestedCExcess = m.RequestedCExcessPrice,
+                        PVP = m.RecommendedRent,
+                        RequestedRent = m.RequestedRent,
+                        Description = m.Description,
+                        PageBillingFrequency = si.PageBillingFrequency,
+                        ID_Quote = m.ID
+                    };
+                    db.BB_PrintingServices_ClickPerModel_VVA.Add(vvaClickPerModel);
+                    lst_VVAClickpermodel.Add(vvaClickPerModel);
+                }
                 try
                 {
                     db.SaveChanges();
-                    newPS.BB_PrintingServices_NoVolume = nv;
+                    newPS.BB_PrintingServices_ClickPerModel_VVA = lst_VVAClickpermodel;
                 }
                 catch (Exception ex)
                 {
                     ex.Message.ToString();
                 }
             }
-            BB_Proposal_PrintingServiceValidationRequest serviceRequest = new BB_Proposal_PrintingServiceValidationRequest()
+
+            string responsable = "";
+                
+            using (var dbX = new BB_DB_DEVEntities2())
             {
-                IsApproved = false,
-                ApprovedBy = null,
-                RequestedAt = DateTime.Now,
-                IsComplete = false,
-                PrintingServiceID = newPS.ID,
-                RequestedBy = proposal.Draft.details.ModifiedBy,
-                SEObservations = si.Observations,
-                ToDelete = false
-            };
+                var clientAccountNumber = db.BB_Proposal.Where(x => x.ID == proposal.Draft.details.ID).Select(x => x.ClientAccountNumber).FirstOrDefault();
+
+                var client = db.BB_Clientes.Where(x => x.accountnumber == clientAccountNumber).FirstOrDefault();
+
+
+                using (var masterEntities = new masterEntities())
+                {
+                    AspNetUsers userByDelegation = new AspNetUsers();
+                    responsable = masterEntities.AspNetUsers.Where(x => x.Territory.Contains(client.Territory)).Select(x => x.USUARIO_Sharepoint_Email).FirstOrDefault();
+
+                    if (responsable == null)
+                    {
+                        responsable = masterEntities.AspNetUsers.Where(x => x.DisplayName == client.Owner).Select(x => x.USUARIO_Sharepoint_Email).FirstOrDefault();
+                    }              
+                }
+            }
+
+            BB_Proposal_PrintingServiceValidationRequest serviceRequest = new BB_Proposal_PrintingServiceValidationRequest()
+                {
+                    IsApproved = false,
+                    ApprovedBy = null,
+                    RequestedAt = DateTime.Now,
+                    IsComplete = false,
+                    PrintingServiceID = newPS.ID,
+                    RequestedBy = responsable,
+                    SEObservations = si.Observations,
+                    ToDelete = false
+                };
             db.BB_Proposal_PrintingServiceValidationRequest.Add(serviceRequest);
             try
             {
@@ -386,13 +487,13 @@ namespace WebApplication1.BLL
                         m.RequestedAt = DateTime.Parse(rdr["RequestedAt"].ToString());
                         m.ClientName = rdr["Name"].ToString();
                         m.RequestedBy = rdr["RequestedBy"].ToString();
-                        m.ApprovedValue = rdr["Renda"] != null  && rdr["Renda"].ToString() != "" ? Double.Parse(rdr["Renda"].ToString()) : new Double();
+                        m.ApprovedValue = rdr["Renda"] != null && rdr["Renda"].ToString() != "" ? Double.Parse(rdr["Renda"].ToString()) : new Double();
                         m.ApprovedClickBW = rdr["ExcPreto"] != null && rdr["ExcPreto"].ToString() != "" ? Double.Parse(rdr["ExcPreto"].ToString()) : new Double();
                         m.ApprovedClickC = rdr["ExcCor"] != null && rdr["ExcCor"].ToString() != "" ? Double.Parse(rdr["ExcCor"].ToString()) : new Double();
                         m.Type = rdr["Modalidade"].ToString();
                         m.TypeID = rdr["TypeID"] != null ? (int)rdr["TypeID"] : 3;
                         m.Leasedesk = rdr["Leasedesk"].ToString();
-                        m.QuoteNumber = rdr["QuoteNumber"].ToString(); 
+                        m.QuoteNumber = rdr["QuoteNumber"].ToString();
 
                         history.Add(m);
                     }
@@ -518,7 +619,7 @@ namespace WebApplication1.BLL
                             SCObservations = validationRequest.SCObservations,
                             PVP = 0,
                             TotalCost = 0,
-                            Type = "Click Global - VVA",
+                            Type = "Click Global con Volumen Incluido (VVA)",
                         };
                         var query = from pe in historyEquipments
                                     join e in equipments on pe.CodeRef equals e.CodeRef
@@ -604,7 +705,7 @@ namespace WebApplication1.BLL
                             SCObservations = validationRequest.SCObservations,
                             PageBillingFrequency = validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.PageBillingFrequency.GetValueOrDefault(),
                             TotalCost = 0,
-                            Type = "Click Global - Sem Volume Incluído",
+                            Type = "Click Global sim Volumen Incluido",
                         };
                         var query = from pe in historyEquipments
                                     join e in equipments on pe.CodeRef equals e.CodeRef
@@ -666,6 +767,156 @@ namespace WebApplication1.BLL
                         }
                         return srh;
                     }
+                    else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA != null && validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.Count > 0)
+                    {
+                        ClickPerModelVVAServiceRequestHistory srh = new ClickPerModelVVAServiceRequestHistory();
+
+                        SVRClient svrClient = new SVRClient();
+                        if (client != null)
+                        {
+                            svrClient.ClientAccountNumber = client.accountnumber;
+                            svrClient.ClientName = client.Name;
+                            svrClient.IsNewClient = false;
+                            if (client.accountnumber != null && client.accountnumber.ToLower().StartsWith("p"))
+                            {
+                                svrClient.IsNewClient = true;
+                            }
+                        }
+
+                        srh.Client = svrClient;
+                        srh.ClientName = client.Name;
+                        srh.Volumes = new SVRVolumes()
+                        {
+                            BWVolume = validationRequest.BB_PrintingServices.BWVolume.GetValueOrDefault(),
+                            CVolume = validationRequest.BB_PrintingServices.CVolume.GetValueOrDefault(),
+                        };
+                        srh.ContractDuration = validationRequest.BB_PrintingServices.ContractDuration.GetValueOrDefault();
+                        srh.Equipments = new List<ServiceValidationRequestEquipment>();
+                        //svr.PageBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                        srh.RentBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                        srh.ExcessBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().ExcessBillingFrequency;
+                        srh.AverageCostBW = 0;
+                        srh.AverageCostC = 0;
+                        srh.ID = validationRequest.ID;
+                        srh.RequestedBy = validationRequest.RequestedBy;
+                        srh.SEObservations = validationRequest.SEObservations;
+                        srh.Type = "Click por Modelo com Volumen Incluido";
+
+
+                        List<ServiceValidationRequestEquipment> svrEquipments = new List<ServiceValidationRequestEquipment>();
+                        var query = from m in validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA
+                                    join e in equipments on m.CodeRef equals e.CodeRef
+                                    select new ServiceValidationRequestEquipment
+                                    {
+                                        ID = m.ID,
+                                        ApprovedBW = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                        ApprovedC = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                        CodeRef = e.CodeRef,
+                                        Description = e.Description != null ? e.Description : m.Description,
+                                        Quantity = (int)m.Quantity,
+                                        RecBWVolume = e.RecBWVolume,
+                                        BWBaseCost = e.BWBaseCost,
+                                        RecCVolume = e.RecCVolume,
+                                        CBaseCost = e.CBaseCost,
+                                        ClickPriceBW = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                        ClickPriceC = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                        BWCoefficient = 0,
+                                        CCoefficient = 0,
+                                        BWPages = (int?)m.BWVolume,
+                                        CPages = (int?)m.CVolume,
+                                        RequestedBWClickPrice = m.RequestedBWClickPrice,
+                                        RequestedCClickPrice = m.RequestedCClickPrice,
+                                        Type = e.PHC5 == null ? "" : (e.PHC5.Contains("(MF)") ? "MFP" : "Printer"),
+                                        IsUsed = false,
+                                        IsInClient = false,
+                                        RequestedBWExcess = m.RequestedBWExcess,
+                                        RequestedCExcess = m.RequestedCExcess,
+                                        BWExcessPVP = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                        CExcessPVP = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                        RequestedPVP = m.RequestedRent,
+                                        RecommendedPVP = m.PVP
+                                    };
+
+                        svrEquipments = query.ToList();
+
+                        srh.RecommendedPVP = (double)svrEquipments.Sum(x => x.RecommendedPVP);
+                        srh.RequestedPVP = (double)svrEquipments.Sum(x => x.RequestedPVP);
+
+                        // volume total de copias a PRETO
+                        int totalRecBW = (int)svrEquipments.Sum(x => x.BWPages * x.Quantity);
+
+                        // volume total de copias a COR
+                        int totalRecC = (int)svrEquipments.Sum(x => x.CPages * x.Quantity);
+
+                        srh.Volumes.BWVolume = totalRecBW;
+                        srh.Volumes.CVolume = totalRecC;
+
+                        foreach (ServiceValidationRequestEquipment svre in svrEquipments)
+                        {
+                            if (srh.Volumes.BWVolume != 0 && svre.RecBWVolume != null)
+                            {
+                                int totalBWEquip = (int)(svre.BWPages * svre.Quantity);
+                                if (totalRecBW > 0)
+                                {
+                                    svre.BWCoefficient = ((double)svre.BWPages / totalRecBW) * svre.Quantity;
+                                }
+                                else
+                                {
+                                    svre.BWCoefficient = 0;
+                                }
+                            }
+
+                            if (srh.Volumes.CVolume != 0 && svre.RecCVolume != null)
+                            {
+                                int totalCEquip = (int)(svre.CPages * svre.Quantity);
+                                if (totalRecC > 0)
+                                {
+                                    svre.CCoefficient = ((double)svre.CPages / totalRecC) * svre.Quantity;
+                                }
+                                else
+                                {
+                                    svre.CCoefficient = 0;
+                                }
+                            }
+                        }
+
+                        srh.AverageCostBW = (double)(svrEquipments.Sum(x => x.BWBaseCost * x.RecBWVolume) / svrEquipments.Sum(x => x.RecBWVolume));
+                        srh.AverageCostC = (double)(svrEquipments.Where(x => x.CBaseCost != 0).Sum(x => x.CBaseCost * x.RecCVolume) / svrEquipments.Sum(x => x.RecCVolume));
+                        srh.Equipments = svrEquipments;
+
+                        List<BB_Proposal_OPSImplement> opsImplement = db.BB_Proposal_OPSImplement.Where(x => x.ProposalID == proposalID).ToList();
+                        foreach (BB_Proposal_OPSImplement implementPack in opsImplement)
+                        {
+                            OPSImplement item = new OPSImplement
+                            {
+                                CodeRef = implementPack.CodeRef,
+                                Description = implementPack.Description,
+                                ID = implementPack.ID,
+                                Name = implementPack.Name,
+                                PVP = implementPack.PVP,
+                                Quantity = implementPack.Quantity,
+                                UnitDiscountPrice = implementPack.UnitDiscountPrice,
+                            };
+                            srh.OPSImplement.Add(item);
+                        }
+                        List<BB_Proposal_OPSManage> opsManage = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalID).ToList();
+                        foreach (BB_Proposal_OPSManage managePack in opsManage)
+                        {
+                            OPSManage item = new OPSManage
+                            {
+                                CodeRef = managePack.CodeRef,
+                                Description = managePack.Description,
+                                ID = managePack.ID,
+                                Name = managePack.Name,
+                                PVP = managePack.PVP,
+                                Quantity = managePack.Quantity,
+                                UnitDiscountPrice = managePack.UnitDiscountPrice,
+                                TotalMonths = managePack.TotalMonths
+                            };
+                            srh.OPSManage.Add(item);
+                        }
+                        return srh;
+                    }
                     else
                     {
                         ClickPerModelServiceRequestHistory srh = new ClickPerModelServiceRequestHistory()
@@ -685,7 +936,7 @@ namespace WebApplication1.BLL
                             SEObservations = validationRequest.SEObservations,
                             SCObservations = validationRequest.SCObservations,
                             PageBillingFrequency = validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel.PageBillingFrequency.GetValueOrDefault(),
-                            Type = "Click Por Modelo - Sem Volume Incluído",
+                            Type = "Click Por Modelo sin Volumen Incluido",
                         };
                         var query = from pe in historyEquipments
                                     join e in equipments on pe.CodeRef equals e.CodeRef
@@ -787,6 +1038,10 @@ namespace WebApplication1.BLL
                 {
                     svr = ProcessGlobalClickNoVolumeServiceRequest(validationRequest, svrClient, proposalEquipments, equipments);
                 }
+                else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA != null)
+                {
+                    svr = ProcessClickPerModelVVAServiceRequest(validationRequest, svrClient, proposalEquipments, equipments);
+                }
                 else
                 {
                     svr = ProcessClickPerModelServiceRequest(validationRequest, svrClient, proposalEquipments, equipments);
@@ -825,11 +1080,11 @@ namespace WebApplication1.BLL
 
                 List<BB_Proposal_Quote> quotesList = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
 
-                foreach(BB_Proposal_Quote quote in quotesList)
+                foreach (BB_Proposal_Quote quote in quotesList)
                 {
                     BB_OPS_Implement_Packs imp = db.BB_OPS_Implement_Packs.Where(x => x.CodeRef == quote.CodeRef).FirstOrDefault();
 
-                    if(imp != null)
+                    if (imp != null)
                     {
                         OPSImplement item = new OPSImplement
                         {
@@ -876,7 +1131,7 @@ namespace WebApplication1.BLL
                     validationRequest.BB_PrintingServices.Fee = svr.Fee;
                     validationRequest.ApprovedAt = DateTime.Now;
 
-                    if(svr.isApproved == false)
+                    if (svr.isApproved == false)
                     {
                         validationRequest.ToDelete = true;
                     }
@@ -1009,7 +1264,7 @@ namespace WebApplication1.BLL
                     string tableStyle = "border: 1px solid #ddd; border-collapse: collapse";
                     string thStyle = "background-color: #245982;text-align: center;color: white;border: 1px solid #ddd; border-collapse: collapse";
 
-                    
+
                     strBuilder.Append("Caro(a) Gestor(a),<br/>");
                     if (svr.isApproved == true)
                     {
@@ -1019,7 +1274,7 @@ namespace WebApplication1.BLL
                     {
                         strBuilder.Append("O seguinte pedido de <b>Aprovação de Serviço</b> foi <b>REJEITADO</b><br/>");
                     }
-                   
+
                     strBuilder.Append("<br/>");
 
                     if (proposal.Name != null) strBuilder.Append("<b>Oportunidade</b>: " + proposal.Name + "<br/>");
@@ -1218,13 +1473,13 @@ namespace WebApplication1.BLL
                     {
                         message.Subject = "BB - REPROVACAO de Serviço - " + clientName;
                     }
-                       
+
                     StringBuilder strBuilder = new StringBuilder();
                     string tableStyle = "border: 1px solid #ddd; border-collapse: collapse";
                     string thStyle = "background-color: #245982;text-align: center;color: white;border: 1px solid #ddd; border-collapse: collapse";
 
                     strBuilder.Append("Caro(a) Gestor(a),<br/>");
-                    if(svr.isApproved)
+                    if (svr.isApproved)
                     {
                         strBuilder.Append("O seguinte pedido de <b>Aprovação de Serviço</b> foi <b>APROVADO</b><br/>");
                     }
@@ -1232,7 +1487,7 @@ namespace WebApplication1.BLL
                     {
                         strBuilder.Append("O seguinte pedido de <b>Aprovação de Serviço</b> foi <b>REPROVADO</b><br/>");
                     }
-                    
+
                     strBuilder.Append("<br/>");
 
                     if (proposal.Name != null) strBuilder.Append("<b>Oportunidade</b>: " + proposal.Name + "<br/>");
@@ -1772,6 +2027,7 @@ namespace WebApplication1.BLL
                 try
                 {
                     db.SaveChanges();
+
                     SendServiceRequestEmail(request.RequestedBy, rr.ID, 1);
                 }
                 catch (Exception ex)
@@ -1922,6 +2178,288 @@ namespace WebApplication1.BLL
                 ex.Message.ToString();
             }
             return rr;
+        }
+
+
+        // --------------- NEW CODE ---------------------------
+        private ClickPerModelVVAServiceValidationRequest ProcessClickPerModelVVAServiceRequest(BB_Proposal_PrintingServiceValidationRequest validationRequest, SVRClient client, List<BB_Proposal_Quote> proposalEquipments, List<BB_Equipamentos> equipments)
+        {
+            ClickPerModelVVAServiceValidationRequest svr = new ClickPerModelVVAServiceValidationRequest();
+            try
+            {
+                svr.Client = client;
+                svr.Volumes = new SVRVolumes()
+                {
+                    BWVolume = validationRequest.BB_PrintingServices.BWVolume.GetValueOrDefault(),
+                    CVolume = validationRequest.BB_PrintingServices.CVolume.GetValueOrDefault(),
+                };
+                svr.ContractDuration = validationRequest.BB_PrintingServices.ContractDuration.GetValueOrDefault();
+                svr.Equipments = new List<ServiceValidationRequestEquipment>();
+                //svr.PageBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                svr.RentBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
+                svr.ExcessBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().ExcessBillingFrequency;
+                svr.AverageCostBW = 0;
+                svr.AverageCostC = 0;
+                svr.ID = validationRequest.ID;
+                svr.RequestedBy = validationRequest.RequestedBy;
+                svr.SEObservations = validationRequest.SEObservations;
+                svr.Type = "Click Por Modelo - Com Volume Incluído";              
+
+
+                List<ServiceValidationRequestEquipment> svrEquipments = new List<ServiceValidationRequestEquipment>();
+                var query = from m in validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA
+                            join e in equipments on m.CodeRef equals e.CodeRef
+                            select new ServiceValidationRequestEquipment
+                            {
+                                ID = m.ID,
+                                ApprovedBW = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                ApprovedC = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                CodeRef = e.CodeRef,
+                                Description = e.Description != null ? e.Description : m.Description,
+                                Quantity = (int)m.Quantity,
+                                RecBWVolume = e.RecBWVolume,
+                                BWBaseCost = e.BWBaseCost,
+                                RecCVolume = e.RecCVolume,
+                                CBaseCost = e.CBaseCost,
+                                ClickPriceBW = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                ClickPriceC = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                BWCoefficient = 0,
+                                CCoefficient = 0,
+                                BWPages = (int?)m.BWVolume,
+                                CPages = (int?)m.CVolume,
+                                RequestedBWClickPrice = m.RequestedBWClickPrice,
+                                RequestedCClickPrice = m.RequestedCClickPrice,
+                                Type = e.PHC5 == null ? "" : (e.PHC5.Contains("(MF)") ? "MFP" : "Printer"),
+                                IsUsed = false,
+                                IsInClient = false,
+                                RequestedBWExcess = m.RequestedBWExcess,
+                                RequestedCExcess = m.RequestedCExcess,
+                                BWExcessPVP = e.ClickPriceBW != null ? e.ClickPriceBW : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceBW).Max() * 1.15,
+                                CExcessPVP = e.ClickPriceC != null ? e.ClickPriceC : equipments.Where(x => x.PHC1 == e.PHC1 && x.PHC4 == e.PHC4 && x.PHC5 == e.PHC5).Select(x => x.ClickPriceC).Max() * 1.15,
+                                RequestedPVP = m.RequestedRent,
+                                RecommendedPVP = m.PVP                     
+                            };
+
+                svrEquipments = query.ToList();
+
+                svr.RecommendedPVP = (double)svrEquipments.Sum(x => x.RecommendedPVP);
+                svr.RequestedPVP = (double)svrEquipments.Sum(x => x.RequestedPVP);
+
+                // volume total de copias a PRETO
+                int totalRecBW = (int)svrEquipments.Sum(x => x.BWPages * x.Quantity);
+
+                // volume total de copias a COR
+                int totalRecC = (int)svrEquipments.Sum(x => x.CPages * x.Quantity);
+
+                svr.Volumes.BWVolume = totalRecBW;
+                svr.Volumes.CVolume = totalRecC;
+
+                foreach (ServiceValidationRequestEquipment svre in svrEquipments)
+                {
+                    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null)
+                    {
+                        int totalBWEquip = (int)(svre.BWPages * svre.Quantity);
+                        if(totalRecBW > 0)
+                        {
+                            svre.BWCoefficient = ((double)svre.BWPages / totalRecBW) * svre.Quantity;
+                        }
+                        else
+                        {
+                            svre.BWCoefficient = 0;
+                        }
+                    }
+
+                    if (svr.Volumes.CVolume != 0 && svre.RecCVolume != null)
+                    {
+                        int totalCEquip = (int)(svre.CPages * svre.Quantity);
+                        if (totalRecC > 0)
+                        {
+                            svre.CCoefficient = ((double)svre.CPages / totalRecC) * svre.Quantity;
+                        }
+                        else
+                        {
+                            svre.CCoefficient = 0;
+                        }
+                    }
+                }
+
+
+                //int toUseBW = svr.Volumes.BWVolume - totalUsedBW;
+                //int toUseC = svr.Volumes.CVolume - totalUsedC;
+                //foreach (ServiceValidationRequestEquipment svre in svrEquipments)
+                //{
+                //    if (totalUsedBW == totalRecBW && totalUsedC == totalRecC)
+                //    {
+                //        break;
+                //    }
+                //    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null && totalUsedBW != totalRecBW)
+                //    {
+                //        int toAddBW = (int)Math.Round((double)(toUseBW * (svre.BWCoefficient / 100)));
+                //        //svre.BWPages += toAddBW;
+                //        totalUsedBW += toAddBW;
+                //    }
+                //    if (svr.Volumes.BWVolume != 0 && svre.RecBWVolume != null && totalUsedC != totalRecC)
+                //    {
+                //        int toAddC = (int)Math.Round((double)(toUseC * (svre.CCoefficient / 100)));
+                //        //svre.CPages += toAddC;
+                //        totalUsedC += toAddC;
+                //    }
+                //}
+                svr.AverageCostBW = (double)(svrEquipments.Sum(x => x.BWBaseCost * x.RecBWVolume) / svrEquipments.Sum(x => x.RecBWVolume));
+                svr.AverageCostC = (double)(svrEquipments.Where(x => x.CBaseCost != 0).Sum(x => x.CBaseCost * x.RecCVolume) / svrEquipments.Sum(x => x.RecCVolume));
+                svr.Equipments = svrEquipments;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+            return svr;
+        }
+
+        public async System.Threading.Tasks.Task ProcessClickPerModelVVAServiceValidationReplyAsync(ServiceValidationReply svr)
+        {
+            try
+            {
+                BB_Proposal_PrintingServiceValidationRequest validationRequest = db.BB_Proposal_PrintingServiceValidationRequest
+                .Include(x => x.BB_PrintingServices)
+                .Where(vr => vr.ID == svr.RequestID)
+                .FirstOrDefault();
+                if (true || validationRequest != null && validationRequest.IsComplete == false)
+                {
+                    string approvedBy;
+                    using (var masterEntities = new masterEntities())
+                    {
+                        approvedBy = masterEntities.AspNetUsers.Where(x => x.DisplayName == svr.ModifiedBy).Select(x => x.Email).FirstOrDefault();
+                    }
+
+                    validationRequest.ApprovedBy = approvedBy;
+                    validationRequest.IsApproved = svr.isApproved;
+                    validationRequest.IsComplete = true;
+                    validationRequest.SCObservations = svr.SCObservations;
+                    validationRequest.BB_PrintingServices.Fee = svr.Fee;
+                    validationRequest.ApprovedAt = DateTime.Now;
+                    if (svr.isApproved == false)
+                    {
+                        validationRequest.ToDelete = true;
+                    }
+                    else
+                    {
+                        validationRequest.ToDelete = false;
+                    }
+
+                    foreach (OPSImplement implementPack in svr.OPSImplement)
+                    {
+                        var toEdit = db.BB_Proposal_OPSImplement.Where(x => x.ID == implementPack.ID).FirstOrDefault();
+                        if (toEdit != null)
+                        {
+                            toEdit.UnitDiscountPrice = implementPack.UnitDiscountPrice;
+                            toEdit.IsValidated = true;
+                            db.SaveChanges();
+                        }
+                    }
+                    foreach (OPSManage managePack in svr.OPSManage)
+                    {
+                        var toEdit = db.BB_Proposal_OPSManage.Where(x => x.ID == managePack.ID).FirstOrDefault();
+                        if (toEdit != null)
+                        {
+                            toEdit.UnitDiscountPrice = managePack.UnitDiscountPrice;
+                            toEdit.IsValidated = true;
+                            db.SaveChanges();
+                        }
+                    }
+
+                    BB_Proposal_PrintingServices2 ps2 = db.BB_Proposal_PrintingServices2.Where(x => x.ID == validationRequest.BB_PrintingServices.PrintingServices2ID).FirstOrDefault();
+                    if (ps2 != null)
+                    {
+                        if (ps2.ActivePrintingService == null)
+                        {
+                            ps2.ActivePrintingService = 1;
+                        }
+                        db.SaveChanges();
+                    }
+
+                    db.SaveChanges();
+
+                    foreach (ServiceValidationRequestEquipment equipment in svr.Equipments)
+                    {
+                        BB_PrintingServices_ClickPerModel_VVA machine = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.ID == equipment.ID).FirstOrDefault();
+                        machine.ApprovedBW = equipment.ApprovedBW;
+                        machine.ApprovedC = equipment.ApprovedC;
+                        machine.BWVolume = equipment.BWPages;
+                        machine.CVolume = equipment.CPages;
+                        machine.BWExcessPVP = equipment.BWExcessPVP;
+                        machine.CExcessPVP = equipment.CExcessPVP;
+
+                        db.SaveChanges();
+                    }
+
+                    await SendServiceValidationEmail(validationRequest, svr, ps2.ProposalID);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+        }
+
+        // ------------------------------------------------------------------------------------------------------------------------------
+        // -------------------------- HELPERS -------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------------------------
+        public async System.Threading.Tasks.Task SendServiceValidationEmail(BB_Proposal_PrintingServiceValidationRequest validationRequest, ServiceValidationReply svr, int? proposalID)
+        {
+            EmailService emailSend = new EmailService();
+            EmailMesage message = new EmailMesage();
+
+            BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
+            string clientName = "";
+            if (proposal != null && proposal.ClientAccountNumber != null)
+            {
+                clientName = db.BB_Clientes.Where(x => x.accountnumber == proposal.ClientAccountNumber).Select(x => x.Name).FirstOrDefault();
+            }
+
+            message.Destination = proposal.CreatedBy;
+            message.Subject = "BB - Aprovação de Serviço - " + clientName;
+            StringBuilder strBuilder = new StringBuilder();
+            string tableStyle = "border: 1px solid #ddd; border-collapse: collapse";
+            string thStyle = "background-color: #245982;text-align: center;color: white;border: 1px solid #ddd; border-collapse: collapse";
+
+            strBuilder.Append("Caro(a) Gestor(a),<br/>");
+            strBuilder.Append("O seguinte pedido de <b>Aprovação de Serviço</b> foi <b>Aprovado</b><br/>");
+            strBuilder.Append("<br/>");
+
+            if (proposal.Name != null) strBuilder.Append("<b>Oportunidade</b>: " + proposal.Name + "<br/>");
+            if (proposal.CRM_QUOTE_ID != null) strBuilder.Append("<b>Quote CRM</b>: " + proposal.CRM_QUOTE_ID + "<br/>");
+            strBuilder.Append("<b>ID Interno</b>: " + proposal.ID + "<br/>");
+            if (clientName != null) strBuilder.Append("<b>Cliente</b>: " + clientName + "<br/>");
+            strBuilder.Append("<br/>");
+            strBuilder.Append("<b>Modalidade de Serviço</b>: Click Per Model - Com Volume Incluído<br/>");
+            if (validationRequest.BB_PrintingServices.ContractDuration != null) strBuilder.Append("<b>Duração de Contrato</b>: " + validationRequest.BB_PrintingServices.ContractDuration + " Meses<br/>");
+            if (validationRequest.BB_PrintingServices.BWVolume != null) strBuilder.Append("<b>Volume Key</b>: " + validationRequest.BB_PrintingServices.BWVolume + "<br/>");
+            if (validationRequest.BB_PrintingServices.CVolume != null) strBuilder.Append("<b>Volume Cor</b>: " + validationRequest.BB_PrintingServices.CVolume + "<br/>");
+            strBuilder.Append("<br/>");
+            //if (validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickBW != null) strBuilder.Append("<b>Excedente Key</b>: " + validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickBW + " €<br/>");
+            //if (validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickC != null) strBuilder.Append("<b>Excedente Cor</b>: " + validationRequest.BB_PrintingServices.BB_PrintingServices_NoVolume.GlobalClickC + " €<br/>");
+            if (validationRequest.BB_PrintingServices.Fee != null) strBuilder.Append("<b>Acréscimo de Renda Cor</b>: " + validationRequest.BB_PrintingServices.Fee + " €<br/>");
+            strBuilder.Append("<br/>");
+            strBuilder.Append("<table style = '" + tableStyle + "'><tr><th style='" + thStyle + "'>Equipamento</th><th style='" + thStyle + "'>Quantidade</th><th style='" + thStyle + "'>Páginas Key</th><th style='" + thStyle + "'>Páginas Cor</th><th style='" + thStyle + "'>ClickPrice Key</th><th style='" + thStyle + "'>ClickPrice Cor</th></tr>");
+            foreach (ServiceValidationRequestEquipment equipment in svr.Equipments)
+            {
+                strBuilder.Append("<tr><td style = '" + tableStyle + "'>" + equipment.Description + "</td><td style = '" + tableStyle + "'>" + equipment.Quantity + "</td><td style = '" + tableStyle + "'>" + equipment.BWPages + "</td><td style = '" + tableStyle + "'>" + equipment.CPages + "</td><td style = '" + tableStyle + "'>" + equipment.ApprovedBW + "</td><td style = '" + tableStyle + "'>" + equipment.ApprovedC + "</td></tr>");
+            }
+            strBuilder.Append("</table>");
+            strBuilder.Append("<br/>");
+            strBuilder.Append("<b>Observações</b>: " + validationRequest.SCObservations + "<br/>");
+            strBuilder.Append("<br/>");
+            if (validationRequest.RequestedAt != null) strBuilder.Append("<b>Data de Pedido</b>: " + validationRequest.RequestedAt.Value.ToString("dd/MM/yyyy HH:mm") + "<br/>");
+            if (validationRequest.ApprovedAt != null) strBuilder.Append("<b>Data de Resposta</b>: " + validationRequest.ApprovedAt.Value.ToString("dd/MM/yyyy HH:mm") + "<br/>");
+            strBuilder.Append("<br/>");
+            strBuilder.Append("Para aceder à aplicação, utilize o seguinte link: " + "https://bb.konicaminolta.pt" + "<br/>");
+            strBuilder.Append("Por favor, não responder a este email." + "<br/>");
+            strBuilder.Append("<br/>");
+            strBuilder.Append("<p><strong><span style='font-size: 48px;'>//Business Builder</span></strong></p>");
+            message.Body = strBuilder.ToString();
+
+            await emailSend.SendEmailaync(message);
         }
     }
 }

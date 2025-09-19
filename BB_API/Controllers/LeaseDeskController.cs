@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Office.Interop.Word;
+using Newtonsoft.Json;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
 using System.Collections.Generic;
@@ -2092,7 +2093,7 @@ namespace WebApplication1.Controllers
                                     m.Financiamento = db2.BB_FinancingType.Where(x => x.Code == f.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
                                 }
 
-                                    m.TipoNegocio = db2.BB_Campanha.Where(x => x.ID == b.CampaignID).Select(x => x.Campanha).FirstOrDefault();
+                                m.TipoNegocio = db2.BB_Campanha.Where(x => x.ID == b.CampaignID).Select(x => x.Campanha).FirstOrDefault();
 
                                 if (f != null && f.FinancingTypeCode != null && f.FinancingTypeCode == 0)
                                 {
@@ -2371,273 +2372,236 @@ namespace WebApplication1.Controllers
         [ActionName("GetProposta")]
         public IHttpActionResult GetProposta(int? proposalID)
         {
-
-            ProposalBLL p1 = new ProposalBLL();
-            LoadProposalInfo i = new LoadProposalInfo();
-            i.ProposalId = proposalID.Value;
-            ActionResponse a = p1.LoadProposal(i);
-
-            double? LeiDaCopiaPriada = 0;
-            double? sobrevalorizacao = 0;
-            double? retomas = 0;
-            BB_Proposal pr1 = new BB_Proposal();
-            BB_Proposal_PrazoDiferenciado prazoDiferenciado1 = new BB_Proposal_PrazoDiferenciado();
-            BB_Clientes cliente = new BB_Clientes();
-            BB_Proposal_Client pCliente = new BB_Proposal_Client();
-
-            List<BB_Equipamentos> bb_Equipamentos = new List<BB_Equipamentos>();
-
-            using (var db = new BB_DB_DEVEntities2())
+            ActionResponse a = new ActionResponse();
+            try
             {
-                bb_Equipamentos = db.BB_Equipamentos.ToList();
+                ProposalBLL p1 = new ProposalBLL();
+                LoadProposalInfo i = new LoadProposalInfo();
+                i.ProposalId = proposalID.Value;
+                a = p1.LoadProposal(i);
 
-                pr1 = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
-                cliente = db.BB_Clientes.Where(x => x.accountnumber == pr1.ClientAccountNumber).FirstOrDefault();
-                pCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == pr1.ID).FirstOrDefault();
-                List<BB_Proposal_Quote> lstQuotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID && (x.Family == "OPSHW" || x.Family == "PPHW")).ToList();
-                foreach (var quote in lstQuotes)
+                double? LeiDaCopiaPriada = 0;
+                double? sobrevalorizacao = 0;
+                double? retomas = 0;
+                BB_Proposal pr1 = new BB_Proposal();
+                BB_Proposal_PrazoDiferenciado prazoDiferenciado1 = new BB_Proposal_PrazoDiferenciado();
+                BB_Clientes cliente = new BB_Clientes();
+                BB_Proposal_Client pCliente = new BB_Proposal_Client();
+
+                List<BB_Equipamentos> bb_Equipamentos = new List<BB_Equipamentos>();
+
+                using (var db = new BB_DB_DEVEntities2())
                 {
-                    double? TCP = db.BB_Equipamentos.Where(x => x.CodeRef == quote.CodeRef).Select(x => x.TCP).FirstOrDefault();
+                    bb_Equipamentos = db.BB_Equipamentos.ToList();
 
-                    var contador = db.BB_Proposal_Counters.Where(x => x.OSID == quote.ID).Count();
+                    pr1 = db.BB_Proposal.Where(x => x.ID == proposalID).FirstOrDefault();
+                    cliente = db.BB_Clientes.Where(x => x.accountnumber == pr1.ClientAccountNumber).FirstOrDefault();
+                    pCliente = db.BB_Proposal_Client.Where(x => x.ProposalID == pr1.ID).FirstOrDefault();
+                    List<BB_Proposal_Quote> lstQuotes = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID && (x.Family == "OPSHW" || x.Family == "PPHW")).ToList();
+                    foreach (var quote in lstQuotes)
+                    {
+                        double? TCP = db.BB_Equipamentos.Where(x => x.CodeRef == quote.CodeRef).Select(x => x.TCP).FirstOrDefault();
 
-                    if (TCP is null)
-                        TCP = 0;
+                        var contador = db.BB_Proposal_Counters.Where(x => x.OSID == quote.ID).Count();
 
-                    if (quote.IsUsed.GetValueOrDefault() == false)
-                        LeiDaCopiaPriada = (TCP * quote.Qty) + LeiDaCopiaPriada;
+                        if (TCP is null)
+                            TCP = 0;
+
+                        if (quote.IsUsed.GetValueOrDefault() == false)
+                            LeiDaCopiaPriada = (TCP * quote.Qty) + LeiDaCopiaPriada;
+
+                    }
+
+
+
+
+                    List<BB_Proposal_Overvaluation> o = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalID).ToList();
+                    foreach (var quote in o)
+                    {
+                        sobrevalorizacao += quote.Total;
+                    }
+
+                    List<BB_Proposal_Upturn> ret = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalID).ToList();
+                    foreach (var quote1 in ret)
+                    {
+                        retomas += quote1.Total;
+                    }
+
+                    string nLocadora = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalID).Select(x => x.NLocadora).FirstOrDefault();
+                    prazoDiferenciado1 = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalID).FirstOrDefault();
+
+                    if (prazoDiferenciado1 != null)
+                    {
+                        a.ProposalObj.Draft.financing.DataExpiracao = prazoDiferenciado1.DataExpiracao;
+                    }
+
+                    if (a.ProposalObj.Draft.financing.diffTerm != null)
+                        a.ProposalObj.Draft.financing.diffTerm.Nlocadora = nLocadora;
+
+                    a.ProposalObj.Draft.financingDetails = new FinancingDetails();
+                    string contractType = db.BB_FinancingContractType.Where(x => x.ID == a.ProposalObj.Draft.financing.ContractTypeId).Select(x => x.Company).FirstOrDefault();
+                    a.ProposalObj.Draft.financingDetails.ContractType = contractType;
+                    string financingType = db.BB_FinancingType.Where(x => x.Code == a.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
+                    a.ProposalObj.Draft.financingDetails.FinancingType = financingType;
+                }
+
+                a.ProposalObj.Draft.financing.DateApproval = a.ProposalObj.Draft.financing.DateApproval;
+
+                //sobrevalorizacao = (sobrevalorizacao + retomas) - retomas;
+
+                //a.ProposalObj.Draft.details.ValueTotal = a.ProposalObj.Draft.details.ValueTotal + LeiDaCopiaPriada.Value + sobrevalorizacao.Value;
+                a.ProposalObj.Draft.details.ValueTotal = a.ProposalObj.Draft.details.ValueTotal;
+
+                double? sobrevalorizacao1 = 0;
+                sobrevalorizacao1 = sobrevalorizacao - retomas;
+                //double? sobrevalorizacao = 0;
+                //sobrevalorizacao = a.ProposalObj.Draft.overvaluations.Select(x => x.Total).FirstOrDefault();
+                double? OPSHWvalorTotal = 0;
+                double? OPSHWUnti = 0;
+
+                using (var db1 = new BB_DB_DEV_LeaseDesk())
+                {
+                    LD_Contrato c = db1.LD_Contrato.Where(x => x.ProposalID == proposalID).FirstOrDefault();
+                    a.ProposalObj.NUS = db1.LD_Contrato_Facturacao.Where(x => x.LDID == c.ID).Select(x => x.NUS).FirstOrDefault();
+                    a.ProposalObj.FolderDoc = c.Pasta;
+                    a.ProposalObj.LeasedeskComentariosGC = c.ComentariosGC;
+                    a.ProposalObj.LeasedeskComentarios = c.Comments;
+                    a.ProposalObj.LeasedeskComentariosDevolucao = c.ComentariosDevolucao;
+                    a.ProposalObj.LeasedeskStatus = db1.LD_Observacoes_Motivos.Where(x => x.ID == c.MotivoID).Select(x => x.Motive).FirstOrDefault();
+                }
+
+                ValoresTotaisRenda vt = new ValoresTotaisRenda();
+                vt.RendaFinanciada = 0;
+                vt.VVA = 0;
+                if (a.ProposalObj.Draft.financing.FinancingTypeCode != 0 && a.ProposalObj.Draft.financing.diffTerm != null)
+                {
+                    vt.RendaFinanciada = (a.ProposalObj.Draft.financing.diffTerm.Rent != null ? a.ProposalObj.Draft.financing.diffTerm.Rent : 0);
+
 
                 }
 
 
-
-
-                List<BB_Proposal_Overvaluation> o = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalID).ToList();
-                foreach (var quote in o)
+                ApprovedPrintingService activePS = null;
+                if (a.ProposalObj.Draft.printingServices2.ActivePrintingService != null)
                 {
-                    sobrevalorizacao += quote.Total;
+                    activePS = a.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[a.ProposalObj.Draft.printingServices2.ActivePrintingService.Value - 1];
+                    if (activePS != null && activePS.GlobalClickVVA != null)
+                    {
+
+                        vt.VVA = Math.Round(activePS.GlobalClickVVA.PVP, 5);
+                        activePS.GlobalClickVVA.BWExcessPVP = Math.Round(activePS.GlobalClickVVA.BWExcessPVP, 5);
+                        activePS.GlobalClickVVA.CExcessPVP = Math.Round(activePS.GlobalClickVVA.CExcessPVP, 5);
+                        switch (activePS.GlobalClickVVA.RentBillingFrequency)
+                        {
+                            case 3:
+                                activePS.BWVolume = activePS.BWVolume * 3;
+                                activePS.CVolume = activePS.CVolume * 3;
+                                vt.VVA = activePS.GlobalClickVVA.PVP * 3;
+                                break;
+                            case 6:
+                                activePS.BWVolume = activePS.BWVolume * 6;
+                                activePS.CVolume = activePS.CVolume * 6;
+                                vt.VVA = activePS.GlobalClickVVA.PVP * 3;
+                                break;
+                            default: break;
+                        }
+
+                    }else if(activePS != null && activePS.VVAClickPerModel != null)
+                    {
+
+                        foreach (var item in activePS.VVAClickPerModel.ps_basket)
+                        {
+                            vt.VVA += ((item.BWVolume * item.ApprovedBW) + (item.CVolume * item.ApprovedC)) * item.Quantity;
+                        }
+                    }
+
+                        foreach (var machine in activePS.Machines)
+                        {
+                            machine.BWCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.BWBaseCost).FirstOrDefault();
+                            machine.CCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.CBaseCost).FirstOrDefault();
+
+                            machine.BWCost = machine.BWCost.HasValue ? Math.Round(machine.BWCost.Value, 5) : (double?)0;
+                            machine.CCost = machine.CCost.HasValue ? Math.Round(machine.CCost.Value, 5) : (double?)0;
+
+                            machine.ClickPriceBW = machine.ClickPriceBW.HasValue ? Math.Round(machine.ClickPriceBW.Value, 5) : (double?)0;
+                            machine.ClickPriceC = machine.ClickPriceC.HasValue ? Math.Round(machine.ClickPriceC.Value, 5) : (double?)0;
+
+                            machine.RequestedBWClickPrice = machine.RequestedBWClickPrice != null ? Math.Round((double)machine.RequestedBWClickPrice, 5) : 0;
+                            machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ? Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
+
+
+                            machine.ApprovedBW = machine.ApprovedBW.HasValue ? Math.Round(machine.ApprovedBW.Value, 5) : (double?)0;
+                            machine.ApprovedC = machine.ApprovedC.HasValue ? Math.Round(machine.ApprovedC.Value, 5) : (double?)0;
+
+                        }
+
                 }
 
-                List<BB_Proposal_Upturn> ret = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalID).ToList();
-                foreach (var quote1 in ret)
+                if (retomas.Value > 0)
                 {
-                    retomas += quote1.Total;
+                    a.ProposalObj.Draft.details.ValueTotal -= retomas.Value;
                 }
 
-                string nLocadora = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalID).Select(x => x.NLocadora).FirstOrDefault();
-                prazoDiferenciado1 = db.BB_Proposal_PrazoDiferenciado.Where(x => x.ProposalID == proposalID).FirstOrDefault();
+                //a.ProposalObj.Draft.details.ValueTotal = pr1 != null && pr1.SubTotal != null ? pr1.SubTotal.Value : a.ProposalObj.Draft.details.ValueTotal;
 
-                if (prazoDiferenciado1 != null)
+                if (a.ProposalObj.Draft.baskets.rs_basket.Count() > 0 || a.ProposalObj.Draft.opsPacks.opsManage.Count() > 0)
                 {
-                    a.ProposalObj.Draft.financing.DataExpiracao = prazoDiferenciado1.DataExpiracao;
+                    vt.ServicosRecorentesMes = a.ProposalObj.Draft.baskets.rs_basket.Sum(x => x.MonthlyFee) + a.ProposalObj.Draft.opsPacks.opsManage.Sum(x => x.UnitDiscountPrice * x.Quantity);
+                    vt.ServicosRecorentesMes = Math.Round((double)vt.ServicosRecorentesMes, 2);
+                }
+                else
+                {
+                    vt.ServicosRecorentesMes = 0;
+                }
+                if (a.ProposalObj.Draft.baskets.rs_basket.Count() > 0 || a.ProposalObj.Draft.opsPacks.opsManage.Count() > 0)
+                {
+                    vt.ServicosRecorentesTotal = a.ProposalObj.Draft.baskets.rs_basket.Sum(x => x.TotalNetsale) + a.ProposalObj.Draft.opsPacks.opsManage.Sum(x => x.UnitDiscountPrice * x.Quantity * x.TotalMonths);
+                    vt.ServicosRecorentesTotal = Math.Round((double)vt.ServicosRecorentesTotal, 2);
+                }
+                else
+                {
+                    vt.ServicosRecorentesTotal = 0;
                 }
 
-                if (a.ProposalObj.Draft.financing.diffTerm != null)
-                    a.ProposalObj.Draft.financing.diffTerm.Nlocadora = nLocadora;
 
-                a.ProposalObj.Draft.financingDetails = new FinancingDetails();
-                string contractType = db.BB_FinancingContractType.Where(x => x.ID == a.ProposalObj.Draft.financing.ContractTypeId).Select(x => x.Company).FirstOrDefault();
-                a.ProposalObj.Draft.financingDetails.ContractType = contractType;
-                string financingType = db.BB_FinancingType.Where(x => x.Code == a.ProposalObj.Draft.financing.FinancingTypeCode).Select(x => x.Type).FirstOrDefault();
-                a.ProposalObj.Draft.financingDetails.FinancingType = financingType;
-            }
+                vt.ConfiguracaoOneShotValor = Math.Round((double)(a.ProposalObj.Draft.details.ValueTotal - vt.ServicosRecorentesTotal), 2);
 
-            a.ProposalObj.Draft.financing.DateApproval = a.ProposalObj.Draft.financing.DateApproval;
+                double fee = (activePS != null && activePS.Fee != null ? activePS.Fee : 0);
 
-            //sobrevalorizacao = (sobrevalorizacao + retomas) - retomas;
-
-            //a.ProposalObj.Draft.details.ValueTotal = a.ProposalObj.Draft.details.ValueTotal + LeiDaCopiaPriada.Value + sobrevalorizacao.Value;
-            a.ProposalObj.Draft.details.ValueTotal = a.ProposalObj.Draft.details.ValueTotal;
-
-            double? sobrevalorizacao1 = 0;
-            sobrevalorizacao1 = sobrevalorizacao - retomas;
-            //double? sobrevalorizacao = 0;
-            //sobrevalorizacao = a.ProposalObj.Draft.overvaluations.Select(x => x.Total).FirstOrDefault();
-            double? OPSHWvalorTotal = 0;
-            double? OPSHWUnti = 0;
-            //if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0 && sobrevalorizacao1 > 0)
-            //{
-            //    if (a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").Count() > 0)
-            //    {
-
-
-            //        OPSHWvalorTotal = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.TotalNetsale)).First();
-
-            //        OPSHWUnti = a.ProposalObj.Draft.baskets.os_basket.Where(x => x.Family == "OPSHW").GroupBy(x => x.Family).Select(x => x.Sum(c => c.UnitDiscountPrice)).First();
-            //    }
-            //}
-
-            //if (sobrevalorizacao1 != null && sobrevalorizacao1 != 0)
-            //{
-
-            //    a.ProposalObj.Draft.details.ValueTotal = 0;
-            //    foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
-            //    {
-            //        quote.TotalNetsale = sobrevalorizacao1 != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao1) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
-            //        quote.UnitDiscountPrice = Math.Round((quote.TotalNetsale / quote.Qty), 2);
-            //        //quote.TotalNetsale = sobrevalorizacao != 0 && quote.Family == "OPSHW" ? Math.Round((((quote.TotalNetsale / OPSHWvalorTotal) * sobrevalorizacao) + quote.TotalNetsale).Value, 2) : quote.TotalNetsale;
-
-            //        a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
-            //    }
-            //    a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
-            //}
-            //else
-            //{
-            //    //a.ProposalObj.Draft.details.ValueTotal = 0;
-            //    //foreach (var quote in a.ProposalObj.Draft.baskets.os_basket)
-            //    //{
-            //    //    a.ProposalObj.Draft.details.ValueTotal += quote.TotalNetsale;
-            //    //}
-            //    //a.ProposalObj.Draft.details.ValueTotal += LeiDaCopiaPriada.Value;
-            //}
-
-            using (var db1 = new BB_DB_DEV_LeaseDesk())
-            {
-                LD_Contrato c = db1.LD_Contrato.Where(x => x.ProposalID == proposalID).FirstOrDefault();
-                a.ProposalObj.NUS = db1.LD_Contrato_Facturacao.Where(x => x.LDID == c.ID).Select(x => x.NUS).FirstOrDefault();
-                a.ProposalObj.FolderDoc = c.Pasta;
-                a.ProposalObj.LeasedeskComentariosGC = c.ComentariosGC;
-                a.ProposalObj.LeasedeskComentarios = c.Comments;
-                a.ProposalObj.LeasedeskComentariosDevolucao = c.ComentariosDevolucao;
-                a.ProposalObj.LeasedeskStatus = db1.LD_Observacoes_Motivos.Where(x => x.ID == c.MotivoID).Select(x => x.Motive).FirstOrDefault();
-            }
-
-            ValoresTotaisRenda vt = new ValoresTotaisRenda();
-            vt.RendaFinanciada = 0;
-            vt.VVA = 0;
-            if (a.ProposalObj.Draft.financing.FinancingTypeCode != 0 && a.ProposalObj.Draft.financing.diffTerm != null)
-            {
-                vt.RendaFinanciada = (a.ProposalObj.Draft.financing.diffTerm.Rent != null ? a.ProposalObj.Draft.financing.diffTerm.Rent : 0);
-
-
-            }
-
-
-            ApprovedPrintingService activePS = null;
-            if (a.ProposalObj.Draft.printingServices2.ActivePrintingService != null)
-            {
-                activePS = a.ProposalObj.Draft.printingServices2.ApprovedPrintingServices[a.ProposalObj.Draft.printingServices2.ActivePrintingService.Value - 1];
                 if (activePS != null && activePS.GlobalClickVVA != null)
                 {
-
-                    vt.VVA = Math.Round(activePS.GlobalClickVVA.PVP, 5);
-                    activePS.GlobalClickVVA.BWExcessPVP = Math.Round(activePS.GlobalClickVVA.BWExcessPVP, 5);
-                    activePS.GlobalClickVVA.CExcessPVP = Math.Round(activePS.GlobalClickVVA.CExcessPVP, 5);
                     switch (activePS.GlobalClickVVA.RentBillingFrequency)
                     {
                         case 3:
-                            activePS.BWVolume = activePS.BWVolume * 3;
-                            activePS.CVolume = activePS.CVolume * 3;
-                            vt.VVA = activePS.GlobalClickVVA.PVP * 3;
+                            //vt.RendaFinanciada = vt.RendaFinanciada * 3;
+                            vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 3;
+                            fee = fee * 3;
                             break;
                         case 6:
-                            activePS.BWVolume = activePS.BWVolume * 6;
-                            activePS.CVolume = activePS.CVolume * 6;
-                            vt.VVA = activePS.GlobalClickVVA.PVP * 3;
+                            //vt.RendaFinanciada = vt.RendaFinanciada * 6;
+                            vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 6;
+                            fee = fee * 6;
                             break;
                         default: break;
                     }
-
-                    //switch (activePS.GlobalClickVVA.RentBillingFrequency)
-                    //{
-                    //    case 3:
-                    //        activePS.GlobalClickVVA.PVP = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP * 3 : 0;
-                    //        break;
-                    //    case 6:
-                    //        activePS.GlobalClickVVA.PVP = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP * 6 : 0;
-                    //        break;
-                    //    default: break;
-                    //}
-                    //vt.VVA = activePS.GlobalClickVVA != null ? activePS.GlobalClickVVA.PVP : 0;
                 }
-
-                foreach(var machine in activePS.Machines)
+                if (activePS != null && activePS.GlobalClickNoVolume != null)
                 {
-                    machine.BWCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.BWBaseCost).FirstOrDefault();
-                    machine.CCost = bb_Equipamentos.Where(x => x.CodeRef == machine.CodeRef).Select(x => x.CBaseCost).FirstOrDefault();
-
-                    machine.BWCost = machine.BWCost.HasValue ? Math.Round(machine.BWCost.Value, 5) : (double?)0;
-                    machine.CCost = machine.CCost.HasValue ? Math.Round(machine.CCost.Value, 5) : (double?)0;
-
-                    machine.ClickPriceBW = machine.ClickPriceBW.HasValue ? Math.Round(machine.ClickPriceBW.Value, 5) : (double?)0;
-                    machine.ClickPriceC = machine.ClickPriceC.HasValue ? Math.Round(machine.ClickPriceC.Value, 5) : (double?)0;
-
-                    machine.RequestedBWClickPrice = machine.RequestedBWClickPrice != null ? Math.Round((double)machine.RequestedBWClickPrice, 5) : 0;
-                    machine.RequestedCClickPrice = machine.RequestedCClickPrice != null ?  Math.Round((double)machine.RequestedCClickPrice, 5) : 0;
-
-
-                    machine.ApprovedBW = machine.ApprovedBW.HasValue ? Math.Round(machine.ApprovedBW.Value, 5) : (double?)0;
-                    machine.ApprovedC = machine.ApprovedC.HasValue ? Math.Round(machine.ApprovedC.Value, 5) : (double?)0;
-
+                    switch (activePS.GlobalClickNoVolume.PageBillingFrequency)
+                    {
+                        case 3:
+                            //vt.RendaFinanciada = vt.RendaFinanciada * 3;
+                            vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 3;
+                            fee = fee * 3;
+                            break;
+                        case 6:
+                            //vt.RendaFinanciada = vt.RendaFinanciada * 6;
+                            vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 6;
+                            fee = fee * 6;
+                            break;
+                        default: break;
+                    }
                 }
-
-            }
-
-            if (retomas.Value > 0)
-            {
-                a.ProposalObj.Draft.details.ValueTotal -= retomas.Value;
-            }
-
-            //a.ProposalObj.Draft.details.ValueTotal = pr1 != null && pr1.SubTotal != null ? pr1.SubTotal.Value : a.ProposalObj.Draft.details.ValueTotal;
-
-            if (a.ProposalObj.Draft.baskets.rs_basket.Count() > 0 || a.ProposalObj.Draft.opsPacks.opsManage.Count() > 0)
-            {
-                vt.ServicosRecorentesMes = a.ProposalObj.Draft.baskets.rs_basket.Sum(x => x.MonthlyFee) + a.ProposalObj.Draft.opsPacks.opsManage.Sum(x => x.UnitDiscountPrice * x.Quantity);
-                vt.ServicosRecorentesMes = Math.Round((double)vt.ServicosRecorentesMes, 2);
-            }
-            else
-            {
-                vt.ServicosRecorentesMes = 0;
-            }
-            if (a.ProposalObj.Draft.baskets.rs_basket.Count() > 0 || a.ProposalObj.Draft.opsPacks.opsManage.Count() > 0)
-            {
-                vt.ServicosRecorentesTotal = a.ProposalObj.Draft.baskets.rs_basket.Sum(x => x.TotalNetsale) + a.ProposalObj.Draft.opsPacks.opsManage.Sum(x => x.UnitDiscountPrice * x.Quantity * x.TotalMonths);
-                vt.ServicosRecorentesTotal = Math.Round((double)vt.ServicosRecorentesTotal, 2);
-            }
-            else
-            {
-                vt.ServicosRecorentesTotal = 0;
-            }
-
-
-            vt.ConfiguracaoOneShotValor = Math.Round((double)(a.ProposalObj.Draft.details.ValueTotal - vt.ServicosRecorentesTotal), 2);
-
-            double fee = (activePS != null && activePS.Fee != null ? activePS.Fee : 0);
-
-            if (activePS != null && activePS.GlobalClickVVA != null)
-            {
-                switch (activePS.GlobalClickVVA.RentBillingFrequency)
-                {
-                    case 3:
-                        //vt.RendaFinanciada = vt.RendaFinanciada * 3;
-                        vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 3;
-                        fee = fee * 3;
-                        break;
-                    case 6:
-                        //vt.RendaFinanciada = vt.RendaFinanciada * 6;
-                        vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 6;
-                        fee = fee * 6;
-                        break;
-                    default: break;
-                }
-            }
-            if (activePS != null && activePS.GlobalClickNoVolume != null)
-            {
-                switch (activePS.GlobalClickNoVolume.PageBillingFrequency)
-                {
-                    case 3:
-                        //vt.RendaFinanciada = vt.RendaFinanciada * 3;
-                        vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 3;
-                        fee = fee * 3;
-                        break;
-                    case 6:
-                        //vt.RendaFinanciada = vt.RendaFinanciada * 6;
-                        vt.ServicosRecorentesMes = vt.ServicosRecorentesMes * 6;
-                        fee = fee * 6;
-                        break;
-                    default: break;
-                }
-            }
 
 
 
@@ -2653,138 +2617,159 @@ namespace WebApplication1.Controllers
             vt.retomasTotal = retomas != null && retomas.HasValue && retomas.Value != 0 ? retomas.Value : 0;
             a.ProposalObj.valoretotais = vt;
 
-            LeaseDeskBLL lDBll = new LeaseDeskBLL();
+                LeaseDeskBLL lDBll = new LeaseDeskBLL();
 
-            ConditionsTotais condPvp = lDBll.FinancingDetailsPerMachine(proposalID);
+                ConditionsTotais condPvp = lDBll.FinancingDetailsPerMachine(proposalID);
 
-            a.ProposalObj.ConditionsPvpPerMachine = condPvp;
+                a.ProposalObj.ConditionsPvpPerMachine = condPvp;
 
-            //foreach(var manage in a.ProposalObj.Draft.opsPacks.opsManage)
-            //{
-            //    manage.UnitDiscountPrice = Math.Round((double)manage.UnitDiscountPrice, 3);
-            //}
+                //foreach(var manage in a.ProposalObj.Draft.opsPacks.opsManage)
+                //{
+                //    manage.UnitDiscountPrice = Math.Round((double)manage.UnitDiscountPrice, 3);
+                //}
 
-            List<HW_SW> configuratorInfo = GetGroupedConfigurator(proposalID);
+                List<HW_SW> configuratorInfo = GetGroupedConfigurator(proposalID);
 
-            a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
-            string delegation = "";
-            if(cliente != null)
-            {
-                switch(cliente.Territory.Substring(4, 4))
+                a.ProposalObj.Draft.configuratorInfo = configuratorInfo;
+                string delegation = "";
+                if (cliente != null)
                 {
-                    case "5241":
-                        delegation = "Barcelona";
-                        break;
-                    case "5203":
-                        delegation = "Sales Area 3";
-                        break;
-                    case "5243":
-                        delegation = "Algaciras";
-                        break;
-                    case "5200":
-                        delegation = "Sales Area 0";
-                        break;
-                    case "5248":
-                        delegation = "Sevilla";
-                        break;
-                    case "5245":
-                        delegation = "Cádiz";
-                        break;
-                    case "5246":
-                        delegation = "Málaga";
-                        break;
-                    case "5242":
-                        delegation = "Valencia";
-                        break;
-                    case "5247":
-                        delegation = "Santander";
-                        break;
-                    case "5204":
-                        delegation = "Sales Area 4";
-                        break;
-                    case "5220":
-                        delegation = "Dealer Service";
-                        break;
-                    case "5201":
-                        delegation = "Sales Area 1";
-                        break;
-                    case "5202":
-                        delegation = "Sales Area 2";
-                        break;
-                    case "5244":
-                        delegation = "Bilbao";
-                        break;
-                    default:
-                        delegation = "Madrid";
-                        break;
+                    switch (cliente.Territory.Substring(4, 4))
+                    {
+                        case "5241":
+                            delegation = "Barcelona";
+                            break;
+                        case "5203":
+                            delegation = "Sales Area 3";
+                            break;
+                        case "5243":
+                            delegation = "Algaciras";
+                            break;
+                        case "5200":
+                            delegation = "Sales Area 0";
+                            break;
+                        case "5248":
+                            delegation = "Sevilla";
+                            break;
+                        case "5245":
+                            delegation = "Cádiz";
+                            break;
+                        case "5246":
+                            delegation = "Málaga";
+                            break;
+                        case "5242":
+                            delegation = "Valencia";
+                            break;
+                        case "5247":
+                            delegation = "Santander";
+                            break;
+                        case "5204":
+                            delegation = "Sales Area 4";
+                            break;
+                        case "5220":
+                            delegation = "Dealer Service";
+                            break;
+                        case "5201":
+                            delegation = "Sales Area 1";
+                            break;
+                        case "5202":
+                            delegation = "Sales Area 2";
+                            break;
+                        case "5244":
+                            delegation = "Bilbao";
+                            break;
+                        default:
+                            delegation = "Madrid";
+                            break;
+                    }
                 }
+
+                string office = "";
+                if (cliente != null)
+                {
+                    switch (cliente.Territory.Substring(8, 3))
+                    {
+                        case "543":
+                            office = "Production Printing";
+                            break;
+                        case "5VT":
+                            office = "Inside Sales";
+                            break;
+                        case "521":
+                            office = "PREMIUM";
+                            break;
+                        case "522":
+                            office = "ADVANCED";
+                            break;
+                        case "523":
+                            office = "PARTNER";
+                            break;
+                        case "540":
+                            office = "Regular Customers";
+                            break;
+                        case "520":
+                            office = "ELITE";
+                            break;
+                        case "544":
+                            office = "Industrial Printing";
+                            break;
+                        case "541":
+                            office = "Major Accounts";
+                            break;
+                        case "542":
+                            office = "Production Printing";
+                            break;
+
+                    }
+                }
+
+
+                a.ProposalObj.Draft.client.SalesGroup = cliente != null ? cliente.Territory.Substring(4, 4) + " - " + delegation : "-";
+                a.ProposalObj.Draft.client.SalesOffice = cliente != null ? cliente.Territory.Substring(8, 3) + " - " + office : "-";
+
+                a.ProposalObj.SAPNumber = pr1.Pedido_SAP == null ? "" : pr1.Pedido_SAP.Value.ToString();
+                a.ProposalObj.IsClientPublicSector = (bool)pCliente.IsPublicSector;
+
+                using (var dbMaster = new masterEntities())
+                {
+
+                    AspNetUsers user = dbMaster.AspNetUsers.Where(x => x.Territory.Contains(cliente.Territory)).FirstOrDefault();
+
+                    if (user != null)
+                    {
+                        a.ProposalObj.Draft.client.GestorCuenta = user.DisplayName;
+                    }
+                    else
+                    {
+                        a.ProposalObj.Draft.client.GestorCuenta = cliente.Owner;
+                    }
+
+
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
             }
 
-            string office = "";
-            if (cliente != null)
+            var json = JsonConvert.SerializeObject(
+                a.ProposalObj,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    PreserveReferencesHandling = PreserveReferencesHandling.None
+                });
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                switch (cliente.Territory.Substring(8, 3))
-                {
-                    case "543":
-                        office = "Production Printing";
-                        break;
-                    case "5VT":
-                        office = "Inside Sales";
-                        break;
-                    case "521":
-                        office = "PREMIUM";
-                        break;
-                    case "522":
-                        office = "ADVANCED";
-                        break;
-                    case "523":
-                        office = "PARTNER";
-                        break;
-                    case "540":
-                        office = "Regular Customers";
-                        break;
-                    case "520":
-                        office = "ELITE";
-                        break;
-                    case "544":
-                        office = "Industrial Printing";
-                        break;
-                    case "541":
-                        office = "Major Accounts";
-                        break;
-                    case "542":
-                        office = "Production Printing";
-                        break;
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
 
-                }
-            }
-           
+            return ResponseMessage(response);
 
-            a.ProposalObj.Draft.client.SalesGroup =  cliente != null ? cliente.Territory.Substring(4, 4) + " - " + delegation : "-";
-            a.ProposalObj.Draft.client.SalesOffice = cliente != null ? cliente.Territory.Substring(8, 3) + " - " + office : "-";
-
-            a.ProposalObj.SAPNumber = pr1.Pedido_SAP == null ? "" : pr1.Pedido_SAP.Value.ToString();
-            a.ProposalObj.IsClientPublicSector = (bool)pCliente.IsPublicSector;
-
-            using (var dbMaster = new masterEntities())
-            {
-
-                AspNetUsers user = dbMaster.AspNetUsers.Where(x => x.Territory.Contains(cliente.Territory)).FirstOrDefault();
-
-                if (user != null)
-                {
-                    a.ProposalObj.Draft.client.GestorCuenta = user.DisplayName;
-                }
-                else
-                {
-                    a.ProposalObj.Draft.client.GestorCuenta = cliente.Owner;
-                }
-
-
-
-            }
-
-            return Ok(a.ProposalObj);
         }
 
 
@@ -2800,7 +2785,8 @@ namespace WebApplication1.Controllers
         {
             List<HW_SW> configurator = new List<HW_SW>();
 
-            try {
+            try
+            {
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     //List<BB_Proposal_Quote> pp_quote = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalID).ToList();
@@ -2876,15 +2862,15 @@ namespace WebApplication1.Controllers
                                 BB_Proposal_Quote_RS quoteRS = pp_quote_rs.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
                                 OsBasket basketItem = new OsBasket
                                 {
-                                        CodeRef = item.CodeRef,
-                                        Description = item.Description,
-                                        Family = item.Family,
-                                        UnitDiscountPrice = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
-                                        Qty = (int)item.Qty,
-                                        TotalNetsale = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
-                                        Group = item.Group,
-                                        IsUsed = (bool)item.IsUsedMachine,
-                                        SerialNumber = "-"
+                                    CodeRef = item.CodeRef,
+                                    Description = item.Description,
+                                    Family = item.Family,
+                                    UnitDiscountPrice = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
+                                    Qty = (int)item.Qty,
+                                    TotalNetsale = (double)(item.UnitDiscountPrice * quoteRS.TotalMonths),
+                                    Group = item.Group,
+                                    IsUsed = (bool)item.IsUsedMachine,
+                                    SerialNumber = "-"
                                 };
 
 
@@ -2936,7 +2922,7 @@ namespace WebApplication1.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string error = ex.Message;
             }
@@ -2983,7 +2969,7 @@ namespace WebApplication1.Controllers
                 try
                 {
                     BB_Proposal_DeliveryLocation dlToEdit = db.BB_Proposal_DeliveryLocation.Where(x => x.IDX == ti.IDX).FirstOrDefault();
-                    if(dlToEdit != null)
+                    if (dlToEdit != null)
                     {
                         dlToEdit.SAPCustomerNr = ti.SAP_Nr;
                         db.SaveChanges();
@@ -3030,7 +3016,7 @@ namespace WebApplication1.Controllers
                                 {
 
                                     BB_Equipamentos isEquip = db.BB_Equipamentos.Where(x => x.CodeRef == it.CodeRef).FirstOrDefault();
-                                    if(isEquip != null || it.Description.Contains("MAIN MATERIAL"))
+                                    if (isEquip != null || it.Description.Contains("MAIN MATERIAL"))
                                     {
                                         BB_Proposal_DeliveryLocationResumoModel resumo = new BB_Proposal_DeliveryLocationResumoModel();
                                         resumo.Group = p.Key;
@@ -3039,8 +3025,8 @@ namespace WebApplication1.Controllers
                                         resumo.PostalCode = i.PostalCode;
                                         resumo.City = i.City;
                                         resumo.Contacto = contact != null ? contact.Name + " " + contact.Surname : "";
-                                        resumo.Phone = contact != null ? contact.Movil.ToString(): "";
-                                        resumo.Email = contact != null ? contact.Email: "";
+                                        resumo.Phone = contact != null ? contact.Movil.ToString() : "";
+                                        resumo.Email = contact != null ? contact.Email : "";
                                         resumo.AddressType = i.AccountType;
                                         resumo.CodeRef = it.CodeRef;
                                         resumo.Qty = it.Qty;
@@ -4216,7 +4202,7 @@ namespace WebApplication1.Controllers
                             data.AccordNumber = accorNumber;
 
                             List<BB_Proposal_DeliveryLocation> bb_pp_dl_lst = dbX.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == proposalID).ToList();
-                            
+
 
                             data.DL_Table_Info_Lst = new List<DL_Table_Info>();
 
@@ -4416,7 +4402,7 @@ namespace WebApplication1.Controllers
                             if (soldTo != null)
                             {
                                 BB_Proposal_Client bb_Proposal_Client = db.BB_Proposal_Client.Where(x => x.ProposalID == bb_proposal.ID).FirstOrDefault();
-                                if(bb_Proposal_Client.ClientID != soldTo)
+                                if (bb_Proposal_Client.ClientID != soldTo)
                                 {
                                     bb_Proposal_Client.ClientID = soldTo;
                                     bb_proposal.ClientAccountNumber = soldTo;
@@ -4424,13 +4410,14 @@ namespace WebApplication1.Controllers
                             }
                             bb_proposal.Plant = plant;
                             bb_proposal.ContractNumberPai = contractNumberPai;
-                            
+
 
                             LD_Contrato lD_Contrato = db.LD_Contrato.Where(x => x.ID == contractID).FirstOrDefault();
 
                             lD_Contrato.InvoiceList = invoiceList;
 
-                            if(financingcompany != null) { 
+                            if (financingcompany != null)
+                            {
                                 BB_FinancingContractType contractType = db.BB_FinancingContractType.Where(x => x.CompanyCode == financingcompany).FirstOrDefault();
 
                                 BB_Proposal_Financing proposal_Financing = db.BB_Proposal_Financing.Where(x => x.ProposalID == contractProposal).FirstOrDefault();
@@ -4576,7 +4563,7 @@ namespace WebApplication1.Controllers
 
         }
 
-        
+
 
 
         public class PrazoDiferenciado

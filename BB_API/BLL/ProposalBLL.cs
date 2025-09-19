@@ -121,62 +121,6 @@ namespace WebApplication1.BLL
 
                     p.Draft.upturns.upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == ProposalID).ToList();
 
-                    // ISTO ESTÁ A SER UTILIZADO???? EU ACHO QUE NAO
-                    if (p.Draft.printingServices != null)
-                    {
-                        List<BB_Proposal_PrintingServices> pritningService_lst = db.BB_Proposal_PrintingServices.Where(x => x.ProposalID == proposal.ID).ToList();
-                        db.BB_Proposal_PrintingServices.RemoveRange(pritningService_lst);
-
-                        var configpPrintingServices = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<PrintingServices, BB_Proposal_PrintingServices>();
-                        });
-
-                        IMapper iMapperPrintinfServices = configpPrintingServices.CreateMapper();
-
-                        BB_Proposal_PrintingServices printingService = iMapperPrintinfServices.Map<PrintingServices, BB_Proposal_PrintingServices>(p.Draft.printingServices);
-
-                        printingService.ProposalID = ProposalID;
-
-                        db.BB_Proposal_PrintingServices.Add(printingService);
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Message.ToString();
-                        }
-
-                        //VVA
-                        if (p.Draft.printingServices.vva != null)
-                        {
-                            List<BB_Proposal_Vva> vva_lst = db.BB_Proposal_Vva.Where(x => x.ProposalID == proposal.ID).ToList();
-                            db.BB_Proposal_Vva.RemoveRange(vva_lst);
-
-                            var configpVVA = new MapperConfiguration(cfg =>
-                            {
-                                cfg.CreateMap<Vva, BB_Proposal_Vva>();
-                            });
-                            IMapper iMapperVVA = configpVVA.CreateMapper();
-
-                            BB_Proposal_Vva vva = iMapperVVA.Map<Vva, BB_Proposal_Vva>(p.Draft.printingServices.vva);
-
-                            vva.ProposalID = ProposalID;
-
-
-                            db.BB_Proposal_Vva.Add(vva);
-                            try
-                            {
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Message.ToString();
-                            }
-                        }
-                    }
-
                     UpdatePrintingService(p.Draft.printingServices2, ProposalID);
 
                     UpdateClient(p.Draft.client, p.Draft.details.CreatedBy, ProposalID);
@@ -527,6 +471,7 @@ namespace WebApplication1.BLL
                 BB_Proposal_PrintingServices2 printingServices2 = db.BB_Proposal_PrintingServices2
                     .Include(x => x.BB_PrintingServices.Select(ps => ps.BB_VVA))
                     .Include(a => a.BB_PrintingServices.Select(m => m.BB_PrintingService_Machines))
+                    .Include(b => b.BB_PrintingServices.Select(ps => ps.BB_PrintingServices_ClickPerModel_VVA))
                     .FirstOrDefault(x => x.ProposalID == proposal.ID);
                 BB_Proposal_Condition_Type existPrintingCondition = db.BB_Proposal_Condition_Type.Where(x => x.ProposalID == proposal.ID && x.ConditionType == "ZVBS").FirstOrDefault();
 
@@ -594,6 +539,27 @@ namespace WebApplication1.BLL
                                 PageBillingFrequency = ps.BB_PrintingServices_ClickPerModel.PageBillingFrequency.Value,
                             };
                             newPS.ClickPerModel = cpm;
+                        }
+                        if (ps.BB_PrintingServices_ClickPerModel_VVA != null)
+                        {
+                            List<BB_PrintingServices_ClickPerModel_VVA> lst = ps.BB_PrintingServices_ClickPerModel_VVA.ToList();
+                            BB_PrintingServices_ClickPerModel_VVA firtsElem = ps.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault();
+
+                            if (firtsElem != null)
+                            {
+                                VVAClickPerModel vVAClickPerModel = new VVAClickPerModel()
+                                {
+                                    ExcessBillingFrequency = Convert.ToInt32(firtsElem.ExcessBillingFrequency.Value),
+                                    PageBillingFrequency = Convert.ToInt32(firtsElem.ExcessBillingFrequency.Value),
+                                    RentBillingFrequency = Convert.ToInt32(firtsElem.RentBillingFrequency.Value),
+                                    ReturnType = Convert.ToInt32(firtsElem.ReturnType.Value),
+                                    RecommendedRent = 0,
+                                    RequestedRent = 0,
+                                    ps_basket = lst
+
+                                };
+                                newPS.VVAClickPerModel = vVAClickPerModel;
+                            }
                         }
 
                         List<BB_Equipamentos> equipamentos = new List<BB_Equipamentos>();
@@ -1001,8 +967,9 @@ namespace WebApplication1.BLL
                         db.Entry(item).State = item.ID == 0 ? EntityState.Added : EntityState.Modified;
                         db.SaveChanges();
                     }
-                    foreach (var _Quote in p.Draft.baskets.os_basket)
+                    for (int i = 0; i < p.Draft.baskets.os_basket.Count; i++)
                     {
+                        var _Quote = p.Draft.baskets.os_basket[i];
 
                         var config1 = new MapperConfiguration(cfg =>
                         {
@@ -1065,6 +1032,8 @@ namespace WebApplication1.BLL
                                 }
                             }
                         }
+
+
                         //PS_CONFIG
                         if (_Quote.psConfig != null)
                         {
@@ -1089,6 +1058,15 @@ namespace WebApplication1.BLL
                                 ex.Message.ToString();
                             }
                         }
+
+                        var configReverse = new MapperConfiguration(cfg =>
+                        {
+                            cfg.CreateMap<BB_Proposal_Quote, OsBasket>();
+                        });
+
+                        IMapper iMapperReverse = configReverse.CreateMapper();
+
+                        p.Draft.baskets.os_basket[i] = iMapperReverse.Map<BB_Proposal_Quote, OsBasket>(quote);
 
                     }
 
@@ -2437,6 +2415,7 @@ namespace WebApplication1.BLL
                 // FINANCING MONTHLY
                 foreach (var monthly in financing.FinancingFactors.Monthly)
                 {
+
                     BB_Proposal_FinancingMonthly m1 = iMappermonthly.Map<Monthly, BB_Proposal_FinancingMonthly>(monthly);
 
                     m1.ProposalID = proposalID;
@@ -3234,9 +3213,9 @@ namespace WebApplication1.BLL
                                     }
                                 }
                             }
-                            if (aps.VVA_PerModel_lst != null)
+                            if (aps.VVAClickPerModel != null)
                             {
-                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVAClickPerModel.ps_basket)
                                 {
                                     BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
                                     {
@@ -3373,9 +3352,9 @@ namespace WebApplication1.BLL
                                     db.SaveChanges();
                                 }
                             }
-                            if (aps.VVA_PerModel_lst != null)
+                            if (aps.VVAClickPerModel != null)
                             {
-                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVA_PerModel_lst)
+                                foreach (BB_PrintingServices_ClickPerModel_VVA m in aps.VVAClickPerModel.ps_basket)
                                 {
                                     BB_PrintingServices_ClickPerModel_VVA ps_vva_model = new BB_PrintingServices_ClickPerModel_VVA()
                                     {

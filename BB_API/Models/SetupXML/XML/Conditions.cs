@@ -314,16 +314,36 @@ namespace WebApplication1.Models.SetupXML.XML
                     List<BB_Proposal_Quote> quote_lst = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
                     List<BB_Proposal_Quote_RS> quoteRs_lst = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).ToList();
                     List<BB_Data_Integration> dataIntegration_lst = db.BB_Data_Integration.AsNoTracking().ToList();
-                    var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-                    List<BB_PrintingServices> bB_PrintingServices_lst = db.BB_PrintingServices.AsNoTracking().ToList();
-                    List<BB_VVA> bB_VVA_lst = db.BB_VVA.AsNoTracking().ToList();
-                    List<BB_PrintingService_Machines> bB_PrintingService_Machine = db.BB_PrintingService_Machines.AsNoTracking().ToList();
                     BB_Proposal_OPSManage opsM = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     //BB_Proposal_Financing pf = db.BB_Proposal_Financing.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     BB_Proposal_Overvaluation overvaluation = db.BB_Proposal_Overvaluation.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     List<BB_Proposal_Upturn> upturns = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalId).ToList();
                     List<BB_Equipamentos> equipamentos = db.BB_Equipamentos.AsNoTracking().ToList();
 
+                    //Serviço de printing que está associado ao negócio
+                    var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    //Guardar número de serviço de printing ativo
+                    int index = (int)printingService2ID.ActivePrintingService;
+                    List<BB_VVA> bB_VVA_lst = db.BB_VVA.AsNoTracking().ToList();
+                    List<BB_PrintingService_Machines> bB_PrintingService_Machine = db.BB_PrintingService_Machines.AsNoTracking().ToList();
+
+
+                    //Vamos buscar o id do serviço de printing ativo
+                    BB_PrintingServices bB_PrintingServices = null;
+                    //Caso exista mais do que um serviço de printing associado ao negócio, temos que ir buscar o que está ativo
+                    // Senão vamos o único que existe
+                    if (index > 1)
+                    {
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
+                    }
+                    else
+                    {
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
+                    }
+
+                    //Com o serviço de printing ativo, vamos buscar as máquinas que estão associadas a esse serviço através do ID da tabela BB_PrintingServices
+                    List<BB_PrintingServices_ClickPerModel_VVA> perModel_VVA_lst = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
+                    
                     int? numberOfMachines = db.BB_Proposal_Quote
                                             .Where(x => x.Proposal_ID == proposalId)
                                             .Join(db.BB_Equipamentos,
@@ -685,51 +705,58 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             }
 
-                            //Criação da condição ZVBS quando negocio tem VVA como tipo de servico de printing
-                            int index = (int)printingService2ID.ActivePrintingService;
-                            BB_PrintingServices bB_PrintingServices = null;
-                            if (index > 1)
-                            {
-                                bB_PrintingServices = bB_PrintingServices_lst.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
-                            }
-                            else
-                            {
-                                bB_PrintingServices = bB_PrintingServices_lst.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
-                            }
 
-
-                            if (bB_PrintingServices != null)
-                            {
-                                BB_VVA bB_VVA = bB_VVA_lst.FirstOrDefault(x => x.PrintingServiceID == bB_PrintingServices.ID);
-                                List<BB_PrintingService_Machines> machines = bB_PrintingService_Machine.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
-
-                                if (bB_VVA != null)
+                                if (bB_PrintingServices != null)
                                 {
-                                    BB_PrintingService_Machines machineItem = machines.FirstOrDefault(x => x.CodeRef == order.MACHINE);
+                                    BB_VVA bB_VVA = bB_VVA_lst.FirstOrDefault(x => x.PrintingServiceID == bB_PrintingServices.ID);
+                                    List<BB_PrintingService_Machines> machines = bB_PrintingService_Machine.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
+                                    //List<BB_PrintingServices_ClickPerModel_VVA> clickPerModelVVAMachines = listClickPerModelVVAMachines.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
 
-                                    // Se não encontrar e for máquina usada, tenta obter pela tabela de basket
-                                    if (machineItem == null)
+                                    if (bB_VVA != null)
                                     {
-                                        //Quando maquina usada, temos que ir buscar o codigo de referencia atraves da BB_Proposal_ItemDoBasket 
-                                        BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.FirstOrDefault(x => x.SerialNumber == order.ORDER_INFO);
-                                        machineItem = machines.FirstOrDefault(x => x.CodeRef == itemDoBasket?.CodeRef);
-                                    }
+                                        BB_PrintingService_Machines machineItem = machines.FirstOrDefault(x => x.CodeRef == order.MACHINE);
 
-                                    if (machineItem != null)
-                                    {
-                                        //Cálculo do valor do PVP do ZVBS é sempre o volume BW * click preto aprovador + volume C * click cor aprovado
-                                        double? pvpZVBS = (machineItem.BWVolume * machineItem.ApprovedBW) + (machineItem.CVolume * machineItem.ApprovedC);
-
-                                        collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                                        // Se não encontrar e for máquina usada, tenta obter pela tabela de basket
+                                        if (machineItem == null)
                                         {
-                                            DOC = order.SD_DOC,
-                                            COND_FLAG = "A",
-                                            KSCHL = "ZVBS",
-                                            KBETR = Math.Round(pvpZVBS ?? 0.0, 2).ToString("F2").Replace(",", ".")
-                                        });
+                                            //Quando maquina usada, temos que ir buscar o codigo de referencia atraves da BB_Proposal_ItemDoBasket 
+                                            BB_Proposal_ItemDoBasket itemDoBasket = db.BB_Proposal_ItemDoBasket.FirstOrDefault(x => x.SerialNumber == order.ORDER_INFO);
+                                            machineItem = machines.FirstOrDefault(x => x.CodeRef == itemDoBasket?.CodeRef);
+                                        }
+
+                                        if (machineItem != null)
+                                        {
+                                            //Cálculo do valor do PVP do ZVBS é sempre o volume BW * click preto aprovador + volume C * click cor aprovado
+                                            double? pvpZVBS = (machineItem.BWVolume * machineItem.ApprovedBW) + (machineItem.CVolume * machineItem.ApprovedC);
+
+                                            collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                                            {
+                                                DOC = order.SD_DOC,
+                                                COND_FLAG = "A",
+                                                KSCHL = "ZVBS",
+                                                KBETR = Math.Round(pvpZVBS ?? 0.0, 2).ToString("F2").Replace(",", ".")
+                                            });
+                                        }
+                                    }
+                                    else if (perModel_VVA_lst != null)
+                                    {
+                                        BB_PrintingServices_ClickPerModel_VVA machineItem = perModel_VVA_lst.FirstOrDefault(x => x.CodeRef == order.MACHINE);
+
+                                        if (machineItem != null)
+                                        {
+                                            double? pvpZVBS = (machineItem.BWVolume * machineItem.ApprovedBW) + (machineItem.CVolume * machineItem.ApprovedC);
+                                            collectionConditions.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONDITIONS
+                                            {
+                                                DOC = order.SD_DOC,
+                                                COND_FLAG = "A",
+                                                KSCHL = "ZVBS",
+                                                KBETR = Math.Round(pvpZVBS ?? 0.0, 2).ToString("F2").Replace(",", ".")
+                                            });
+
+                                            perModel_VVA_lst.Remove(machineItem);
+                                    }
                                     }
                                 }
-                            }
 
 
                             //Quando negocio tem sobrevalorizacao, adiciona a condicao ZEBB 
@@ -1044,6 +1071,7 @@ namespace WebApplication1.Models.SetupXML.XML
                     if (bB_PrintingServices != null)
                     {
                         BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
+                        List<BB_PrintingServices_ClickPerModel_VVA> ClickPerModelVVA_lst = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
 
                         if (bB_VVA != null)
                         {
@@ -1051,6 +1079,18 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             ConditionPVP condPvp = new ConditionPVP();
                             condPvp.PVP = Convert.ToDouble(Math.Round(bB_VVA.PVP ?? 0.0, 2).ToString("F2"));
+                            condPvp.ConditionCode = "ZVBS";
+                            conditionsPvp.Add(condPvp);
+                        }
+                        else if (ClickPerModelVVA_lst != null)
+                        {
+                            double? totalZVBS = 0;
+                            foreach (var cMVVA in ClickPerModelVVA_lst)
+                            {
+                                totalZVBS += ((cMVVA.BWVolume * cMVVA.ApprovedBW) + (cMVVA.CVolume * cMVVA.ApprovedC)) * cMVVA.Quantity;
+                            }
+                            ConditionPVP condPvp = new ConditionPVP();
+                            condPvp.PVP = totalZVBS == null ? 0 : Math.Round(totalZVBS ?? 0.0, 2);
                             condPvp.ConditionCode = "ZVBS";
                             conditionsPvp.Add(condPvp);
                         }
@@ -1126,6 +1166,26 @@ namespace WebApplication1.Models.SetupXML.XML
                     List<BB_Proposal_Quote> oneShot = db.BB_Proposal_Quote.Where(x => x.Proposal_ID == proposalId).ToList();
                     List<BB_Proposal_Quote_RS> rsShot = db.BB_Proposal_Quote_RS.Where(x => x.ProposalID == proposalId).ToList();
                     List<BB_Proposal_OPSManage> oPSManages = db.BB_Proposal_OPSManage.Where(x => x.ProposalID == proposalId).ToList();
+                    //Serviço de printing que está associado ao negócio
+                    BB_Proposal_PrintingServices2 printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
+                    //Guardar número de serviço de printing ativo
+                    int index = (int)printingService2ID.ActivePrintingService;
+
+                    //Vamos buscar o id do serviço de printing ativo
+                    BB_PrintingServices bB_PrintingServices = null;
+                    //Caso exista mais do que um serviço de printing associado ao negócio, temos que ir buscar o que está ativo
+                    // Senão vamos o único que existe
+                    if (index > 1)
+                    {
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
+                    }
+                    else
+                    {
+                        bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
+                    }
+
+                    //Com o serviço de printing ativo, vamos buscar as máquinas que estão associadas a esse serviço através do ID da tabela BB_PrintingServices
+                    List<BB_PrintingServices_ClickPerModel_VVA> perModel_VVA_lst = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
 
                     int? numberOfMachines = db.BB_Proposal_Quote
                                             .Where(x => x.Proposal_ID == proposalId)
@@ -1386,23 +1446,13 @@ namespace WebApplication1.Models.SetupXML.XML
 
                             if (machineName != null)
                             {
-                                var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
-
-                                int index = (int)printingService2ID.ActivePrintingService;
-                                BB_PrintingServices bB_PrintingServices = null;
-                                if (index > 1)
-                                {
-                                    bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).OrderBy(x => x.ID).Skip(index - 1).FirstOrDefault();
-                                }
-                                else
-                                {
-                                    bB_PrintingServices = db.BB_PrintingServices.Where(x => x.PrintingServices2ID == printingService2ID.ID).FirstOrDefault();
-                                }
+                                //var printingService2ID = db.BB_Proposal_PrintingServices2.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
                                 if (bB_PrintingServices != null)
                                 {
                                     BB_VVA bB_VVA = db.BB_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).FirstOrDefault();
                                     BB_PrintingService_Machines machine = db.BB_PrintingService_Machines.Where(x => x.PrintingServiceID == bB_PrintingServices.ID && x.CodeRef == item.CodeRef).FirstOrDefault();
+                                    BB_PrintingServices_ClickPerModel_VVA perModel_VVA = perModel_VVA_lst.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
                                     if (machineName != null && machine != null)
                                     {
                                         if (bB_VVA != null)
@@ -1413,6 +1463,19 @@ namespace WebApplication1.Models.SetupXML.XML
                                             condPvp.PVP = Convert.ToDouble(Math.Round((machine.BWVolume * machine.ApprovedBW) + (machine.ApprovedC * machine.CVolume) ?? 0.0, 2).ToString("F2"));
                                             condPvp.ConditionCode = "ZVBS";
                                             conditionPVPPerMachine.Conditions.Add(condPvp);
+                                        }
+                                    }
+                                    else if (machineName != null && perModel_VVA != null)
+                                    {
+                                        if (perModel_VVA != null)
+                                        {
+                                            double valueZVBS = 0;
+                                            ConditionPVP condPvp = new ConditionPVP();
+                                            condPvp.PVP = condPvp.PVP = Convert.ToDouble(Math.Round((perModel_VVA.BWVolume * perModel_VVA.ApprovedBW) + (perModel_VVA.ApprovedC * perModel_VVA.CVolume) ?? 0.0, 2).ToString("F2"));
+                                            condPvp.ConditionCode = "ZVBS";
+                                            conditionPVPPerMachine.Conditions.Add(condPvp);
+
+                                            perModel_VVA_lst.Remove(perModel_VVA);
                                         }
                                     }
                                 }

@@ -15,6 +15,8 @@ namespace WebApplication1.Models.ViewModels
         public Nullable<int> Qty { get; set; }
         public Nullable<double> RequestedBWClickPrice { get; set; }
         public Nullable<double> RequestedCClickPrice { get; set; }
+        public Nullable<double> RequestedBWExcessPrice { get; set; }
+        public Nullable<double> RequestedCExcessPrice { get; set; }
         public Nullable<int> bwPages { get; set; }
         public Nullable<int> cPages { get; set; }
         public Nullable<double> ClickPriceBW { get; set; }
@@ -27,5 +29,7 @@ namespace WebApplication1.Models.ViewModels
         public Nullable<double> CCost { get; set; }
         public Nullable<double> ApprovedBW { get; set; }
         public Nullable<double> ApprovedC { get; set; }
+        public Nullable<double> RequestedRent { get; set; }
+        public Nullable<double> RecommendedRent { get; set; }
     }
 }
