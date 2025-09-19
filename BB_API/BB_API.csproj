@@ -418,6 +418,9 @@
     <Compile Include="Models\BB_PrintingServices_ClickPerModel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BB_PrintingServices_ClickPerModel_VVA.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BB_PrintingServices_NoVolume.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -735,6 +738,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Model12.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ModelsDiogo\BB_Client.cs" />
     <Compile Include="Models\ModelsDiogo\BB_Proposal.cs" />
     <Compile Include="Models\ModelsDiogo\BB_Proposal_Status.cs" />
@@ -835,6 +843,7 @@
     <Content Include="Models\Model1.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model12.cs</LastGenOutput>
     </Content>
     <Content Include="Models\PortalUsers.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

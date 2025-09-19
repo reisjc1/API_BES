@@ -4126,7 +4126,7 @@ namespace WebApplication1.Controllers
                     }
 
                     double? cacelamento = 0;
-                    foreach (var itecacelamento in p.Draft.upturns)
+                    foreach (var itecacelamento in p.Draft.upturns.upturns)
                     {
                         cacelamento += itecacelamento.Total;
                     }
@@ -4715,7 +4715,7 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["B39"].Value = p.Draft.overvaluations != null && p.Draft.overvaluations.Count > 0 ? p.valoretotais.sobrevalorizacaoTotal.ToString() + " €" : "N/A";
 
-                    wsBB.Cells["D39"].Value = p.Draft.upturns != null && p.Draft.upturns.Count > 0 ? p.valoretotais.retomasTotal.ToString() + " €" :"N/A";
+                    wsBB.Cells["D39"].Value = p.Draft.upturns != null && p.Draft.upturns.upturns.Count > 0 ? p.valoretotais.retomasTotal.ToString() + " €" :"N/A";
 
                     wsBB.Cells["B42"].Value = p.LeasedeskComentariosGC != null && p.LeasedeskComentariosGC != "" ? p.LeasedeskComentariosGC : "N/A";
                     //KOnica Representante

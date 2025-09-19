@@ -21,5 +21,7 @@ namespace WebApplication1.Models.ViewModels
         public GlobalClickVVA GlobalClickVVA { get; set; }
         public GlobalClickNoVolume GlobalClickNoVolume { get; set; }
         public ClickPerModel ClickPerModel { get; set; }
+        //Pode ser necessario tornar um objeto "singluar" e nao uma lista
+        public List<BB_PrintingServices_ClickPerModel_VVA> VVA_PerModel_lst { get; set; }
     }
 }
