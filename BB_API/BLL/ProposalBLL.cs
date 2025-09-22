@@ -967,9 +967,8 @@ namespace WebApplication1.BLL
                         db.Entry(item).State = item.ID == 0 ? EntityState.Added : EntityState.Modified;
                         db.SaveChanges();
                     }
-                    for (int i = 0; i < p.Draft.baskets.os_basket.Count; i++)
+                    foreach (var _Quote in p.Draft.baskets.os_basket)
                     {
-                        var _Quote = p.Draft.baskets.os_basket[i];
 
                         var config1 = new MapperConfiguration(cfg =>
                         {
@@ -1058,15 +1057,6 @@ namespace WebApplication1.BLL
                                 ex.Message.ToString();
                             }
                         }
-
-                        var configReverse = new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<BB_Proposal_Quote, OsBasket>();
-                        });
-
-                        IMapper iMapperReverse = configReverse.CreateMapper();
-
-                        p.Draft.baskets.os_basket[i] = iMapperReverse.Map<BB_Proposal_Quote, OsBasket>(quote);
 
                     }
 
