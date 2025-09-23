@@ -1596,7 +1596,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 newPS.Machines.Add(psMachine);
                             }
 
-                            if(ps.BB_PrintingServices_ClickPerModel_VVA != null)
+                            if(ps.BB_PrintingServices_ClickPerModel_VVA.Count > 0)
                             {
                                 BB_PrintingServices_ClickPerModel_VVA psVVAcpm = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
                                 List<BB_PrintingServices_ClickPerModel_VVA> ps_basket = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == ps.ID).ToList();
