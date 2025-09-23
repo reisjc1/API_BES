@@ -175,7 +175,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             VT_VLAUFE = "3",
                             VT_ANZPOS = noOrders.ToString(),
                             VT_VUNDAT = FirstDayNextMonthString,
-                            VT_ZTERM = "453E",
+                            VT_ZTERM = pf.MaintanceContractPaymentTerms,
                             VT_FAKSK = "ZN",
                             VT_SAP_CONTRACT = proposal.ContractNumberPai
                         });
@@ -200,7 +200,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             VT_VLAUFE = "3",
                             VT_ANZPOS = noOrders.ToString(),
                             VT_VUNDAT = FirstDayNextMonthString,
-                            VT_ZTERM = "453E",
+                            VT_ZTERM = pf.MaintanceContractPaymentTerms,
                             VT_FAKSK = "ZN"
                         });
                     }
