@@ -753,8 +753,15 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 KBETR = Math.Round(pvpZVBS ?? 0.0, 2).ToString("F2").Replace(",", ".")
                                             });
 
-                                            perModel_VVA_lst.Remove(machineItem);
-                                    }
+                                            if (machineItem.Quantity == 1)
+                                            {
+                                                perModel_VVA_lst.Remove(machineItem);
+                                            }
+                                            else
+                                            {
+                                                machineItem.Quantity--;
+                                            }
+                                        }
                                     }
                                 }
 

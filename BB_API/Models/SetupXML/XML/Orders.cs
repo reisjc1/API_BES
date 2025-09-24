@@ -762,8 +762,15 @@ namespace WebApplication1.Models.SetupXML.XML
                                 BB_PrintingServices_ClickPerModel_VVA psClickPerModelVVA = perModel_VVA_lst.Where(x => x.CodeRef == order.CodeRef).FirstOrDefault();
                                 collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.CodeRef, machineCounter, psClickPerModelVVA);
 
-                                perModel_VVA_lst.Remove(psClickPerModelVVA);
-                                
+                                if(psClickPerModelVVA.Quantity == 1)
+                                {
+                                    perModel_VVA_lst.Remove(psClickPerModelVVA);
+                                }
+                                else
+                                {
+                                    psClickPerModelVVA.Quantity--;
+                                }
+
                                     collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
                                     {
                                         SD_DOC = orderDoc,

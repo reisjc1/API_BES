@@ -515,10 +515,10 @@ namespace WebApplication1.Models.SetupXML.XML
                                     CP_NAME1 = bB_Proposal_DL_ClientContacts.Name,
                                     CP_PHONE = bB_Proposal_DL_ClientContacts.Movil.ToString(),
                                     CP_MAIL = bB_Proposal_DL_ClientContacts.Email,
-                                    SO_BUILDING = order.BUILD_LONG,
-                                    SO_FLOOR = order.FLOOR,
-                                    SO_ROOMNR = order.ROOMNUMBER,
-                                    SO_DEPARTMENT = order.DEPARTMENT
+                                    //SO_BUILDING = order.BUILD_LONG,
+                                    //SO_FLOOR = order.FLOOR,
+                                    //SO_ROOMNR = order.ROOMNUMBER,
+                                    //SO_DEPARTMENT = order.DEPARTMENT
                                 });
                             }
                             collectionAddresses.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES
@@ -526,17 +526,17 @@ namespace WebApplication1.Models.SetupXML.XML
                                 ADDRNUMBER = addressObj.ADDRNUMBER,     //$"A_3686499_{randomLetterNunber}",
                                 NAME1 = order.NAME1 == "" ? order.BUSINESSCODE : order.NAME1,
                                 //NAME2 = addressObj.NAME2, //"COMPLEMENTO 1",               //NOTA: Ir buscar o dado a base de dados de ESPANHA -- Falar com João reis  (Para Antonio e Tiago)
-                                NAME_CO = order.DEPARTMENT,
+                                //NAME_CO = order.DEPARTMENT,
                                 CITY1 = addressObj.CITY1,// "CADIZ",
                                 POST_CODE1 = addressObj.POST_CODE1,//"11006",
                                 STREET = order.STREET,//"AVENIDA DEL PUERTO 2  3º ED FEN",
-                                FLOOR = addressObj.FLOOR,//"3",
-                                ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
+                                //FLOOR = addressObj.FLOOR,//"3",
+                                //ROOMNUMBER = addressObj.ROOMNUMBER,//"A",
                                 COUNTRY = "ES",//"ES",
                                 LANGU = addressObj.LANGU,//"E",
                                 REGION = addressObj.REGION,//"11",
                                 TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
-                                BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
+                                //BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
                             });
                             collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
                             {
@@ -693,6 +693,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                             TEL_NUMBER = addressObj.TEL_NUMBER,//"66666666", //int no DB
                                             BUILD_LONG = addressObj.BUILD_LONG//"FENOSA"
                                         });
+
+
                                         collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
                                         {
                                             TAX_NO_1 = addressAddObj.TAX_NO_1,
