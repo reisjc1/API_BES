@@ -453,8 +453,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 });
                                 collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
                                 {
-                                    TAX_NO_1 = addressAddObj.TAX_NO_1,
-                                    TAX_NO_2 = client.NIF,
+                                    TAX_NO_1 = addressAddObj.TAX_NO_1.StartsWith("ES") ? addressAddObj.TAX_NO_1.Substring(2) : addressAddObj.TAX_NO_1,
+                                    TAX_NO_2 = client.NIF.StartsWith("ES") ? client.NIF.Substring(2) : client.NIF,
                                     ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
                                 });
                                 i++;
@@ -540,8 +540,8 @@ namespace WebApplication1.Models.SetupXML.XML
                             });
                             collectionAddressesAdd.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ADDRESSES_ADD
                             {
-                                TAX_NO_1 = addressAddObj.TAX_NO_1,
-                                TAX_NO_2 = client.NIF,
+                                TAX_NO_1 = addressAddObj.TAX_NO_1.StartsWith("ES") ? addressAddObj.TAX_NO_1.Substring(2) : addressAddObj.TAX_NO_1,
+                                TAX_NO_2 = client.NIF.StartsWith("ES")? client.NIF.Substring(2) : client.NIF,
                                 ADDRNUMBER_2 = addressAddObj.ADDRNUMBER
                             });
                             i++;

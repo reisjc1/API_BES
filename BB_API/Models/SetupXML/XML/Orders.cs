@@ -37,7 +37,7 @@ namespace WebApplication1.Models.SetupXML.XML
                 using (var db = new BB_DB_DEVEntities2())
                 {
                     //List<BB_Equipamentos> maquinas = new List<BB_Equipamentos>();
-                    BB_Equipamentos  maquina = new BB_Equipamentos();
+                    BB_Equipamentos maquina = new BB_Equipamentos();
                     //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
                     //BB_Proposal d = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault();
                     //LD_Contrato c = db.LD_Contrato.Where(x => x.ProposalID == proposalId).FirstOrDefault();
@@ -49,7 +49,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
 
                     List<BB_Proposal_DeliveryLocation> dl = db.BB_Proposal_DeliveryLocation.Where(x => x.ProposalID == d.ID && x.AccountType == "Ship To").ToList();
-                   
+
 
                     Random random = new Random();
                     int randomNumberOrderDoc = random.Next(1000000, 10000000);
@@ -66,25 +66,25 @@ namespace WebApplication1.Models.SetupXML.XML
                         int? groupNumber = null;
                         //List<BB_Proposal_ItemDoBasket> groups = new List<BB_Proposal_ItemDoBasket>();
                         List<BB_Proposal_ItemDoBasket> itemsDoBasket = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliveryLocation.IDX).OrderBy(x => x.Group).ToList();
-                     
+
                         foreach (var itemdoBsket in itemsDoBasket)
                         {
                             if (itemdoBsket.Group != groupNumber)
                             {
                                 maquina = db.BB_Equipamentos.Where(m => m.CodeRef == itemdoBsket.CodeRef).FirstOrDefault();
-                                
-                                if(maquina != null)
+
+                                if (maquina != null)
                                 {
 
-                                    groups.Add(itemdoBsket,1);
+                                    groups.Add(itemdoBsket, 1);
                                     groupNumber = itemdoBsket.Group;
                                 }
                                 else
                                 {
 
-                                    if(itemdoBsket.Description.Contains("MAIN MATERIAL"))
+                                    if (itemdoBsket.Description.Contains("MAIN MATERIAL"))
                                     {
-                                        groups.Add(itemdoBsket,2);
+                                        groups.Add(itemdoBsket, 2);
                                         groupNumber = itemdoBsket.Group;
                                     }
                                 }
@@ -105,7 +105,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 var collectionOrderItems = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>();
                                 var collectionOrdersContact = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT>(); //Informação igual 
                                 var collectionOrdersFinance = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_FINANCE>();
-                                var collectionOrderCLickPrices = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES>(); 
+                                var collectionOrderCLickPrices = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES>();
                                 string contractIndexString = index.ToString();
                                 string bundelCodeRef = "";
 
@@ -120,13 +120,13 @@ namespace WebApplication1.Models.SetupXML.XML
                                 //Utilizado no Z1ZVOE_ORDERS
                                 string contractItm = contractIndexString + "0";
                                 List<BB_Proposal_ItemDoBasket> group = db.BB_Proposal_ItemDoBasket.Where(x => x.DeliveryLocationID == deliveryLocationIDX.IDX && x.Group == order.Key.Group).ToList();
-                            
+
                                 int itm_number = 20;
                                 bool isMachine = false;
                                 foreach (var item in group)
                                 {
                                     BB_Equipamentos bB_Equipamentos = db.BB_Equipamentos.Where(x => x.CodeRef == item.CodeRef).FirstOrDefault();
-                                
+
 
                                     BB_Proposal_ItemDoBasket lastItemGroup = group.Last();
 
@@ -178,7 +178,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                     }
                                 }
-                            
+
                                 BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == deliveryLocationIDX.DeliveryContact).FirstOrDefault();
 
                                 BB_PrintingServices_ClickPerModel_VVA psClickPerModelVVA = new BB_PrintingServices_ClickPerModel_VVA();
@@ -217,7 +217,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                 if (pf.Months == 60)
                                 {
                                     LEAS_ZTERM = "E30D";
-                                }else if(pf.Months == 48 || pf.Months == 0)
+                                }
+                                else if (pf.Months == 48 || pf.Months == 0)
                                 {
                                     LEAS_ZTERM = "E60D";
 
@@ -230,7 +231,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     LEAS_LVTNR = pf.AgreementNumber,
                                     LEAS_LFAKT = "1",
                                     LEAS_ZTERM = LEAS_ZTERM,
-                                    LEAS_LEABG = String.Format("{0:yyyyMMdd}",pf.DateApproval),
+                                    LEAS_LEABG = String.Format("{0:yyyyMMdd}", pf.DateApproval),
                                     KBETR1 = "",
                                     KBETR2 = "",
                                     LEAS_LEPER = "",
@@ -238,7 +239,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     LEAS_LKAUP = "2.5",
                                     BILL_TO = d.ClientAccountNumber
                                     //PAYER = d.ClientAccountNumber
-                                }) ;
+                                });
                                 //}
 
                                 collectionOrderItems = new Collection<WebApplication1.Models.SetupXML.XSD.Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>(collectionOrderItems.OrderBy(x => x.ITM_NUMBER).ToList());
@@ -270,7 +271,8 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 index++;
 
-                            }catch(Exception ex)
+                            }
+                            catch (Exception ex)
                             {
                                 ex.Message.ToString();
                                 return null;
@@ -440,7 +442,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         }
                     }
 
-                        
+
 
 
                     var collectionOrderItemsRetiradas = new System.Collections.ObjectModel.Collection<Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS>();
@@ -448,10 +450,10 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     BB_Proposal_Upturn bB_Proposal_Upturn = db.BB_Proposal_Upturn.Where(x => x.ProposalID == proposalId).FirstOrDefault();
 
-                    if(bB_Proposal_Upturn != null)
+                    if (bB_Proposal_Upturn != null)
                     {
-                    //    if((bool)bB_Proposal_Upturn.Retirada)
-                    //{
+                        //    if((bool)bB_Proposal_Upturn.Retirada)
+                        //{
                         Random randomRetirada = new Random();
                         int randomNumberOrderDocRetirada = randomRetirada.Next(1000000, 10000000);
                         string randomNumberOrderRetiradaString = randomNumberOrderDocRetirada.ToString();
@@ -469,7 +471,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         string contactPhone = bB_Proposal_Upturn.Tel.ToString();
                         string contactSchedule = bB_Proposal_Upturn.Schedule;
                         string contactInfo = "Depart: " + bB_Proposal_Upturn.Department + " -Plant: " + bB_Proposal_Upturn.Plant;
-                        string contactInfo2 = "Marque/Modèle: "+ bB_Proposal_Upturn.Brand + " / " + bB_Proposal_Upturn.Model + "-N°:" + bB_Proposal_Upturn.Equipment_Number;
+                        string contactInfo2 = "Marque/Modèle: " + bB_Proposal_Upturn.Brand + " / " + bB_Proposal_Upturn.Model + "-N°:" + bB_Proposal_Upturn.Equipment_Number;
                         //string contactInfo3 = "";
 
                         collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
@@ -483,7 +485,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             APRT_INFO3 = "2024431493"
 
                         });
-                            
+
                         DateTime currentDate = DateTime.Now;
                         string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
                         collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
@@ -503,7 +505,7 @@ namespace WebApplication1.Models.SetupXML.XML
                             Z1ZVOE_ORDER_CONTACT = collectionOrdersContactRetiradas,
                             Z1ZVOE_ORDER_ITEMS = collectionOrderItemsRetiradas
                         });
-                    //}
+                        //}
                     }
 
 
@@ -565,7 +567,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                         cmd.Parameters.AddWithValue("@ProposalId", proposalId);
                         SqlDataReader reader = cmd.ExecuteReader();
-                        
+
                         while (reader.Read())
                         {
                             try
@@ -593,18 +595,19 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 groups.Add(order);
 
-                                if(order.TypeOfOrder == 1)
+                                if (order.TypeOfOrder == 1)
                                 {
                                     machineCounter++;
                                 }
 
-                            }catch(Exception ex)
+                            }
+                            catch (Exception ex)
                             {
                                 ex.Message.ToString();
                                 return null;
-                            }   
+                            }
                         }
-                        
+
                     }
                     List<BB_Equipamentos> bB_EquipamentosLst = db.BB_Equipamentos.ToList();
                     List<int> orderIds = groups.Select(order => order.IDX).ToList();
@@ -646,7 +649,7 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     //Com o serviço de printing ativo, vamos buscar as máquinas que estão associadas a esse serviço através do ID da tabela BB_PrintingServices
                     List<BB_PrintingServices_ClickPerModel_VVA> perModel_VVA_lst = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == bB_PrintingServices.ID).ToList();
-
+                    BB_Proposal bB_Proposal = db.BB_Proposal.Where(x => x.ID == proposalId).FirstOrDefault(); 
                     foreach (var order in groups)
                     {
                         if (order.TypeOfOrder == 1)
@@ -689,7 +692,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         //bundelCodeRef = item.CodeRef;
                                         firstItemGroup = false;
 
-                                        if(item.IsUsedMachine == true)
+                                        if (item.IsUsedMachine == true)
                                         {
                                             collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                                             {
@@ -712,7 +715,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 MODEL_YN = "Y",// Perguntar ao Luis
-                                                PLANT = "5200"
+                                                PLANT = bB_Proposal.IsMultipleContract.Value ? (bB_Proposal.Plant ?? "5200") : "5200"
                                             });
                                             bundelCodeRef = item.CodeRef;
                                         }
@@ -723,6 +726,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     {
                                         if (item == lastItemGroup && isMachine == false)
                                         {
+
                                             collectionOrderItems.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
                                             {
                                                 SD_DOC = orderDoc,
@@ -730,7 +734,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 HG_LV_ITEM = "10",
-                                                PLANT = item.CodeRef == "9960DX00056" ? "5460" : "5200"
+                                                PLANT =  item.CodeRef == "9960DX00056"  ? "5460": (bB_Proposal.IsMultipleContract.Value && bB_Proposal.Plant != null? bB_Proposal.Plant: "5200")
                                                 //MODEL_YN = "Y" // Perguntar ao Luis
                                             });
                                             bundelCodeRef = item.CodeRef;
@@ -744,7 +748,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 HG_LV_ITEM = "10",
-                                                PLANT = item.CodeRef == "9960DX00056" ? "5460": "5200"
+                                                PLANT = item.CodeRef == "9960DX00056" ? "5460": (bB_Proposal.IsMultipleContract.Value && bB_Proposal.Plant != null? bB_Proposal.Plant : "5200")
                                                 //MODEL_YN = "Y" // Perguntar ao Luis
                                             });
 
@@ -757,29 +761,30 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 //BB_Proposal_DL_ClientContacts dLClient = db.BB_Proposal_DL_ClientContacts.Where(x => x.ID == order.DeliveryContact).FirstOrDefault();
 
-                                
+
 
                                 BB_PrintingServices_ClickPerModel_VVA psClickPerModelVVA = perModel_VVA_lst.Where(x => x.CodeRef == order.CodeRef).FirstOrDefault();
                                 collectionOrderCLickPrices = ClickPrices(d.ID, orderDoc, order.CodeRef, machineCounter, psClickPerModelVVA);
-
-                                if(psClickPerModelVVA.Quantity == 1)
+                                if (psClickPerModelVVA != null)
                                 {
-                                    perModel_VVA_lst.Remove(psClickPerModelVVA);
-                                }
-                                else
-                                {
-                                    psClickPerModelVVA.Quantity--;
-                                }
-
-                                    collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                    if ( psClickPerModelVVA.Quantity == 1)
                                     {
-                                        SD_DOC = orderDoc,
-                                        APLF_NAME = order.ContactName + "" + order.ContactSurname, //"M. LUIS ALVAREZ",
-                                        APLF_PHON = order.ContactMovil,       //"66666666",
-                                        APLF_OPEN = order.Schedule,//"9h 17h",
-                                        APLF_INFO2 = order.Comments//"Asc: Oui -Connexion: PRINTFLEET",
+                                        perModel_VVA_lst.Remove(psClickPerModelVVA);
+                                    }
+                                    else  
+                                    {
+                                        psClickPerModelVVA.Quantity--;
+                                    }
+                                }
+                                collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                                {
+                                    SD_DOC = orderDoc,
+                                    APLF_NAME = order.ContactName + "" + order.ContactSurname, //"M. LUIS ALVAREZ",
+                                    APLF_PHON = order.ContactMovil,       //"66666666",
+                                    APLF_OPEN = order.Schedule,//"9h 17h",
+                                    APLF_INFO2 = order.Comments//"Asc: Oui -Connexion: PRINTFLEET",
 
-                                    });
+                                });
                                 //}
                                 //else
                                 //{
@@ -811,12 +816,14 @@ namespace WebApplication1.Models.SetupXML.XML
 
                                 string payerNumber = "";
 
-                                foreach(var dl in list_DeliveryLocations)
+                                foreach (var dl in list_DeliveryLocations)
                                 {
-                                    if(dl.BillReceiver == true && dl.Payer == true) {
+                                    if (dl.BillReceiver == true && dl.Payer == true)
+                                    {
                                         billToNumber = dl.SAPCustomerNr;
                                         payerNumber = dl.SAPCustomerNr;
-                                    }else if(dl.BillReceiver == true && dl.Payer == false)
+                                    }
+                                    else if (dl.BillReceiver == true && dl.Payer == false)
                                     {
                                         billToNumber = dl.SAPCustomerNr;
                                     }
@@ -966,7 +973,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         itm_number = itm_number + 10;
                                     }
                                 }
-                                                                
+
                                 collectionOrdersContact.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
                                 {
                                     SD_DOC = orderDoc,
@@ -976,7 +983,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                     APLF_INFO = order.Comments,//"Asc: Oui -Connexion: PRINTFLEET",
 
                                 });
-                                
+
                                 var LEAS_ZTERM = "";
                                 if (pf.Months == 60)
                                 {
@@ -1052,30 +1059,30 @@ namespace WebApplication1.Models.SetupXML.XML
 
                     if (bB_Proposal_Upturn != null)
                     {
-                        foreach(var upturn in bB_Proposal_Upturn)
+                        foreach (var upturn in bB_Proposal_Upturn)
                         {
                             //if ((bool)upturn.Retirada)
                             //{
-                                Random randomRetirada = new Random();
-                                int randomNumberOrderDocRetirada = randomRetirada.Next(1000000, 10000000);
-                                string randomNumberOrderRetiradaString = randomNumberOrderDocRetirada.ToString();
+                            Random randomRetirada = new Random();
+                            int randomNumberOrderDocRetirada = randomRetirada.Next(1000000, 10000000);
+                            string randomNumberOrderRetiradaString = randomNumberOrderDocRetirada.ToString();
 
-                                string orderRetiradaDoc = $"O_R{randomNumberOrderRetiradaString}_{randomLetterNunber}";
-                                collectionOrderItemsRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
-                                {
-                                    SD_DOC = orderRetiradaDoc,
-                                    ITM_NUMBER = "10", // contractItm,
-                                    MATERIAL = "9960DX00058", //"A6DR021",//order.CodeRef,
-                                    REQ_QTY = "1"
-                                });
+                            string orderRetiradaDoc = $"O_R{randomNumberOrderRetiradaString}_{randomLetterNunber}";
+                            collectionOrderItemsRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_ITEMS
+                            {
+                                SD_DOC = orderRetiradaDoc,
+                                ITM_NUMBER = "10", // contractItm,
+                                MATERIAL = "9960DX00058", //"A6DR021",//order.CodeRef,
+                                REQ_QTY = "1"
+                            });
 
-                                string contactName = upturn.Name + " " + upturn.Surname;
-                                string contactPhone = upturn.Tel.ToString();
-                                string contactSchedule = upturn.Schedule;
-                                string contactInfo = "Depart: " + upturn.Department + " - Plant: " + upturn.Plant;
-                                string contactInfo2 = "";
+                            string contactName = upturn.Name + " " + upturn.Surname;
+                            string contactPhone = upturn.Tel.ToString();
+                            string contactSchedule = upturn.Schedule;
+                            string contactInfo = "Depart: " + upturn.Department + " - Plant: " + upturn.Plant;
+                            string contactInfo2 = "";
 
-                            if(upturn.Comments != null && upturn.Comments != "")
+                            if (upturn.Comments != null && upturn.Comments != "")
                             {
                                 contactInfo2 += upturn.Comments + " - ";
                             }
@@ -1103,66 +1110,66 @@ namespace WebApplication1.Models.SetupXML.XML
                             //string contactInfo3 = "";
 
                             collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
-                                {
-                                    SD_DOC = orderRetiradaDoc,
-                                    APRT_NAME = contactName, //"M. LUIS ALVAREZ",
-                                    APRT_PHON = contactPhone,       //"66666666",
-                                    APRT_OPEN = contactSchedule,//"9h 17h",
-                                    APRT_INFO = contactInfo,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                    APRT_INFO2 = contactInfo2,//"Asc: Oui -Connexion: PRINTFLEET",
-                                    APRT_INFO3 = ""
+                            {
+                                SD_DOC = orderRetiradaDoc,
+                                APRT_NAME = contactName, //"M. LUIS ALVAREZ",
+                                APRT_PHON = contactPhone,       //"66666666",
+                                APRT_OPEN = contactSchedule,//"9h 17h",
+                                APRT_INFO = contactInfo,//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                                APRT_INFO2 = contactInfo2,//"Asc: Oui -Connexion: PRINTFLEET",
+                                APRT_INFO3 = ""
 
-                                });
+                            });
 
-                                //string[] splitDesciption = upturn.Description.Split(';');
-                                //if (upturn.Contact != null)
-                                //{
-                                //    string[] splitContact = upturn.Contact.Split(';');
+                            //string[] splitDesciption = upturn.Description.Split(';');
+                            //if (upturn.Contact != null)
+                            //{
+                            //    string[] splitContact = upturn.Contact.Split(';');
 
-                                //    collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
-                                //    {
-                                //        SD_DOC = orderRetiradaDoc,
-                                //        APLF_NAME = (splitContact != null && !string.IsNullOrEmpty(splitContact[0]) ? splitContact[0] : ""), //"M. LUIS ALVAREZ",
-                                //        APLF_PHON = (splitContact != null && !string.IsNullOrEmpty(splitContact[1]) ? splitContact[1] : ""),       //"66666666",
-                                //        APLF_OPEN = (splitContact != null && !string.IsNullOrEmpty(splitContact[2]) ? splitContact[2] : ""),//"9h 17h",
-                                //        APLF_INFO = "",//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                //        APLF_INFO2 = "Marque/Modèle: Konica Minolta / " + (splitDesciption != null && !string.IsNullOrEmpty(splitDesciption[0]) ? splitDesciption[0] : "") + "-N°:" + splitDesciption[1],//"Asc: Oui -Connexion: PRINTFLEET",
-                                //        APLF_INFO3 = "2024431493"
+                            //    collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                            //    {
+                            //        SD_DOC = orderRetiradaDoc,
+                            //        APLF_NAME = (splitContact != null && !string.IsNullOrEmpty(splitContact[0]) ? splitContact[0] : ""), //"M. LUIS ALVAREZ",
+                            //        APLF_PHON = (splitContact != null && !string.IsNullOrEmpty(splitContact[1]) ? splitContact[1] : ""),       //"66666666",
+                            //        APLF_OPEN = (splitContact != null && !string.IsNullOrEmpty(splitContact[2]) ? splitContact[2] : ""),//"9h 17h",
+                            //        APLF_INFO = "",//"Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                            //        APLF_INFO2 = "Marque/Modèle: Konica Minolta / " + (splitDesciption != null && !string.IsNullOrEmpty(splitDesciption[0]) ? splitDesciption[0] : "") + "-N°:" + splitDesciption[1],//"Asc: Oui -Connexion: PRINTFLEET",
+                            //        APLF_INFO3 = "2024431493"
 
-                                //    });
-                                //}
-                                //else
-                                //{
-                                //    collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
-                                //    {
-                                //        SD_DOC = orderRetiradaDoc,
-                                //        APLF_NAME = "M. LUIS ALVAREZ",
-                                //        APLF_PHON = "66666666",
-                                //        APLF_OPEN = "9h 17h",
-                                //        APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
-                                //        APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
-                                //        APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
-                                //    });
-                                //}
-                                DateTime currentDate = DateTime.Now;
-                                string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
-                                collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
-                                {
-                                    SD_DOC = orderRetiradaDoc,
-                                    DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
-                                    REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
-                                    REF_1 = "SDR252146", //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
-                                    PURCH_NO_C = "BB" + DateTime.Today.Year + proposalId.ToString(),  //Nome interno da oferta
-                                    SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
-                                    PMNTTRMS = "E6CD", //TODO: manter  || FinancingPaymentMethods.
-                                    MACHINE = "5R", //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
-                                    ORDER_FLAG = "5R", //TODO: MANTER ESTE VALOR;
-                                    EQUIPMENT_NO = upturn.Equipment_Number,
-                                    DWERK = "5300",
-                                    LINKING_PIN = proposalId.ToString(),
-                                    Z1ZVOE_ORDER_CONTACT = collectionOrdersContactRetiradas,
-                                    Z1ZVOE_ORDER_ITEMS = collectionOrderItemsRetiradas
-                                });
+                            //    });
+                            //}
+                            //else
+                            //{
+                            //    collectionOrdersContactRetiradas.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_ORDER_CONTACT
+                            //    {
+                            //        SD_DOC = orderRetiradaDoc,
+                            //        APLF_NAME = "M. LUIS ALVAREZ",
+                            //        APLF_PHON = "66666666",
+                            //        APLF_OPEN = "9h 17h",
+                            //        APLF_INFO = "Et: 3 -Dept: DEPART -Bat: FENOSA -Salle: A",
+                            //        APLF_INFO2 = "Asc: Oui -Connexion: PRINTFLEET",
+                            //        APLF_INFO3 = "comentario ship to 14733442024402907 ESC COM IDMON ASC"
+                            //    });
+                            //}
+                            DateTime currentDate = DateTime.Now;
+                            string formattedCurrentDate = currentDate.ToString("yyyyMMdd");
+                            collectionOrders.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERS
+                            {
+                                SD_DOC = orderRetiradaDoc,
+                                DOC_TYPE = "ZDO1",      //TODO: Falar com o Luis MAIS TARDE   --- SERVIÇOS = ZD05 ||  MAQUINAS = ZDO1 
+                                REQ_DATE_H = formattedCurrentDate,          //"20240215", //implementar data do pedido a fabrica
+                                REF_1 = "SDR252146", //Nome de referencia da oferta que tem o cliente (o que está escrito na oferta)
+                                PURCH_NO_C = "BB" + DateTime.Today.Year + proposalId.ToString(),  //Nome interno da oferta
+                                SHIP_COND = "50", //TODO: manter || PARA DEPOIS DO GO LIVE -- VER se tem sentido deixar de ser Hardcoded
+                                PMNTTRMS = "E6CD", //TODO: manter  || FinancingPaymentMethods.
+                                MACHINE = "5R", //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
+                                ORDER_FLAG = "5R", //TODO: MANTER ESTE VALOR;
+                                EQUIPMENT_NO = upturn.Equipment_Number,
+                                DWERK = "5300",
+                                LINKING_PIN = proposalId.ToString(),
+                                Z1ZVOE_ORDER_CONTACT = collectionOrdersContactRetiradas,
+                                Z1ZVOE_ORDER_ITEMS = collectionOrderItemsRetiradas
+                            });
                             //}
                         }
                     }
@@ -1223,20 +1230,20 @@ namespace WebApplication1.Models.SetupXML.XML
                     int? copiasIncludias = 0;
                     ApprovedPrintingService activePS = null;
 
-                    
+
 
                     if (printingServices2.ActivePrintingService != null)
                     {
                         activePS = printingServices2.ApprovedPrintingServices[printingServices2.ActivePrintingService.Value - 1];
 
-                        if(activePS != null)
+                        if (activePS != null)
                         {
 
                             if (activePS.BWVolume > 0 && activePS.CVolume > 0)
                             {
                                 mATNR = "TOBW";
                                 kLFN = "1";
-                            
+
                                 if (activePS.GlobalClickNoVolume != null)
                                 {
                                     string formatNumber = activePS.GlobalClickNoVolume.GlobalClickBW.ToString("F5");
@@ -1276,7 +1283,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                     kBETR = formatNumber.Replace(",", ".");
                                     copiasIncludias = pSM.BWVolume;
                                     kSTBM = copiasIncludias.ToString();
-                                }else if(activePS.VVAClickPerModel != null)
+                                }
+                                else if (activePS.VVAClickPerModel != null)
                                 {
                                     string formatNumber = "";
                                     //BB_PrintingServices_ClickPerModel_VVA pSM = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == activePS.ID && x.CodeRef == codeRef).FirstOrDefault();
@@ -1304,16 +1312,16 @@ namespace WebApplication1.Models.SetupXML.XML
                                 }
 
 
-                                    collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
-                                    {
-                                        SD_DOC = orderDoc,
-                                        MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
-                                        KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
-                                        DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
-                                        DATBI = "99991231", // data de até quando é válido -- deixar default
-                                        KSTBM = kSTBM, //copias incluidas 
-                                        KBETR = kBETR //preço do excedente 
-                                    });
+                                collectionOrderCLickPrices.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_ORDERSZ1ZVOE_CLICK_PRICES
+                                {
+                                    SD_DOC = orderDoc,
+                                    MATNR = mATNR, // códigos de cor ou black and white     TOCO -> cor    TOBW-> black and white 
+                                    KLFN1 = kLFN, // se for TOBW - 1         se for TOCO->2 
+                                    DATAB = FirstDayNextMonthString, //data a partir do momento que é valido  -- primeiro do mês seguinte
+                                    DATBI = "99991231", // data de até quando é válido -- deixar default
+                                    KSTBM = kSTBM, //copias incluidas 
+                                    KBETR = kBETR //preço do excedente 
+                                });
 
                                 mATNR = "TOCO";
                                 kLFN = "2";
@@ -1489,8 +1497,8 @@ namespace WebApplication1.Models.SetupXML.XML
                         }
 
                     }
-                    
-                                       
+
+
                 }
 
                 stopwatch.Stop();
@@ -1507,7 +1515,7 @@ namespace WebApplication1.Models.SetupXML.XML
             }
 
         }
-      
+
 
         public PrintingServices2 GetPrintingServices(int proposalID)
         {
@@ -1603,7 +1611,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                 newPS.Machines.Add(psMachine);
                             }
 
-                            if(ps.BB_PrintingServices_ClickPerModel_VVA.Count > 0)
+                            if (ps.BB_PrintingServices_ClickPerModel_VVA.Count > 0)
                             {
                                 BB_PrintingServices_ClickPerModel_VVA psVVAcpm = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == ps.ID).FirstOrDefault();
                                 List<BB_PrintingServices_ClickPerModel_VVA> ps_basket = db.BB_PrintingServices_ClickPerModel_VVA.Where(x => x.PrintingServiceID == ps.ID).ToList();
@@ -1644,15 +1652,15 @@ namespace WebApplication1.Models.SetupXML.XML
                         }
 
                         proposalPS2.ApprovedPrintingServices = proposalPS2.ApprovedPrintingServices.OrderBy(x => x.IsPrecalc).ToList();
-                       
-                        
+
+
 
                     }
                     return proposalPS2;
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ex.Message.ToString();
                 return null;
