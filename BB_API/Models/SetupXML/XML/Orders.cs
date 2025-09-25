@@ -701,7 +701,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 MODEL_YN = "Y",// Perguntar ao Luis
-                                                PLANT = "5400"
+                                                //PLANT = "5400"
                                             });
                                             isUsedMachine = true;
                                             serialNumber = item.SerialNumber;
@@ -715,7 +715,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 MODEL_YN = "Y",// Perguntar ao Luis
-                                                PLANT = bB_Proposal.IsMultipleContract.Value ? (bB_Proposal.Plant ?? "5200") : "5200"
+                                               // PLANT = bB_Proposal.IsMultipleContract.Value ? (bB_Proposal.Plant ?? "5200") : "5200"
                                             });
                                             bundelCodeRef = item.CodeRef;
                                         }
@@ -734,7 +734,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 HG_LV_ITEM = "10",
-                                                PLANT =  item.CodeRef == "9960DX00056"  ? "5460": (bB_Proposal.IsMultipleContract.Value && bB_Proposal.Plant != null? bB_Proposal.Plant: "5200")
+                                               // PLANT =  item.CodeRef == "9960DX00056"  ? "5460": (bB_Proposal.IsMultipleContract.Value && bB_Proposal.Plant != null? bB_Proposal.Plant: "5200")
                                                 //MODEL_YN = "Y" // Perguntar ao Luis
                                             });
                                             bundelCodeRef = item.CodeRef;
@@ -748,7 +748,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                                 MATERIAL = item.CodeRef, //"A6DR021",//order.CodeRef,
                                                 REQ_QTY = item.Qty.ToString(),
                                                 HG_LV_ITEM = "10",
-                                                PLANT = item.CodeRef == "9960DX00056" ? "5460": (bB_Proposal.IsMultipleContract.Value && bB_Proposal.Plant != null? bB_Proposal.Plant : "5200")
+                                               // PLANT = item.CodeRef == "9960DX00056" ? "5460": (bB_Proposal.IsMultipleContract.Value && bB_Proposal.Plant != null? bB_Proposal.Plant : "5200")
                                                 //MODEL_YN = "Y" // Perguntar ao Luis
                                             });
 
@@ -871,6 +871,7 @@ namespace WebApplication1.Models.SetupXML.XML
                                         MACHINE = bundelCodeRef, //"A63R021",      /*dataIntegration.CodeRef, *///"A63R021",       //order.CodeRef,   // order.CodeRef,                  //"A6DR021",                  //order.CodeRef,
                                         ORDER_FLAG = "O1", //TODO: MANTER ESTE VALOR;
                                         LINKING_PIN = proposalId.ToString(),
+                                        DWERK = bB_Proposal.IsMultipleContract.Value ? (bB_Proposal.Plant ?? "5200") : "5200",
                                         Z1ZVOE_ORDER_CONTACT = collectionOrdersContact,
                                         Z1ZVOE_ORDER_ITEMS = collectionOrderItems,
                                         Z1ZVOE_CLICK_PRICES = collectionOrderCLickPrices,
@@ -899,7 +900,8 @@ namespace WebApplication1.Models.SetupXML.XML
                                         Z1ZVOE_ORDER_CONTACT = collectionOrdersContact,
                                         Z1ZVOE_ORDER_ITEMS = collectionOrderItems,
                                         Z1ZVOE_CLICK_PRICES = collectionOrderCLickPrices,
-                                        Z1ZVOE_FINANCE = collectionOrdersFinance
+                                        Z1ZVOE_FINANCE = collectionOrdersFinance,
+
 
 
                                     });
