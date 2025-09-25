@@ -161,7 +161,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         {
 
 
-                            CONTR_DOC = $"C_D{c.ID}_{contractIndexStringMC}_{randomLetterNunber}",
+                            CONTR_DOC = $"C_D{proposalId}_{randomLetterNunber}",
                             //CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
                             VT_AUART = "ZWV1",
                             VT_BEGDA = formattedDtCont,
@@ -186,7 +186,7 @@ namespace WebApplication1.Models.SetupXML.XML
                         string contractIndexString = index.ToString();
                         collectionContracts.Add(new Z1ZVOE_DEAL_1IDOCZ1ZVOE_CONTRACTS
                         {
-                            CONTR_DOC = $"C_D{c.ID}_{contractIndexString}_{randomLetterNunber}",
+                            CONTR_DOC = $"C_D{proposalId}_{randomLetterNunber}",
                             //CONTR_DOC = $"C_D3924_1_{randomLetterNunber}",
                             VT_AUART = "ZWV1",
                             VT_BEGDA = formattedDtCont,
