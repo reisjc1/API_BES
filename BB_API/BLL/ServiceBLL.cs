@@ -1037,7 +1037,7 @@ namespace WebApplication1.BLL
                 {
                     svr = ProcessGlobalClickNoVolumeServiceRequest(validationRequest, svrClient, proposalEquipments, equipments);
                 }
-                else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA != null)
+                else if (validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.Count > 0)
                 {
                     svr = ProcessClickPerModelVVAServiceRequest(validationRequest, svrClient, proposalEquipments, equipments);
                 }
@@ -2195,8 +2195,8 @@ namespace WebApplication1.BLL
                 svr.ContractDuration = validationRequest.BB_PrintingServices.ContractDuration.GetValueOrDefault();
                 svr.Equipments = new List<ServiceValidationRequestEquipment>();
                 //svr.PageBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
-                svr.RentBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().RentBillingFrequency;
-                svr.ExcessBillingFrequency = (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.FirstOrDefault().ExcessBillingFrequency;
+                svr.RentBillingFrequency = validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.Any() ? (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.First().RentBillingFrequency: 0;
+                svr.ExcessBillingFrequency = validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.Any()? (int)validationRequest.BB_PrintingServices.BB_PrintingServices_ClickPerModel_VVA.First().ExcessBillingFrequency: 0;
                 svr.AverageCostBW = 0;
                 svr.AverageCostC = 0;
                 svr.ID = validationRequest.ID;
