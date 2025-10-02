@@ -109,9 +109,34 @@ namespace WebApplication1.BLL
 
                 List<ItemGroups> groups = GetGroups(proposalId);
 
-                List<ConditionPVPPerMachine> condPvpPerMachine = cond.ConditionsVariablesPerMachine(groups, contractType, financing.Months, proposalId, ft.Code);
+                //List<ConditionPVPPerMachine> condPvpPerMachine = cond.ConditionsVariablesPerMachine(groups, contractType, financing.Months, proposalId, ft.Code);
 
-                List<ConditionPVP> condPvp = cond.ConditionsVariables(groups, contractType, financing.Months, proposalId, ft.Code);
+                //List<ConditionPVP> condPvp = cond.ConditionsVariables(groups, contractType, financing.Months, proposalId, ft.Code);
+
+                var condPvpPerMachine = db.BB_PROPOSAL_CONDITIONS_PERMACHINE
+        .Where(x => x.ProposalID == proposalId.Value)
+        .GroupBy(x => new { x.MachineModel, x.Group })
+        .Select(g => new ConditionPVPPerMachine
+        {
+            MachineModel = g.Key.MachineModel,
+            Group = g.Key.Group.Value,
+            Conditions = g.Select(c => new ConditionPVP
+            {
+                PVP = c.PVP,
+                ConditionCode = c.ConditionCode
+            }).ToList()
+        })
+        .ToList();
+
+
+                var condPvp = db.BB_PROPOSAL_CONDITIONS
+    .Where(x => x.ProposalID == proposalId.Value)
+    .Select(x => new ConditionPVP
+    {
+        PVP = x.PVP,
+        ConditionCode = x.ConditionCode
+    })
+    .ToList();
 
                 conditionsTotais.ConditionsPerMachine = condPvpPerMachine;
                 conditionsTotais.ConditionsTotal = condPvp;

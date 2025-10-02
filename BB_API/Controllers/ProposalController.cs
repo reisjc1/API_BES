@@ -911,6 +911,18 @@ namespace WebApplication1.Controllers
                     await EnviarEmailleasedeskAsync(proposal, Observations);
                 }
 
+                var newMonitor = new BB_PROPOSAL_CONDITIONS_MONITORIZATION
+                {
+                    ProposalID = ProposalID.Value,  
+                    CreatedTime= DateTime.Now,
+                    IsStarted = false,
+                    IsProcessed = false,
+                    Error = null       
+                };
+
+                db.BB_PROPOSAL_CONDITIONS_MONITORIZATION.Add(newMonitor);
+                db.SaveChanges();
+
             }
             catch (Exception ex)
             {
