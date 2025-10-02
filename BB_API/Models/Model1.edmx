@@ -956,6 +956,37 @@
           <Property Name="ConditionType" Type="varchar" MaxLength="100" />
           <Property Name="ConditionValue" Type="float" />
         </EntityType>
+        <EntityType Name="BB_PROPOSAL_CONDITIONS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProposalID" Type="int" Nullable="false" />
+          <Property Name="ConditionCode" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="PVP" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BB_PROPOSAL_CONDITIONS_MONITORIZATION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProposalID" Type="int" Nullable="false" />
+          <Property Name="CreatedTime" Type="datetime" Nullable="false" />
+          <Property Name="IsStarted" Type="bit" Nullable="false" />
+          <Property Name="IsProcessed" Type="bit" Nullable="false" />
+          <Property Name="Error" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="BB_PROPOSAL_CONDITIONS_PERMACHINE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MachineModel" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Group" Type="int" />
+          <Property Name="ProposalID" Type="int" Nullable="false" />
+          <Property Name="ConditionCode" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="PVP" Type="float" Nullable="false" />
+        </EntityType>
         <EntityType Name="BB_Proposal_Consignments">
           <Key>
             <PropertyRef Name="ID" />
@@ -2080,6 +2111,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
           <EntitySet Name="BB_Proposal_Client" EntityType="Self.BB_Proposal_Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Commission" EntityType="Self.BB_Proposal_Commission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Condition_Type" EntityType="Self.BB_Proposal_Condition_Type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_PROPOSAL_CONDITIONS" EntityType="Self.BB_PROPOSAL_CONDITIONS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_PROPOSAL_CONDITIONS_MONITORIZATION" EntityType="Self.BB_PROPOSAL_CONDITIONS_MONITORIZATION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BB_PROPOSAL_CONDITIONS_PERMACHINE" EntityType="Self.BB_PROPOSAL_CONDITIONS_PERMACHINE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Consignments" EntityType="Self.BB_Proposal_Consignments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Contacts" EntityType="Self.BB_Proposal_Contacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BB_Proposal_Contacts_Documentation" EntityType="Self.BB_Proposal_Contacts_Documentation" Schema="dbo" store:Type="Tables" />
@@ -2430,6 +2464,9 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             <End Role="BB_PrintingServices" EntitySet="BB_PrintingServices" />
             <End Role="BB_PrintingServices_ClickPerModel_VVA" EntitySet="BB_PrintingServices_ClickPerModel_VVA" />
           </AssociationSet>
+          <EntitySet Name="BB_PROPOSAL_CONDITIONS" EntityType="BB_DB_DEVModel.BB_PROPOSAL_CONDITIONS" />
+          <EntitySet Name="BB_PROPOSAL_CONDITIONS_MONITORIZATION" EntityType="BB_DB_DEVModel.BB_PROPOSAL_CONDITIONS_MONITORIZATION" />
+          <EntitySet Name="BB_PROPOSAL_CONDITIONS_PERMACHINE" EntityType="BB_DB_DEVModel.BB_PROPOSAL_CONDITIONS_PERMACHINE" />
           
           </EntityContainer>
         <EntityType Name="BB_Acessories">
@@ -4445,6 +4482,37 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="BB_PROPOSAL_CONDITIONS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" Nullable="false" />
+          <Property Name="ConditionCode" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PVP" Type="Double" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BB_PROPOSAL_CONDITIONS_MONITORIZATION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProposalID" Type="Int32" Nullable="false" />
+          <Property Name="CreatedTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsStarted" Type="Boolean" Nullable="false" />
+          <Property Name="IsProcessed" Type="Boolean" Nullable="false" />
+          <Property Name="Error" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BB_PROPOSAL_CONDITIONS_PERMACHINE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MachineModel" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Group" Type="Int32" />
+          <Property Name="ProposalID" Type="Int32" Nullable="false" />
+          <Property Name="ConditionCode" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PVP" Type="Double" Nullable="false" />
+        </EntityType>
         
         </Schema>
     </edmx:ConceptualModels>
@@ -6458,6 +6526,40 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BB_PROPOSAL_CONDITIONS">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_PROPOSAL_CONDITIONS">
+              <MappingFragment StoreEntitySet="BB_PROPOSAL_CONDITIONS">
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="ConditionCode" ColumnName="ConditionCode" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_PROPOSAL_CONDITIONS_MONITORIZATION">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_PROPOSAL_CONDITIONS_MONITORIZATION">
+              <MappingFragment StoreEntitySet="BB_PROPOSAL_CONDITIONS_MONITORIZATION">
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="IsProcessed" ColumnName="IsProcessed" />
+                <ScalarProperty Name="IsStarted" ColumnName="IsStarted" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BB_PROPOSAL_CONDITIONS_PERMACHINE">
+            <EntityTypeMapping TypeName="BB_DB_DEVModel.BB_PROPOSAL_CONDITIONS_PERMACHINE">
+              <MappingFragment StoreEntitySet="BB_PROPOSAL_CONDITIONS_PERMACHINE">
+                <ScalarProperty Name="PVP" ColumnName="PVP" />
+                <ScalarProperty Name="ConditionCode" ColumnName="ConditionCode" />
+                <ScalarProperty Name="ProposalID" ColumnName="ProposalID" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="MachineModel" ColumnName="MachineModel" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           
           </EntityContainerMapping>
       </Mapping>
@@ -6474,7 +6576,7 @@ warning 6002: The table/view 'BB_DEV_BPT_BES.dbo.WFA_FullDetails' does not have 
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="false" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

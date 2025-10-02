@@ -146,6 +146,9 @@ namespace WebApplication1.Models
         public virtual DbSet<BB_WFA_Workflow_Proposal> BB_WFA_Workflow_Proposal { get; set; }
         public virtual DbSet<LD_Contrato> LD_Contrato { get; set; }
         public virtual DbSet<BB_PrintingServices_ClickPerModel_VVA> BB_PrintingServices_ClickPerModel_VVA { get; set; }
+        public virtual DbSet<BB_PROPOSAL_CONDITIONS> BB_PROPOSAL_CONDITIONS { get; set; }
+        public virtual DbSet<BB_PROPOSAL_CONDITIONS_MONITORIZATION> BB_PROPOSAL_CONDITIONS_MONITORIZATION { get; set; }
+        public virtual DbSet<BB_PROPOSAL_CONDITIONS_PERMACHINE> BB_PROPOSAL_CONDITIONS_PERMACHINE { get; set; }
     
         public virtual int GetXMLOrders(Nullable<int> proposalId)
         {
