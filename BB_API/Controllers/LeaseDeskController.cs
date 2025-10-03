@@ -762,7 +762,20 @@ namespace WebApplication1.Controllers
 
                 }
 
-                using (var db = new BB_DB_DEV_LeaseDesk())
+                using (var db2 = new BB_DB_DEVEntities2())
+                {
+                    var condition_monitorization = db2.BB_PROPOSAL_CONDITIONS_MONITORIZATION.Where(x => x.ProposalID == idProposal.Value).FirstOrDefault();
+                    if (condition_monitorization != null)
+                    {
+                        condition_monitorization.IsStarted = false;
+                        condition_monitorization.IsProcessed = false;
+
+                        
+                        db2.SaveChanges();
+                    }
+                }
+
+                    using (var db = new BB_DB_DEV_LeaseDesk())
                 {
 
                     BB_Proposal proposal = db.BB_Proposal.Where(x => x.ID == idProposal).FirstOrDefault();
