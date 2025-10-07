@@ -2501,7 +2501,7 @@ namespace WebApplication1.Controllers
                             case 6:
                                 activePS.BWVolume = activePS.BWVolume * 6;
                                 activePS.CVolume = activePS.CVolume * 6;
-                                vt.VVA = activePS.GlobalClickVVA.PVP * 3;
+                                vt.VVA = activePS.GlobalClickVVA.PVP * 6;
                                 break;
                             default: break;
                         }

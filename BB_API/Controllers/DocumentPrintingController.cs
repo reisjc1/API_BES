@@ -807,6 +807,48 @@ namespace WebApplication1.Controllers
             return exportSuccessful;
         }
 
+
+        public void ConvertExcelToPdf(string excelPath, string pdfPath)
+        {
+            if (!File.Exists(excelPath))
+                throw new FileNotFoundException("Ficheiro Excel não encontrado.", excelPath);
+
+            Microsoft.Office.Interop.Excel.Application app = null;
+            Microsoft.Office.Interop.Excel.Workbook wb = null;
+
+            try
+            {
+                app = new Microsoft.Office.Interop.Excel.Application();
+                app.Visible = false;
+                wb = app.Workbooks.Open(excelPath);
+
+                foreach (Microsoft.Office.Interop.Excel.Worksheet ws in wb.Sheets)
+                {
+                    // Configuração da página para melhor impressão
+                    ws.PageSetup.Orientation = Microsoft.Office.Interop.Excel.XlPageOrientation.xlLandscape; // horizontal
+                    ws.PageSetup.Zoom = false;               // desliga zoom
+                    ws.PageSetup.FitToPagesWide = 1;         // cabe em 1 página de largura
+                    ws.PageSetup.FitToPagesTall = false;     // altura automática
+                }
+
+                // Exporta a pasta inteira para PDF
+                wb.ExportAsFixedFormat(
+                    Microsoft.Office.Interop.Excel.XlFixedFormatType.xlTypePDF,
+                    pdfPath,
+                    Microsoft.Office.Interop.Excel.XlFixedFormatQuality.xlQualityStandard,
+                    IncludeDocProperties: true,
+                    IgnorePrintAreas: false,
+                    OpenAfterPublish: false
+                );
+            }
+            finally
+            {
+                if (wb != null) wb.Close(false);
+                if (app != null) app.Quit();
+            }
+        }
+
+
         public bool ExportWorkbookToPdfContrato(string workbookPath, string outputPath, int? proposalID)
         {
             // If either required string is null or empty, stop and bail out
@@ -835,6 +877,7 @@ namespace WebApplication1.Controllers
 
                 // Open the workbook that you wish to export to PDF
                 excelWorkbook = excelApplication.Workbooks.Open(workbookPath);
+
                 //Worksheet = excelWorkbook.Worksheets;
 
                 //using (var db = new BB_DB_DEVEntities2())
@@ -3150,7 +3193,7 @@ namespace WebApplication1.Controllers
 
         [AcceptVerbs("GET", "POST")]
         [ActionName("ExportExcelContrato")]
-        public HttpResponseMessage ExportExcelContrato(int proposalid)
+        public string ExportExcelContrato(int proposalid)
         {
 
 
@@ -3220,34 +3263,35 @@ namespace WebApplication1.Controllers
 
 
                 //Check whether File exists.
-                if (!File.Exists(filePath))
-                {
-                    //Throw 404 (Not Found) exception if File not found.
-                    response.StatusCode = HttpStatusCode.NotFound;
-                    response.ReasonPhrase = string.Format("File not found: .");
-                    throw new HttpResponseException(response);
-                }
+                //if (!File.Exists(filePath))
+                //{
+                //    //Throw 404 (Not Found) exception if File not found.
+                //    response.StatusCode = HttpStatusCode.NotFound;
+                //    response.ReasonPhrase = string.Format("File not found: .");
+                //    throw new HttpResponseException(response);
+                //}
 
-                //Set the Response Content.
-                response.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read));
+                ////Set the Response Content.
+                //response.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read));
 
-                //Set the Response Content Length.
-                //response.Content.Headers.ContentLength = bytes.LongLength;
+                ////Set the Response Content Length.
+                ////response.Content.Headers.ContentLength = bytes.LongLength;
 
-                //Set the Content Disposition Header Value and FileName.
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                response.Content.Headers.ContentDisposition.FileName = "ConfiguracaoNegocio.xlsx";
+                ////Set the Content Disposition Header Value and FileName.
+                //response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                //response.Content.Headers.ContentDisposition.FileName = "ConfiguracaoNegocio.xlsx";
 
-                //Set the File Content Type.
-                //response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Proposal.pdf"));
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/xlsx");
+                ////Set the File Content Type.
+                ////response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Proposal.pdf"));
+                //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/xlsx");
+                return filePath;
             }
             catch (Exception ex)
 
             {
                 File.Delete(@path + "\\ConfiguracaoNegocio.xlsx");
             }
-            return response;
+            return "";
 
 
         }
@@ -4510,7 +4554,7 @@ namespace WebApplication1.Controllers
                     wsBB.Cells["F9"].Value = p.Draft.client.isPublicSector.GetValueOrDefault() ? "Publico" : "Privado";
 
 
-                    wsBB.Cells["H9"].Value =_Cliente.GMA_Identifier != null && _Cliente.GMA_Identifier != "" ? _Cliente.GMA_Identifier : "N/A";
+                    wsBB.Cells["H9"].Value = _Cliente.GMA_Identifier != null && _Cliente.GMA_Identifier != "" ? _Cliente.GMA_Identifier : "N/A";
 
                     string _TipoNegocio = "";
                     switch (p.Draft.details.CampaignID)
@@ -4695,7 +4739,7 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["F33"].Value = p.valoretotais.ServicosRecorentesTotal != 0 ? p.valoretotais.ServicosRecorentesTotal + " €" : "N/A";
 
-                    wsBB.Cells["H33"].Value = p.valoretotais.LeiCopiaPrivada != 0 ? (p.valoretotais.LeiCopiaPrivada + "€").ToString(): "N/A";
+                    wsBB.Cells["H33"].Value = p.valoretotais.LeiCopiaPrivada != 0 ? (p.valoretotais.LeiCopiaPrivada + "€").ToString() : "N/A";
 
 
                     double? TotalCuotaCliente = p.Draft.financing.MonthlyIncome;
@@ -4715,7 +4759,7 @@ namespace WebApplication1.Controllers
 
                     wsBB.Cells["B39"].Value = p.Draft.overvaluations != null && p.Draft.overvaluations.Count > 0 ? p.valoretotais.sobrevalorizacaoTotal.ToString() + " €" : "N/A";
 
-                    wsBB.Cells["D39"].Value = p.Draft.upturns != null && p.Draft.upturns.upturns.Count > 0 ? p.valoretotais.retomasTotal.ToString() + " €" :"N/A";
+                    wsBB.Cells["D39"].Value = p.Draft.upturns != null && p.Draft.upturns.upturns.Count > 0 ? p.valoretotais.retomasTotal.ToString() + " €" : "N/A";
 
                     wsBB.Cells["B42"].Value = p.LeasedeskComentariosGC != null && p.LeasedeskComentariosGC != "" ? p.LeasedeskComentariosGC : "N/A";
                     //KOnica Representante
@@ -5036,6 +5080,13 @@ namespace WebApplication1.Controllers
 
                     if (activePS != null && activePS.GlobalClickVVA != null)
                     {
+                        wsSERVICE.Cells["F9"].Value = "";
+                        wsSERVICE.Cells["H9"].Value = "";
+                        wsSERVICE.Cells["J9"].Value = "";
+                        wsSERVICE.Cells["N9"].Value = "";
+                        wsSERVICE.Cells["P9"].Value = "";
+                        wsSERVICE.Cells["R9"].Value = "";
+
                         switch (activePS.GlobalClickVVA.RentBillingFrequency)
                         {
                             case 3:
@@ -5058,15 +5109,15 @@ namespace WebApplication1.Controllers
                             wsSERVICE.Cells["E" + idxActive].Value = item.Qty;
                             wsSERVICE.Cells["F" + idxActive].Value = item.BWVolume;
                             wsSERVICE.Cells["G" + idxActive].Value = item.BWVolume.GetValueOrDefault() * item.ApprovedBW.GetValueOrDefault() + " €";
-                            wsSERVICE.Cells["H" + idxActive].Value = item.BWCost + " €"; 
+                            wsSERVICE.Cells["H" + idxActive].Value = item.BWCost + " €";
                             wsSERVICE.Cells["I" + idxActive].Value = activePS.GlobalClickVVA.BWExcessPVP + " €";
                             wsSERVICE.Cells["J" + idxActive].Value = item.CVolume;
                             wsSERVICE.Cells["K" + idxActive].Value = item.CVolume.GetValueOrDefault() * item.ApprovedC.GetValueOrDefault() + " €";
-                            wsSERVICE.Cells["L" + idxActive].Value = item.CCost + " €"; 
+                            wsSERVICE.Cells["L" + idxActive].Value = item.CCost + " €";
                             wsSERVICE.Cells["M" + idxActive].Value = activePS.GlobalClickVVA.CExcessPVP + " €";
-                            wsSERVICE.Cells["N" + idxActive].Value = item.ApprovedBW +" €" ;
+                            wsSERVICE.Cells["N" + idxActive].Value = item.ApprovedBW + " €";
                             wsSERVICE.Cells["O" + idxActive].Value = item.ClickPriceBW + "€";
-                            wsSERVICE.Cells["P" + idxActive].Value = item.ApprovedC+ " €" ;
+                            wsSERVICE.Cells["P" + idxActive].Value = item.ApprovedC + " €";
                             wsSERVICE.Cells["Q" + idxActive].Value = item.ClickPriceC + "€";
                             idxActive++;
                         }
@@ -5074,6 +5125,13 @@ namespace WebApplication1.Controllers
 
                     if (activePS != null && activePS.GlobalClickNoVolume != null)
                     {
+                        wsSERVICE.Cells["F9"].Value = "";
+                        wsSERVICE.Cells["H9"].Value = "";
+                        wsSERVICE.Cells["J9"].Value = "";
+                        wsSERVICE.Cells["N9"].Value = "";
+                        wsSERVICE.Cells["P9"].Value = "";
+                        wsSERVICE.Cells["R9"].Value = "";
+
                         switch (activePS.GlobalClickNoVolume.PageBillingFrequency)
                         {
                             case 3:
@@ -5101,9 +5159,9 @@ namespace WebApplication1.Controllers
                             wsSERVICE.Cells["K" + idxActive].Value = " ---";
                             wsSERVICE.Cells["L" + idxActive].Value = item.CCost + " €";
                             wsSERVICE.Cells["M" + idxActive].Value = " ---";
-                            wsSERVICE.Cells["N" + idxActive].Value = item.ClickPriceBW +" €";
+                            wsSERVICE.Cells["N" + idxActive].Value = item.ClickPriceBW + " €";
                             wsSERVICE.Cells["O" + idxActive].Value = item.ClickPriceBW + " €";
-                            wsSERVICE.Cells["P" + idxActive].Value = item.ClickPriceC +" €" ;
+                            wsSERVICE.Cells["P" + idxActive].Value = item.ClickPriceC + " €";
                             wsSERVICE.Cells["Q" + idxActive].Value = item.ClickPriceC + " €";
                             idxActive++;
                         }
@@ -5111,6 +5169,13 @@ namespace WebApplication1.Controllers
 
                     if (activePS != null && activePS.ClickPerModel != null)
                     {
+                        wsSERVICE.Cells["F9"].Value = "";
+                        wsSERVICE.Cells["H9"].Value = "";
+                        wsSERVICE.Cells["J9"].Value = "";
+                        wsSERVICE.Cells["N9"].Value = "";
+                        wsSERVICE.Cells["P9"].Value = "";
+                        wsSERVICE.Cells["R9"].Value = "";
+
                         switch (activePS.ClickPerModel.PageBillingFrequency)
                         {
                             case 3:
@@ -5144,7 +5209,60 @@ namespace WebApplication1.Controllers
                             idxActive++;
                         }
                     }
+                    if (activePS != null && activePS.VVAClickPerModel != null)
+                    {
+                        switch (activePS.VVAClickPerModel.PageBillingFrequency)
+                        {
+                            case 3:
+                                wsSERVICE.Cells["C7"].Value = "Trimestral";
+                                break;
+                            case 6:
+                                wsSERVICE.Cells["C7"].Value = "Semestral";
+                                break;
+                            default:
+                                wsSERVICE.Cells["C7"].Value = "Mensual";
+                                break;
+                        }
 
+
+                        wsSERVICE.Cells["D10"].Value = "Descripción";
+                        wsSERVICE.Cells["E10"].Value = "Qtd.";
+                        wsSERVICE.Cells["F10"].Value = "Negro";
+                        wsSERVICE.Cells["G10"].Value = "Color";
+                        wsSERVICE.Cells["H10"].Value = "Negro";
+                        wsSERVICE.Cells["I10"].Value = "Color";
+                        wsSERVICE.Cells["J10"].Value = "Negro";
+                        wsSERVICE.Cells["K10"].Value = "Color";
+                        wsSERVICE.Cells["L10"].Value = "Negro";
+                        wsSERVICE.Cells["M10"].Value = "Color";
+                        wsSERVICE.Cells["N10"].Value = "Negro";
+                        wsSERVICE.Cells["O10"].Value = "Color";
+                        wsSERVICE.Cells["P10"].Value = "Negro";
+                        wsSERVICE.Cells["Q10"].Value = "Color";
+                        wsSERVICE.Cells["R10"].Value = "Por equipo";
+
+                        int idxActive = 11;
+                        foreach (var item in activePS.VVAClickPerModel.ps_basket)
+                        {
+                            wsSERVICE.Cells["D" + idxActive].Value = item.Description;
+                            wsSERVICE.Cells["E" + idxActive].Value = item.Quantity;
+                            wsSERVICE.Cells["F" + idxActive].Value = item.BWVolume;
+                            wsSERVICE.Cells["G" + idxActive].Value = item.CVolume;
+                            wsSERVICE.Cells["H" + idxActive].Value = item.BWPVP;
+                            wsSERVICE.Cells["I" + idxActive].Value = item.CPVP;
+                            wsSERVICE.Cells["J" + idxActive].Value = item.ApprovedBW;
+                            wsSERVICE.Cells["K" + idxActive].Value = item.ApprovedC;
+                            wsSERVICE.Cells["L" + idxActive].Value = item.BWExcessPVP;
+                            wsSERVICE.Cells["M" + idxActive].Value = item.CExcessPVP;
+                            wsSERVICE.Cells["N" + idxActive].Value = item.BWCost;
+                            wsSERVICE.Cells["O" + idxActive].Value = item.CCost;
+                            wsSERVICE.Cells["P" + idxActive].Value = item.BWVolume.GetValueOrDefault() * item.ApprovedBW.GetValueOrDefault();
+                            wsSERVICE.Cells["Q" + idxActive].Value = item.CVolume.GetValueOrDefault() * item.ApprovedC.GetValueOrDefault();
+                            wsSERVICE.Cells["R" + idxActive].Value = (item.CVolume.GetValueOrDefault() * item.ApprovedC.GetValueOrDefault()) + (item.BWVolume.GetValueOrDefault() * item.ApprovedBW.GetValueOrDefault());
+                            idxActive++;
+                        }
+
+                    }
 
                     pck.Save();
 
@@ -6931,6 +7049,68 @@ namespace WebApplication1.Controllers
                 error = ex.Message.ToString();
             }
             return filePath;
+        }
+
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GenerateContractExcel_BES")]
+        public HttpResponseMessage GenerateContractExcel_BES(int proposalID)
+        {
+            string error = "";
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                string filePath = ExportExcelContrato(proposalID);
+                filePath += ".xlsx";
+                if (!File.Exists(filePath))
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.ReasonPhrase = string.Format("File not found: .");
+                    throw new HttpResponseException(response);
+                }
+                byte[] bytes = File.ReadAllBytes(filePath);
+                response.Content = new ByteArrayContent(bytes);
+                response.Content.Headers.ContentLength = bytes.LongLength;
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "Contrato.xlsx";
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contrato.xlsx"));
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message.ToString();
+            }
+            return response;
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        [ActionName("GenerateContractPDF_BES")]
+        public HttpResponseMessage GenerateContractPDF_BES(int proposalID)
+        {
+            string error = "";
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                string filePath = ExportExcelContrato(proposalID);
+                string filePathPDF = Path.ChangeExtension(filePath, ".pdf");
+                ConvertExcelToPdf(filePath, filePathPDF);
+                if (!File.Exists(filePath))
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.ReasonPhrase = string.Format("File not found: .");
+                    throw new HttpResponseException(response);
+                }
+                byte[] bytes = File.ReadAllBytes(filePath);
+                response.Content = new ByteArrayContent(bytes);
+                response.Content.Headers.ContentLength = bytes.LongLength;
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = "Contracto.pdf";
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping("Contracto.pdf"));
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message.ToString();
+            }
+            return response;
         }
 
     }
