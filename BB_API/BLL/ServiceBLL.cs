@@ -133,7 +133,8 @@ namespace WebApplication1.BLL
                             Machines = new List<Machine>(),
                         };
                         int serviceType = 0;
-                        if (newPS.BB_VVA != null)
+                        //if (newPS.BB_VVA != null)
+                        if(si.PSModeId == 1)
                         {
                             serviceType = 1;
                             pendingQuoteRequest.GlobalClickVVA = new GlobalClickVVA
@@ -149,7 +150,8 @@ namespace WebApplication1.BLL
                                 ReturnType = newPS.BB_VVA.ReturnType.Value
                             };
                         }
-                        else if (newPS.BB_PrintingServices_NoVolume != null)
+                        //else if (newPS.BB_PrintingServices_NoVolume != null)
+                        else if (si.PSModeId == 2)
                         {
                             serviceType = 2;
                             pendingQuoteRequest.GlobalClickNoVolume = new GlobalClickNoVolume
@@ -161,7 +163,8 @@ namespace WebApplication1.BLL
                                 RequestedGlobalClickC = newPS.BB_PrintingServices_NoVolume.RequestedGlobalClickC.Value,
                             };
                         }
-                        else if (newPS.BB_PrintingServices_ClickPerModel_VVA != null)
+                        // else if (newPS.BB_PrintingServices_ClickPerModel_VVA != null)
+                        else if (si.PSModeId == 4)
                         {
                             serviceType = 4;
                             pendingQuoteRequest.VVAClickPerModel = new VVAClickPerModel();
